@@ -18,7 +18,6 @@ body {
 header {
     display: inline-block;              /* 🔥 ajuste le gradient à la taille du texte */
     text-align: center;
-    padding: 20px 0;
     font-family: 'American Captain', sans-serif;
     font-size: 48px;
     letter-spacing: 2px;
