@@ -27,26 +27,25 @@ header {
 /* Timeline globale */
 .timeline-container {
   overflow-x: auto;
-  overflow-y: visible; /* plus de scroll vertical */
-  padding: 20px var(--timeline-padding);
+  overflow-y: visible;
+  padding: 20px 50px; /* on garde le padding mais calcul JS le prend en compte */
 }
 
 .timeline {
   position: relative;
   display: flex;
-  width: 100%;
-  height: auto; /* hauteur dynamique */
-  box-sizing: border-box;
+  width: max-content; /* timeline s’adapte au nombre de jours */
+  height: auto;
 }
 
-/* Colonnes de dates */
 .date-column {
-  flex: 1;
+  flex: none; /* empêcher flex-grow */
   text-align: center;
   position: relative;
   padding: 0 2px;
   box-sizing: border-box;
 }
+
 
 .date-column .day {
   display: block;
