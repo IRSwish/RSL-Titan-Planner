@@ -101,25 +101,24 @@ window.addEventListener('load', () => {
 
       // Update Summary
       function updateSummary() {
-        let totalAcquired = 0;
-        let totalVirtual = 0;
-        let totalPassed = 0;
+        let totalAcquired = 0; // verts
+        let totalOngoing = 0;  // orange
+        let totalPassed = 0;   // gris
 
         document.querySelectorAll('.point-box').forEach(box => {
           const p = parseInt(box.querySelector('span').textContent) || 0;
 
-        if (box.classList.contains('state-validated')) {  // vert = acquis
-              totalAcquired += p;
-              totalVirtual += p;
-            } else if (box.classList.contains('state-ongoing')) { // orange = en cours
-              totalVirtual += p;
-            } else if (box.classList.contains('state-passed')) { // gris = passé non acquis
-              totalPassed += p;
-            }
-          });
+          if (box.classList.contains('state-validated')) { 
+            totalAcquired += p;
+          } else if (box.classList.contains('state-ongoing')) { 
+            totalOngoing += p;
+          } else if (box.classList.contains('state-passed')) { 
+            totalPassed += p;
+          }
+        });
 
         document.getElementById('points-acquired').textContent = totalAcquired;
-        document.getElementById('points-virtual').textContent = totalAcquired + totalVirtual;
+        document.getElementById('points-virtual').textContent = totalAcquired + totalOngoing;
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
@@ -129,7 +128,6 @@ window.addEventListener('load', () => {
         localStorage.setItem('pointStates', JSON.stringify(savedStates));
       }
 
-      // Récupérer état sauvegardé
       function getSavedState(id, defaultState) {
         return savedStates[id] || defaultState;
       }
@@ -149,8 +147,6 @@ window.addEventListener('load', () => {
         block.style.left = `${Math.round(dayStart * dayWidth + horizontalGap/2)}px`;
         block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - horizontalGap)}px`;
         block.style.top = `${top}px`;
-        block.dataset.start = event.start_date;
-        block.dataset.end = event.end_date;
 
         const pointsHTML = event.points.map((p, pointIndex) => {
           const uniqueId = `${eventIndex}-${pointIndex}`;
@@ -175,7 +171,7 @@ window.addEventListener('load', () => {
         timeline.appendChild(block);
       });
 
-      // Gestion clic sur les points (avec undo)
+      // Gestion clic sur les points
       timeline.addEventListener('click', (e) => {
         const box = e.target.closest('.point-box');
         if (!box) return;
