@@ -108,14 +108,15 @@ window.addEventListener('load', () => {
         document.querySelectorAll('.point-box').forEach(box => {
           const p = parseInt(box.querySelector('span').textContent) || 0;
 
-          if (box.classList.contains('state-validated')) {
-            totalAcquired += p;
-            totalVirtual += p;
-          } else if (box.classList.contains('state-ongoing')) {
-            totalVirtual += p;
-          } else if (box.classList.contains('state-passed')) {
-            totalPassed += p;
-          }
+        if (box.classList.contains('state-validated')) {  // vert = acquis
+              totalAcquired += p;
+              totalVirtual += p;
+            } else if (box.classList.contains('state-ongoing')) { // orange = en cours
+              totalVirtual += p;
+            } else if (box.classList.contains('state-passed')) { // gris = passé non acquis
+              totalPassed += p;
+            }
+          });
 
         document.getElementById('points-acquired').textContent = totalAcquired;
         document.getElementById('points-virtual').textContent = totalAcquired + totalVirtual;
