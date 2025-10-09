@@ -19,7 +19,6 @@ window.addEventListener('load', () => {
 
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
 
-      // Charger états sauvegardés
       const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
 
       // Génération des colonnes de dates
@@ -59,7 +58,6 @@ window.addEventListener('load', () => {
         timeline.appendChild(col);
       }
 
-      // Ligne horizontale
       const line = document.createElement('div');
       line.classList.add('timeline-line');
       timeline.appendChild(line);
@@ -70,13 +68,13 @@ window.addEventListener('load', () => {
         const placedEvents = [];
         events.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
 
-        const timelineWidth = timeline.clientWidth; // exclut padding
+        const timelineWidth = timeline.clientWidth; 
 
         events.forEach(event => {
           const start = new Date(event.start_date);
           const end = new Date(event.end_date);
-          const startPx = ((start - minDate)/(1000*60*60*24)) * timelineWidth;
-          const endPx = ((end - minDate)/(1000*60*60*24)) * timelineWidth;
+          const startPx = ((start - minDate)/(1000*60*60*24)) * timelineWidth / totalDays;
+          const endPx = ((end - minDate)/(1000*60*60*24)) * timelineWidth / totalDays;
 
           let placed = false;
           for (let i = 0; i < tracks.length; i++) {
@@ -100,7 +98,6 @@ window.addEventListener('load', () => {
 
       const placedEvents = computeTracks(events);
 
-      // Update Summary
       function updateSummary() {
         let totalAcquired = 0;
         let totalVirtual = 0;
@@ -109,12 +106,12 @@ window.addEventListener('load', () => {
         document.querySelectorAll('.point-box').forEach(box => {
           const p = parseInt(box.querySelector('span').textContent) || 0;
 
-          if (box.classList.contains('state-validated')) {  // vert = acquis
+          if (box.classList.contains('state-validated')) {
             totalAcquired += p;
             totalVirtual += p;
-          } else if (box.classList.contains('state-ongoing')) { // orange = en cours
+          } else if (box.classList.contains('state-ongoing')) {
             totalVirtual += p;
-          } else if (box.classList.contains('state-passed')) { // gris = passé non acquis
+          } else if (box.classList.contains('state-passed')) {
             totalPassed += p;
           }
         });
@@ -124,7 +121,6 @@ window.addEventListener('load', () => {
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
-      // Sauvegarde état dans localStorage
       function saveState(id, state) {
         savedStates[id] = state;
         localStorage.setItem('pointStates', JSON.stringify(savedStates));
@@ -134,21 +130,21 @@ window.addEventListener('load', () => {
         return savedStates[id] || defaultState;
       }
 
-      // Génération des events
       placedEvents.forEach((item, eventIndex) => {
         const event = item.event;
         const top = item.top + 100;
-        const timelineWidth = timeline.clientWidth;
 
         const start = new Date(event.start_date);
         const end = new Date(event.end_date);
+        const timelineWidth = timeline.clientWidth;
+        const dayWidth = timelineWidth / totalDays;
         const dayStart = (start - minDate)/(1000*60*60*24);
         const dayEnd = (end - minDate)/(1000*60*60*24);
 
         const block = document.createElement('div');
         block.classList.add('event-block');
-        block.style.left = `${Math.round(dayStart * timelineWidth + horizontalGap/2)}px`;
-        block.style.width = `${Math.round((dayEnd - dayStart) * timelineWidth - horizontalGap)}px`;
+        block.style.left = `${Math.round(dayStart * dayWidth + horizontalGap/2)}px`;
+        block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - horizontalGap)}px`;
         block.style.top = `${top}px`;
         block.dataset.start = event.start_date;
         block.dataset.end = event.end_date;
@@ -176,20 +172,15 @@ window.addEventListener('load', () => {
         timeline.appendChild(block);
       });
 
-      // Ajuster hauteur dynamique
-      function adjustTimelineHeight() {
-        const blocks = document.querySelectorAll('.event-block');
-        let maxBottom = 0;
-        blocks.forEach(block => {
-          const blockBottom = block.offsetTop + block.offsetHeight;
-          if (blockBottom > maxBottom) maxBottom = blockBottom;
-        });
-        timeline.style.height = `${maxBottom + 20}px`;
-      }
+      // Ajuster la hauteur selon les événements
+      const blocks = document.querySelectorAll('.event-block');
+      let maxBottom = 0;
+      blocks.forEach(block => {
+        const blockBottom = block.offsetTop + block.offsetHeight;
+        if (blockBottom > maxBottom) maxBottom = blockBottom;
+      });
+      timeline.style.height = `${maxBottom + 20}px`;
 
-      adjustTimelineHeight();
-
-      // Gestion clic sur les points
       timeline.addEventListener('click', (e) => {
         const box = e.target.closest('.point-box');
         if (!box) return;
@@ -212,13 +203,13 @@ window.addEventListener('load', () => {
 
       updateSummary();
 
-      // Déplacer summary-box sous le calendrier et centrer
+      // Summary-box sous le calendrier, centrée
       const summaryBox = document.querySelector('.summary-box');
       if (summaryBox) {
         summaryBox.style.position = 'relative';
         summaryBox.style.margin = '20px auto 0';
-        summaryBox.style.right = 'unset';
         summaryBox.style.left = 'unset';
+        summaryBox.style.right = 'unset';
         summaryBox.style.display = 'flex';
         summaryBox.style.justifyContent = 'center';
       }
