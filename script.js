@@ -1,90 +1,65 @@
-async function loadEvents() {
-  const response = await fetch('events.json');
-  const events = await response.json();
-  renderTimeline(events);
-}
+fetch('events.json')
+  .then(response => response.json())
+  .then(data => {
+    // Titre dynamique
+    document.getElementById('page-title').textContent = data.title || 'TITAN TIMELINE';
 
-function renderTimeline(events) {
-  const timeline = document.getElementById('timeline');
-  const datesRow = document.getElementById('dates-row');
-  timeline.innerHTML = '';
-  datesRow.innerHTML = '';
+    const events = data.events;
+    const timeline = document.querySelector('.timeline');
 
-  const timelineWidth = timeline.offsetWidth;
-  const padding = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--timeline-padding'));
+    // Dates min / max
+    const minDate = new Date(Math.min(...events.map(e => new Date(e.start_date))));
+    const maxDate = new Date(Math.max(...events.map(e => new Date(e.end_date))));
+    const totalDays = (maxDate - minDate) / (1000 * 60 * 60 * 24) + 1;
 
-  // Min et max
-  const startDates = events.map(e => new Date(e.start_date));
-  const endDates = events.map(e => new Date(e.end_date));
-  const minDate = new Date(Math.min(...startDates));
-  const maxDate = new Date(Math.max(...endDates));
+    // Générer les colonnes de dates
+    for (let i = 0; i < totalDays; i++) {
+      const currentDate = new Date(minDate);
+      currentDate.setDate(minDate.getDate() + i);
 
-  minDate.setHours(0, 0, 0, 0);
-  maxDate.setHours(0, 0, 0, 0);
-  maxDate.setDate(maxDate.getDate() + 1);
+      const day = currentDate.toLocaleDateString('en-US', { weekday: 'short' });
+      const date = currentDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
 
-  const totalDuration = maxDate - minDate;
+      const dateCol = document.createElement('div');
+      dateCol.classList.add('date-column');
+      dateCol.innerHTML = `
+        <span class="day">${day}</span>
+        <span class="date">${date}</span>
+        <div class="grid-line"></div>
+      `;
+      timeline.appendChild(dateCol);
+    }
 
-  // 📅 Dates + lignes verticales
-  for (let d = new Date(minDate); d <= maxDate; d.setDate(d.getDate() + 1)) {
-    const offsetPercent = ((d - minDate) / totalDuration);
-    const pixelOffset = padding + offsetPercent * (timelineWidth - padding * 2);
-
+    // Ligne horizontale
     const line = document.createElement('div');
-    line.className = 'day-line';
-    line.style.left = `${pixelOffset}px`;
+    line.classList.add('timeline-line');
     timeline.appendChild(line);
 
-    const label = document.createElement('div');
-    label.className = 'date-label';
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
-    const dayNum = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+    // Positionner les événements
+    events.forEach(event => {
+      const start = new Date(event.start_date);
+      const end = new Date(event.end_date);
+      const startOffset = (start - minDate) / (1000 * 60 * 60 * 24);
+      const duration = (end - start) / (1000 * 60 * 60 * 24) + 1;
 
-    const daySpan = document.createElement('div');
-    daySpan.className = 'date-day';
-    daySpan.textContent = dayName;
+      const block = document.createElement('div');
+      block.classList.add('event-block');
+      block.style.left = `${startOffset * 100}px`;
+      block.style.top = '100px';
+      block.style.width = `${duration * 100 - 10}px`;
 
-    const numSpan = document.createElement('div');
-    numSpan.className = 'date-num';
-    numSpan.textContent = dayNum;
+      block.innerHTML = `
+        <div class="event-name">${event.name}</div>
+        <div class="points-container">
+          ${event.points.map(p => `
+            <div class="point-box">
+              <img src="style/img/Points.png" alt="points"/>
+              <span>${p}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
 
-    label.appendChild(daySpan);
-    label.appendChild(numSpan);
-    label.style.left = `${pixelOffset}px`;
-    datesRow.appendChild(label);
-  }
-
-  // 📊 Events
-  events.forEach(event => {
-    const evStart = new Date(event.start_date);
-    const evEnd = new Date(event.end_date);
-
-    const startPercent = (evStart - minDate) / totalDuration;
-    const endPercent = (evEnd - minDate) / totalDuration;
-
-    const left = padding + startPercent * (timelineWidth - padding * 2);
-    const right = padding + endPercent * (timelineWidth - padding * 2);
-
-    const eventEl = document.createElement('div');
-    eventEl.className = 'event';
-    eventEl.style.left = `${left}px`;
-    eventEl.style.width = `${right - left}px`;
-
-    const pointsHTML = event.points.map(p => `
-      <div class="point-box">
-        <img src="style/img/Points.png" alt="Points" />
-        <div class="point-value">${p}</div>
-      </div>
-    `).join('');
-
-    eventEl.innerHTML = `
-      <div class="event-name">${event.name}</div>
-      <div class="event-points">${pointsHTML}</div>
-    `;
-
-    timeline.appendChild(eventEl);
+      timeline.appendChild(block);
+    });
   });
-}
-
-window.addEventListener('resize', () => loadEvents());
-loadEvents();
