@@ -9,10 +9,12 @@
 }
 
 body {
-  background-color: #0e0e0e;
   color: var(--text-color);
   margin: 0;
   font-family: 'Inter', sans-serif;
+  background: url('img/TITAN BACKGROUND.png') top center no-repeat;
+  background-size: 100% auto; /* s'étend sur toute la largeur, conserve le ratio */
+  background-color: #0e0e0e;  /* couleur de fond si l'image ne couvre pas tout */
 }
 
 header {
