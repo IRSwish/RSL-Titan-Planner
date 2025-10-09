@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
 
       const today = new Date();
       today.setHours(0,0,0,0);
-      const horizontalGap = 6;
+      const horizontalGap = 14;
 
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
       const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
