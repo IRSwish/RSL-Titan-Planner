@@ -40,5 +40,12 @@
       "end_date": "2025-10-13",
       "points": [30, 70]
     }
+    ,
+    {
+      "name": "Classic Arena",
+      "start_date": "2025-10-11",
+      "end_date": "2025-10-14",
+      "points": [?]
+    }
   ]
 }
