@@ -194,6 +194,16 @@ window.addEventListener('load', () => {
         summaryBox.style.left = 'unset';
         summaryBox.style.right = 'unset';
       }
+
+      // ➜ Mettre en surbrillance la colonne correspondant à aujourd'hui
+const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+document.querySelectorAll('.date-column .date').forEach(el => {
+  const colDate = el.textContent.trim();
+  if (colDate === today) {
+    el.closest('.date-column').classList.add('today');
+  }
+});
     });
 
   window.addEventListener('resize', () => location.reload());
