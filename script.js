@@ -21,7 +21,6 @@ window.addEventListener('load', () => {
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
       const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
 
-      // largeur utilisable = timelineContainer.width - padding
       const containerStyle = getComputedStyle(timelineContainer);
       const paddingLeft = parseFloat(containerStyle.paddingLeft);
       const paddingRight = parseFloat(containerStyle.paddingRight);
@@ -100,7 +99,6 @@ window.addEventListener('load', () => {
 
       const placedEvents = computeTracks(events);
 
-      // Génération des events
       placedEvents.forEach((item, eventIndex) => {
         const event = item.event;
         const top = item.top + 100;
@@ -197,7 +195,6 @@ window.addEventListener('load', () => {
 
       // ➜ Mettre en surbrillance la colonne correspondant à aujourd'hui
       (function highlightToday() {
-          // Nom unique pour éviter conflit avec d'autres variables
           const currentDay = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
       
           document.querySelectorAll('.date-column .date').forEach(el => {
@@ -207,3 +204,6 @@ window.addEventListener('load', () => {
               }
           });
       })();
+
+    }); // <-- fermeture de .then(data => { ... })
+}); // <-- fermeture de window.addEventListener('load', ...)
