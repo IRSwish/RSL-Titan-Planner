@@ -55,14 +55,13 @@ header {
   font-size: 13px;
 }
 
+/* Ligne verticale gauche/droite */
 .date-column .grid-line {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
   width: 2px;
   background-color: var(--grid-line-color);
-  transform: translateX(-50%);
 }
 
 /* Ligne horizontale sous les dates */
