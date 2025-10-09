@@ -178,5 +178,6 @@ header {
 }
 
 .summary-box div {
+  display: block;   /* obligatoire pour forcer un retour à la ligne */
   margin-bottom: 6px;
 }
