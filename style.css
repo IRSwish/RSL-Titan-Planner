@@ -195,6 +195,9 @@ header {
 .point-box.state-passed { /* Passé non acquis */
   border: 2px solid red;
   box-shadow: inset 0 0 6px rgba(100,100,100,0.25);
+}
+
+.point-box.state-passed span { /* Passé non acquis */
   color:red !important;
 }
 
