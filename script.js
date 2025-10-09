@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
 
       const today = new Date();
       today.setHours(0,0,0,0);
-      const horizontalGap = 14;
+      const horizontalGap = 16;
 
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
       const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
@@ -109,8 +109,11 @@ window.addEventListener('load', () => {
         const dayEnd = (end - minDate)/(1000*60*60*24);
 
         const block = document.createElement('div');
+        const left = Math.round(dayStart * dayWidth + horizontalGap/2);
+        const width = Math.round((dayEnd - dayStart) * dayWidth - horizontalGap);
         block.classList.add('event-block');
-        block.style.left = `${Math.round(dayStart * dayWidth)}px`;
+        block.style.left = `${left}px`;
+        block.style.width = `${width}px`;
         block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - horizontalGap)}px`;
         block.style.top = `${top}px`;
         block.dataset.start = event.start_date;
