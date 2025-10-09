@@ -175,9 +175,9 @@ header {
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
   font-size: 14px;
+  display: block; 
 }
 
 .summary-box div {
-  display: block;   /* obligatoire pour forcer un retour à la ligne */
   margin-bottom: 6px;
 }
