@@ -101,6 +101,23 @@ header {
   gap: 6px;
 }
 
+/* --- Effet visuel au clic --- */
+.point-box {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.point-box:active {
+  transform: scale(0.85);
+}
+
+/* État passé (désaturé) */
+.point-box.state-passed img {
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
 /* indique que les points sont cliquables */
 .point-box {
   cursor: pointer;
