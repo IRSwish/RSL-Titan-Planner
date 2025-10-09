@@ -16,12 +16,19 @@ body {
 }
 
 header {
-  text-align: center;
-  padding: 20px 0;
-  font-family: 'American Captain', sans-serif;
-  font-size: 48px;
-  letter-spacing: 2px;
-  color: var(--line-color);
+    text-align: center;
+    padding: 20px 0;
+    font-family: 'American Captain', sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+
+    /* Dégradé du texte */
+    background: linear-gradient(to bottom, #feeec1, #e09f40);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Effet emboss léger */
+    text-shadow: 1px 1px 0 #ffffff, -1px -1px 0 #000000;
 }
 
 /* Timeline globale */
