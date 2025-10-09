@@ -1,5 +1,6 @@
 :root {
   --line-color: #f52584;
+  --grid-line-color: rgba(255, 255, 255, 0.15);
   --event-bg: #1a1a1a;
   --event-border: #f52584;
   --text-color: #fcf6ff;
@@ -23,7 +24,24 @@ h1 {
   position: relative;
   width: 100%;
   overflow-x: auto;
-  padding: 40px 0;
+  padding: 20px 0 40px 0;
+}
+
+#dates-row {
+  position: relative;
+  display: flex;
+  height: 40px;
+  align-items: flex-end;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.date-label {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #ccc;
 }
 
 #timeline {
@@ -31,6 +49,14 @@ h1 {
   height: 120px;
   min-width: 600px;
   border-top: 2px solid var(--line-color);
+}
+
+.day-line {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: var(--grid-line-color);
 }
 
 .event {
