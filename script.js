@@ -165,15 +165,22 @@ window.addEventListener('load', () => {
       });
 
       function updateSummary() {
-        let totalAcquired = 0, totalVirtual = 0, totalPassed = 0;
+        let totalAcquired = 0, totalOngoing = 0, totalPassed = 0;
+      
         document.querySelectorAll('.point-box').forEach(box => {
           const p = parseInt(box.querySelector('span').textContent) || 0;
-          if (box.classList.contains('state-validated')) { totalAcquired += p; totalVirtual += p; }
-          else if (box.classList.contains('state-ongoing')) totalVirtual += p;
-          else if (box.classList.contains('state-passed')) totalPassed += p;
+      
+          if (box.classList.contains('state-validated')) {
+            totalAcquired += p;
+          } else if (box.classList.contains('state-ongoing')) {
+            totalOngoing += p;
+          } else if (box.classList.contains('state-passed')) {
+            totalPassed += p;
+          }
         });
+      
         document.getElementById('points-acquired').textContent = totalAcquired;
-        document.getElementById('points-virtual').textContent = totalAcquired + totalVirtual;
+        document.getElementById('points-virtual').textContent = totalAcquired + totalOngoing;
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
