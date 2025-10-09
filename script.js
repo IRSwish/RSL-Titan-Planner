@@ -20,6 +20,9 @@ window.addEventListener('load', () => {
       const today = new Date();
       today.setHours(0,0,0,0);
 
+      // Marge horizontale entre events
+      const horizontalGap = 6;
+
       // Générer colonnes de dates avec lignes à gauche/droite
       for (let i = 0; i < totalDays; i++) {
         const currentDate = new Date(minDate);
@@ -118,8 +121,8 @@ window.addEventListener('load', () => {
 
         const block = document.createElement('div');
         block.classList.add('event-block');
-        block.style.left = `${Math.round(dayStart * dayWidth)}px`;
-        block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth)}px`;
+        block.style.left = `${Math.round(dayStart * dayWidth + horizontalGap/2)}px`;
+        block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - horizontalGap)}px`;
         block.style.top = `${top}px`;
 
         const pointsHTML = event.points.map(p => `
