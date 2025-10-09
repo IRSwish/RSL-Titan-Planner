@@ -12,8 +12,6 @@ window.addEventListener('load', () => {
       const minDate = new Date(Math.min(...events.map(e => new Date(e.start_date))));
       const maxDate = new Date(Math.max(...events.map(e => new Date(e.end_date))));
       const totalDays = Math.ceil((maxDate - minDate) / (1000*60*60*24)) + 1;
-      const timelineWidth = timeline.getBoundingClientRect().width;
-      const dayWidth = timelineWidth / totalDays;
 
       const today = new Date();
       today.setHours(0,0,0,0);
@@ -21,9 +19,10 @@ window.addEventListener('load', () => {
 
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
 
+      // Charger états sauvegardés
       const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
 
-      // Colonnes de dates
+      // Génération des colonnes de dates
       for (let i = 0; i < totalDays; i++) {
         const currentDate = new Date(minDate);
         currentDate.setDate(minDate.getDate() + i);
@@ -33,13 +32,16 @@ window.addEventListener('load', () => {
 
         const col = document.createElement('div');
         col.classList.add('date-column');
-        col.style.width = `${dayWidth}px`;
+        col.style.width = `${100 / totalDays}%`;
 
         if (currentDate.getTime() === today.getTime()) {
           col.style.backgroundColor = 'rgba(212,175,55,0.15)';
         }
 
-        col.innerHTML = `<span class="day">${day}</span><span class="date">${date}</span>`;
+        col.innerHTML = `
+          <span class="day">${day}</span>
+          <span class="date">${date}</span>
+        `;
 
         if (i > 0) {
           const leftLine = document.createElement('div');
@@ -57,6 +59,7 @@ window.addEventListener('load', () => {
         timeline.appendChild(col);
       }
 
+      // Ligne horizontale
       const line = document.createElement('div');
       line.classList.add('timeline-line');
       timeline.appendChild(line);
@@ -67,11 +70,13 @@ window.addEventListener('load', () => {
         const placedEvents = [];
         events.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
 
+        const timelineWidth = timeline.clientWidth; // exclut padding
+
         events.forEach(event => {
           const start = new Date(event.start_date);
           const end = new Date(event.end_date);
-          const startPx = ((start - minDate)/(1000*60*60*24)) * dayWidth;
-          const endPx = ((end - minDate)/(1000*60*60*24)) * dayWidth;
+          const startPx = ((start - minDate)/(1000*60*60*24)) * timelineWidth;
+          const endPx = ((end - minDate)/(1000*60*60*24)) * timelineWidth;
 
           let placed = false;
           for (let i = 0; i < tracks.length; i++) {
@@ -95,11 +100,7 @@ window.addEventListener('load', () => {
 
       const placedEvents = computeTracks(events);
 
-      // Ajuster la hauteur dynamique
-      const tracksCount = Math.max(...placedEvents.map(e => e.top)) / 110 + 1;
-      timeline.style.height = `${tracksCount * 110 + 50}px`;
-
-      // Summary
+      // Update Summary
       function updateSummary() {
         let totalAcquired = 0;
         let totalVirtual = 0;
@@ -110,20 +111,20 @@ window.addEventListener('load', () => {
 
           if (box.classList.contains('state-validated')) {  // vert = acquis
             totalAcquired += p;
-          } 
-          if (box.classList.contains('state-validated') || box.classList.contains('state-ongoing')) { 
-            totalVirtual += p; // virtuel = acquis + en cours
-          } 
-          if (box.classList.contains('state-passed')) {
+            totalVirtual += p;
+          } else if (box.classList.contains('state-ongoing')) { // orange = en cours
+            totalVirtual += p;
+          } else if (box.classList.contains('state-passed')) { // gris = passé non acquis
             totalPassed += p;
           }
         });
 
         document.getElementById('points-acquired').textContent = totalAcquired;
-        document.getElementById('points-virtual').textContent = totalVirtual;
+        document.getElementById('points-virtual').textContent = totalAcquired + totalVirtual;
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
+      // Sauvegarde état dans localStorage
       function saveState(id, state) {
         savedStates[id] = state;
         localStorage.setItem('pointStates', JSON.stringify(savedStates));
@@ -133,10 +134,11 @@ window.addEventListener('load', () => {
         return savedStates[id] || defaultState;
       }
 
-      // Génération events
+      // Génération des events
       placedEvents.forEach((item, eventIndex) => {
         const event = item.event;
         const top = item.top + 100;
+        const timelineWidth = timeline.clientWidth;
 
         const start = new Date(event.start_date);
         const end = new Date(event.end_date);
@@ -145,8 +147,8 @@ window.addEventListener('load', () => {
 
         const block = document.createElement('div');
         block.classList.add('event-block');
-        block.style.left = `${Math.round(dayStart * dayWidth + horizontalGap/2)}px`;
-        block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - horizontalGap)}px`;
+        block.style.left = `${Math.round(dayStart * timelineWidth + horizontalGap/2)}px`;
+        block.style.width = `${Math.round((dayEnd - dayStart) * timelineWidth - horizontalGap)}px`;
         block.style.top = `${top}px`;
         block.dataset.start = event.start_date;
         block.dataset.end = event.end_date;
@@ -166,12 +168,28 @@ window.addEventListener('load', () => {
                   </div>`;
         }).join('');
 
-        block.innerHTML = `<div class="event-name">${event.name}</div>
-                           <div class="points-container">${pointsHTML}</div>`;
+        block.innerHTML = `
+          <div class="event-name">${event.name}</div>
+          <div class="points-container">${pointsHTML}</div>
+        `;
+
         timeline.appendChild(block);
       });
 
-      // Clic sur points
+      // Ajuster hauteur dynamique
+      function adjustTimelineHeight() {
+        const blocks = document.querySelectorAll('.event-block');
+        let maxBottom = 0;
+        blocks.forEach(block => {
+          const blockBottom = block.offsetTop + block.offsetHeight;
+          if (blockBottom > maxBottom) maxBottom = blockBottom;
+        });
+        timeline.style.height = `${maxBottom + 20}px`;
+      }
+
+      adjustTimelineHeight();
+
+      // Gestion clic sur les points
       timeline.addEventListener('click', (e) => {
         const box = e.target.closest('.point-box');
         if (!box) return;
@@ -193,6 +211,17 @@ window.addEventListener('load', () => {
       });
 
       updateSummary();
+
+      // Déplacer summary-box sous le calendrier et centrer
+      const summaryBox = document.querySelector('.summary-box');
+      if (summaryBox) {
+        summaryBox.style.position = 'relative';
+        summaryBox.style.margin = '20px auto 0';
+        summaryBox.style.right = 'unset';
+        summaryBox.style.left = 'unset';
+        summaryBox.style.display = 'flex';
+        summaryBox.style.justifyContent = 'center';
+      }
     });
 
   window.addEventListener('resize', () => location.reload());
