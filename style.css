@@ -25,10 +25,12 @@ header {
     /* Dégradé du texte */
     background: linear-gradient(to bottom, #feeec1, #e09f40);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; /* IMPORTANT pour Chrome/Safari */
+    -webkit-text-fill-color: transparent;
 
     /* Effet emboss léger */
-    text-shadow: 1px 1px 0 rgba(255,255,255,0.6), -1px -1px 0 rgba(0,0,0,0.3);
+    text-shadow:
+        1px 1px 0 rgba(255, 255, 255, 0.6),   /* lumière en haut à gauche */
+        -1px -1px 0 rgba(0, 0, 0, 0.3);        /* ombre en bas à droite */
 }
 
 /* Timeline globale */
