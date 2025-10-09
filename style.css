@@ -229,6 +229,8 @@ header {
 
 /* Highlight de la colonne du jour actuel */
 .date-column.today {
+    margin:5px;
+    
     background-color: rgba(212,175,55,0.15); /* léger highlight doré */
-    border-radius: 6px; /* optionnel, arrondi joli */
+    border-radius: 14px; /* optionnel, arrondi joli */
 }
