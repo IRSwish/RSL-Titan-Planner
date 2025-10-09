@@ -237,3 +237,44 @@ header {
        rgba(212,175,55,0) 100%  /* bas */
   );
 }
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid #fff; /* pour que ça ressorte sur fond sombre */
+}
+
+/* Couleurs correspondant aux états */
+.legend-dot.skipped {
+  background-color: red; /* rouge */
+}
+
+.legend-dot.in-progress {
+  background-color: orange; /* jaune/orange */
+}
+
+.legend-dot.done {
+  background-color: #4caf50; /* vert */
+}
+
+.legend-dot.not-started {
+  background-color: #ffffff; /* blanc */
+}
