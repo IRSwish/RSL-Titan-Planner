@@ -195,7 +195,7 @@ window.addEventListener('load', () => {
 
       // ➜ Mettre en surbrillance la colonne correspondant à aujourd'hui
       (function highlightToday() {
-          const currentDay = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+          const currentDay = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
       
           document.querySelectorAll('.date-column .date').forEach(el => {
               const colDate = el.textContent.trim();
