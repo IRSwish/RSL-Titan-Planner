@@ -103,7 +103,7 @@ window.addEventListener('load', () => {
         let totalPassed = 0;
 
         document.querySelectorAll('.point-box').forEach(box => {
-          const p = parseInt(box.querySelector('span').textContent);
+          const p = parseInt(box.querySelector('span').textContent) || 0;
 
           if (box.classList.contains('state-ongoing')) {
             totalAcquired += p;
@@ -120,7 +120,7 @@ window.addEventListener('load', () => {
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
-      // Placer les events
+      // Placer les events (création des HTML blocks)
       placedEvents.forEach(item => {
         const event = item.event;
         const top = item.top + 100;
@@ -138,26 +138,14 @@ window.addEventListener('load', () => {
         block.dataset.start = event.start_date;
         block.dataset.end = event.end_date;
 
+        // Build points as HTML strings (no per-element listeners)
         const pointsHTML = event.points.map(p => {
           let stateClass = 'state-upcoming';
           if (today < start) stateClass = 'state-upcoming';
           else if (today >= start && today <= end) stateClass = 'state-ongoing';
           else if (today > end) stateClass = 'state-passed';
 
-          const div = document.createElement('div');
-          div.className = `point-box ${stateClass}`;
-          div.innerHTML = `<img src="style/img/Points.png" alt="points"/><span>${p}</span>`;
-
-          // Clic pour changer l'état
-          div.addEventListener('click', () => {
-            const currentIndex = pointStates.findIndex(s => div.classList.contains(s));
-            div.classList.remove(pointStates[currentIndex]);
-            const nextIndex = (currentIndex + 1) % pointStates.length;
-            div.classList.add(pointStates[nextIndex]);
-            updateSummary();
-          });
-
-          return div.outerHTML;
+          return `<div class="point-box ${stateClass}"><img src="style/img/Points.png" alt="points"/><span>${p}</span></div>`;
         }).join('');
 
         block.innerHTML = `
@@ -168,9 +156,27 @@ window.addEventListener('load', () => {
         timeline.appendChild(block);
       });
 
-      // Mettre à jour la summary-box initialement
+      // Event delegation: gérer les clics sur .point-box même si créés via innerHTML
+      timeline.addEventListener('click', (e) => {
+        const box = e.target.closest('.point-box');
+        if (!box) return;
+
+        // cycle d'état
+        const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
+        const nextIndex = (currentIndex + 1) % pointStates.length;
+
+        // retire toutes les classes d'état présentes et ajoute la suivante
+        pointStates.forEach(s => box.classList.remove(s));
+        box.classList.add(pointStates[nextIndex]);
+
+        // mise à jour du recap
+        updateSummary();
+      });
+
+      // Initial summary
       updateSummary();
     });
 
+  // Recalculer largeur au resize
   window.addEventListener('resize', () => location.reload());
 });
