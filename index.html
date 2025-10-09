@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Titan Timeline - Raid Shadow Legends</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Titan Timeline</title>
+
+  <!-- ✅ Feuille de style -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- ✅ Font moderne pour le corps du texte -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- ✅ Déclaration de la police personnalisée pour le titre -->
   <style>
     @font-face {
       font-family: 'American Captain';
@@ -13,12 +19,15 @@
   </style>
 </head>
 <body>
-  <h1>Titan Timeline</h1>
-  <div id="timeline-container">
-    <div id="dates-row"></div>
-    <div id="timeline"></div>
+  <!-- 🪙 Titre dynamique (issu du JSON) -->
+  <header id="page-title">TITAN TIMELINE</header>
+
+  <!-- 📅 Conteneur de la timeline -->
+  <div class="timeline-container">
+    <div class="timeline"></div>
   </div>
 
+  <!-- 🧠 Script principal -->
   <script src="script.js"></script>
 </body>
 </html>
