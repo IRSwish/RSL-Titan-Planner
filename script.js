@@ -193,8 +193,6 @@ window.addEventListener('load', () => {
         summaryBox.style.margin = '20px auto 0 auto';
         summaryBox.style.left = 'unset';
         summaryBox.style.right = 'unset';
-        summaryBox.style.display = 'flex';
-        summaryBox.style.justifyContent = 'center';
       }
     });
 
