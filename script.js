@@ -19,10 +19,11 @@ fetch('events.json')
     const today = new Date();
     today.setHours(0,0,0,0);
 
-    // Générer colonnes de dates avec lignes verticales
+    // Générer colonnes de dates avec lignes à gauche/droite
     for (let i = 0; i < totalDays; i++) {
       const currentDate = new Date(minDate);
       currentDate.setDate(minDate.getDate() + i);
+
       const day = currentDate.toLocaleDateString('en-US', { weekday: 'short' });
       const date = currentDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
 
@@ -41,7 +42,7 @@ fetch('events.json')
         <span class="date">${date}</span>
       `;
 
-      // Lignes verticales à gauche et à droite sauf début / fin
+      // Lignes verticales : gauche sauf premier jour, droite sauf dernier jour
       if (i > 0) {
         const leftLine = document.createElement('div');
         leftLine.classList.add('grid-line');
@@ -63,11 +64,10 @@ fetch('events.json')
     line.classList.add('timeline-line');
     timeline.appendChild(line);
 
-    // Placement sur lignes pour éviter chevauchement
+    // Fonction placement sur lignes (tracks)
     function computeTracks(events) {
       const tracks = [];
       const placedEvents = [];
-
       events.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
 
       events.forEach(event => {
@@ -81,7 +81,7 @@ fetch('events.json')
           const line = tracks[i];
           if (!line.some(e => (startPx < e.endPx && endPx > e.startPx))) {
             line.push({startPx, endPx});
-            placedEvents.push({event, top: i * 100});
+            placedEvents.push({event, top: i * 110}); // 110px par ligne pour espacement
             placed = true;
             break;
           }
@@ -89,7 +89,7 @@ fetch('events.json')
 
         if (!placed) {
           tracks.push([{startPx, endPx}]);
-          placedEvents.push({event, top: (tracks.length - 1) * 100});
+          placedEvents.push({event, top: (tracks.length - 1) * 110});
         }
       });
 
@@ -98,19 +98,21 @@ fetch('events.json')
 
     const placedEvents = computeTracks(events);
 
+    // Placer les events
     placedEvents.forEach(item => {
       const event = item.event;
-      const top = item.top + 100; // 100px marge sous la ligne des dates
+      const top = item.top + 100; // 100px pour marge sous les dates
 
       const start = new Date(event.start_date);
       const end = new Date(event.end_date);
-      const startPx = ((start - minDate)/(1000*60*60*24)) * dayWidth;
-      const duration = ((end - start)/(1000*60*60*24) + 1) * dayWidth;
+
+      const dayStart = ((start - minDate)/(1000*60*60*24));
+      const dayEnd = ((end - minDate)/(1000*60*60*24) + 1);
 
       const block = document.createElement('div');
       block.classList.add('event-block');
-      block.style.left = `${startPx}px`;
-      block.style.width = `${duration - 10}px`;
+      block.style.left = `${dayStart * dayWidth}px`;
+      block.style.width = `${(dayEnd - dayStart) * dayWidth - 10}px`;
       block.style.top = `${top}px`;
 
       const pointsHTML = event.points.map(p => `
@@ -129,5 +131,5 @@ fetch('events.json')
     });
   });
 
-// Recalculer la largeur au resize
+// Recalculer au resize
 window.addEventListener('resize', () => location.reload());
