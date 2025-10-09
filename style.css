@@ -101,6 +101,12 @@ header {
   gap: 6px;
 }
 
+/* indique que les points sont cliquables */
+.point-box {
+  cursor: pointer;
+  user-select: none;
+}
+
 .point-box {
   display: flex;
   flex-direction: column;
