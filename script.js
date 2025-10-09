@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
       timeline.innerHTML = '';
 
       const pageTitle = document.getElementById('page-title');
-      pageTitle.textContent = data.title || 'TITAN TIMELINE';
+      pageTitle.textContent = data.title;
 
       const events = data.events;
       const minDate = new Date(Math.min(...events.map(e => new Date(e.start_date))));
