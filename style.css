@@ -16,6 +16,7 @@ body {
 }
 
 header {
+    display: inline-block;              /* 🔥 ajuste le gradient à la taille du texte */
     text-align: center;
     padding: 20px 0;
     font-family: 'American Captain', sans-serif;
@@ -32,6 +33,11 @@ header {
     /* Emboss simulé avec double ombre très légère */
     filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.2))
             drop-shadow(-1px -1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* Conteneur centré */
+.header-wrapper {
+    text-align: center;
 }
 
 /* Timeline globale */
