@@ -233,7 +233,7 @@ header {
        to bottom,
        rgba(212,175,55,0) 0%,   /* haut */
        rgba(212,175,55,0.15) 20%,  /* légèrement plus bas */
-       rgba(212,175,55,0.15) 20%, /* presque en bas */
+       rgba(212,175,55,0.15) 80%, /* presque en bas */
        rgba(212,175,55,0) 100%  /* bas */
   );
 }
