@@ -62,7 +62,7 @@ header {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 2px;
+  width: 1px; /* plus fine */
   background-color: var(--grid-line-color);
 }
 
