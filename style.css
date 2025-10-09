@@ -118,10 +118,10 @@ header {
 .event-block {
   position: absolute;
   background: var(--event-bg);
-  border: 1.5px solid var(--event-border);
+  border: 3px solid var(--event-border);
   padding: 6px;
   min-width: 50px;
-  border-radius: 8px;
+  border-radius: 14px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -147,8 +147,8 @@ header {
   flex-direction: column;
   align-items: center;
   background: var(--point-bg);
-  border: 1.5px solid var(--event-border);
-  border-radius: 6px;
+  border: 2px solid var(--event-border);
+  border-radius: 8px;
   padding: 4px;
   width: 40px;
   box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
@@ -177,22 +177,22 @@ header {
 
 /* Points états */
 .point-box.state-upcoming { /* A venir */
-  border: 1.5px solid white;
+  border: 3px solid white;
   box-shadow: inset 0 0 6px rgba(212,175,55,0.25);
 }
 
 .point-box.state-ongoing { /* En cours */
-  border: 1.5px solid orange;
+  border: 3px solid orange;
   box-shadow: inset 0 0 6px rgba(255,165,0,0.25);
 }
 
 .point-box.state-validated { /* Validé */
-  border: 1.5px solid #4caf50;
+  border: 3px solid #4caf50;
   box-shadow: inset 0 0 6px rgba(76,175,80,0.25);
 }
 
 .point-box.state-passed { /* Passé non acquis */
-  border: 1.5px solid #666666;
+  border: 3px solid #666666;
   box-shadow: inset 0 0 6px rgba(100,100,100,0.25);
 }
 
@@ -207,9 +207,9 @@ header {
   max-width: 300px;
   text-align: center;
   background: #1a1a1a;
-  border: 1.5px solid #d4af37;
+  border: 3px solid #d4af37;
   padding: 12px 20px;
-  border-radius: 8px;
+  border-radius: 14px;
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
   font-size: 14px;
