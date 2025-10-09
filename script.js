@@ -21,10 +21,9 @@ window.addEventListener('load', () => {
 
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
 
-      // Charger états sauvegardés
       const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
 
-      // Génération des colonnes de dates
+      // Colonnes de dates
       for (let i = 0; i < totalDays; i++) {
         const currentDate = new Date(minDate);
         currentDate.setDate(minDate.getDate() + i);
@@ -40,10 +39,7 @@ window.addEventListener('load', () => {
           col.style.backgroundColor = 'rgba(212,175,55,0.15)';
         }
 
-        col.innerHTML = `
-          <span class="day">${day}</span>
-          <span class="date">${date}</span>
-        `;
+        col.innerHTML = `<span class="day">${day}</span><span class="date">${date}</span>`;
 
         if (i > 0) {
           const leftLine = document.createElement('div');
@@ -99,30 +95,35 @@ window.addEventListener('load', () => {
 
       const placedEvents = computeTracks(events);
 
-      // Update Summary
+      // Ajuster la hauteur dynamique
+      const tracksCount = Math.max(...placedEvents.map(e => e.top)) / 110 + 1;
+      timeline.style.height = `${tracksCount * 110 + 50}px`;
+
+      // Summary
       function updateSummary() {
-        let totalAcquired = 0; // verts
-        let totalOngoing = 0;  // orange
-        let totalPassed = 0;   // gris
+        let totalAcquired = 0;
+        let totalVirtual = 0;
+        let totalPassed = 0;
 
         document.querySelectorAll('.point-box').forEach(box => {
           const p = parseInt(box.querySelector('span').textContent) || 0;
 
-          if (box.classList.contains('state-validated')) { 
+          if (box.classList.contains('state-validated')) {  // vert = acquis
             totalAcquired += p;
-          } else if (box.classList.contains('state-ongoing')) { 
-            totalOngoing += p;
-          } else if (box.classList.contains('state-passed')) { 
+          } 
+          if (box.classList.contains('state-validated') || box.classList.contains('state-ongoing')) { 
+            totalVirtual += p; // virtuel = acquis + en cours
+          } 
+          if (box.classList.contains('state-passed')) {
             totalPassed += p;
           }
         });
 
         document.getElementById('points-acquired').textContent = totalAcquired;
-        document.getElementById('points-virtual').textContent = totalAcquired + totalOngoing;
+        document.getElementById('points-virtual').textContent = totalVirtual;
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
-      // Sauvegarde état dans localStorage
       function saveState(id, state) {
         savedStates[id] = state;
         localStorage.setItem('pointStates', JSON.stringify(savedStates));
@@ -132,7 +133,7 @@ window.addEventListener('load', () => {
         return savedStates[id] || defaultState;
       }
 
-      // Génération des events
+      // Génération events
       placedEvents.forEach((item, eventIndex) => {
         const event = item.event;
         const top = item.top + 100;
@@ -147,6 +148,8 @@ window.addEventListener('load', () => {
         block.style.left = `${Math.round(dayStart * dayWidth + horizontalGap/2)}px`;
         block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - horizontalGap)}px`;
         block.style.top = `${top}px`;
+        block.dataset.start = event.start_date;
+        block.dataset.end = event.end_date;
 
         const pointsHTML = event.points.map((p, pointIndex) => {
           const uniqueId = `${eventIndex}-${pointIndex}`;
@@ -163,15 +166,12 @@ window.addEventListener('load', () => {
                   </div>`;
         }).join('');
 
-        block.innerHTML = `
-          <div class="event-name">${event.name}</div>
-          <div class="points-container">${pointsHTML}</div>
-        `;
-
+        block.innerHTML = `<div class="event-name">${event.name}</div>
+                           <div class="points-container">${pointsHTML}</div>`;
         timeline.appendChild(block);
       });
 
-      // Gestion clic sur les points
+      // Clic sur points
       timeline.addEventListener('click', (e) => {
         const box = e.target.closest('.point-box');
         if (!box) return;
@@ -180,7 +180,6 @@ window.addEventListener('load', () => {
         const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
         let nextIndex;
 
-        // Ctrl + clic = revenir en arrière
         if (e.ctrlKey || e.metaKey) {
           nextIndex = (currentIndex - 1 + pointStates.length) % pointStates.length;
         } else {
