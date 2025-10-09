@@ -1,30 +1,174 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Titan Timeline</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    @font-face {
-      font-family: 'American Captain';
-      src: url('style/American Captain.otf') format('opentype');
-    }
-  </style>
-</head>
-<body>
-  <header id="page-title">TITAN TIMELINE</header>
-  <div class="timeline-container">
-    <div class="timeline"></div>
-  </div>
+:root {
+  --line-color: #d4af37;
+  --grid-line-color: rgba(255, 215, 0, 0.15);
+  --event-bg: #1a1a1a;
+  --event-border: #d4af37;
+  --text-color: #fcf6ff;
+  --point-bg: #0e0e0e;
+  --timeline-padding: 50px;
+}
 
-  <!-- Summary box -->
-  <div class="summary-box">
-    <div>Total acquis: <span id="points-acquired">0</span></div>
-    <div>Points virtuels: <span id="points-virtual">0</span></div>
-    <div>Points passés: <span id="points-passed">0</span></div>
-  </div>
+body {
+  background-color: #0e0e0e;
+  color: var(--text-color);
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+header {
+  text-align: center;
+  padding: 20px 0;
+  font-family: 'American Captain', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  color: var(--line-color);
+}
+
+/* Timeline globale */
+.timeline-container {
+  overflow-x: auto;
+  padding: 20px var(--timeline-padding);
+}
+
+.timeline {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 250px;
+  box-sizing: border-box;
+}
+
+/* Colonnes de dates */
+.date-column {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  padding: 0 2px; /* limite le highlight */
+  box-sizing: border-box;
+}
+
+.date-column .day {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.date-column .date {
+  font-size: 13px;
+}
+
+/* Ligne verticale gauche/droite */
+.date-column .grid-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px; /* plus fine */
+  background-color: var(--grid-line-color);
+}
+
+/* Ligne horizontale sous les dates */
+.timeline-line {
+  position: absolute;
+  top: 55px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--line-color);
+}
+
+/* Événements */
+.event-block {
+  position: absolute;
+  background: var(--event-bg);
+  border: 1.5px solid var(--event-border);
+  padding: 6px;
+  min-width: 50px;
+  border-radius: 8px;
+  text-align: center;
+  box-sizing: border-box; /* padding inclus dans la largeur */
+}
+
+.event-name {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+/* Points */
+.points-container {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.point-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--point-bg);
+  border: 1.5px solid var(--event-border);
+  border-radius: 6px;
+  padding: 4px;
+  width: 40px;
+  box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.point-box:hover {
+  transform: scale(1.05);
+}
+
+.point-box img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.point-box span {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--line-color);
+}
+
+/* Points états */
+.point-box.state-upcoming { /* A venir */
+  border: 1.5px solid #d4af37;
+  box-shadow: inset 0 0 6px rgba(212,175,55,0.25);
+}
+
+.point-box.state-ongoing { /* En cours */
+  border: 1.5px solid orange;
+  box-shadow: inset 0 0 6px rgba(255,165,0,0.25);
+}
+
+.point-box.state-validated { /* Validé */
+  border: 1.5px solid #4caf50;
+  box-shadow: inset 0 0 6px rgba(76,175,80,0.25);
+}
+
+.point-box.state-passed { /* Passé non acquis */
+  border: 1.5px solid #666666;
+  box-shadow: inset 0 0 6px rgba(100,100,100,0.25);
+}
+
+.point-box.state-passed img {
+  filter: grayscale(100%);
+}
+
+/* Summary box */
+.summary-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1a1a1a;
+  border: 1.5px solid #d4af37;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+.summary-box div {
+  margin-bottom: 6px;
+}
