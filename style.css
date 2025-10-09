@@ -6,7 +6,7 @@
   --text-color: #fcf6ff;
   --point-bg: #0e0e0e;
   --timeline-padding: 50px;
-  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-main: 'Inter', sans-serif;
 }
 
 @font-face {
@@ -42,6 +42,7 @@ header {
   display: flex;
   align-items: flex-start;
   min-height: 300px;
+  margin: 0 40px; /* marge à gauche et à droite */
 }
 
 /* Dates */
@@ -111,9 +112,15 @@ header {
   align-items: center;
   background: var(--point-bg);
   border: 2px solid var(--event-border);
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 6px;
   width: 50px;
+  box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25); /* léger relief doré */
+  transition: transform 0.2s ease;
+}
+
+.point-box:hover {
+  transform: scale(1.05);
 }
 
 .point-box img {
@@ -125,4 +132,6 @@ header {
 .point-box span {
   margin-top: 4px;
   font-size: 14px;
+  font-weight: 600;
+  color: var(--line-color);
 }
