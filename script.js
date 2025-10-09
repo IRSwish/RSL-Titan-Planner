@@ -39,7 +39,17 @@ function renderTimeline(events) {
     label.className = 'date-label';
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
     const dayNum = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-    label.textContent = `${dayName} ${dayNum}`;
+
+    const daySpan = document.createElement('div');
+    daySpan.className = 'date-day';
+    daySpan.textContent = dayName;
+
+    const numSpan = document.createElement('div');
+    numSpan.className = 'date-num';
+    numSpan.textContent = dayNum;
+
+    label.appendChild(daySpan);
+    label.appendChild(numSpan);
     label.style.left = `${pixelOffset}px`;
     datesRow.appendChild(label);
   }
@@ -60,16 +70,21 @@ function renderTimeline(events) {
     eventEl.style.left = `${left}px`;
     eventEl.style.width = `${right - left}px`;
 
+    const pointsHTML = event.points.map(p => `
+      <div class="point-box">
+        <img src="style/img/Points.png" alt="Points" />
+        <div class="point-value">${p}</div>
+      </div>
+    `).join('');
+
     eventEl.innerHTML = `
       <div class="event-name">${event.name}</div>
-      <div class="event-points">
-        ${event.points.map(p => `<div class="event-point">${p}</div>`).join('')}
-      </div>
+      <div class="event-points">${pointsHTML}</div>
     `;
 
     timeline.appendChild(eventEl);
   });
 }
 
-window.addEventListener('resize', () => loadEvents()); // 🔄 responsive sur resize
+window.addEventListener('resize', () => loadEvents());
 loadEvents();
