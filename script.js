@@ -81,14 +81,14 @@ window.addEventListener('load', () => {
           const start = new Date(event.start_date);
           const end = new Date(event.end_date);
           const startPx = ((start - minDate)/(1000*60*60*24)) * dayWidth;
-          const endPx = ((end - minDate)/(1000*60*60*24) + 1) * dayWidth;
+          const endPx = ((end - minDate)/(1000*60*60*24)) * dayWidth;
 
           let placed = false;
           for (let i = 0; i < tracks.length; i++) {
             const line = tracks[i];
             if (!line.some(e => (startPx < e.endPx && endPx > e.startPx))) {
               line.push({startPx, endPx});
-              placedEvents.push({event, top: i * 110}); // espacement vertical
+              placedEvents.push({event, top: i * 110});
               placed = true;
               break;
             }
@@ -108,18 +108,18 @@ window.addEventListener('load', () => {
       // Placer les events
       placedEvents.forEach(item => {
         const event = item.event;
-        const top = item.top + 100; // marge sous la ligne des dates
+        const top = item.top + 100;
 
         const start = new Date(event.start_date);
         const end = new Date(event.end_date);
 
         const dayStart = (start - minDate)/(1000*60*60*24);
-        const dayEnd = ((end - minDate)/(1000*60*60*24) + 1);
+        const dayEnd = (end - minDate)/(1000*60*60*24);
 
         const block = document.createElement('div');
         block.classList.add('event-block');
         block.style.left = `${Math.round(dayStart * dayWidth)}px`;
-        block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth - 10)}px`;
+        block.style.width = `${Math.round((dayEnd - dayStart) * dayWidth)}px`;
         block.style.top = `${top}px`;
 
         const pointsHTML = event.points.map(p => `
