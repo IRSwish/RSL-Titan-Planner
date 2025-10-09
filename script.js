@@ -196,15 +196,14 @@ window.addEventListener('load', () => {
       }
 
       // ➜ Mettre en surbrillance la colonne correspondant à aujourd'hui
-const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
-document.querySelectorAll('.date-column .date').forEach(el => {
-  const colDate = el.textContent.trim();
-  if (colDate === today) {
-    el.closest('.date-column').classList.add('today');
-  }
-});
-    });
-
-  window.addEventListener('resize', () => location.reload());
-});
+      (function highlightToday() {
+          // Nom unique pour éviter conflit avec d'autres variables
+          const currentDay = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      
+          document.querySelectorAll('.date-column .date').forEach(el => {
+              const colDate = el.textContent.trim();
+              if (colDate === currentDay) {
+                  el.closest('.date-column').classList.add('today');
+              }
+          });
+      })();
