@@ -26,7 +26,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.75); /* 0.75 = bien sombre mais visible */
+  background: rgba(0, 0, 0, 0.85); /* 0.75 = bien sombre mais visible */
   pointer-events: none;     /* pour ne pas bloquer les clics */
   z-index: 0;
 }
