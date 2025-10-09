@@ -1,11 +1,27 @@
 :root {
   --line-color: #f52584;
-  --grid-line-color: rgba(255, 255, 255, 0.15);
+  --grid-line-color: rgba(255, 255, 255, 0.1);
   --event-bg: #1a1a1a;
   --event-border: #f52584;
   --text-color: #fcf6ff;
-  --point-bg: #00c9ff;
-  --timeline-padding: 50px; /* ✅ marge gauche/droite */
+  --timeline-padding: 50px;
+}
+
+body {
+  background-color: #0e0e0e;
+  color: var(--text-color);
+  font-family: "Inter", system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+  font-family: 'American Captain', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  color: var(--text-color);
 }
 
 #timeline-container {
@@ -15,13 +31,13 @@
   padding: 20px 0 40px 0;
 }
 
+/* 🗓️ Dates en haut */
 #dates-row {
   position: relative;
-  height: 40px;
-  align-items: flex-end;
-  font-size: 12px;
-  white-space: nowrap;
+  height: 50px;
   padding: 0 var(--timeline-padding);
+  white-space: nowrap;
+  font-size: 13px;
 }
 
 .date-label {
@@ -30,6 +46,20 @@
   transform: translateX(-50%);
   text-align: center;
   color: #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.date-day {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.date-num {
+  font-size: 12px;
+  opacity: 0.85;
 }
 
 #timeline {
@@ -48,14 +78,41 @@
   background-color: var(--grid-line-color);
 }
 
+/* 📦 Events */
 .event {
   position: absolute;
-  top: 10px;
+  top: 20px;
   background-color: var(--event-bg);
   border: 1px solid var(--event-border);
-  box-shadow: 0 0 10px var(--line-color);
   padding: 10px;
   min-width: 120px;
   border-radius: 8px;
   text-align: center;
+  font-size: 14px;
+}
+
+/* 🪙 Points */
+.event-points {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.point-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32px;
+}
+
+.point-box img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.point-value {
+  font-size: 11px;
+  margin-top: 2px;
 }
