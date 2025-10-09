@@ -32,20 +32,30 @@
       "start_date": "2025-10-09",
       "end_date": "2025-10-12",
       "points": [40]
-    }
-    ,
+    },
     {
       "name": "Champion Training Tournament",
       "start_date": "2025-10-09",
       "end_date": "2025-10-13",
       "points": [30, 70]
-    }
-    ,
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "start_date": "2025-10-11",
+      "end_date": "2025-10-13",
+      "points": [?]
+    },
     {
       "name": "Classic Arena",
       "start_date": "2025-10-11",
       "end_date": "2025-10-14",
       "points": [?]
+    },
+    {
+      "name": "Gear Upgrade",
+      "start_date": "2025-10-12",
+      "end_date": "2025-10-15",
+      "points": [60]
     }
   ]
 }
