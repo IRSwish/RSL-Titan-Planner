@@ -25,16 +25,13 @@ header {
     /* Dégradé du texte */
     background: linear-gradient(to bottom, #feeec1, #e09f40);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
-
-    /* Supprimer la couleur héritée */
+    -webkit-text-fill-color: transparent;
     color: transparent;
 
-    /* Effet emboss léger */
-    text-shadow:
-        1px 1px 0 rgba(255, 255, 255, 0.3),
-        -1px -1px 0 rgba(0, 0, 0, 0.5);
+    /* Emboss simulé avec double ombre très légère */
+    filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.2))
+            drop-shadow(-1px -1px 1px rgba(0, 0, 0, 0.5));
 }
 
 /* Timeline globale */
