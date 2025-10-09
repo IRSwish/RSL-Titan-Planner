@@ -5,10 +5,10 @@ window.addEventListener('load', () => {
       const timeline = document.querySelector('.timeline');
       timeline.innerHTML = '';
 
-      // Titre dynamique
-      document.getElementById('page-title').textContent = data.title || 'TITAN TIMELINE';
-      const events = data.events;
+      const pageTitle = document.getElementById('page-title');
+      pageTitle.textContent = data.title || 'TITAN TIMELINE';
 
+      const events = data.events;
       const minDate = new Date(Math.min(...events.map(e => new Date(e.start_date))));
       const maxDate = new Date(Math.max(...events.map(e => new Date(e.end_date))));
       const totalDays = Math.ceil((maxDate - minDate) / (1000*60*60*24)) + 1;
@@ -21,7 +21,10 @@ window.addEventListener('load', () => {
 
       const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
 
-      // Générer colonnes de dates
+      // Charger états sauvegardés
+      const savedStates = JSON.parse(localStorage.getItem('pointStates') || '{}');
+
+      // Génération des colonnes de dates
       for (let i = 0; i < totalDays; i++) {
         const currentDate = new Date(minDate);
         currentDate.setDate(minDate.getDate() + i);
@@ -62,7 +65,7 @@ window.addEventListener('load', () => {
       line.classList.add('timeline-line');
       timeline.appendChild(line);
 
-      // Placement sur lignes (tracks)
+      // Placement sur pistes
       function computeTracks(events) {
         const tracks = [];
         const placedEvents = [];
@@ -96,7 +99,7 @@ window.addEventListener('load', () => {
 
       const placedEvents = computeTracks(events);
 
-      // Fonction de mise à jour de la summary-box
+      // Update Summary
       function updateSummary() {
         let totalAcquired = 0;
         let totalVirtual = 0;
@@ -120,8 +123,19 @@ window.addEventListener('load', () => {
         document.getElementById('points-passed').textContent = totalPassed;
       }
 
-      // Placer les events (création des HTML blocks)
-      placedEvents.forEach(item => {
+      // Sauvegarde état dans localStorage
+      function saveState(id, state) {
+        savedStates[id] = state;
+        localStorage.setItem('pointStates', JSON.stringify(savedStates));
+      }
+
+      // Récupérer état sauvegardé
+      function getSavedState(id, defaultState) {
+        return savedStates[id] || defaultState;
+      }
+
+      // Génération des events
+      placedEvents.forEach((item, eventIndex) => {
         const event = item.event;
         const top = item.top + 100;
 
@@ -138,14 +152,19 @@ window.addEventListener('load', () => {
         block.dataset.start = event.start_date;
         block.dataset.end = event.end_date;
 
-        // Build points as HTML strings (no per-element listeners)
-        const pointsHTML = event.points.map(p => {
-          let stateClass = 'state-upcoming';
-          if (today < start) stateClass = 'state-upcoming';
-          else if (today >= start && today <= end) stateClass = 'state-ongoing';
-          else if (today > end) stateClass = 'state-passed';
+        const pointsHTML = event.points.map((p, pointIndex) => {
+          const uniqueId = `${eventIndex}-${pointIndex}`;
+          let initialState;
 
-          return `<div class="point-box ${stateClass}"><img src="style/img/Points.png" alt="points"/><span>${p}</span></div>`;
+          if (today < start) initialState = 'state-upcoming';
+          else if (today >= start && today <= end) initialState = 'state-ongoing';
+          else if (today > end) initialState = 'state-passed';
+
+          const saved = getSavedState(uniqueId, initialState);
+          return `<div class="point-box ${saved}" data-id="${uniqueId}">
+                    <img src="style/img/Points.png" alt="points"/>
+                    <span>${p}</span>
+                  </div>`;
         }).join('');
 
         block.innerHTML = `
@@ -156,27 +175,30 @@ window.addEventListener('load', () => {
         timeline.appendChild(block);
       });
 
-      // Event delegation: gérer les clics sur .point-box même si créés via innerHTML
+      // Gestion clic sur les points (avec undo)
       timeline.addEventListener('click', (e) => {
         const box = e.target.closest('.point-box');
         if (!box) return;
 
-        // cycle d'état
+        const id = box.dataset.id;
         const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
-        const nextIndex = (currentIndex + 1) % pointStates.length;
+        let nextIndex;
 
-        // retire toutes les classes d'état présentes et ajoute la suivante
+        // Ctrl + clic = revenir en arrière
+        if (e.ctrlKey || e.metaKey) {
+          nextIndex = (currentIndex - 1 + pointStates.length) % pointStates.length;
+        } else {
+          nextIndex = (currentIndex + 1) % pointStates.length;
+        }
+
         pointStates.forEach(s => box.classList.remove(s));
         box.classList.add(pointStates[nextIndex]);
-
-        // mise à jour du recap
+        saveState(id, pointStates[nextIndex]);
         updateSummary();
       });
 
-      // Initial summary
       updateSummary();
     });
 
-  // Recalculer largeur au resize
   window.addEventListener('resize', () => location.reload());
 });
