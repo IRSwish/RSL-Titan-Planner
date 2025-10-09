@@ -5,19 +5,7 @@
   --event-border: #f52584;
   --text-color: #fcf6ff;
   --point-bg: #00c9ff;
-}
-
-body {
-  background-color: #0e0e0e;
-  color: var(--text-color);
-  font-family: "Futura", Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-h1 {
-  text-align: center;
-  margin: 20px 0;
+  --timeline-padding: 50px; /* ✅ marge gauche/droite */
 }
 
 #timeline-container {
@@ -29,11 +17,11 @@ h1 {
 
 #dates-row {
   position: relative;
-  display: flex;
   height: 40px;
   align-items: flex-end;
   font-size: 12px;
   white-space: nowrap;
+  padding: 0 var(--timeline-padding);
 }
 
 .date-label {
@@ -49,6 +37,7 @@ h1 {
   height: 120px;
   min-width: 600px;
   border-top: 2px solid var(--line-color);
+  padding: 0 var(--timeline-padding);
 }
 
 .day-line {
@@ -69,31 +58,4 @@ h1 {
   min-width: 120px;
   border-radius: 8px;
   text-align: center;
-}
-
-.event-name {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.event-points {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-}
-
-.event-point {
-  background-color: var(--point-bg);
-  color: #000;
-  font-size: 12px;
-  padding: 3px 6px;
-  border-radius: 4px;
-}
-
-@media (max-width: 600px) {
-  .event {
-    font-size: 12px;
-    min-width: 100px;
-  }
 }
