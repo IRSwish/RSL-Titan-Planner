@@ -1,20 +1,17 @@
-[
-  {
-    "name": "Summon Rush",
-    "start_date": "2025-10-05",
-    "end_date": "2025-10-07",
-    "points": [10, 20, 50]
-  },
-  {
-    "name": "Artifact Enhancement",
-    "start_date": "2025-10-07",
-    "end_date": "2025-10-09",
-    "points": [15, 30]
-  },
-  {
-    "name": "Champion Chase",
-    "start_date": "2025-10-10",
-    "end_date": "2025-10-12",
-    "points": [20, 40, 60]
-  }
-]
+{
+  "title": "TITAN TIMELINE",
+  "events": [
+    {
+      "name": "Summon Rush",
+      "start_date": "2025-10-05",
+      "end_date": "2025-10-07",
+      "points": [10, 20, 50]
+    },
+    {
+      "name": "Artifact Enhancement",
+      "start_date": "2025-10-07",
+      "end_date": "2025-10-09",
+      "points": [15, 30]
+    }
+  ]
+}
