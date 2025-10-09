@@ -119,6 +119,7 @@ header {
   position: absolute;
   background: var(--event-bg);
   border: 2px solid var(--event-border);
+  padding:6px;
   min-width: 50px;
   border-radius: 14px;
   text-align: center;
