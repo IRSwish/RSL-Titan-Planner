@@ -19,6 +19,8 @@ window.addEventListener('load', () => {
       today.setHours(0,0,0,0);
       const horizontalGap = 6;
 
+      const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
+
       // Générer colonnes de dates
       for (let i = 0; i < totalDays; i++) {
         const currentDate = new Date(minDate);
@@ -31,7 +33,6 @@ window.addEventListener('load', () => {
         col.classList.add('date-column');
         col.style.width = `${dayWidth}px`;
 
-        // Highlight du jour actuel
         if (currentDate.getTime() === today.getTime()) {
           col.style.backgroundColor = 'rgba(212,175,55,0.15)';
         }
@@ -61,7 +62,7 @@ window.addEventListener('load', () => {
       line.classList.add('timeline-line');
       timeline.appendChild(line);
 
-      // Placement sur lignes
+      // Placement sur lignes (tracks)
       function computeTracks(events) {
         const tracks = [];
         const placedEvents = [];
@@ -95,10 +96,31 @@ window.addEventListener('load', () => {
 
       const placedEvents = computeTracks(events);
 
-      let totalAcquired = 0;
-      let totalVirtual = 0;
-      let totalPassed = 0;
+      // Fonction de mise à jour de la summary-box
+      function updateSummary() {
+        let totalAcquired = 0;
+        let totalVirtual = 0;
+        let totalPassed = 0;
 
+        document.querySelectorAll('.point-box').forEach(box => {
+          const p = parseInt(box.querySelector('span').textContent);
+
+          if (box.classList.contains('state-ongoing')) {
+            totalAcquired += p;
+            totalVirtual += p;
+          } else if (box.classList.contains('state-validated')) {
+            totalVirtual += p;
+          } else if (box.classList.contains('state-passed')) {
+            totalPassed += p;
+          }
+        });
+
+        document.getElementById('points-acquired').textContent = totalAcquired;
+        document.getElementById('points-virtual').textContent = totalAcquired + totalVirtual;
+        document.getElementById('points-passed').textContent = totalPassed;
+      }
+
+      // Placer les events
       placedEvents.forEach(item => {
         const event = item.event;
         const top = item.top + 100;
@@ -117,25 +139,25 @@ window.addEventListener('load', () => {
         block.dataset.end = event.end_date;
 
         const pointsHTML = event.points.map(p => {
-          // Déterminer l'état du point
           let stateClass = 'state-upcoming';
           if (today < start) stateClass = 'state-upcoming';
-          else if (today >= start && today <= end) { 
-            stateClass = 'state-ongoing';
-            totalAcquired += p;
-            totalVirtual += p;
-          }
-          else if (today > end) { 
-            stateClass = 'state-passed';
-            totalPassed += p;
-          }
+          else if (today >= start && today <= end) stateClass = 'state-ongoing';
+          else if (today > end) stateClass = 'state-passed';
 
-          return `
-            <div class="point-box ${stateClass}">
-              <img src="style/img/Points.png" alt="points"/>
-              <span>${p}</span>
-            </div>
-          `;
+          const div = document.createElement('div');
+          div.className = `point-box ${stateClass}`;
+          div.innerHTML = `<img src="style/img/Points.png" alt="points"/><span>${p}</span>`;
+
+          // Clic pour changer l'état
+          div.addEventListener('click', () => {
+            const currentIndex = pointStates.findIndex(s => div.classList.contains(s));
+            div.classList.remove(pointStates[currentIndex]);
+            const nextIndex = (currentIndex + 1) % pointStates.length;
+            div.classList.add(pointStates[nextIndex]);
+            updateSummary();
+          });
+
+          return div.outerHTML;
         }).join('');
 
         block.innerHTML = `
@@ -146,10 +168,8 @@ window.addEventListener('load', () => {
         timeline.appendChild(block);
       });
 
-      // Mettre à jour la summary-box
-      document.getElementById('points-acquired').textContent = totalAcquired;
-      document.getElementById('points-virtual').textContent = totalAcquired + totalVirtual;
-      document.getElementById('points-passed').textContent = totalPassed;
+      // Mettre à jour la summary-box initialement
+      updateSummary();
     });
 
   window.addEventListener('resize', () => location.reload());
