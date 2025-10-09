@@ -27,6 +27,7 @@ header {
 /* Timeline globale */
 .timeline-container {
   overflow-x: auto;
+  overflow-y: visible; /* plus de scroll vertical */
   padding: 20px var(--timeline-padding);
 }
 
@@ -34,7 +35,7 @@ header {
   position: relative;
   display: flex;
   width: 100%;
-  min-height: 250px;
+  height: auto; /* hauteur dynamique */
   box-sizing: border-box;
 }
 
@@ -43,7 +44,7 @@ header {
   flex: 1;
   text-align: center;
   position: relative;
-  padding: 0 2px; /* limite le highlight */
+  padding: 0 2px;
   box-sizing: border-box;
 }
 
@@ -62,7 +63,7 @@ header {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 1px; /* plus fine */
+  width: 1px;
   background-color: var(--grid-line-color);
 }
 
@@ -85,7 +86,7 @@ header {
   min-width: 50px;
   border-radius: 8px;
   text-align: center;
-  box-sizing: border-box; /* padding inclus dans la largeur */
+  box-sizing: border-box;
 }
 
 .event-name {
@@ -101,30 +102,10 @@ header {
   gap: 6px;
 }
 
-/* --- Effet visuel au clic --- */
 .point-box {
   cursor: pointer;
   user-select: none;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.point-box:active {
-  transform: scale(0.85);
-}
-
-/* État passé (désaturé) */
-.point-box.state-passed img {
-  filter: grayscale(100%);
-  opacity: 0.7;
-}
-
-/* indique que les points sont cliquables */
-.point-box {
-  cursor: pointer;
-  user-select: none;
-}
-
-.point-box {
+  transition: transform 0.2s ease, filter 0.15s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,11 +115,14 @@ header {
   padding: 4px;
   width: 40px;
   box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
-  transition: transform 0.2s ease;
 }
 
 .point-box:hover {
   transform: scale(1.05);
+}
+
+.point-box:active {
+  transform: scale(0.85);
 }
 
 .point-box img {
@@ -179,11 +163,12 @@ header {
   filter: grayscale(100%);
 }
 
-/* Summary box */
+/* Summary box sous la timeline, centrée */
 .summary-box {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  position: relative;
+  margin: 20px auto 0 auto;
+  max-width: 300px;
+  text-align: center;
   background: #1a1a1a;
   border: 1.5px solid #d4af37;
   padding: 12px 20px;
@@ -192,6 +177,7 @@ header {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
 }
+
 .summary-box div {
   margin-bottom: 6px;
 }
