@@ -223,14 +223,13 @@ header {
   font-size: 14px;
   display: block; 
 }
+.summary-box div {
+  margin-bottom: 6px;
+}
 
 /* Highlight de la colonne du jour actuel */
 .date-column.today {
   background: rgba(255, 255, 255, 0.05);
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-}
-
-.summary-box div {
-  margin-bottom: 6px;
 }
