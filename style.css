@@ -1,0 +1,73 @@
+:root {
+  --line-color: #f52584;
+  --event-bg: #1a1a1a;
+  --event-border: #f52584;
+  --text-color: #fcf6ff;
+  --point-bg: #00c9ff;
+}
+
+body {
+  background-color: #0e0e0e;
+  color: var(--text-color);
+  font-family: "Futura", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#timeline-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  padding: 40px 0;
+}
+
+#timeline {
+  position: relative;
+  height: 120px;
+  min-width: 600px;
+  border-top: 2px solid var(--line-color);
+}
+
+.event {
+  position: absolute;
+  top: 10px;
+  background-color: var(--event-bg);
+  border: 1px solid var(--event-border);
+  box-shadow: 0 0 10px var(--line-color);
+  padding: 10px;
+  min-width: 120px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.event-name {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.event-points {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.event-point {
+  background-color: var(--point-bg);
+  color: #000;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .event {
+    font-size: 12px;
+    min-width: 100px;
+  }
+}
