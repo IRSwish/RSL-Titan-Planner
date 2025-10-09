@@ -1,24 +1,18 @@
 :root {
-  --line-color: #d4af37; /* doré */
+  --line-color: #d4af37;
   --grid-line-color: rgba(255, 215, 0, 0.15);
   --event-bg: #1a1a1a;
   --event-border: #d4af37;
   --text-color: #fcf6ff;
   --point-bg: #0e0e0e;
   --timeline-padding: 50px;
-  --font-main: 'Inter', sans-serif;
-}
-
-@font-face {
-  font-family: 'American Captain';
-  src: url('style/American Captain.otf') format('opentype');
 }
 
 body {
   background-color: #0e0e0e;
   color: var(--text-color);
   margin: 0;
-  font-family: var(--font-main);
+  font-family: 'Inter', sans-serif;
 }
 
 header {
@@ -32,24 +26,23 @@ header {
 
 /* Timeline globale */
 .timeline-container {
-  position: relative;
   overflow-x: auto;
-  padding: var(--timeline-padding);
+  padding: 20px var(--timeline-padding);
 }
 
 .timeline {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  min-height: 300px;
-  margin: 0 40px; /* marge à gauche et à droite */
+  width: 100%;
+  min-height: 250px;
+  box-sizing: border-box;
 }
 
-/* Dates */
+/* Colonnes de dates */
 .date-column {
-  position: relative;
+  flex: 1;
   text-align: center;
-  min-width: 100px;
+  position: relative;
 }
 
 .date-column .day {
@@ -64,10 +57,10 @@ header {
 
 .date-column .grid-line {
   position: absolute;
+  top: 0;
   bottom: 0;
   left: 50%;
   width: 2px;
-  height: 100%;
   background-color: var(--grid-line-color);
   transform: translateX(-50%);
 }
@@ -115,7 +108,7 @@ header {
   border-radius: 8px;
   padding: 6px;
   width: 50px;
-  box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25); /* léger relief doré */
+  box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
   transition: transform 0.2s ease;
 }
 
