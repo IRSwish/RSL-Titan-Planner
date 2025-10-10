@@ -211,12 +211,12 @@ header {
 /* Summary box sous la timeline, centrée */
 .summary-box {
   position: relative;
-  margin: 20px auto 0 auto;
-  max-width: 300px;
+  margin: 10px auto 0 auto;
+  max-width: 360px;
   text-align: center;
   background: #1a1a1a;
   border: 2px solid #d4af37;
-  padding: 12px 20px;
+  padding: 12px;
   border-radius: 14px;
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
