@@ -43,8 +43,8 @@ header {
     font-family: 'American Captain', sans-serif;
     font-size: 48px;
     letter-spacing: 2px;
-    margin-top:20px;
-    margin-bottom:20px;
+    margin-top:10px;
+    margin-bottom:10px;
     /* Dégradé du texte */
     background: linear-gradient(to bottom, #feeec1, #e09f40);
     -webkit-background-clip: text;
@@ -119,7 +119,7 @@ header {
   position: absolute;
   background: var(--event-bg);
   border: 2px solid var(--event-border);
-  padding:6px;
+  padding:4px;
   min-width: 50px;
   border-radius: 14px;
   text-align: center;
@@ -149,7 +149,7 @@ header {
   background: var(--point-bg);
   border: 2px solid var(--event-border);
   border-radius: 8px;
-  padding: 4px;
+  padding: 2px;
   width: 40px;
   box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
 }
