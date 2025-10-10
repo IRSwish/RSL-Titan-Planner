@@ -160,22 +160,21 @@ function renderTimeline(data) {
   });
   timeline.style.height = `${maxBottom + 20}px`;
 
-  // --- Clic sur points ---
-  timeline.addEventListener('click', (e) => {
-    const box = e.target.closest('.point-box');
-    if (!box) return;
+  // --- Clic sur chaque point ---
+  document.querySelectorAll('.point-box').forEach(box => {
+    box.addEventListener('click', (e) => {
+      const id = box.dataset.id;
+      const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
+      let nextIndex = (e.ctrlKey || e.metaKey)
+        ? (currentIndex - 1 + pointStates.length) % pointStates.length
+        : (currentIndex + 1) % pointStates.length;
 
-    const id = box.dataset.id;
-    const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
-    let nextIndex = (e.ctrlKey || e.metaKey)
-      ? (currentIndex - 1 + pointStates.length) % pointStates.length
-      : (currentIndex + 1) % pointStates.length;
-
-    pointStates.forEach(s => box.classList.remove(s));
-    box.classList.add(pointStates[nextIndex]);
-    savedStates[id] = pointStates[nextIndex];
-    localStorage.setItem('pointStates', JSON.stringify(savedStates));
-    updateSummary();
+      pointStates.forEach(s => box.classList.remove(s));
+      box.classList.add(pointStates[nextIndex]);
+      savedStates[id] = pointStates[nextIndex];
+      localStorage.setItem('pointStates', JSON.stringify(savedStates));
+      updateSummary();
+    });
   });
 
   function updateSummary() {
