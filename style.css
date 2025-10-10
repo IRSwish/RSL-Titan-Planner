@@ -242,8 +242,8 @@ header {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 4px;
   font-size: 12px;
   opacity: 0.85;
 }
@@ -251,7 +251,7 @@ header {
 .legend div {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .legend-dot {
