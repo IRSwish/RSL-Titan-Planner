@@ -251,15 +251,14 @@ header {
 .legend div {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
 }
 
 .legend-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   display: inline-block;
-  border: 1px solid #fff; /* pour que ça ressorte sur fond sombre */
 }
 
 /* Couleurs correspondant aux états */
