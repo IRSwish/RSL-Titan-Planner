@@ -43,7 +43,7 @@
       "name": "Hero's Path",
       "start_date": "2025-10-10",
       "end_date": "2025-10-13",
-      "points": [0]
+      "points": [40, 40, 60, 60, 100, 100]
     },
     {
       "name": "Ice Golem Tournament",
