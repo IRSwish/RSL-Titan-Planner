@@ -67,7 +67,7 @@ header {
 .timeline-container {
   overflow-x: auto;
   overflow-y: visible;
-  padding: 20px 50px; /* on garde le padding mais calcul JS le prend en compte */
+  padding: 0px 50px; /* on garde le padding mais calcul JS le prend en compte */
 }
 
 .timeline {
@@ -217,7 +217,7 @@ header {
   text-align: center;
   background: #1a1a1a;
   border: 2px solid #d4af37;
-  padding: 12px;
+  /* padding: 12px; */
   border-radius: 14px;
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
