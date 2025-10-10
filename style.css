@@ -212,7 +212,7 @@ header {
 .summary-box {
   position: relative;
   margin: 10px auto 0 auto;
-  max-width: 360px;
+  max-width: 280px;
   text-align: center;
   background: #1a1a1a;
   border: 2px solid #d4af37;
