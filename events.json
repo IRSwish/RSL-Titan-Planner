@@ -77,13 +77,13 @@
       "name": "Shredder's Tournament",
       "start_date": "2025-10-16",
       "end_date": "2025-10-19",
-      "points": [0]
+      "points": [50]
     },
     {
       "name": "Fire Knight Tournament",
       "start_date": "2025-10-17",
       "end_date": "2025-10-20",
-      "points": [0]
+      "points": [40]
     },
     {
       "name": "Champion Chase",
@@ -95,13 +95,13 @@
       "name": "Classic Arena",
       "start_date": "2025-10-18",
       "end_date": "2025-10-21",
-      "points": [0]
+      "points": [20]
     },
     {
       "name": "Gear Upgrade",
       "start_date": "2025-10-18",
       "end_date": "2025-10-21",
-      "points": [0]
+      "points": [60]
     }
   ]
 }
