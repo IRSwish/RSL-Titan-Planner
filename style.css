@@ -178,7 +178,7 @@ header {
 
 /* Points états */
 .point-box.state-upcoming { /* A venir */
-  border: 2px solid white;
+  border: 2px solid #e0e0e0;
   box-shadow: inset 0 0 6px rgba(212,175,55,0.25);
 }
 
@@ -276,5 +276,5 @@ header {
 }
 
 .legend-dot.not-started {
-  background-color: #ffffff; /* blanc */
+  background-color: #E0E0E0; /* blanc */
 }
