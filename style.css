@@ -10,7 +10,7 @@
 
 body {
   position: relative;
-  background: url('style/img/TITAN BACKGROUND.jpg') top center no-repeat;
+  background: url('style/img/TITAN BACKGROUND.webp') top center no-repeat;
   background-size: cover; /* ou 100% auto si tu veux garder les proportions */
   background-attachment: fixed; /* optionnel : effet parallax */
   margin: 0;
