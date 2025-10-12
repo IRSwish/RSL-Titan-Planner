@@ -187,7 +187,7 @@ header {
 }
 
 .point-box.state-upcoming span { /* Passé non acquis */
-  color:#4caf50;
+  color:#e0e0e0;
 }
 
 .point-box.state-ongoing { /* En cours */
