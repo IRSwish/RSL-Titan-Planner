@@ -186,6 +186,10 @@ header {
   filter: grayscale(100%);
 }
 
+.point-box.state-upcoming span { /* Passé non acquis */
+  color:#4caf50;
+}
+
 .point-box.state-ongoing { /* En cours */
   border: 2px solid orange;
   box-shadow: inset 0 0 6px rgba(255,165,0,0.25);
