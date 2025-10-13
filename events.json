@@ -71,7 +71,7 @@
       "name": "Deck of Fate (Raphael)",
       "start_date": "2025-10-14",
       "end_date": "2025-10-18",
-      "points": [100]
+      "points": [10, 10, 20, 20, 40]
     },
     {
       "name": "Shredder's Tournament",
