@@ -289,6 +289,8 @@ header {
   padding: 15px 0;
   display: flex;
   justify-content: center;
+  position: relative; /* important pour gérer la superposition */
+  z-index: 1000;      /* met la barre au-dessus des autres éléments */
 }
 
 .menu-links {
@@ -322,7 +324,7 @@ header {
   padding: 0;
   margin: 0;
   position: absolute;
-  top: 100%; /* directement sous le bouton */
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   background: #222;
@@ -331,6 +333,7 @@ header {
   min-width: 180px;
   border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 2000; /* passe au-dessus du contenu en dessous */
 }
 
 .dropdown-content li a {
