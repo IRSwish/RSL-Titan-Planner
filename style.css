@@ -16,7 +16,7 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
-  overflow:hidden;
+  overflow-x: hidden;
 }
 
 /* Overlay sombre */
