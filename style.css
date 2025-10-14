@@ -65,8 +65,7 @@ header {
 
 /* Timeline globale */
 .timeline-container {
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow-x: hidden;
   padding: 0px 50px; /* on garde le padding mais calcul JS le prend en compte */
 }
 
