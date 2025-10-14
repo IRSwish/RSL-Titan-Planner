@@ -283,63 +283,54 @@ header {
   background-color: #4caf50; /* vert */
 }
 
-/* Structure du menu */
-.burger-menu-top {
+/* BARRE PRINCIPALE */
+.menu-bar {
   background: #1a1a1a;
-  padding: 10px;
-  position: relative;
-}
-
-.burger-icon {
-  cursor: pointer;
-  width: 30px;
+  padding: 15px 0;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 20px;
+  justify-content: center;
 }
 
-.burger-icon span {
-  display: block;
-  height: 3px;
-  background: white;
-  border-radius: 2px;
-}
-
-.burger-links {
+.menu-links {
   list-style: none;
+  display: flex;
+  gap: 40px; /* espacement entre les catégories */
   padding: 0;
-  margin: 10px 0 0;
-  display: none; /* masqué par défaut */
-  flex-direction: column;
+  margin: 0;
 }
 
-.burger-links.active {
-  display: flex; /* affiché quand ouvert */
-}
-
-/* Dropdown */
-.dropdown {
+.menu-links li {
   position: relative;
 }
 
 .dropdown-toggle {
   color: white;
-  padding: 10px;
+  font-size: 18px;
   cursor: pointer;
+  padding: 10px 20px;
+  transition: background 0.2s;
 }
 
 .dropdown-toggle:hover {
   background: #333;
+  border-radius: 5px;
 }
 
+/* Dropdown */
 .dropdown-content {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: none; /* masqué par défaut */
-  flex-direction: column;
+  position: absolute;
+  top: 100%; /* directement sous le bouton */
+  left: 50%;
+  transform: translateX(-50%);
   background: #222;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
 .dropdown-content li a {
@@ -347,17 +338,14 @@ header {
   padding: 10px;
   display: block;
   text-decoration: none;
+  transition: background 0.2s;
 }
 
 .dropdown-content li a:hover {
   background: #444;
 }
 
-.dropdown.open .dropdown-content {
-  display: flex; /* affiché quand ouvert */
-}
-
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
+/* Affichage au survol */
+.dropdown:hover .dropdown-content {
+  display: flex;
 }
