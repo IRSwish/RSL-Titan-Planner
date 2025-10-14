@@ -283,138 +283,79 @@ header {
   background-color: #4caf50; /* vert */
 }
 
-/* === MENU BURGER EN HAUT === */
+/* Structure du menu */
 .burger-menu-top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.92);
-  border-bottom: 2px solid var(--line-color);
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 1000;
+  background: #1a1a1a;
+  padding: 10px;
+  position: relative;
 }
 
 .burger-icon {
+  cursor: pointer;
   width: 30px;
-  height: 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  cursor: pointer;
+  height: 20px;
 }
 
 .burger-icon span {
   display: block;
   height: 3px;
-  background: var(--line-color);
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-/* Burger → croix */
-.burger-icon.active span:nth-child(1) {
-  transform: rotate(45deg) translateY(8px);
-}
-
-.burger-icon.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.burger-icon.active span:nth-child(3) {
-  transform: rotate(-45deg) translateY(-8px);
+  background: white;
+  border-radius: 2px;
 }
 
 .burger-links {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 10px 0 0;
+  display: none; /* masqué par défaut */
+  flex-direction: column;
 }
 
-.burger-links.show {
-  max-height: 400px; /* hauteur max du menu déroulant */
+.burger-links.active {
+  display: flex; /* affiché quand ouvert */
 }
 
-.burger-links li {
-  padding: 12px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+/* Dropdown */
+.dropdown {
+  position: relative;
 }
 
-.burger-links a,
-.burger-links .dropdown-toggle {
-  text-decoration: none;
-  color: var(--text-color);
-  font-size: 18px;
+.dropdown-toggle {
+  color: white;
+  padding: 10px;
   cursor: pointer;
-  display: block;
-  transition: color 0.2s ease;
 }
 
-.burger-links a:hover,
-.burger-links .dropdown-toggle:hover {
-  color: var(--line-color);
+.dropdown-toggle:hover {
+  background: #333;
 }
 
-/* Dropdowns */
 .dropdown-content {
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.25s ease;
-  background: rgba(0, 0, 0, 0.9);
+  display: none; /* masqué par défaut */
+  flex-direction: column;
+  background: #222;
 }
 
-.dropdown-content li {
-  padding: 8px 30px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+.dropdown-content li a {
+  color: white;
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-content li a:hover {
+  background: #444;
 }
 
 .dropdown.open .dropdown-content {
-  max-height: 300px; /* hauteur si ouvert */
+  display: flex; /* affiché quand ouvert */
 }
-
-/* Responsive */
-@media (min-width: 800px) {
-  .burger-icon {
-    display: none;
-  }
-
-  .burger-links {
-    position: static;
-    display: flex;
-    max-height: none;
-    background: none;
-    justify-content: flex-end;
-  }
-
-  .burger-links li {
-    border: none;
-    padding: 0 15px;
-    position: relative;
-  }
-
-  .dropdown-content {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.95);
-    top: 100%;
-    left: 0;
-    min-width: 180px;
-    max-height: none;
-    display: none;
-  }
 
   .dropdown:hover .dropdown-content {
     display: block;
