@@ -131,7 +131,8 @@ function renderTimeline(data) {
     block.style.top = `${top}px`;
     block.dataset.start = event.start_date;
     block.dataset.end = event.end_date;
-
+	
+	const rewards = event.reward.split(',').map(r => r.trim()); // transforme en tableau
     const pointsHTML = event.points.map((p, pointIndex) => {
       const uniqueId = `${eventIndex}-${pointIndex}`;
       let initialState;
@@ -139,8 +140,9 @@ function renderTimeline(data) {
       else if (today >= start && today <= end) initialState = 'state-ongoing';
       else if (today > end) initialState = 'state-passed';
       const saved = savedStates[uniqueId] || initialState;
+	  const reward = rewards[pointIndex] || 'default';
       return `<div class="point-box ${saved}" data-id="${uniqueId}">
-                <img src="style/img/${event.reward}.webp" alt="points"/>
+                <img src="style/img/${reward}.webp" alt="points"/>
                 <span>${p}</span>
               </div>`;
     }).join('');
