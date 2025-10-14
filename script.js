@@ -230,10 +230,19 @@ burgerIcon.addEventListener('click', () => {
   burgerLinks.classList.toggle('show');
 });
 
-// Ferme le menu quand on clique sur un lien
+// --- DROPDOWNS sur mobile ---
+document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const parent = toggle.parentElement;
+    parent.classList.toggle('open');
+  });
+});
+
+// Fermer le menu quand on clique sur un lien
 burgerLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     burgerIcon.classList.remove('active');
     burgerLinks.classList.remove('show');
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
   });
 });
