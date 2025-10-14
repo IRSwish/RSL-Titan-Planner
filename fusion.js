@@ -21,11 +21,41 @@
       .catch(err => console.error('Erreur lors du chargement du JSON :', err));
   }
 
-  window.addEventListener('load', fetchAndRenderTimeline);
+  window.addEventListener('load', () => {
+    fetchAndRenderTimeline();
+    loadMenu();
+  });
+
   window.addEventListener('resize', () => {
     if (timelineData) renderTimeline(timelineData);
   });
 
+  // --- Chargement menu externe ---
+  function loadMenu() {
+    fetch('menu.html')
+      .then(response => response.text())
+      .then(data => {
+        const menuContainer = document.getElementById('menu-container');
+        if (menuContainer) menuContainer.innerHTML = data;
+
+        const burgerIcon = document.getElementById('burger-icon');
+        const burgerLinks = document.getElementById('burger-links');
+        if (burgerIcon && burgerLinks) {
+          burgerIcon.addEventListener('click', () => {
+            burgerLinks.classList.toggle('active');
+          });
+        }
+
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+          toggle.addEventListener('click', () => {
+            toggle.parentElement.classList.toggle('open');
+          });
+        });
+      })
+      .catch(err => console.error('Erreur lors du chargement du menu :', err));
+  }
+
+  // --- Rendu timeline ---
   function renderTimeline(data) {
     const timelineContainer = document.querySelector('.timeline-container');
     const timeline = document.querySelector('.timeline');
@@ -33,7 +63,7 @@
 
     timeline.innerHTML = '';
 
-    // --- Titre de la page ---
+    // Titre
     const pageTitle = document.getElementById('page-title');
     if (pageTitle) pageTitle.textContent = data.title || '';
 
@@ -57,7 +87,7 @@
     const usableWidth = timelineContainer.clientWidth - paddingLeft - paddingRight;
     const dayWidth = usableWidth / totalDays;
 
-    // --- Colonnes de dates ---
+    // Colonnes de dates
     for (let i = 0; i < totalDays; i++) {
       const currentDate = new Date(minDate);
       currentDate.setDate(minDate.getDate() + i);
@@ -91,12 +121,12 @@
       timeline.appendChild(col);
     }
 
-    // --- Ligne centrale ---
+    // Ligne centrale
     const line = document.createElement('div');
     line.classList.add('timeline-line');
     timeline.appendChild(line);
 
-    // --- Placement des events ---
+    // Placement events
     const placedEvents = computeTracks(events, minDate, dayWidth);
 
     placedEvents.forEach((item, eventIndex) => {
@@ -140,7 +170,7 @@
       timeline.appendChild(block);
     });
 
-    // --- Hauteur dynamique ---
+    // Hauteur dynamique
     const blocks = document.querySelectorAll('.event-block');
     let maxBottom = 0;
     blocks.forEach(block => {
@@ -149,7 +179,7 @@
     });
     timeline.style.height = `${maxBottom + 20}px`;
 
-    // --- Clic sur chaque point ---
+    // Clic sur les points
     document.querySelectorAll('.point-box').forEach(box => {
       box.addEventListener('click', (e) => {
         const id = box.dataset.id;
@@ -168,7 +198,7 @@
 
     updateSummary();
 
-    // --- Summary centrée ---
+    // Summary centrée
     const summaryBox = document.querySelector('.summary-box');
     if (summaryBox) {
       summaryBox.style.position = 'relative';
@@ -177,7 +207,7 @@
       summaryBox.style.right = 'unset';
     }
 
-    // --- Surligner aujourd'hui ---
+    // Surligner aujourd'hui
     const currentDay = today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
     document.querySelectorAll('.date-column .date').forEach(el => {
       if (el.textContent.trim() === currentDay) {
@@ -219,7 +249,6 @@
 
   function updateSummary() {
     let totalAcquired = 0, totalOngoing = 0, totalPassed = 0;
-    const pointStates = ['state-upcoming', 'state-ongoing', 'state-validated', 'state-passed'];
 
     document.querySelectorAll('.point-box').forEach(box => {
       const p = parseInt(box.querySelector('span').textContent) || 0;
