@@ -1,7 +1,7 @@
 let timelineData = null;
 
 window.addEventListener('load', () => {
-  fetch('events.json')
+  fetch('Ace-Reporter.json')
     .then(res => res.json())
     .then(data => {
       timelineData = data;
