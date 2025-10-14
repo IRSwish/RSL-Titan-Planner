@@ -220,3 +220,20 @@ function renderTimeline(data) {
     });
   })();
 }
+
+// --- MENU BURGER ---
+const burgerIcon = document.getElementById('burger-icon');
+const burgerLinks = document.getElementById('burger-links');
+
+burgerIcon.addEventListener('click', () => {
+  burgerIcon.classList.toggle('active');
+  burgerLinks.classList.toggle('show');
+});
+
+// Ferme le menu quand on clique sur un lien
+burgerLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    burgerIcon.classList.remove('active');
+    burgerLinks.classList.remove('show');
+  });
+});
