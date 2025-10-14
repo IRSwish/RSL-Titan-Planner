@@ -288,14 +288,14 @@ header {
   padding: 15px 0;
   display: flex;
   justify-content: center;
-  position: relative; /* important pour gérer la superposition */
-  z-index: 1000;      /* met la barre au-dessus des autres éléments */
+  position: relative;
+  z-index: 1000;
 }
 
 .menu-links {
   list-style: none;
   display: flex;
-  gap: 40px; /* espacement entre les catégories */
+  gap: 40px;
   padding: 0;
   margin: 0;
 }
@@ -317,7 +317,7 @@ header {
   border-radius: 5px;
 }
 
-/* Dropdown */
+/* DROPDOWN NIVEAU 1 */
 .dropdown-content {
   list-style: none;
   padding: 0;
@@ -332,7 +332,7 @@ header {
   min-width: 180px;
   border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  z-index: 2000; /* passe au-dessus du contenu en dessous */
+  z-index: 2000;
 }
 
 .dropdown-content li a {
@@ -347,7 +347,72 @@ header {
   background: #444;
 }
 
-/* Affichage au survol */
+/* AFFICHAGE AU SURVOL - NIVEAU 1 */
 .dropdown:hover .dropdown-content {
   display: flex;
+}
+
+/* ======== NIVEAU 2 (Sous-dropdown pour les années) ======== */
+.dropdown-sub {
+  position: relative;
+}
+
+.dropdown-sub-toggle {
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.dropdown-sub-toggle:hover {
+  background: #444;
+  border-radius: 5px;
+}
+
+.arrow {
+  margin-left: 8px;
+  font-size: 12px;
+  transform: rotate(0deg);
+  transition: transform 0.2s;
+}
+
+/* Sous-menu */
+.dropdown-sub-content {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #222;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 3000;
+}
+
+.dropdown-sub-content li a {
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-sub-content li a:hover {
+  background: #444;
+}
+
+/* Affichage au survol - NIVEAU 2 */
+.dropdown-sub:hover .dropdown-sub-content {
+  display: flex;
+}
+
+/* Rotation de la flèche au survol */
+.dropdown-sub:hover .arrow {
+  transform: rotate(90deg);
 }
