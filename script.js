@@ -221,28 +221,16 @@ function renderTimeline(data) {
   })();
 }
 
-// --- MENU BURGER ---
-const burgerIcon = document.getElementById('burger-icon');
-const burgerLinks = document.getElementById('burger-links');
+  const burgerIcon = document.getElementById('burger-icon');
+  const burgerLinks = document.getElementById('burger-links');
 
-burgerIcon.addEventListener('click', () => {
-  burgerIcon.classList.toggle('active');
-  burgerLinks.classList.toggle('show');
-});
-
-// --- DROPDOWNS sur mobile ---
-document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-  toggle.addEventListener('click', () => {
-    const parent = toggle.parentElement;
-    parent.classList.toggle('open');
+  burgerIcon.addEventListener('click', () => {
+    burgerLinks.classList.toggle('active');
   });
-});
 
-// Fermer le menu quand on clique sur un lien
-burgerLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    burgerIcon.classList.remove('active');
-    burgerLinks.classList.remove('show');
-    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const parent = toggle.parentElement;
+      parent.classList.toggle('open');
+    });
   });
-});
