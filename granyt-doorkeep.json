@@ -1,0 +1,107 @@
+{
+  "title": "ACE REPORTER TITAN EVENT",
+  "events": [
+    {
+      "name": "Fire Knight Tournament",
+      "start_date": "2025-10-06",
+      "end_date": "2025-10-08",
+      "points": [40]
+    },
+    {
+      "name": "Gear Hunters",
+      "start_date": "2025-10-06",
+      "end_date": "2025-10-09",
+      "points": [10, 20, 50]
+    },
+    {
+      "name": "Gear Upgrade",
+      "start_date": "2025-10-07",
+      "end_date": "2025-10-10",
+      "points": [60]
+    },
+    {
+      "name": "Shredder's Tournament",
+      "start_date": "2025-10-08",
+      "end_date": "2025-10-10",
+      "points": [50]
+    },
+    {
+      "name": "Dragon Tournament",
+      "start_date": "2025-10-09",
+      "end_date": "2025-10-12",
+      "points": [40]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "start_date": "2025-10-09",
+      "end_date": "2025-10-13",
+      "points": [30, 70]
+    },
+    {
+      "name": "Hero's Path",
+      "start_date": "2025-10-10",
+      "end_date": "2025-10-13",
+      "points": [40, 40, 60, 60, 100, 100]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "start_date": "2025-10-11",
+      "end_date": "2025-10-13",
+      "points": [40]
+    },
+    {
+      "name": "Classic Arena",
+      "start_date": "2025-10-11",
+      "end_date": "2025-10-14",
+      "points": [20]
+    },
+    {
+      "name": "Gear Upgrade",
+      "start_date": "2025-10-12",
+      "end_date": "2025-10-15",
+      "points": [10, 50]
+    },
+    {
+      "name": "Spider Tournament",
+      "start_date": "2025-10-13",
+      "end_date": "2025-10-16",
+      "points": [40]
+    },
+    {
+      "name": "Deck of Fate (Raphael)",
+      "start_date": "2025-10-14",
+      "end_date": "2025-10-18",
+      "points": [10, 10, 20, 20, 40]
+    },
+    {
+      "name": "Shredder's Tournament",
+      "start_date": "2025-10-16",
+      "end_date": "2025-10-19",
+      "points": [50]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "start_date": "2025-10-17",
+      "end_date": "2025-10-20",
+      "points": [40]
+    },
+    {
+      "name": "Champion Chase",
+      "start_date": "2025-10-17",
+      "end_date": "2025-10-20",
+      "points": [0]
+    },
+    {
+      "name": "Classic Arena",
+      "start_date": "2025-10-18",
+      "end_date": "2025-10-21",
+      "points": [20]
+    },
+    {
+      "name": "Gear Upgrade",
+      "start_date": "2025-10-18",
+      "end_date": "2025-10-21",
+      "points": [60]
+    }
+  ]
+}
