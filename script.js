@@ -235,10 +235,10 @@ function renderTimeline(data) {
     });
   });
 
-// Charger le menu automatiquement
+// Charger le menu une seule fois
 fetch('menu.html')
   .then(response => response.text())
   .then(data => {
-    document.getElementById('menu-placeholder').innerHTML = data;
+    document.getElementById('menu-container').innerHTML = data;
   })
-  .catch(error => console.error('Erreur de chargement du menu :', error));
+  .catch(error => console.error('Erreur lors du chargement du menu:', error));
