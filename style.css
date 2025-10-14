@@ -283,6 +283,89 @@ header {
   background-color: #4caf50; /* vert */
 }
 
+/* === MENU BURGER === */
+.burger-menu {
+  position: fixed;
+  top: 15px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.burger-icon {
+  width: 30px;
+  height: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.burger-icon span {
+  display: block;
+  height: 3px;
+  background: var(--line-color);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Animation burger -> croix */
+.burger-icon.active span:nth-child(1) {
+  transform: rotate(45deg) translateY(8px);
+}
+
+.burger-icon.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-icon.active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-8px);
+}
+
+/* Menu déroulant */
+.burger-links {
+  position: fixed;
+  top: 0;
+  left: -250px; /* caché au départ */
+  height: 100%;
+  width: 250px;
+  background: rgba(0, 0, 0, 0.95);
+  border-right: 2px solid var(--line-color);
+  padding-top: 70px;
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  transition: left 0.3s ease;
+}
+
+.burger-links.show {
+  left: 0;
+}
+
+.burger-links li {
+  margin: 20px 0;
+  text-align: left;
+  padding-left: 20px;
+}
+
+.burger-links a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 18px;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s ease;
+}
+
+.burger-links a:hover {
+  color: var(--line-color);
+}
+
+/* Sur mobile */
+@media (max-width: 600px) {
+  .burger-links {
+    width: 200px;
+  }
+}
+
 .legend-dot.not-started {
   background-color: #E0E0E0; /* blanc */
 }
