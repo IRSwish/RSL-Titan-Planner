@@ -234,3 +234,11 @@ function renderTimeline(data) {
       parent.classList.toggle('open');
     });
   });
+
+// Charger le menu automatiquement
+fetch('menu.html')
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById('menu-placeholder').innerHTML = data;
+  })
+  .catch(error => console.error('Erreur de chargement du menu :', error));
