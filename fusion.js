@@ -257,9 +257,14 @@
       else if (box.classList.contains('state-passed')) totalPassed += p;
     });
 
-    document.getElementById('points-acquired')?.textContent = totalAcquired;
-    document.getElementById('points-virtual')?.textContent = totalAcquired + totalOngoing;
-    document.getElementById('points-passed')?.textContent = totalPassed;
+    const elAcquired = document.getElementById('points-acquired');
+    if (elAcquired) elAcquired.textContent = totalAcquired;
+    
+    const elVirtual = document.getElementById('points-virtual');
+    if (elVirtual) elVirtual.textContent = totalAcquired + totalOngoing;
+    
+    const elPassed = document.getElementById('points-passed');
+    if (elPassed) elPassed.textContent = totalPassed;
   }
 
 })();
