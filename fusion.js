@@ -150,7 +150,9 @@
 
       const rewards = (event.reward || '').split(',').map(r => r.trim());
       const pointsHTML = (event.points || []).map((p, pointIndex) => {
-        const uniqueId = `${eventIndex}-${pointIndex}`;
+        // Crée un nom sûr pour le stockage
+        const safeName = event.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        const uniqueId = `${safeName}-${event.start_date}-${event.end_date}-${pointIndex}`;
         let initialState;
         if (today < start) initialState = 'state-upcoming';
         else if (today >= start && today <= end) initialState = 'state-ongoing';
