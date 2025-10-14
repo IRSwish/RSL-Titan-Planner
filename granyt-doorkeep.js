@@ -140,7 +140,7 @@ function renderTimeline(data) {
       else if (today > end) initialState = 'state-passed';
       const saved = savedStates[uniqueId] || initialState;
       return `<div class="point-box ${saved}" data-id="${uniqueId}">
-                <img src="style/img/Points.webp" alt="points"/>
+                <img src="style/img/${event.reward}.webp" alt="points"/>
                 <span>${p}</span>
               </div>`;
     }).join('');
