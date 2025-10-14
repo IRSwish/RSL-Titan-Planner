@@ -32,7 +32,7 @@
 
   // --- Chargement menu externe ---
   function loadMenu() {
-    fetch('menu.html')
+    fetch('../menu.html')
       .then(response => response.text())
       .then(data => {
         const menuContainer = document.getElementById('menu-container');
