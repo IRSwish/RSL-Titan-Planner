@@ -161,7 +161,7 @@
 
         const reward = rewards[pointIndex] || 'default';
         return `<div class="point-box ${saved}" data-id="${uniqueId}">
-                  <img src="../style/img/${reward}.webp" alt="${reward}"/>
+                  <img src="/style/img/${reward}.webp" alt="${reward}"/>
                   <span>${p}</span>
                 </div>`;
       }).join('');
