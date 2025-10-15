@@ -3,6 +3,7 @@
   "events": [
     {
       "name": "Fire Knight Tournament",
+      "type": "Tournament",
       "start_date": "2025-10-06",
       "end_date": "2025-10-08",
       "points": [40]
