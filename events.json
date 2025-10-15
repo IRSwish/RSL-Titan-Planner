@@ -74,6 +74,12 @@
       "points": [10, 10, 20, 20, 40]
     },
     {
+      "name": "Champion Training Event",
+      "start_date": "2025-10-15",
+      "end_date": "2025-10-19",
+      "points": [30,70]
+    },
+    {
       "name": "Shredder's Tournament",
       "start_date": "2025-10-16",
       "end_date": "2025-10-19",
