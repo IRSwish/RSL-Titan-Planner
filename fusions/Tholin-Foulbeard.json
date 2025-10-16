@@ -1,3 +1,133 @@
 {
-  "title": "THOLIN FOULBEARD"
+  "title": "THOLIN FOULBEARD - CLASSIC FUSION • 05/06/2025 - 19/06/2025",
+  "events": [
+    {
+      "name": "Spider Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-06-05",
+      "end_date": "2025-06-08",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Champion Training",
+	  "type": "Tournament",
+      "start_date": "2025-06-06",
+      "end_date": "2025-06-10",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-06-07",
+      "end_date": "2025-06-10",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Ice Golem Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-06-08",
+      "end_date": "2025-06-11",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Dragon Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-06-12",
+      "end_date": "2025-06-15",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Champion Chase Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-06-13",
+      "end_date": "2025-06-16",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-06-14",
+      "end_date": "2025-06-17",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Fire Knight Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-06-15",
+      "end_date": "2025-06-18",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-06-05",
+      "end_date": "2025-06-08",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Summon Rush",
+	  "type": "Event",
+      "start_date": "2025-06-06",
+      "end_date": "2025-06-09",
+      "reward": "Cithrel, Gnarox",
+      "points": [1, 1]
+    },
+	{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-06-07",
+      "end_date": "2025-06-10",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-06-09",
+      "end_date": "2025-06-12",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-06-11",
+      "end_date": "2025-06-14",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Champion Training Event",
+	  "type": "Event",
+      "start_date": "2025-06-13",
+      "end_date": "2025-06-17",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-06-14",
+      "end_date": "2025-06-17",
+      "reward": "Cithrel",
+      "points": [1]
+    },
+	{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-06-15",
+      "end_date": "2025-06-18",
+      "reward": "Cithrel",
+      "points": [1]
+    }
+  ]
 }
