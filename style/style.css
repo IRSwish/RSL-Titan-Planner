@@ -282,6 +282,10 @@ header {
   background-color: #4caf50; /* vert */
 }
 
+.legend-dot.not-started {
+  background-color: #e0e0e0; /* vert */
+}
+
 /* BARRE PRINCIPALE */
 .menu-bar {
   background: #1a1a1a;
