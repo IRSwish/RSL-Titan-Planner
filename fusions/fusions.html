@@ -42,24 +42,32 @@
   <!-- ⚡ Charger la config AVANT le script -->
   <script src="fusions-config.js"></script>
   <script>
-    // Récupération du nom de la fusion depuis le hash
-    const fusionKey = window.location.hash.replace('#', '');
-    const fusion = window.fusions[fusionKey];
-
-    if (fusion) {
-      // Mettre à jour le titre
-      document.getElementById('page-title').textContent = fusion.name;
-      document.title = `Swish - ${fusion.name}`;
-
-      // Mettre à jour le fichier JSON à charger
-      document.getElementById('timeline-container').setAttribute('data-json', fusion.json);
-    } else {
-      // Cas où la fusion n'existe pas
-      document.getElementById('page-title').textContent = "Fusion inconnue";
-      document.title = "Swish - Fusion inconnue";
+    function loadFusionFromHash() {
+      const fusionKey = window.location.hash.replace('#', '');
+      const fusion = window.fusions[fusionKey];
+  
+      if (fusion) {
+        document.getElementById('page-title').textContent = fusion.name;
+        document.title = `Swish - ${fusion.name}`;
+        document.getElementById('timeline-container').setAttribute('data-json', fusion.json);
+  
+        // 🔁 Si fusion.js doit relire le JSON, on peut forcer une réinitialisation ici :
+        if (typeof loadFusionTimeline === 'function') {
+          loadFusionTimeline(fusion.json);
+        }
+      } else {
+        document.getElementById('page-title').textContent = "Fusion inconnue";
+        document.title = "Swish - Fusion inconnue";
+      }
     }
+  
+    // Chargement initial
+    loadFusionFromHash();
+  
+    // 👇 Détecter changement de hash sans rechargement de page
+    window.addEventListener('hashchange', loadFusionFromHash);
   </script>
-
   <script src="fusion.js"></script>
 </body>
 </html>
+
