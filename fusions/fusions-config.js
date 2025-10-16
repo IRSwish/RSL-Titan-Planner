@@ -42,8 +42,9 @@ window.fusions = {
   },
   MadHatter: {
     name: "Mad Hatter Fusion",
-    json: "MadHatter.json"
+    json: "Mad-Hatter.json"
   }
 };
+
 
 
