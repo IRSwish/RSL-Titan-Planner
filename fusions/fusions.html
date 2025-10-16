@@ -49,11 +49,13 @@
       if (fusion) {
         document.getElementById('page-title').textContent = fusion.name;
         document.title = `Swish - ${fusion.name}`;
-        document.getElementById('timeline-container').setAttribute('data-json', fusion.json);
   
-        // 🔁 Si fusion.js doit relire le JSON, on peut forcer une réinitialisation ici :
-        if (typeof loadFusionTimeline === 'function') {
-          loadFusionTimeline(fusion.json);
+        const timelineContainer = document.getElementById('timeline-container');
+        timelineContainer.setAttribute('data-json', fusion.json);
+  
+        // 🔁 Recharger le JSON et la timeline
+        if (typeof window.reloadTimeline === 'function') {
+          window.reloadTimeline();
         }
       } else {
         document.getElementById('page-title').textContent = "Fusion inconnue";
@@ -61,13 +63,15 @@
       }
     }
   
-    // Chargement initial
+    // Au chargement initial
     loadFusionFromHash();
   
-    // 👇 Détecter changement de hash sans rechargement de page
+    // 👂 On écoute les changements de hash
     window.addEventListener('hashchange', loadFusionFromHash);
   </script>
   <script src="fusion.js"></script>
+
 </body>
 </html>
+
 
