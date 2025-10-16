@@ -8,7 +8,7 @@ window.fusions = {
     name: "Granyt Doorkeep Fusion",
     json: "Granyt-Doorkeep.json"
   },
-  KroKhad: {
+  Donatello: {
     name: "Donatello Fusion",
     json: "Donatello.json"
   },
@@ -45,3 +45,4 @@ window.fusions = {
     json: "Mad-Hatter.json"
   }
 };
+
