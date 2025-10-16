@@ -1,3 +1,117 @@
 {
-  "title": "ESME THE DANCER FUSION"
+  "title": "ESME THE DANCER - FRAGMENT FUSION • 10/02/2025 - 24/02/2025",
+  "events": [
+    {
+      "name": "Spider Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-02-10",
+      "end_date": "2025-02-13",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Fire Knight Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-02-13",
+      "end_date": "2025-02-16",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-02-15",
+      "end_date": "2025-02-18",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Dragon Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-02-16",
+      "end_date": "2025-02-19",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Champion Training Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-02-16",
+      "end_date": "2025-02-20",
+      "reward": "Fragments, Fragments",
+      "points": [10, 10]
+    },
+	{
+      "name": "Ice Golem Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-02-19",
+      "end_date": "2025-02-22",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Champion Chase Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-02-21",
+      "end_date": "2025-02-24",
+      "reward": "Fragments",
+      "points": [15]
+    },
+	{
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-02-21",
+      "end_date": "2025-02-24",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Champion Training Event",
+	  "type": "Event",
+      "start_date": "2025-02-10",
+      "end_date": "2025-02-14",
+      "reward": "Fragments",
+      "points": [10]
+    },
+	{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-02-11",
+      "end_date": "2025-02-14",
+      "reward": "Fragments",
+      "points": [10]
+    },
+	{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-02-12",
+      "end_date": "2025-02-15",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Hero's Path",
+	  "type": "Event",
+      "start_date": "2025-02-14",
+      "end_date": "2025-02-17",
+      "reward": "Fragments",
+      "points": [25]
+    },
+	{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-02-16",
+      "end_date": "2025-02-19",
+      "reward": "Fragments",
+      "points": [5]
+    },
+	{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-02-20",
+      "end_date": "2025-02-23",
+      "reward": "Fragments",
+      "points": [5]
+    }
+  ]
 }
