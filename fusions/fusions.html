@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title id="document-title">Swish - Fusion</title>
+  <link rel="stylesheet" href="/style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'American Captain';
+      src: url('/style/American Captain.otf') format('opentype');
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
+</head>
+<body>
+  
+  <!-- BARRE DE MENU CENTRÉE -->
+  <div id="menu-container"></div>
+
+  <div class="header-wrapper">
+    <header id="page-title"></header>
+  </div> 
+
+  <div class="timeline-container" id="timeline-container">
+    <div class="timeline"></div>
+  </div>
+
+  <!-- Summary box -->
+  <div class="summary-box">
+    <div class="legend">
+      <div><span class="legend-dot skipped"></span> Skipped</div>
+      <div><span class="legend-dot in-progress"></span> In progress</div>
+      <div><span class="legend-dot done"></span> Done</div>
+      <div><span class="legend-dot not-started"></span> Not started</div>
+    </div>
+    <div>Acquired : <span id="points-acquired">0</span></div>
+    <div>Virtual total : <span id="points-virtual">0</span></div>
+    <div>Skipped : <span id="points-passed">0</span></div>
+  </div>
+
+  <!-- ⚡ Charger la config AVANT le script -->
+  <script src="fusions-config.js"></script>
+  <script>
+    function loadFusionFromHash() {
+      const fusionKey = window.location.hash.replace('#', '');
+      const fusion = window.fusions[fusionKey];
+  
+      if (fusion) {
+        document.getElementById('page-title').textContent = fusion.name;
+        document.title = `Swish - ${fusion.name}`;
+  
+        const timelineContainer = document.getElementById('timeline-container');
+        timelineContainer.setAttribute('data-json', fusion.json);
+  
+        // 🔁 Recharger le JSON et la timeline
+        if (typeof window.reloadTimeline === 'function') {
+          window.reloadTimeline();
+        }
+      } else {
+        document.getElementById('page-title').textContent = "Unlisted fusion yet";
+        document.title = "Swish - Unlisted fusion yet";
+      }
+    }
+  
+    // Au chargement initial
+    loadFusionFromHash();
+  
+    // 👂 On écoute les changements de hash
+    window.addEventListener('hashchange', loadFusionFromHash);
+  </script>
+  <script src="fusion.js"></script>
+
+</body>
+</html>
+
+
+
