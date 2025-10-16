@@ -151,7 +151,7 @@ header {
   border-radius: 8px;
   flex: 1 1 40px;        /* peut s’adapter */
   max-width: 40px;       /* limite max */
-  min-width: 28px;       /* limite mini */
+  min-width: 18px;       /* limite mini */
   padding: 2px;
   width: 40px;
   box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
@@ -168,6 +168,11 @@ header {
 .point-box img {
   width: 28px;
   height: 28px;
+  flex: 1 1 28px;        /* peut s’adapter */
+  max-width: 28px;       /* limite max */
+  min-width: 18px;       /* limite mini */
+  max-height: 28px;
+  min-height: 18px;
   object-fit: contain;
 }
 
