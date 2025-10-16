@@ -1,3 +1,127 @@
 {
-  "title": "LORD ENTERTAINER FABIAN FUSION"
+  "title": "LORD ENTERTAINER FABIAN - CLASSIC FUSION • 10/03/2025 - 26/03/2025",
+  "events": [
+    {
+      "name": "Dragon Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-03-10",
+      "end_date": "2025-03-13",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Ice Golem Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-03-13",
+      "end_date": "2025-03-16",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-03-15",
+      "end_date": "2025-03-18",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Champion Training Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-03-16",
+      "end_date": "2025-03-20",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Spider Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-03-17",
+      "end_date": "2025-03-20",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Fire Knight Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-03-20",
+      "end_date": "2025-03-23",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Champion Chase Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-03-21",
+      "end_date": "2025-03-24",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-03-21",
+      "end_date": "2025-03-24",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-03-10",
+      "end_date": "2025-03-13",
+      "reward": "Boorn",
+      "points": [1]
+    },
+	{
+      "name": "Champion Training Event",
+	  "type": "Event",
+      "start_date": "2025-03-10",
+      "end_date": "2025-03-14",
+      "reward": "Boorn",
+      "points": [1]
+    },{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-03-12",
+      "end_date": "2025-03-15",
+      "reward": "Boorn",
+      "points": [1]
+    },{
+      "name": "Summon Rush",
+	  "type": "Event",
+      "start_date": "2025-03-14",
+      "end_date": "2025-03-17",
+      "reward": "Boorn, Siendra",
+      "points": [1, 1]
+    },{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-03-14",
+      "end_date": "2025-03-17",
+      "reward": "Boorn",
+      "points": [1]
+    },{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-03-17",
+      "end_date": "2025-03-20",
+      "reward": "Boorn",
+      "points": [1]
+    },{
+      "name": "Dungeon Divers",
+	  "type": "Event",
+      "start_date": "2025-03-21",
+      "end_date": "2025-03-24",
+      "reward": "Boorn",
+      "points": [1]
+    },{
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-03-22",
+      "end_date": "2025-03-25",
+      "reward": "Boorn",
+      "points": [1]
+    }
+  ]
 }
