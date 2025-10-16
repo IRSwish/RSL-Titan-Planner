@@ -13,6 +13,7 @@
 
     if (!fusionConfig) {
       console.error('Aucune fusion trouvée pour le hash :', hash);
+      timelineContainer.querySelector('.timeline').innerHTML = '';
       return;
     }
 
@@ -25,16 +26,13 @@
         return res.json();
       })
       .then(data => {
-        // S'assurer que events est un tableau
-        if (!data || !Array.isArray(data.events)) {
-          console.warn('Aucun event dans le JSON, la timeline sera vide.');
-          data = data || {};
-          data.events = [];
-        }
         timelineData = data;
         renderTimeline(data);
       })
-      .catch(err => console.error('Erreur lors du chargement du JSON :', err));
+      .catch(err => {
+        console.error('Erreur lors du chargement du JSON :', err);
+        timelineContainer.querySelector('.timeline').innerHTML = '';
+      });
   }
 
   window.addEventListener('load', () => {
@@ -82,7 +80,7 @@
     const timeline = document.querySelector('.timeline');
     if (!timeline || !timelineContainer) return;
 
-    timeline.innerHTML = '';
+    timeline.innerHTML = ''; // on vide la timeline quoi qu'il arrive
 
     // Titre
     const pageTitle = document.getElementById('page-title');
@@ -90,12 +88,11 @@
 
     const events = Array.isArray(data.events) ? data.events : [];
 
-    const minDate = events.length > 0
-      ? new Date(Math.min(...events.map(e => new Date(e.start_date))))
-      : new Date();
-    const maxDate = events.length > 0
-      ? new Date(Math.max(...events.map(e => new Date(e.end_date))))
-      : new Date();
+    // Si aucun event, on ne fait rien
+    if (events.length === 0) return;
+
+    const minDate = new Date(Math.min(...events.map(e => new Date(e.start_date))));
+    const maxDate = new Date(Math.max(...events.map(e => new Date(e.end_date))));
     const totalDays = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24)) + 1;
 
     const today = new Date();
@@ -140,6 +137,7 @@
         rightLine.style.right = '0';
         col.appendChild(rightLine);
       }
+
       timeline.appendChild(col);
     }
 
@@ -148,7 +146,7 @@
     line.classList.add('timeline-line');
     timeline.appendChild(line);
 
-    // Placement events (si events est vide, rien ne sera ajouté)
+    // Placement events
     const placedEvents = computeTracks(events, minDate, dayWidth);
     placedEvents.forEach((item) => {
       const event = item.event;
@@ -226,14 +224,6 @@
       summaryBox.style.left = 'unset';
       summaryBox.style.right = 'unset';
     }
-
-    // Surligner aujourd'hui
-    const currentDay = today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
-    document.querySelectorAll('.date-column .date').forEach(el => {
-      if (el.textContent.trim() === currentDay) {
-        el.closest('.date-column').classList.add('today');
-      }
-    });
   }
 
   function computeTracks(events, minDate, dayWidth) {
@@ -278,4 +268,5 @@
     const elPassed = document.getElementById('points-passed');
     if (elPassed) elPassed.textContent = totalPassed;
   }
+
 })();
