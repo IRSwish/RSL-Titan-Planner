@@ -25,9 +25,11 @@
         return res.json();
       })
       .then(data => {
+        // S'assurer que events est un tableau
         if (!data || !Array.isArray(data.events)) {
-          console.error('Format JSON invalide');
-          return;
+          console.warn('Aucun event dans le JSON, la timeline sera vide.');
+          data = data || {};
+          data.events = [];
         }
         timelineData = data;
         renderTimeline(data);
@@ -87,10 +89,13 @@
     if (pageTitle) pageTitle.textContent = data.title || '';
 
     const events = Array.isArray(data.events) ? data.events : [];
-    if (events.length === 0) return;
 
-    const minDate = new Date(Math.min(...events.map(e => new Date(e.start_date))));
-    const maxDate = new Date(Math.max(...events.map(e => new Date(e.end_date))));
+    const minDate = events.length > 0
+      ? new Date(Math.min(...events.map(e => new Date(e.start_date))))
+      : new Date();
+    const maxDate = events.length > 0
+      ? new Date(Math.max(...events.map(e => new Date(e.end_date))))
+      : new Date();
     const totalDays = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24)) + 1;
 
     const today = new Date();
@@ -143,7 +148,7 @@
     line.classList.add('timeline-line');
     timeline.appendChild(line);
 
-    // Placement events
+    // Placement events (si events est vide, rien ne sera ajouté)
     const placedEvents = computeTracks(events, minDate, dayWidth);
     placedEvents.forEach((item) => {
       const event = item.event;
