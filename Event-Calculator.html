@@ -160,14 +160,28 @@ function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
 
+  // On récupère la valeur max parmi toutes les cellules du loot pour normaliser le vert
+  let maxValue = 0;
+  rarities.forEach(rarity => {
+    const arr = loot[rarity] || [];
+    arr.forEach(v => { if(v>maxValue) maxValue=v; });
+  });
+
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const percentages = loot[rarity] || [0,0,0,0,0,0];
     for (let col = 1; col <= 6; col++) {
       const value = percentages[col-1] || 0;
       tr.cells[col].textContent = (value*100).toFixed(2) + '%';
-      const alpha = Math.min(value*10,1);
-      tr.cells[col].style.backgroundColor = `rgba(245,37,132,${alpha})`;
+
+      if(value === 0){
+        // gris pour 0
+        tr.cells[col].style.backgroundColor = 'rgba(200,200,200,0.3)';
+      } else {
+        // dégradé vert
+        const alpha = value / maxValue; // proportion de la valeur max
+        tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+      }
     }
   });
 }
