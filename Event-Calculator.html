@@ -299,7 +299,7 @@ function updateCalculation() {
   const gems = (totalEnergy / 3.25).toFixed(2);
 
   calculationResult.textContent =
-    `On average, you will need to run any <b>${zone || 'zone'} ${runsNeeded}</b> time(s) in order to get ${remaining} points. 
+    `On average, you will need to run any ${zone || 'zone'} ${runsNeeded} time(s) in order to get ${remaining} points. 
     That corresponds to ${totalEnergy} energy, or approximately ${gems} gems worth of energy refills.`;
 }
 
@@ -346,5 +346,6 @@ generateEmptyPointsTable();
 updateDropdowns();
 toggleBtn.style.display = 'none';
 </script>
+<script src="script.js"></script>
 </body>
 </html>
