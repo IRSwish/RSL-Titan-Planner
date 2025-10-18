@@ -160,12 +160,41 @@
 </script>
   
 <script>
+let pointsData = {};
+
+fetch('points-data.json')
+  .then(response => response.json())
+  .then(data => {
+    pointsData = data;
+  })
+  .catch(err => console.error('Erreur chargement points:', err));
+  
 const eventTypeSelect = document.getElementById('event-type');
 const pointsTableContainer = document.getElementById('points-table-container');
 const pointsTable = document.getElementById('points-table').querySelector('tbody');
 
 const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 
+eventTypeSelect.addEventListener('change', () => {
+  const eventType = eventTypeSelect.value;
+
+  if (eventType && pointsData[eventType]) {
+    pointsTableContainer.classList.remove('hidden');
+
+    // Remplir le tableau
+    rarities.forEach((rarity, rowIndex) => {
+      const tr = pointsTable.rows[rowIndex];
+      tr.cells[0].textContent = rarity; // colonne Rarity
+
+      for (let col = 1; col <= 6; col++) {
+        tr.cells[col].textContent = pointsData[eventType][rarity][col - 1];
+      }
+    });
+  } else {
+    pointsTableContainer.classList.add('hidden');
+  }
+});
+  
 function generateEmptyPointsTable() {
   pointsTable.innerHTML = '';
   rarities.forEach(rarity => {
