@@ -10,6 +10,12 @@
       src: url('style/American Captain.otf') format('opentype');
     }
     td { text-align: center; }
+    .toggle-btn {
+      margin: 10px 0;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -56,7 +62,7 @@
   <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
 
   <!-- Toggle Points / % -->
-  <button id="toggle-btn" class="toggle-btn">Show Loot %</button>
+  <button id="toggle-btn" class="toggle-btn">Afficher en %</button>
 </div>
 
 <!-- Tableau des points/loot -->
@@ -202,8 +208,16 @@ function updateDropdowns() {
 // Mise à jour du tableau selon mode
 function updateTable() {
   const eventType = eventTypeSelect.value;
-  if (!eventType) return generateEmptyPointsTable();
+
+  if (!eventType) {
+    generateEmptyPointsTable();
+    pointsTableContainer.classList.add('hidden');
+    toggleBtn.style.display = 'none'; // cacher le toggle si pas de tableau
+    return;
+  }
+
   pointsTableContainer.classList.remove('hidden');
+  toggleBtn.style.display = 'inline-block'; // afficher le toggle
   generateEmptyPointsTable();
 
   if(displayMode === 'points'){
@@ -241,7 +255,7 @@ dungeonDifficultySelect.addEventListener('change', () => {
 // Toggle points / %
 toggleBtn.addEventListener('click', ()=>{
   displayMode = displayMode==='points'?'percent':'points';
-  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
+  toggleBtn.textContent = displayMode==='points'?'Afficher en %':'Afficher en points';
   updateTable();
 });
 
@@ -256,6 +270,7 @@ toggleBtn.addEventListener('click', ()=>{
 // Initialisation
 generateEmptyPointsTable();
 updateDropdowns();
+toggleBtn.style.display = 'none'; // bouton caché au départ
 </script>
 </body>
 </html>
