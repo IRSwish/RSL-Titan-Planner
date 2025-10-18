@@ -28,7 +28,7 @@
   <select id="event-type">
     <option value="">-- Event Type --</option>
     <option value="tournament">Tournament</option>
-    <option value="event">Event</option>
+    <option value="event">Dungeon Divers</option>
     <option value="herospath">Hero's Path</option>
     <option value="deckoffate">Deck of Fate</option>
   </select>
@@ -162,71 +162,66 @@
 <script>
 let pointsData = {};
 
-fetch('points-data.json')
+// Charger le JSON
+fetch('/points-data.json')
   .then(response => response.json())
   .then(data => {
     pointsData = data;
   })
   .catch(err => console.error('Erreur chargement points:', err));
-  
+
 const eventTypeSelect = document.getElementById('event-type');
 const pointsTableContainer = document.getElementById('points-table-container');
-const pointsTable = document.getElementById('points-table').querySelector('tbody');
+const pointsTableBody = document.getElementById('points-table').querySelector('tbody');
 
 const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 
-eventTypeSelect.addEventListener('change', () => {
-  const eventType = eventTypeSelect.value;
-
-  if (eventType && pointsData[eventType]) {
-    pointsTableContainer.classList.remove('hidden');
-
-    // Remplir le tableau
-    rarities.forEach((rarity, rowIndex) => {
-      const tr = pointsTable.rows[rowIndex];
-      tr.cells[0].textContent = rarity; // colonne Rarity
-
-      for (let col = 1; col <= 6; col++) {
-        tr.cells[col].textContent = pointsData[eventType][rarity][col - 1];
-      }
-    });
-  } else {
-    pointsTableContainer.classList.add('hidden');
-  }
-});
-  
+// Générer le tableau vide initial
 function generateEmptyPointsTable() {
-  pointsTable.innerHTML = '';
+  pointsTableBody.innerHTML = '';
   rarities.forEach(rarity => {
     const tr = document.createElement('tr');
     const tdRarity = document.createElement('td');
     tdRarity.textContent = rarity;
     tr.appendChild(tdRarity);
 
-    for (let rank = 1; rank <= 6; rank++) {
+    for (let i = 1; i <= 6; i++) {
       const td = document.createElement('td');
-      td.textContent = '0'; // valeurs initiales à zéro
+      td.textContent = '0';
       tr.appendChild(td);
     }
 
-    pointsTable.appendChild(tr);
+    pointsTableBody.appendChild(tr);
   });
 }
 
+// Remplir le tableau avec les données pour l'événement choisi
+function fillPointsTable(eventType) {
+  if (!pointsData[eventType]) return;
+
+  rarities.forEach((rarity, rowIndex) => {
+    const tr = pointsTableBody.rows[rowIndex];
+    for (let col = 1; col <= 6; col++) {
+      tr.cells[col].textContent = pointsData[eventType][rarity][col - 1];
+    }
+  });
+}
+
+// Quand on change le type d'événement
 eventTypeSelect.addEventListener('change', () => {
   const eventType = eventTypeSelect.value;
 
   if (eventType) {
-    // Afficher le tableau
     pointsTableContainer.classList.remove('hidden');
-
-    // Générer une version vide/initialisée du tableau
-    generateEmptyPointsTable();
+    generateEmptyPointsTable();  // réinitialiser
+    fillPointsTable(eventType);  // remplir avec les données
   } else {
-    // Cacher si aucun event sélectionné
     pointsTableContainer.classList.add('hidden');
   }
 });
+
+// Initialisation
+generateEmptyPointsTable();
 </script>
 <script src="script.js"></script>
 </body>
