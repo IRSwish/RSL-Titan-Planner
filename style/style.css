@@ -19,6 +19,11 @@ body {
   overflow-x: hidden;
 }
 
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Overlay sombre */
 body::before {
   content: "";
