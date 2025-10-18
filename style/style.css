@@ -516,12 +516,14 @@ transform: rotate(90deg);
   display: none; /* caché par défaut */
 }
 
-#calculation-result, .points-inputs {
+#calculation-result {
   width: 100%;
   border-collapse: collapse;
   text-align: center;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
+  position: relative;
+  z-index: 10000;
 }
 
 .points-inputs {
