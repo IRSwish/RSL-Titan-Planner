@@ -545,6 +545,7 @@ transform: rotate(90deg);
   border: none;                     /* Supprime la bordure */
   border-radius: 6px;               /* Arrondit les bords */
   padding: 1rem;
+  height:120%;
   width: 100%;
   max-width: 200px;
   box-sizing: border-box;
