@@ -511,3 +511,7 @@ transform: rotate(90deg);
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
+#toggle-btn {
+  display: none; /* caché par défaut */
+}
