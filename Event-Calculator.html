@@ -81,7 +81,7 @@
   </select>
   <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
 
-  <button id="toggle-btn" class="toggle-btn">Afficher en %</button>
+  <button id="toggle-btn" class="toggle-btn">Show Loot %</button>
 </div>
 
 <div class="points-inputs">
@@ -327,7 +327,7 @@ dungeonDifficultySelect.addEventListener('change', () => {
 
 toggleBtn.addEventListener('click', ()=>{
   displayMode = displayMode==='points'?'percent':'points';
-  toggleBtn.textContent = displayMode==='points'?'Afficher en %':'Afficher en points';
+  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
   updateTable();
 });
 
