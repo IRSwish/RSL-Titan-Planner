@@ -293,7 +293,7 @@ function updateCalculation() {
   });
 
   const runsNeeded = Math.ceil(remaining / totalAvgPoints);
-  const superrunsNeeded = Math.ceil(remaining / totalAvgPoints)/2;
+  const superrunsNeeded = Math.ceil(remaining / totalAvgPoints / 2);
   const totalEnergy = runsNeeded * energyPerRun;
   const gems = (totalEnergy / 3.25).toFixed(2);
 
