@@ -11,12 +11,15 @@
 body {
   position: relative;
   background: url('/style/img/TITAN BACKGROUND.webp') top center no-repeat;
-  background-size: cover; /* ou 100% auto si tu veux garder les proportions */
-  background-attachment: fixed; /* optionnel : effet parallax */
+  background-size: cover;
+  background-attachment: fixed;
   margin: 0;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
   overflow-x: hidden;
+
+  /* 🔸 Compense la hauteur de la barre */
+  padding-top: 70px;
 }
 
 body > * {
@@ -27,43 +30,38 @@ body > * {
 /* Overlay sombre */
 body::before {
   content: "";
-  position: fixed;          /* couvre toute la fenêtre */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9); /* 0.75 = bien sombre mais visible */
-  pointer-events: none;     /* pour ne pas bloquer les clics */
+  background: rgba(0, 0, 0, 0.9);
+  pointer-events: none;
   z-index: 0;
 }
 
-/* Tout ton contenu doit passer au-dessus */
 header, .timeline-container, .summary-box {
   position: relative;
   z-index: 1;
 }
 
 header {
-    display: inline-block;              /* 🔥 ajuste le gradient à la taille du texte */
+    display: inline-block;
     text-align: center;
     font-family: 'American Captain', sans-serif;
     font-size: 48px;
     letter-spacing: 2px;
     margin-top:10px;
     margin-bottom:10px;
-    /* Dégradé du texte */
     background: linear-gradient(to bottom, #feeec1, #e09f40);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-
-    /* Emboss simulé avec double ombre très légère */
     filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.2))
             drop-shadow(-1px -1px 1px rgba(0, 0, 0, 0.5));
 }
 
-/* Conteneur centré */
 .header-wrapper {
     text-align: center;
 }
@@ -71,24 +69,23 @@ header {
 /* Timeline globale */
 .timeline-container {
   overflow-x: hidden;
-  padding: 0px 50px; /* on garde le padding mais calcul JS le prend en compte */
+  padding: 0px 50px;
 }
 
 .timeline {
   position: relative;
   display: flex;
-  width: max-content; /* timeline s’adapte au nombre de jours */
+  width: max-content;
   height: auto;
 }
 
 .date-column {
-  flex: none; /* empêcher flex-grow */
+  flex: none;
   text-align: center;
   position: relative;
   padding: 0 2px;
   box-sizing: border-box;
 }
-
 
 .date-column .day {
   display: block;
@@ -154,9 +151,9 @@ header {
   background: var(--point-bg);
   border: 2px solid var(--event-border);
   border-radius: 8px;
-  flex: 1 1 40px;        /* peut s’adapter */
-  max-width: 40px;       /* limite max */
-  min-width: 18px;       /* limite mini */
+  flex: 1 1 40px;
+  max-width: 40px;
+  min-width: 18px;
   padding: 2px;
   width: 40px;
   box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
@@ -173,9 +170,9 @@ header {
 .point-box img {
   width: 28px;
   height: 28px;
-  flex: 1 1 28px;        /* peut s’adapter */
-  max-width: 28px;       /* limite max */
-  min-width: 18px;       /* limite mini */
+  flex: 1 1 28px;
+  max-width: 28px;
+  min-width: 18px;
   max-height: 28px;
   min-height: 18px;
   object-fit: contain;
@@ -189,7 +186,7 @@ header {
 }
 
 /* Points états */
-.point-box.state-upcoming { /* A venir */
+.point-box.state-upcoming {
   border: 2px solid #e0e0e0;
   box-shadow: inset 0 0 6px rgba(212,175,55,0.25);
 }
@@ -198,30 +195,30 @@ header {
   filter: grayscale(100%);
 }
 
-.point-box.state-upcoming span { /* Passé non acquis */
+.point-box.state-upcoming span {
   color:#e0e0e0;
 }
 
-.point-box.state-ongoing { /* En cours */
+.point-box.state-ongoing {
   border: 2px solid orange;
   box-shadow: inset 0 0 6px rgba(255,165,0,0.25);
 }
 
-.point-box.state-validated { /* Validé */
+.point-box.state-validated {
   border: 2px solid #4caf50;
   box-shadow: inset 0 0 6px rgba(76,175,80,0.25);
 }
 
-.point-box.state-validated span { /* Passé non acquis */
+.point-box.state-validated span {
   color:#4caf50;
 }
 
-.point-box.state-passed { /* Passé non acquis */
+.point-box.state-passed {
   border: 2px solid red;
   box-shadow: inset 0 0 6px rgba(100,100,100,0.25);
 }
 
-.point-box.state-passed span { /* Passé non acquis */
+.point-box.state-passed span {
   color:red;
 }
 
@@ -229,7 +226,7 @@ header {
   filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(500%) brightness(80%);
 }
 
-/* Summary box sous la timeline, centrée */
+/* Summary box */
 .summary-box {
   position: relative;
   margin: 0 auto;
@@ -252,10 +249,10 @@ header {
 .date-column.today {
   background: linear-gradient(
        to bottom,
-       rgba(212,175,55,0) 0%,   /* haut */
-       rgba(212,175,55,0.15) 20%,  /* légèrement plus bas */
-       rgba(212,175,55,0.15) 80%, /* presque en bas */
-       rgba(212,175,55,0) 100%  /* bas */
+       rgba(212,175,55,0) 0%,
+       rgba(212,175,55,0.15) 20%,
+       rgba(212,175,55,0.15) 80%,
+       rgba(212,175,55,0) 100%
   );
 }
 
@@ -282,31 +279,37 @@ header {
   display: inline-block;
 }
 
-/* Couleurs correspondant aux états */
 .legend-dot.skipped {
-  background-color: red; /* rouge */
+  background-color: red;
 }
 
 .legend-dot.in-progress {
-  background-color: orange; /* jaune/orange */
+  background-color: orange;
 }
 
 .legend-dot.done {
-  background-color: #4caf50; /* vert */
+  background-color: #4caf50;
 }
 
 .legend-dot.not-started {
-  background-color: #e0e0e0; /* vert */
+  background-color: #e0e0e0;
 }
 
-/* BARRE PRINCIPALE */
+/* BARRE PRINCIPALE FIXÉE */
 .menu-bar {
   background: #1a1a1a;
   padding: 15px 0;
   display: flex;
   justify-content: center;
-  position: absolute;
+
+  /* FIXATION EN HAUT */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
   z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .menu-links {
@@ -396,7 +399,6 @@ header {
   transition: transform 0.2s;
 }
 
-/* Sous-menu */
 .dropdown-sub-content {
   list-style: none;
   padding: 0;
@@ -429,7 +431,6 @@ header {
   display: flex;
 }
 
-/* Rotation de la flèche au survol */
 .dropdown-sub:hover .arrow {
   transform: rotate(90deg);
 }
