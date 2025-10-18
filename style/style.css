@@ -443,7 +443,6 @@ header {
 
   /* ✅ Centrage */
   margin: 0 auto;
-  margin-top: 100px; /* tu peux ajuster cette valeur */
 }
 
 select {
