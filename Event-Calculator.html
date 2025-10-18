@@ -293,11 +293,12 @@ function updateCalculation() {
   });
 
   const runsNeeded = Math.ceil(remaining / totalAvgPoints);
+  const superrunsNeeded = Math.ceil(remaining / totalAvgPoints)/2;
   const totalEnergy = runsNeeded * energyPerRun;
   const gems = (totalEnergy / 3.25).toFixed(2);
 
   calculationResult.textContent =
-    `On average, you will need to run any ${zone || 'zone'} ${runsNeeded} time(s) in order to get ${remaining} points. 
+    `On average, you will need to run any ${zone || 'zone'} ${runsNeeded} time(s) (or ${superrunsNeeded} super raids) in order to get ${remaining} points. 
     That corresponds to ${totalEnergy} energy, or approximately ${gems} gems worth of energy refills.`;
 }
 
