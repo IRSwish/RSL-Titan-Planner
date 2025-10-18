@@ -436,11 +436,14 @@ header {
   flex-direction: column;
   gap: 15px;
   width: 300px;
-  position: fixed; /* plutôt que relative */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
+  /* ✅ Ajout pour passer au-dessus du voile sombre */
+  position: relative;
   z-index: 10000;
+
+  /* ✅ Centrage */
+  margin: 0 auto;
+  margin-top: 100px; /* tu peux ajuster cette valeur */
 }
 
 select {
