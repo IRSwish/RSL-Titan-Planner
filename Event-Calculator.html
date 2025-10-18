@@ -10,13 +10,17 @@
       src: url('style/American Captain.otf') format('opentype');
     }
     td { text-align: center; }
-    .hidden { display: none; }
+    .toggle-btn {
+      margin: 10px 0;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- Barre de menu -->
 <div id="menu-container"></div>
 <div class="header-wrapper">
   <header id="page-title">EFFICIENCY LAB</header>
@@ -57,9 +61,8 @@
   </select>
   <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
 
-  <div style="margin-top:10px;">
-    <button id="toggle-display">Afficher en %</button>
-  </div>
+  <!-- Toggle Points / % -->
+  <button id="toggle-btn" class="toggle-btn">Afficher en %</button>
 </div>
 
 <!-- Tableau des points/loot -->
@@ -99,10 +102,10 @@ const campaignDifficultySelect = document.getElementById('campaign-difficulty');
 const campaignActSelect = document.getElementById('campaign-act');
 const campaignStageSelect = document.getElementById('campaign-stage');
 const eventTypeSelect = document.getElementById('event-type');
-const toggleBtn = document.getElementById('toggle-display');
+const toggleBtn = document.getElementById('toggle-btn');
 
 let pointsData = {};
-let displayMode = 'points'; // points ou percent
+let displayMode = 'points'; // 'points' ou 'percent'
 
 // Charger le JSON
 fetch('/points-data.json')
@@ -123,36 +126,23 @@ function generateEmptyPointsTable() {
       const td = document.createElement('td');
       td.textContent = '0';
       td.style.backgroundColor = '';
-      td.style.color = '#000';
+      td.style.color = '';
       tr.appendChild(td);
     }
-
     pointsTableBody.appendChild(tr);
   });
 }
 
-// Remplir le tableau points
+// Remplir le tableau des points
 function fillPointsTable(eventType) {
   if (!pointsData.points?.[eventType]) return;
-
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const values = pointsData.points[eventType][rarity];
-    const maxValue = Math.max(...values);
-
     for (let col = 1; col <= 6; col++) {
-      let value = values[col-1] || 0;
-      let display = displayMode==='percent' ? (value)+'%' : value;
-      tr.cells[col].textContent = display;
-
-      if(value === 0){
-        tr.cells[col].style.color = '#555'; // grisé
-        tr.cells[col].style.backgroundColor = '';
-      } else {
-        tr.cells[col].style.color = '#fff';
-        const alpha = displayMode==='percent' ? 0.1 + 0.4*(value/maxValue) : 0.15;
-        tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
-      }
+      tr.cells[col].textContent = values[col-1] || 0;
+      tr.cells[col].style.backgroundColor = '';
+      tr.cells[col].style.color = '';
     }
   });
 }
@@ -161,7 +151,6 @@ function fillPointsTable(eventType) {
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
-
   if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
@@ -188,47 +177,49 @@ function fillLootTable() {
 
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
-    const values = loot[rarity] || [0,0,0,0,0,0];
+    const percentages = loot[rarity] || [0,0,0,0,0,0];
 
     for (let col = 1; col <= 6; col++) {
-      const value = values[col-1] || 0;
-      const display = displayMode==='percent' ? (value*100).toFixed(2)+'%' : value;
-      tr.cells[col].textContent = display;
+      const value = percentages[col-1] || 0;
+      tr.cells[col].textContent = (value*100).toFixed(2) + '%';
 
       if(value === 0){
-        tr.cells[col].style.color = '#555';
-        tr.cells[col].style.backgroundColor = '';
+        tr.cells[col].style.color = '#444';  // texte gris très foncé
+        tr.cells[col].style.backgroundColor = 'transparent';
       } else {
         tr.cells[col].style.color = '#fff';
-        const alpha = 0.1 + 0.4*(value/maxValue);
+        const alpha = 0.1 + 0.4*(value/maxValue); // vert pastel léger
         tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
       }
     }
   });
 }
 
-// Update dropdowns affichage
+// Gestion dropdowns
 function updateDropdowns() {
   const zone = zoneSelect.value;
-  campaignDifficultySelect.classList.toggle('hidden', zone!=='campaign');
-  campaignActSelect.classList.toggle('hidden', zone!=='campaign');
-  campaignStageSelect.classList.toggle('hidden', zone!=='campaign');
-  dungeonDifficultySelect.classList.toggle('hidden', zone!=='dungeons');
-  dungeonStageSelect.classList.toggle('hidden', zone!=='dungeons');
+  campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
+  campaignActSelect.classList.toggle('hidden', zone !== 'campaign');
+  campaignStageSelect.classList.toggle('hidden', zone !== 'campaign');
+  dungeonDifficultySelect.classList.toggle('hidden', zone !== 'dungeons');
+  dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
 }
 
-// Mise à jour tableau
+// Mise à jour du tableau selon mode
 function updateTable() {
   const eventType = eventTypeSelect.value;
   if (!eventType) return generateEmptyPointsTable();
-
   pointsTableContainer.classList.remove('hidden');
   generateEmptyPointsTable();
-  fillPointsTable(eventType);
-  fillLootTable();
+
+  if(displayMode === 'points'){
+    fillPointsTable(eventType);
+  } else if(displayMode === 'percent'){
+    fillLootTable();
+  }
 }
 
-// Remplissage dynamique acts/stages
+// Remplissage dynamique des acts/stages
 for (let i=1;i<=12;i++){
   const opt=document.createElement('option');
   opt.value=i; opt.textContent=`Act ${i}`;
@@ -240,9 +231,9 @@ for (let i=1;i<=7;i++){
   campaignStageSelect.appendChild(opt);
 }
 
-// Dungeon stages dynamique
-dungeonDifficultySelect.addEventListener('change',()=>{
-  const diff=dungeonDifficultySelect.value;
+// Dungeon stages dynamiques
+dungeonDifficultySelect.addEventListener('change', () => {
+  const diff = dungeonDifficultySelect.value;
   const maxStages = diff==='normal'?25:10;
   dungeonStageSelect.innerHTML='<option value="">-- Stage --</option>';
   for(let i=1;i<=maxStages;i++){
@@ -253,16 +244,16 @@ dungeonDifficultySelect.addEventListener('change',()=>{
   updateTable();
 });
 
-// Toggle points/percent
-toggleBtn.addEventListener('click',()=>{
+// Toggle points / %
+toggleBtn.addEventListener('click', ()=>{
   displayMode = displayMode==='points'?'percent':'points';
   toggleBtn.textContent = displayMode==='points'?'Afficher en %':'Afficher en points';
   updateTable();
 });
 
-// Événements dropdown
+// Événements pour rafraîchir le tableau
 [eventTypeSelect, zoneSelect, dungeonStageSelect, dungeonDifficultySelect, campaignDifficultySelect, campaignActSelect, campaignStageSelect].forEach(el=>{
-  el.addEventListener('change', ()=>{
+  el.addEventListener('change',()=>{
     updateDropdowns();
     updateTable();
   });
@@ -272,6 +263,5 @@ toggleBtn.addEventListener('click',()=>{
 generateEmptyPointsTable();
 updateDropdowns();
 </script>
-
 </body>
 </html>
