@@ -522,7 +522,34 @@ transform: rotate(90deg);
   text-align: center;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
+}
+
+.points-inputs {
+  display: flex;
+  flex-direction: column;  /* Empile les éléments verticalement */
+  align-items: flex-start;  /* Aligne à gauche */
+  gap: 0.5rem;              /* Espacement entre les éléments */
+  margin-bottom: 1rem;
   position: relative;
   z-index: 10000;
+}
+
+.points-inputs label {
+  font-size: 0.9rem;
+  color: #fcf6ff;
+}
+
+.points-inputs input {
+  background-color: #1a1a1a;
+  color: #fcf6ff;
+  border: 1px solid #f52584;
+  padding: 0.4rem;
+  width: 100%;
+  max-width: 200px;
+}
+
+.points-inputs span {
+  font-size: 0.9rem;
+  color: #fcf6ff;
 }
 
