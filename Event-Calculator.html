@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Swish - RSL Tools</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'American Captain';
+      src: url('style/American Captain.otf') format('opentype');
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #1a1a1a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding-top: 50px;
+    }
+
+    .dropdown-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 300px;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      background-color: #2a2a2a;
+      color: white;
+      outline: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    header {
+      font-family: 'American Captain', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- BARRE DE MENU CENTRÉE -->
+<div id="menu-container"></div>
+
+<div class="header-wrapper">
+  <header id="page-title">What's next ?</header>
+</div> 
+
+<!-- FORMULAIRE -->
+<div class="dropdown-container">
+  <!-- Event Type -->
+  <select id="event-type">
+    <option value="">-- Event Type --</option>
+    <option value="tournament">Tournament</option>
+    <option value="event">Event</option>
+    <option value="herospath">Hero's Path</option>
+    <option value="deckoffate">Deck of Fate</option>
+  </select>
+
+  <!-- Zone -->
+  <select id="zone">
+    <option value="">-- Zone --</option>
+    <option value="dungeons">Dungeons</option>
+    <option value="campaign">Campaign</option>
+  </select>
+
+  <!-- Campaign Options -->
+  <select id="campaign-difficulty" class="hidden">
+    <option value="">-- Difficulty --</option>
+    <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+    <option value="brutal">Brutal</option>
+    <option value="nightmare">Nightmare</option>
+  </select>
+
+  <select id="campaign-act" class="hidden">
+    <option value="">-- Act --</option>
+  </select>
+
+  <select id="campaign-stage" class="hidden">
+    <option value="">-- Stage --</option>
+  </select>
+
+  <!-- Dungeons Options -->
+  <select id="dungeon-difficulty" class="hidden">
+    <option value="">-- Difficulty --</option>
+    <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+  </select>
+
+  <select id="dungeon-stage" class="hidden">
+    <option value="">-- Stage --</option>
+  </select>
+</div>
+
+<script>
+  const zoneSelect = document.getElementById('zone');
+
+  const campaignDifficulty = document.getElementById('campaign-difficulty');
+  const campaignAct = document.getElementById('campaign-act');
+  const campaignStage = document.getElementById('campaign-stage');
+
+  const dungeonDifficulty = document.getElementById('dungeon-difficulty');
+  const dungeonStage = document.getElementById('dungeon-stage');
+
+  // Remplir Acts 1 à 12
+  for (let i = 1; i <= 12; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = `Act ${i}`;
+    campaignAct.appendChild(option);
+  }
+
+  // Remplir Stages 1 à 7 (Campaign)
+  for (let i = 1; i <= 7; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = `Stage ${i}`;
+    campaignStage.appendChild(option);
+  }
+
+  // Quand on change la zone
+  zoneSelect.addEventListener('change', () => {
+    const zone = zoneSelect.value;
+
+    // Réinitialiser l'affichage
+    campaignDifficulty.classList.add('hidden');
+    campaignAct.classList.add('hidden');
+    campaignStage.classList.add('hidden');
+    dungeonDifficulty.classList.add('hidden');
+    dungeonStage.classList.add('hidden');
+
+    if (zone === 'campaign') {
+      campaignDifficulty.classList.remove('hidden');
+      campaignAct.classList.remove('hidden');
+      campaignStage.classList.remove('hidden');
+    } else if (zone === 'dungeons') {
+      dungeonDifficulty.classList.remove('hidden');
+      dungeonStage.classList.remove('hidden');
+    }
+  });
+
+  // Quand on change la difficulté des donjons
+  dungeonDifficulty.addEventListener('change', () => {
+    const difficulty = dungeonDifficulty.value;
+
+    // Vider les stages
+    dungeonStage.innerHTML = '<option value="">-- Stage --</option>';
+
+    let maxStages = difficulty === 'normal' ? 25 : 10;
+
+    for (let i = 1; i <= maxStages; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = `Stage ${i}`;
+      dungeonStage.appendChild(option);
+    }
+  });
+</script>
+
+</body>
+</html>
