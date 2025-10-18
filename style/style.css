@@ -307,7 +307,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 10000000000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
@@ -351,7 +351,7 @@ header {
   min-width: 180px;
   border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  z-index: 2000;
+  z-index: 10000000000;
 }
 
 .dropdown-content li a {
@@ -411,7 +411,7 @@ header {
   min-width: 180px;
   border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  z-index: 3000;
+  z-index: 10000000001;
 }
 
 .dropdown-sub-content li a {
