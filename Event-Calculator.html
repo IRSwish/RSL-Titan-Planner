@@ -157,7 +157,7 @@ function getLoot() {
 
 // Remplir et colorer le tableau selon le loot
 function fillLootTable() {
-  const loot = getLoot();
+  const loot = getLoot(); // récupère l'objet loot du stage choisi
   if (!loot) return;
 
   // Récupérer la valeur max parmi toutes les cellules
@@ -170,18 +170,18 @@ function fillLootTable() {
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const percentages = loot[rarity] || [0,0,0,0,0,0];
+
     for (let col = 1; col <= 6; col++) {
       const value = percentages[col-1] || 0;
       tr.cells[col].textContent = (value*100).toFixed(2) + '%';
 
       if(value === 0){
-        tr.cells[col].style.color = '#aaa'; // gris pour 0
-      } else if(value === maxValue){
-        tr.cells[col].style.color = 'inherit'; // valeur max normale
+        tr.cells[col].style.color = '#aaa';  // texte gris pour zéro
+        tr.cells[col].style.backgroundColor = 'transparent';
       } else {
-        // texte légèrement vert selon proportion de max (mais discret)
-        const alpha = value / maxValue * 0.5; // 0.5 max pour rester léger
-        tr.cells[col].style.color = `rgba(0,128,0,${alpha})`;
+        tr.cells[col].style.color = '#000';  // texte noir pour les autres
+        const alpha = 0.1 + 0.4 * (value / maxValue); // 0.1 à 0.5 de transparence
+        tr.cells[col].style.backgroundColor = `rgba(0, 255, 0, ${alpha})`; // vert léger
       }
     }
   });
