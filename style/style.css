@@ -542,22 +542,13 @@ transform: rotate(90deg);
 .points-inputs input {
   background-color: #1a1a1a;
   color: #fcf6ff;
+  border: none;
   border-radius: 6px;
-  padding: 8px;
+  padding: 1rem;
+  padding-right: 2.5rem; /* 👈 espace entre le texte et le spinner */
   width: 100%;
   max-width: 200px;
-}
-
-/* Corrige l'affichage des flèches sur Chrome/Safari/Edge */
-.points-inputs input::-webkit-outer-spin-button,
-.points-inputs input::-webkit-inner-spin-button {
-  -webkit-appearance: inner-spin-button;
-  margin: 0;
-}
-
-/* Pour Firefox */
-.points-inputs input[type=number] {
-  -moz-appearance: textfield;
+  box-sizing: border-box;
 }
 
 /* Style du texte sous les inputs */
