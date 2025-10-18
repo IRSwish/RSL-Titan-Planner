@@ -542,13 +542,10 @@ transform: rotate(90deg);
 .points-inputs input {
   background-color: #1a1a1a;
   color: #fcf6ff;
-  border: none;                     /* Supprime la bordure */
-  border-radius: 6px;               /* Arrondit les bords */
+  border-radius: 6px;
   padding: 1rem;
-  height:120%;
   width: 100%;
   max-width: 200px;
-  box-sizing: border-box;
 }
 
 /* Corrige l'affichage des flèches sur Chrome/Safari/Edge */
