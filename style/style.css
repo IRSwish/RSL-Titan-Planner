@@ -8,6 +8,11 @@
   --timeline-padding: 50px;
 }
 
+@font-face {
+  font-family: 'American Captain';
+  src: url('style/American Captain.otf') format('opentype');
+}    
+
 body {
   position: relative;
   background: url('/style/img/TITAN BACKGROUND.webp') top center no-repeat;
@@ -425,6 +430,29 @@ header {
   display: flex;
 }
 
+/* CALCULATOR */
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
+  z-index:1;
+}
+
+select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #2a2a2a;
+  color: white;
+  outline: none;
+}
+
+.hidden {
+  display: none;
+}
+
 .dropdown-sub:hover .arrow {
-  transform: rotate(90deg);
+transform: rotate(90deg);
 }
