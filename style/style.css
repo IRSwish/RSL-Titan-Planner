@@ -551,6 +551,18 @@ transform: rotate(90deg);
   box-sizing: border-box;
 }
 
+/* Chrome, Edge, Safari */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 /* Style du texte sous les inputs */
 .points-inputs span {
   font-size: 0.9rem;
