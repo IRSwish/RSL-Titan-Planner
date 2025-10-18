@@ -467,7 +467,8 @@ transform: rotate(90deg);
   margin: 30px auto;
   max-width: 700px;
   overflow-x: auto;
-  z-index: 10000; /* au-dessus du voile */
+  position: relative;
+  z-index: 10000;
 }
 
 /* TABLE POINTS */
@@ -478,8 +479,6 @@ transform: rotate(90deg);
   text-align: center;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
-  position: relative;
-  z-index: 10000;
 }
 
 #points-table th,
