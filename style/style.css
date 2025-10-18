@@ -543,7 +543,7 @@ transform: rotate(90deg);
   background-color: #1a1a1a;
   color: #fcf6ff;
   border: 1px solid var(--event-border);
-  padding: 0.4rem;
+  padding: 1rem;
   width: 100%;
   max-width: 200px;
 }
