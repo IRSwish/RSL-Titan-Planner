@@ -1,269 +1,517 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Swish - RSL Tools</title>
-  <link rel="stylesheet" href="style/style.css">
-  <style>
-    @font-face {
-      font-family: 'American Captain';
-      src: url('style/American Captain.otf') format('opentype');
-    }
-    td { text-align: center; }
-    #toggle-btn { display: none; margin: 10px 0; padding: 6px 12px; font-size: 14px; cursor: pointer; }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<div id="menu-container"></div>
-<div class="header-wrapper">
-  <header id="page-title">EFFICIENCY LAB</header>
-</div> 
-
-<!-- Formulaire -->
-<div class="dropdown-container">
-  <select id="event-type">
-    <option value="">-- Event Type --</option>
-    <option value="tournament">Tournament</option>
-    <option value="gearhunters">Gear Hunters</option>
-    <option value="herospath">Hero's Path</option>
-    <option value="deckoffate">Deck of Fate</option>
-  </select>
-
-  <select id="zone">
-    <option value="">-- Zone --</option>
-    <option value="dungeons">Dungeons</option>
-    <option value="campaign">Campaign</option>
-  </select>
-
-  <!-- Campaign Options -->
-  <select id="campaign-difficulty" class="hidden">
-    <option value="">-- Difficulty --</option>
-    <option value="normal">Normal</option>
-    <option value="hard">Hard</option>
-    <option value="brutal">Brutal</option>
-    <option value="nightmare">Nightmare</option>
-  </select>
-  <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
-  <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
-
-  <!-- Dungeons Options -->
-  <select id="dungeon-difficulty" class="hidden">
-    <option value="">-- Difficulty --</option>
-    <option value="normal">Normal</option>
-    <option value="hard">Hard</option>
-  </select>
-  <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
-
-  <!-- Toggle Points / % -->
-  <button id="toggle-btn">Show Loot %</button>
-</div>
-
-<!-- Tableau des points/loot -->
-<div id="points-table-container" class="hidden">
-  <table id="points-table">
-    <thead>
-      <tr>
-        <th>Rarity</th>
-        <th>Rank 1 ⭐</th>
-        <th>Rank 2 ⭐</th>
-        <th>Rank 3 ⭐</th>
-        <th>Rank 4 ⭐</th>
-        <th>Rank 5 ⭐</th>
-        <th>Rank 6 ⭐</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Common</td></tr>
-      <tr><td>Uncommon</td></tr>
-      <tr><td>Rare</td></tr>
-      <tr><td>Epic</td></tr>
-      <tr><td>Legendary</td></tr>
-      <tr><td>Mythical</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<script>
-const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
-const pointsTableContainer = document.getElementById('points-table-container');
-const pointsTableBody = document.getElementById('points-table').querySelector('tbody');
-
-const zoneSelect = document.getElementById('zone');
-const dungeonDifficultySelect = document.getElementById('dungeon-difficulty');
-const dungeonStageSelect = document.getElementById('dungeon-stage');
-const campaignDifficultySelect = document.getElementById('campaign-difficulty');
-const campaignActSelect = document.getElementById('campaign-act');
-const campaignStageSelect = document.getElementById('campaign-stage');
-const eventTypeSelect = document.getElementById('event-type');
-const toggleBtn = document.getElementById('toggle-btn');
-
-let pointsData = {};
-let displayMode = 'points'; // 'points' ou 'percent'
-
-// Charger le JSON
-fetch('/points-data.json')
-  .then(res => res.json())
-  .then(data => pointsData = data)
-  .catch(err => console.error('Erreur chargement points:', err));
-
-// Générer un tableau vide initial
-function generateEmptyPointsTable() {
-  pointsTableBody.innerHTML = '';
-  rarities.forEach(rarity => {
-    const tr = document.createElement('tr');
-    const tdRarity = document.createElement('td');
-    tdRarity.textContent = rarity;
-    tr.appendChild(tdRarity);
-
-    for (let i = 1; i <= 6; i++) {
-      const td = document.createElement('td');
-      td.textContent = '0';
-      td.style.backgroundColor = '';
-      td.style.color = '';
-      tr.appendChild(td);
-    }
-    pointsTableBody.appendChild(tr);
-  });
+:root {
+  --line-color: #d4af37;
+  --grid-line-color: rgba(255, 215, 0, 0.15);
+  --event-bg: #1a1a1a;
+  --event-border: #d4af37;
+  --text-color: #fcf6ff;
+  --point-bg: #0e0e0e;
+  --timeline-padding: 50px;
 }
 
-// Remplir le tableau des points
-function fillPointsTable(eventType) {
-  if (!pointsData.points?.[eventType]) return;
-  rarities.forEach((rarity, rowIndex) => {
-    const tr = pointsTableBody.rows[rowIndex];
-    const values = pointsData.points[eventType][rarity];
-    for (let col = 1; col <= 6; col++) {
-      tr.cells[col].textContent = values[col-1] || 0;
-      tr.cells[col].style.backgroundColor = '';
-      tr.cells[col].style.color = values[col-1] === 0 ? '#444' : '#fff';
-    }
-  });
+@font-face {
+  font-family: 'American Captain';
+  src: url('style/American Captain.otf') format('opentype');
+}    
+
+body {
+  position: relative;
+  background: url('/style/img/TITAN BACKGROUND.webp') top center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  overflow-x: hidden;
+
+  /* 🔸 Compense la hauteur de la barre */
+  padding-top: 70px;
 }
 
-// Récupérer le loot selon la zone/difficulty/stage
-function getLoot() {
-  const zone = zoneSelect.value;
-  if (!pointsData.loot) return null;
-  if (zone === 'dungeons') {
-    const difficulty = dungeonDifficultySelect.value;
-    const stage = dungeonStageSelect.value;
-    return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
-  } else if (zone === 'campaign') {
-    const difficulty = campaignDifficultySelect.value;
-    const act = campaignActSelect.value;
-    const stage = campaignStageSelect.value;
-    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stage] || null;
-  }
-  return null;
+/* Overlay sombre */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  z-index: 0;
 }
 
-// Remplir et colorer le tableau selon le loot
-function fillLootTable() {
-  const loot = getLoot();
-  if (!loot) return;
-
-  let maxValue = 0;
-  rarities.forEach(rarity => {
-    const arr = loot[rarity] || [];
-    arr.forEach(v => { if(v>maxValue) maxValue=v; });
-  });
-
-  rarities.forEach((rarity, rowIndex) => {
-    const tr = pointsTableBody.rows[rowIndex];
-    const percentages = loot[rarity] || [0,0,0,0,0,0];
-
-    for (let col = 1; col <= 6; col++) {
-      const value = percentages[col-1] || 0;
-      tr.cells[col].textContent = (value*100).toFixed(2) + '%';
-
-      if(value === 0){
-        tr.cells[col].style.color = '#444';  
-        tr.cells[col].style.backgroundColor = 'transparent';
-      } else {
-        tr.cells[col].style.color = '#fff';
-        const alpha = 0.1 + 0.4*(value/maxValue); 
-        tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
-      }
-    }
-  });
+header, .timeline-container, .summary-box {
+  position: relative;
+  z-index: 1;
 }
 
-// Gestion dropdowns
-function updateDropdowns() {
-  const zone = zoneSelect.value;
-  campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
-  campaignActSelect.classList.toggle('hidden', zone !== 'campaign');
-  campaignStageSelect.classList.toggle('hidden', zone !== 'campaign');
-  dungeonDifficultySelect.classList.toggle('hidden', zone !== 'dungeons');
-  dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
+header {
+    display: inline-block;
+    text-align: center;
+    font-family: 'American Captain', sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+    margin-top:10px;
+    margin-bottom:10px;
+    background: linear-gradient(to bottom, #feeec1, #e09f40);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.2))
+            drop-shadow(-1px -1px 1px rgba(0, 0, 0, 0.5));
 }
 
-// Mise à jour du tableau selon mode
-function updateTable() {
-  const eventType = eventTypeSelect.value;
-  if (!eventType) {
-    generateEmptyPointsTable();
-    pointsTableContainer.classList.add('hidden');
-    toggleBtn.classList.add('hidden');
-    return;
-  }
-
-  pointsTableContainer.classList.remove('hidden');
-  toggleBtn.classList.remove('hidden');
-  generateEmptyPointsTable();
-
-  if(displayMode === 'points'){
-    fillPointsTable(eventType);
-  } else if(displayMode === 'percent'){
-    fillLootTable();
-  }
+.header-wrapper {
+    text-align: center;
 }
 
-// Remplissage dynamique des acts/stages
-for (let i=1;i<=12;i++){
-  const opt=document.createElement('option');
-  opt.value=i; opt.textContent=`Act ${i}`;
-  campaignActSelect.appendChild(opt);
-}
-for (let i=1;i<=7;i++){
-  const opt=document.createElement('option');
-  opt.value=i; opt.textContent=`Stage ${i}`;
-  campaignStageSelect.appendChild(opt);
+/* Timeline globale */
+.timeline-container {
+  overflow-x: hidden;
+  padding: 0px 50px;
 }
 
-// Dungeon stages dynamiques
-dungeonDifficultySelect.addEventListener('change', () => {
-  const diff = dungeonDifficultySelect.value;
-  const maxStages = diff==='normal'?25:10;
-  dungeonStageSelect.innerHTML='<option value="">-- Stage --</option>';
-  for(let i=1;i<=maxStages;i++){
-    const opt=document.createElement('option');
-    opt.value=i; opt.textContent=`Stage ${i}`;
-    dungeonStageSelect.appendChild(opt);
-  }
-  updateTable();
-});
+.timeline {
+  position: relative;
+  display: flex;
+  width: max-content;
+  height: auto;
+}
 
-// Toggle points / %
-toggleBtn.addEventListener('click', ()=>{
-  displayMode = displayMode==='points'?'percent':'points';
-  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
-  updateTable();
-});
+.date-column {
+  flex: none;
+  text-align: center;
+  position: relative;
+  padding: 0 2px;
+  box-sizing: border-box;
+}
 
-// Événements pour rafraîchir le tableau
-[eventTypeSelect, zoneSelect, dungeonStageSelect, dungeonDifficultySelect, campaignDifficultySelect, campaignActSelect, campaignStageSelect].forEach(el=>{
-  el.addEventListener('change',()=>{
-    updateDropdowns();
-    updateTable();
-  });
-});
+.date-column .day {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+}
 
-// Initialisation
-generateEmptyPointsTable();
-updateDropdowns();
-</script>
-</body>
-</html>
+.date-column .date {
+  font-size: 13px;
+}
+
+/* Ligne verticale gauche/droite */
+.date-column .grid-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--grid-line-color);
+}
+
+/* Ligne horizontale sous les dates */
+.timeline-line {
+  position: absolute;
+  top: 55px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--line-color);
+}
+
+/* Événements */
+.event-block {
+  position: absolute;
+  background: var(--event-bg);
+  border: 2px solid var(--event-border);
+  padding:4px;
+  min-width: 50px;
+  border-radius: 14px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.event-name {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+/* Points */
+.points-container {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.point-box {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, filter 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--point-bg);
+  border: 2px solid var(--event-border);
+  border-radius: 8px;
+  flex: 1 1 40px;
+  max-width: 40px;
+  min-width: 18px;
+  padding: 2px;
+  width: 40px;
+  box-shadow: inset 0 0 6px rgba(255, 215, 0, 0.25);
+}
+
+.point-box:hover {
+  transform: scale(1.05);
+}
+
+.point-box:active {
+  transform: scale(0.85);
+}
+
+.point-box img {
+  width: 28px;
+  height: 28px;
+  flex: 1 1 28px;
+  max-width: 28px;
+  min-width: 18px;
+  max-height: 28px;
+  min-height: 18px;
+  object-fit: contain;
+}
+
+.point-box span {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--line-color);
+}
+
+/* Points états */
+.point-box.state-upcoming {
+  border: 2px solid #e0e0e0;
+  box-shadow: inset 0 0 6px rgba(212,175,55,0.25);
+}
+
+.point-box.state-upcoming img {
+  filter: grayscale(100%);
+}
+
+.point-box.state-upcoming span {
+  color:#e0e0e0;
+}
+
+.point-box.state-ongoing {
+  border: 2px solid orange;
+  box-shadow: inset 0 0 6px rgba(255,165,0,0.25);
+}
+
+.point-box.state-validated {
+  border: 2px solid #4caf50;
+  box-shadow: inset 0 0 6px rgba(76,175,80,0.25);
+}
+
+.point-box.state-validated span {
+  color:#4caf50;
+}
+
+.point-box.state-passed {
+  border: 2px solid red;
+  box-shadow: inset 0 0 6px rgba(100,100,100,0.25);
+}
+
+.point-box.state-passed span {
+  color:red;
+}
+
+.point-box.state-passed img {
+  filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(500%) brightness(80%);
+}
+
+/* Summary box */
+.summary-box {
+  position: relative;
+  margin: 0 auto;
+  max-width: 280px;
+  text-align: center;
+  background: #1a1a1a;
+  border: 2px solid #d4af37;
+  padding: 8px;
+  border-radius: 14px;
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  display: block; 
+}
+.summary-box div {
+  margin-bottom: 6px;
+}
+
+/* Highlight de la colonne du jour actuel */
+.date-column.today {
+  background: linear-gradient(
+       to bottom,
+       rgba(212,175,55,0) 0%,
+       rgba(212,175,55,0.15) 20%,
+       rgba(212,175,55,0.15) 80%,
+       rgba(212,175,55,0) 100%
+  );
+}
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.skipped {
+  background-color: red;
+}
+
+.legend-dot.in-progress {
+  background-color: orange;
+}
+
+.legend-dot.done {
+  background-color: #4caf50;
+}
+
+.legend-dot.not-started {
+  background-color: #e0e0e0;
+}
+
+/* BARRE PRINCIPALE FIXÉE */
+.menu-bar {
+  background: #1a1a1a;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+
+  /* FIXATION EN HAUT */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.menu-links {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-links li {
+  position: relative;
+}
+
+.dropdown-toggle {
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background 0.2s;
+}
+
+.dropdown-toggle:hover {
+  background: #333;
+  border-radius: 5px;
+}
+
+/* DROPDOWN NIVEAU 1 */
+.dropdown-content {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 2000;
+}
+
+.dropdown-content li a {
+  color: white;
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-content li a:hover {
+  background: #444;
+}
+
+/* AFFICHAGE AU SURVOL - NIVEAU 1 */
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+
+/* ======== NIVEAU 2 (Sous-dropdown pour les années) ======== */
+.dropdown-sub {
+  position: relative;
+}
+
+.dropdown-sub-toggle {
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.dropdown-sub-toggle:hover {
+  background: #444;
+  border-radius: 5px;
+}
+
+.arrow {
+  margin-left: 8px;
+  font-size: 12px;
+  transform: rotate(0deg);
+  transition: transform 0.2s;
+}
+
+.dropdown-sub-content {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #222;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 3000;
+}
+
+.dropdown-sub-content li a {
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-sub-content li a:hover {
+  background: #444;
+}
+
+/* Affichage au survol - NIVEAU 2 */
+.dropdown-sub:hover .dropdown-sub-content {
+  display: flex;
+}
+
+/* CALCULATOR */
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
+
+  /* ✅ Ajout pour passer au-dessus du voile sombre */
+  position: relative;
+  z-index: 10000;
+
+  /* ✅ Centrage */
+  margin: 0 auto;
+}
+
+select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #2a2a2a;
+  color: white;
+  outline: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.dropdown-sub:hover .arrow {
+transform: rotate(90deg);
+}
+
+#points-table-container {
+  margin: 30px auto;
+  max-width: 700px;
+  overflow-x: auto;
+  z-index: 10000; /* au-dessus du voile */
+}
+
+/* TABLE POINTS */
+
+#points-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  position: relative;
+  z-index: 10000;
+}
+
+#points-table th,
+#points-table td {
+  border: 1px solid var(--event-border);
+  padding: 8px;
+  background-color: var(--event-bg);
+}
+
+#points-table th {
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#points-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.toggle-btn {
+  background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+  border: 2px solid #d4af37;
+  color: #fcf6ff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#toggle-btn {
+  display: none; /* caché par défaut */
+}
