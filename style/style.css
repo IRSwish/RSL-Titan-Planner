@@ -516,64 +516,13 @@ transform: rotate(90deg);
   display: none; /* caché par défaut */
 }
 
- #points-table-container {
-      margin: 30px auto;
-      max-width: 700px;
-      overflow-x: auto;
-      z-index: 10000;
-      text-align: center;
-    }
+#calculation-result, .points-inputs {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  position: relative;
+  z-index: 10000;
+}
 
-    #points-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: center;
-      font-family: 'Inter', sans-serif;
-      color: var(--text-color);
-      position: relative;
-      z-index: 10000;
-    }
-
-    #points-table th,
-    #points-table td {
-      border: 1px solid var(--event-border);
-      padding: 8px;
-      background-color: var(--event-bg);
-    }
-
-    #points-table th {
-      background: linear-gradient(to bottom, #feeec1, #e09f40);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    #points-table td:first-child {
-      text-align: left;
-      font-weight: 600;
-    }
-
-    .toggle-btn {
-      background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
-      border: 2px solid #d4af37;
-      color: #fcf6ff;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-bottom: 15px;
-    }
-
-    .toggle-btn:hover {
-      background: linear-gradient(145deg, #2b2b2b, #1a1a1a);
-    }
-
-    .cell-zero {
-      color: #666;
-      background-color: var(--event-bg) !important;
-    }
-
-    .cell-loot {
-      color: #fff;
-    }
