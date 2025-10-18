@@ -305,7 +305,7 @@ header {
   padding: 15px 0;
   display: flex;
   justify-content: center;
-  position: relative;
+  position: absolute;
   z-index: 1000;
 }
 
