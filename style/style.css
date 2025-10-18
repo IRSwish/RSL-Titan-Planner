@@ -478,6 +478,8 @@ transform: rotate(90deg);
   text-align: center;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
+  position: relative;
+  z-index: 10000;
 }
 
 #points-table th,
