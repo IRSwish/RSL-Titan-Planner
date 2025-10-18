@@ -160,7 +160,7 @@ function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
 
-  // On récupère la valeur max parmi toutes les cellules du loot pour normaliser le vert
+  // Récupérer la valeur max parmi toutes les cellules
   let maxValue = 0;
   rarities.forEach(rarity => {
     const arr = loot[rarity] || [];
@@ -175,12 +175,13 @@ function fillLootTable() {
       tr.cells[col].textContent = (value*100).toFixed(2) + '%';
 
       if(value === 0){
-        // gris pour 0
-        tr.cells[col].style.backgroundColor = 'rgba(200,200,200,0.3)';
+        tr.cells[col].style.color = '#aaa'; // gris pour 0
+      } else if(value === maxValue){
+        tr.cells[col].style.color = 'inherit'; // valeur max normale
       } else {
-        // dégradé vert
-        const alpha = value / maxValue; // proportion de la valeur max
-        tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+        // texte légèrement vert selon proportion de max (mais discret)
+        const alpha = value / maxValue * 0.5; // 0.5 max pour rester léger
+        tr.cells[col].style.color = `rgba(0,128,0,${alpha})`;
       }
     }
   });
