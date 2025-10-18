@@ -89,7 +89,7 @@
   <input type="number" id="current-points" min="0" value="0">
   <label for="target-points">Target Points:</label>
   <input type="number" id="target-points" min="0" value="0">
-  <span id="points-remaining">0 remaining</span>
+  <span id="points-remaining">0 point(s) remaining</span>
 </div>
 
 <div id="points-table-container" class="hidden">
@@ -266,7 +266,7 @@ function updateCalculation() {
   const current = Number(currentPointsInput.value) || 0;
   const target = Number(targetPointsInput.value) || 0;
   const remaining = Math.max(target - current, 0);
-  pointsRemainingSpan.textContent = `${remaining} remaining`;
+  pointsRemainingSpan.textContent = `${remaining} point(s) remaining`;
 
   if (remaining <= 0) {
     calculationResult.textContent = '';
