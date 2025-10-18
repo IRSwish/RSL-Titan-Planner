@@ -35,6 +35,20 @@
   },
   "loot": {
     "dungeons": {
+	  "normal":{
+        "1": {
+          "Energy": 20,
+          "Mystery Shard": 0.1005,
+          "Ancient Shard": 0.05,
+          "Brews": 0.1005,
+          "Common": [0, 0, 0, 0, 0, 0],
+          "Uncommon": [0, 0, 0, 0, 0, 0],
+          "Rare": [0.48, 0.32, 0, 0, 0, 0],
+          "Epic": [0.1140, 0.076, 0, 0, 0, 0],
+          "Legendary": [0.0060, 0.0040, 0, 0, 0, 0],
+          "Mythical": [0, 0, 0, 0, 0, 0]
+        }
+	  },
       "hard": {
         "1": {
           "Energy": 20,
