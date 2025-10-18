@@ -49,7 +49,6 @@
   <header id="page-title">EFFICIENCY LAB</header>
 </div> 
 
-<!-- Formulaire -->
 <div class="dropdown-container">
   <select id="event-type">
     <option value="">-- Event Type --</option>
@@ -65,7 +64,6 @@
     <option value="campaign">Campaign</option>
   </select>
 
-  <!-- Campaign Options -->
   <select id="campaign-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
     <option value="normal">Normal</option>
@@ -76,7 +74,6 @@
   <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
   <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
 
-  <!-- Dungeons Options -->
   <select id="dungeon-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
     <option value="normal">Normal</option>
@@ -84,11 +81,9 @@
   </select>
   <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
 
-  <!-- Toggle Points / % -->
   <button id="toggle-btn" class="toggle-btn">Afficher en %</button>
 </div>
 
-<!-- Inputs pour les points -->
 <div class="points-inputs">
   <label for="current-points">Current Points:</label>
   <input type="number" id="current-points" min="0" value="0">
@@ -98,7 +93,6 @@
   <span id="points-remaining">0 remaining</span>
 </div>
 
-<!-- Tableau des points/loot -->
 <div id="points-table-container" class="hidden">
   <table id="points-table">
     <thead>
@@ -123,7 +117,6 @@
   </table>
 </div>
 
-<!-- Résultat de la simulation -->
 <div id="calculation-result"></div>
 
 <script>
@@ -148,13 +141,11 @@ const calculationResult = document.getElementById('calculation-result');
 let pointsData = {};
 let displayMode = 'points';
 
-// Charger le JSON
 fetch('/points-data.json')
   .then(res => res.json())
   .then(data => pointsData = data)
   .catch(err => console.error('Erreur chargement points:', err));
 
-// Tableau vide initial
 function generateEmptyPointsTable() {
   pointsTableBody.innerHTML = '';
   rarities.forEach(rarity => {
@@ -171,7 +162,6 @@ function generateEmptyPointsTable() {
   });
 }
 
-// Points
 function fillPointsTable(eventType) {
   if (!pointsData.points?.[eventType]) return;
   rarities.forEach((rarity, rowIndex) => {
@@ -185,7 +175,6 @@ function fillPointsTable(eventType) {
   });
 }
 
-// Loot JSON
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
@@ -202,40 +191,49 @@ function getLoot() {
   return null;
 }
 
-// Energy JSON
 function getEnergy() {
   const loot = getLoot();
   return loot ? loot.Energy || 0 : 0;
 }
 
-// % Table
+// ➕ NOUVELLE LOGIQUE pour pourcentages
 function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
+
+  const mystery = loot["Mystery Shard"] || 0;
+  const ancient = loot["Ancient Shard"] || 0;
+  const brews = loot["Brews"] || 0;
+  const gearFactor = 1 - (mystery + ancient + brews);
+
   let maxValue = 0;
   rarities.forEach(rarity => {
     const arr = loot[rarity] || [];
-    arr.forEach(v => { if(v>maxValue) maxValue=v; });
+    arr.forEach(v => { 
+      const adjusted = gearFactor > 0 ? (v / gearFactor) : 0;
+      if(adjusted > maxValue) maxValue = adjusted;
+    });
   });
+
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const percentages = loot[rarity] || [0,0,0,0,0,0];
     for (let col = 1; col <= 6; col++) {
       const value = percentages[col-1] || 0;
-      tr.cells[col].textContent = (value*100).toFixed(2) + '%';
+      const adjusted = gearFactor > 0 ? (value / gearFactor) : 0;
+      tr.cells[col].textContent = (adjusted*100).toFixed(2) + '%';
       if(value === 0){
         tr.cells[col].style.color = '#444';
         tr.cells[col].style.backgroundColor = 'transparent';
       } else {
         tr.cells[col].style.color = '#fff';
-        const alpha = 0.1 + 0.4*(value/maxValue);
+        const alpha = 0.1 + 0.4*(adjusted/maxValue);
         tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
       }
     }
   });
 }
 
-// Dropdown visibility
 function updateDropdowns() {
   const zone = zoneSelect.value;
   campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
@@ -245,7 +243,6 @@ function updateDropdowns() {
   dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
 }
 
-// Table update
 function updateTable() {
   const eventType = eventTypeSelect.value;
   if (!eventType) {
@@ -266,7 +263,6 @@ function updateTable() {
   updateCalculation();
 }
 
-// Calculation update
 function updateCalculation() {
   const current = Number(currentPointsInput.value) || 0;
   const target = Number(targetPointsInput.value) || 0;
@@ -287,7 +283,6 @@ function updateCalculation() {
     return;
   }
 
-  // points moyens par run
   let totalAvgPoints = 0;
   const pointValues = pointsData.points[eventType];
   const loot = getLoot();
@@ -308,7 +303,6 @@ function updateCalculation() {
     That corresponds to ${totalEnergy} energy, or approximately ${gems} gems worth of energy refills.`;
 }
 
-// Événements
 [currentPointsInput, targetPointsInput].forEach(input => {
   input.addEventListener('input', updateCalculation);
 });
@@ -319,7 +313,6 @@ function updateCalculation() {
   });
 });
 
-// Dungeon stages
 dungeonDifficultySelect.addEventListener('change', () => {
   const diff = dungeonDifficultySelect.value;
   const maxStages = diff==='normal'?25:10;
@@ -332,14 +325,12 @@ dungeonDifficultySelect.addEventListener('change', () => {
   updateTable();
 });
 
-// Toggle
 toggleBtn.addEventListener('click', ()=>{
   displayMode = displayMode==='points'?'percent':'points';
   toggleBtn.textContent = displayMode==='points'?'Afficher en %':'Afficher en points';
   updateTable();
 });
 
-// Campaign acts/stages
 for (let i=1;i<=12;i++){
   const opt=document.createElement('option');
   opt.value=i; opt.textContent=`Act ${i}`;
@@ -351,7 +342,6 @@ for (let i=1;i<=7;i++){
   campaignStageSelect.appendChild(opt);
 }
 
-// Init
 generateEmptyPointsTable();
 updateDropdowns();
 toggleBtn.style.display = 'none';
