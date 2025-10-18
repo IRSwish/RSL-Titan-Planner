@@ -9,22 +9,20 @@
       font-family: 'American Captain';
       src: url('style/American Captain.otf') format('opentype');
     }    
+    td { text-align: center; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<!-- BARRE DE MENU CENTRÉE -->
+<!-- Barre de menu -->
 <div id="menu-container"></div>
-
 <div class="header-wrapper">
   <header id="page-title">EFFICIENCY LAB</header>
 </div> 
 
-<!-- FORMULAIRE -->
+<!-- Formulaire -->
 <div class="dropdown-container">
-  <!-- Event Type -->
   <select id="event-type">
     <option value="">-- Event Type --</option>
     <option value="tournament">Tournament</option>
@@ -33,7 +31,6 @@
     <option value="deckoffate">Deck of Fate</option>
   </select>
 
-  <!-- Zone -->
   <select id="zone">
     <option value="">-- Zone --</option>
     <option value="dungeons">Dungeons</option>
@@ -48,14 +45,8 @@
     <option value="brutal">Brutal</option>
     <option value="nightmare">Nightmare</option>
   </select>
-
-  <select id="campaign-act" class="hidden">
-    <option value="">-- Act --</option>
-  </select>
-
-  <select id="campaign-stage" class="hidden">
-    <option value="">-- Stage --</option>
-  </select>
+  <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
+  <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
 
   <!-- Dungeons Options -->
   <select id="dungeon-difficulty" class="hidden">
@@ -63,13 +54,10 @@
     <option value="normal">Normal</option>
     <option value="hard">Hard</option>
   </select>
-
-  <select id="dungeon-stage" class="hidden">
-    <option value="">-- Stage --</option>
-  </select>
+  <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
 </div>
 
-<!-- TABLEAU DES POINTS -->
+<!-- Tableau des points/loot -->
 <div id="points-table-container" class="hidden">
   <table id="points-table">
     <thead>
@@ -95,88 +83,27 @@
 </div>
 
 <script>
-  const zoneSelect = document.getElementById('zone');
+const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
+const pointsTableContainer = document.getElementById('points-table-container');
+const pointsTableBody = document.getElementById('points-table').querySelector('tbody');
 
-  const campaignDifficulty = document.getElementById('campaign-difficulty');
-  const campaignAct = document.getElementById('campaign-act');
-  const campaignStage = document.getElementById('campaign-stage');
+const zoneSelect = document.getElementById('zone');
+const dungeonDifficultySelect = document.getElementById('dungeon-difficulty');
+const dungeonStageSelect = document.getElementById('dungeon-stage');
+const campaignDifficultySelect = document.getElementById('campaign-difficulty');
+const campaignActSelect = document.getElementById('campaign-act');
+const campaignStageSelect = document.getElementById('campaign-stage');
+const eventTypeSelect = document.getElementById('event-type');
 
-  const dungeonDifficulty = document.getElementById('dungeon-difficulty');
-  const dungeonStage = document.getElementById('dungeon-stage');
-
-  // Remplir Acts 1 à 12
-  for (let i = 1; i <= 12; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = `Act ${i}`;
-    campaignAct.appendChild(option);
-  }
-
-  // Remplir Stages 1 à 7 (Campaign)
-  for (let i = 1; i <= 7; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = `Stage ${i}`;
-    campaignStage.appendChild(option);
-  }
-
-  // Quand on change la zone
-  zoneSelect.addEventListener('change', () => {
-    const zone = zoneSelect.value;
-
-    // Réinitialiser l'affichage
-    campaignDifficulty.classList.add('hidden');
-    campaignAct.classList.add('hidden');
-    campaignStage.classList.add('hidden');
-    dungeonDifficulty.classList.add('hidden');
-    dungeonStage.classList.add('hidden');
-
-    if (zone === 'campaign') {
-      campaignDifficulty.classList.remove('hidden');
-      campaignAct.classList.remove('hidden');
-      campaignStage.classList.remove('hidden');
-    } else if (zone === 'dungeons') {
-      dungeonDifficulty.classList.remove('hidden');
-      dungeonStage.classList.remove('hidden');
-    }
-  });
-
-  // Quand on change la difficulté des donjons
-  dungeonDifficulty.addEventListener('change', () => {
-    const difficulty = dungeonDifficulty.value;
-
-    // Vider les stages
-    dungeonStage.innerHTML = '<option value="">-- Stage --</option>';
-
-    let maxStages = difficulty === 'normal' ? 25 : 10;
-
-    for (let i = 1; i <= maxStages; i++) {
-      const option = document.createElement('option');
-      option.value = i;
-      option.textContent = `Stage ${i}`;
-      dungeonStage.appendChild(option);
-    }
-  });
-</script>
-  
-<script>
 let pointsData = {};
 
 // Charger le JSON
 fetch('/points-data.json')
-  .then(response => response.json())
-  .then(data => {
-    pointsData = data;
-  })
+  .then(res => res.json())
+  .then(data => pointsData = data)
   .catch(err => console.error('Erreur chargement points:', err));
 
-const eventTypeSelect = document.getElementById('event-type');
-const pointsTableContainer = document.getElementById('points-table-container');
-const pointsTableBody = document.getElementById('points-table').querySelector('tbody');
-
-const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
-
-// Générer le tableau vide initial
+// Générer un tableau vide initial
 function generateEmptyPointsTable() {
   pointsTableBody.innerHTML = '';
   rarities.forEach(rarity => {
@@ -188,6 +115,7 @@ function generateEmptyPointsTable() {
     for (let i = 1; i <= 6; i++) {
       const td = document.createElement('td');
       td.textContent = '0';
+      td.style.backgroundColor = '';
       tr.appendChild(td);
     }
 
@@ -195,34 +123,112 @@ function generateEmptyPointsTable() {
   });
 }
 
-// Remplir le tableau avec les données pour l'événement choisi
+// Remplir le tableau des points
 function fillPointsTable(eventType) {
-  if (!pointsData[eventType]) return;
+  if (!pointsData.points?.[eventType]) return;
 
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
+    const values = pointsData.points[eventType][rarity];
     for (let col = 1; col <= 6; col++) {
-      tr.cells[col].textContent = pointsData[eventType][rarity][col - 1];
+      tr.cells[col].textContent = values[col-1] || 0;
+      tr.cells[col].style.backgroundColor = '';
     }
   });
 }
 
-// Quand on change le type d'événement
-eventTypeSelect.addEventListener('change', () => {
-  const eventType = eventTypeSelect.value;
+// Récupérer le loot selon la zone/difficulty/stage
+function getLoot() {
+  const zone = zoneSelect.value;
+  if (!pointsData.loot) return null;
 
-  if (eventType) {
-    pointsTableContainer.classList.remove('hidden');
-    generateEmptyPointsTable();  // réinitialiser
-    fillPointsTable(eventType);  // remplir avec les données
-  } else {
-    pointsTableContainer.classList.add('hidden');
+  if (zone === 'dungeons') {
+    const difficulty = dungeonDifficultySelect.value;
+    const stage = dungeonStageSelect.value;
+    return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
+  } else if (zone === 'campaign') {
+    const difficulty = campaignDifficultySelect.value;
+    const act = campaignActSelect.value;
+    const stage = campaignStageSelect.value;
+    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stage] || null;
   }
+  return null;
+}
+
+// Remplir et colorer le tableau selon le loot
+function fillLootTable() {
+  const loot = getLoot();
+  if (!loot) return;
+
+  rarities.forEach((rarity, rowIndex) => {
+    const tr = pointsTableBody.rows[rowIndex];
+    const percentages = loot[rarity] || [0,0,0,0,0,0];
+    for (let col = 1; col <= 6; col++) {
+      const value = percentages[col-1] || 0;
+      tr.cells[col].textContent = (value*100).toFixed(2) + '%';
+      const alpha = Math.min(value*10,1);
+      tr.cells[col].style.backgroundColor = `rgba(245,37,132,${alpha})`;
+    }
+  });
+}
+
+// Gestion de l'affichage dynamique des dropdowns
+function updateDropdowns() {
+  const zone = zoneSelect.value;
+  campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
+  campaignActSelect.classList.toggle('hidden', zone !== 'campaign');
+  campaignStageSelect.classList.toggle('hidden', zone !== 'campaign');
+  dungeonDifficultySelect.classList.toggle('hidden', zone !== 'dungeons');
+  dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
+}
+
+// Mise à jour du tableau selon event et loot
+function updateTable() {
+  const eventType = eventTypeSelect.value;
+  if (!eventType) return generateEmptyPointsTable();
+
+  pointsTableContainer.classList.remove('hidden');
+  generateEmptyPointsTable();
+  fillPointsTable(eventType);
+  fillLootTable();
+}
+
+// Remplissage dynamique des acts/stages
+for (let i=1;i<=12;i++) {
+  const opt = document.createElement('option');
+  opt.value=i; opt.textContent=`Act ${i}`;
+  campaignActSelect.appendChild(opt);
+}
+for (let i=1;i<=7;i++) {
+  const opt = document.createElement('option');
+  opt.value=i; opt.textContent=`Stage ${i}`;
+  campaignStageSelect.appendChild(opt);
+}
+
+// Exemple pour dungeon stages (rempli dynamiquement selon difficulty)
+dungeonDifficultySelect.addEventListener('change', () => {
+  const diff = dungeonDifficultySelect.value;
+  const maxStages = diff==='normal'?25:10;
+  dungeonStageSelect.innerHTML='<option value="">-- Stage --</option>';
+  for(let i=1;i<=maxStages;i++){
+    const opt=document.createElement('option');
+    opt.value=i; opt.textContent=`Stage ${i}`;
+    dungeonStageSelect.appendChild(opt);
+  }
+  updateTable();
+});
+
+// Événements pour rafraîchir le tableau
+[eventTypeSelect, zoneSelect, dungeonStageSelect, dungeonDifficultySelect, campaignDifficultySelect, campaignActSelect, campaignStageSelect].forEach(el=>{
+  el.addEventListener('change',()=>{
+    updateDropdowns();
+    updateTable();
+  });
 });
 
 // Initialisation
 generateEmptyPointsTable();
+updateDropdowns();
 </script>
-<script src="script.js"></script>
 </body>
 </html>
