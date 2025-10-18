@@ -462,3 +462,39 @@ select {
 .dropdown-sub:hover .arrow {
 transform: rotate(90deg);
 }
+
+#points-table-container {
+  margin: 30px auto;
+  max-width: 700px;
+  overflow-x: auto;
+  z-index: 10000; /* au-dessus du voile */
+}
+
+/* TABLE POINTS */
+
+#points-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+}
+
+#points-table th,
+#points-table td {
+  border: 1px solid var(--event-border);
+  padding: 8px;
+  background-color: var(--event-bg);
+}
+
+#points-table th {
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#points-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
