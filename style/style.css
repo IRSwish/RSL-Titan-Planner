@@ -530,8 +530,6 @@ transform: rotate(90deg);
   display: flex;
   flex-direction: column;  /* Empile les éléments verticalement */
   align-items: flex-start;  /* Aligne à gauche */
-  gap: 0.5rem;              /* Espacement entre les éléments */
-  margin-bottom: 1rem;
   position: relative;
   z-index: 10000;
 }
