@@ -176,12 +176,12 @@ function fillLootTable() {
       tr.cells[col].textContent = (value*100).toFixed(2) + '%';
 
       if(value === 0){
-        tr.cells[col].style.color = '#aaa';  // texte gris pour zéro
+        tr.cells[col].style.color = '#666';  // texte gris foncé
         tr.cells[col].style.backgroundColor = 'transparent';
       } else {
-        tr.cells[col].style.color = '#000';  // texte noir pour les autres
-        const alpha = 0.1 + 0.4 * (value / maxValue); // 0.1 à 0.5 de transparence
-        tr.cells[col].style.backgroundColor = `rgba(0, 255, 0, ${alpha})`; // vert léger
+        tr.cells[col].style.color = '#fff';  // texte blanc
+        const alpha = 0.1 + 0.4 * (value / maxValue); // 0.1 à 0.5
+        tr.cells[col].style.backgroundColor = `rgba(0, 200, 0, ${alpha})`; // vert pastel
       }
     }
   });
