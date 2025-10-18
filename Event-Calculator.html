@@ -160,27 +160,14 @@
 </script>
   
 <script>
+const eventTypeSelect = document.getElementById('event-type');
 const pointsTableContainer = document.getElementById('points-table-container');
 const pointsTable = document.getElementById('points-table').querySelector('tbody');
 
-function generatePointsTable(zone, difficulty, actOrStage) {
-  // Définir les points par exemple : ici on peut mettre une formule ou des valeurs arbitraires
-  const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
+const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 
-  // Exemple de points pour chaque rank : tu peux adapter selon ton calcul
-  const basePoints = zone === 'campaign' ? 10 : 15;
-  const diffMultiplier = {
-    normal: 1,
-    hard: 1.5,
-    brutal: 2,
-    nightmare: 2.5
-  };
-
-  const multiplier = diffMultiplier[difficulty] || 1;
-
-  // Vider l'ancien contenu sauf la colonne Rarity
+function generateEmptyPointsTable() {
   pointsTable.innerHTML = '';
-  
   rarities.forEach(rarity => {
     const tr = document.createElement('tr');
     const tdRarity = document.createElement('td');
@@ -189,36 +176,27 @@ function generatePointsTable(zone, difficulty, actOrStage) {
 
     for (let rank = 1; rank <= 6; rank++) {
       const td = document.createElement('td');
-      // Exemple de calcul : basePoints * rang * multiplicateur
-      td.textContent = Math.round(basePoints * rank * multiplier);
+      td.textContent = '0'; // valeurs initiales à zéro
       tr.appendChild(td);
     }
 
     pointsTable.appendChild(tr);
   });
-
-  // Afficher le tableau
-  pointsTableContainer.classList.remove('hidden');
 }
 
-// Exemple : on déclenche quand le dropdown campaign/dungeon + niveau sont choisis
-[dungeonStage, campaignStage].forEach(select => {
-  select.addEventListener('change', () => {
-    const zone = zoneSelect.value;
-    let difficulty, stage;
+eventTypeSelect.addEventListener('change', () => {
+  const eventType = eventTypeSelect.value;
 
-    if (zone === 'campaign') {
-      difficulty = campaignDifficulty.value;
-      stage = campaignStage.value;
-    } else if (zone === 'dungeons') {
-      difficulty = dungeonDifficulty.value;
-      stage = dungeonStage.value;
-    }
+  if (eventType) {
+    // Afficher le tableau
+    pointsTableContainer.classList.remove('hidden');
 
-    if (difficulty && stage) {
-      generatePointsTable(zone, difficulty, stage);
-    }
-  });
+    // Générer une version vide/initialisée du tableau
+    generateEmptyPointsTable();
+  } else {
+    // Cacher si aucun event sélectionné
+    pointsTableContainer.classList.add('hidden');
+  }
 });
 </script>
 <script src="script.js"></script>
