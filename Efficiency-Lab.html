@@ -66,10 +66,10 @@
 
   <select id="campaign-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
-    <option value="Normal">Normal</option>
-    <option value="Hard">Hard</option>
-    <option value="Brutal">Brutal</option>
-    <option value="Nightmare">Nightmare</option>
+    <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+    <option value="brutal">Brutal</option>
+    <option value="nightmare">Nightmare</option>
   </select>
   <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
   <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
@@ -174,37 +174,17 @@ function fillPointsTable(eventType) {
 }
 
 function getLoot() {
-  if (!pointsData.loot) return null;
   const zone = zoneSelect.value;
-
-  if(zone === "campaign") {
-    const difficulty = campaignDifficultySelect.value;
-    const act = campaignActSelect.value;
-    const stage = campaignStageSelect.value;
-    const actData = pointsData.loot.campaign?.[difficulty]?.[act];
-    if(!actData) return null;
-
-    // Stage 1 à 6 utilisent la clé "1-6", sinon stage 7 "7"
-    const stageKey = stage === "7" ? "7" : "1-6";
-    const stageData = actData?.[stageKey];
-    if(!stageData) return null;
-
-    // On renvoie un objet complet par rareté pour fillLootTable()
-    const lootByRarity = {};
-    rarities.forEach(rarity => {
-      lootByRarity[rarity] = stageData[rarity] || [0,0,0,0,0,0];
-    });
-    lootByRarity.Energy = stageData.Energy || 0;
-    lootByRarity["Mystery Shard"] = stageData["Mystery Shard"] || 0;
-    lootByRarity["Ancient Shard"] = stageData["Ancient Shard"] || 0;
-    lootByRarity["Brews"] = stageData["Brews"] || 0;
-
-    return lootByRarity;
-  } 
-  else if(zone === "dungeons") {
+  if (!pointsData.loot) return null;
+  if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
+  } else if (zone === 'campaign') {
+    const difficulty = campaignDifficultySelect.value;
+    const act = campaignActSelect.value;
+    const stage = campaignStageSelect.value;
+    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stage] || null;
   }
   return null;
 }
@@ -214,6 +194,7 @@ function getEnergy() {
   return loot ? loot.Energy || 0 : 0;
 }
 
+// ➕ NOUVELLE LOGIQUE pour pourcentages
 function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
@@ -293,6 +274,7 @@ function updateCalculation() {
 
   const energyPerRun = getEnergy();
   const eventType = eventTypeSelect.value;
+  const zone = zoneSelect.value;
 
   if (!energyPerRun || !pointsData.points?.[eventType]) {
     calculationResult.textContent = '';
