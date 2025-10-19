@@ -89,7 +89,9 @@
   <input type="number" id="target-points" min="0" value="0">
   <span id="points-remaining">0 point(s) remaining</span>
 </div>
-
+  
+<div id="calculation-result"></div>
+  
 <div id="points-table-container" class="hidden">
   <button id="toggle-btn" class="toggle-btn">Show Loot %</button>
   <table id="points-table">
@@ -114,8 +116,6 @@
     </tbody>
   </table>
 </div>
-
-<div id="calculation-result"></div>
 
 <script>
 const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
