@@ -204,9 +204,8 @@ function fillLootTable() {
   if (!loot) return;
 
   const mystery = loot["Mystery Shard"] || 0;
-  const ancient = loot["Ancient Shard"] || 0;
-  const brews = loot["Brews"] || 0;
-  const gearFactor = 1 - (mystery + ancient + brews);
+  const champions = loot["Champions"] || 0; // à la place de Brews
+  const gearFactor = 1 - (mystery + champions); // uniquement Myst + Champs
 
   let maxValue = 0;
   rarities.forEach(rarity => {
@@ -219,7 +218,7 @@ function fillLootTable() {
 
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
-    const percentages = loot[rarity] || [0,0,0,0,0,0];
+    const percentages = loot[rarity] || [0,0,0,0,0,0]; // fallback pour raretés inexistantes
     for (let col = 1; col <= 6; col++) {
       const value = percentages[col-1] || 0;
       const adjusted = gearFactor > 0 ? (value / gearFactor) : 0;
