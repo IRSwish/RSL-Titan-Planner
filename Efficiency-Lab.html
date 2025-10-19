@@ -137,7 +137,6 @@ const zoneSelect = document.getElementById('zone');
 const dungeonDifficultySelect = document.getElementById('dungeon-difficulty');
 const dungeonStageSelect = document.getElementById('dungeon-stage');
 const campaignDifficultySelect = document.getElementById('campaign-difficulty');
-const campaignActSelect = document.getElementById('campaign-act');
 const campaignStageSelect = document.getElementById('campaign-stage');
 const eventTypeSelect = document.getElementById('event-type');
 const toggleBtn = document.getElementById('toggle-btn');
@@ -190,8 +189,6 @@ function fillPointsTable(eventType) {
 function getCampaignStageData(difficulty, stage) {
   const campaignData = pointsData.loot.campaign?.[difficulty];
   if (!campaignData) return {};
-
-  // Parcours des clés, qui peuvent être des intervalles ou des stages simples
   for (const key of Object.keys(campaignData)) {
     if (key.includes('-')) {
       const [start, end] = key.split('-').map(Number);
@@ -203,32 +200,15 @@ function getCampaignStageData(difficulty, stage) {
   return {};
 }
 
-// --- Dropdown campagne
-campaignDifficultySelect.addEventListener('change', () => {
-  const diff = campaignDifficultySelect.value;
-  if (!diff) return;
-  // Supposons que chaque difficulté a max 25 stages
-  const maxStages = diff === 'normal' ? 25 : diff === 'hard' ? 25 : 25; 
-  campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
-  for (let i = 1; i <= maxStages; i++) {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = `Stage ${i}`;
-    campaignStageSelect.appendChild(opt);
-  }
-  updateTable();
-});
-
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
-
   if (zone === 'campaign') {
     const difficulty = campaignDifficultySelect.value;
     const stage = Number(campaignStageSelect.value);
     if (difficulty && stage) return getCampaignStageData(difficulty, stage);
     return null;
-} else if (zone === 'dungeons') {
+  } else if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     if (difficulty && stage) return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
@@ -243,35 +223,30 @@ function getEnergy() {
 }
 
 function fillLootTable() {
-  const zone = zoneSelect.value;
-  let loot = getLoot();
+  const loot = getLoot();
   if (!loot) return;
 
-  // Calcul du facteur gear si applicable
   const mystery = loot["Mystery Shard"] || 0;
   const champions = loot["Champions"] || 0;
   const gearFactor = 1 - (mystery + champions);
 
-  // Trouver la valeur maximale pour le gradient
   let maxValue = 0;
-  rarities.forEach((rarity) => {
+  rarities.forEach(rarity => {
     const arr = loot[rarity] || [];
-    for(let i = 0; i < 6; i++) {
+    for(let i=0;i<6;i++){
       const value = arr[i] || 0;
       const adjusted = gearFactor > 0 ? value / gearFactor : 0;
       if(adjusted > maxValue) maxValue = adjusted;
     }
   });
 
-  // Remplissage du tableau
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const arr = loot[rarity] || [];
-    for (let i = 0; i < 6; i++) {
+    for(let i=0;i<6;i++){
       const value = arr[i] || 0;
       const adjusted = gearFactor > 0 ? value / gearFactor : 0;
-      tr.cells[i+1].textContent = (adjusted*100).toFixed(2) + '%';
-      
+      tr.cells[i+1].textContent = (adjusted*100).toFixed(2)+'%';
       if(value === 0){
         tr.cells[i+1].style.color = '#444';
         tr.cells[i+1].style.backgroundColor = 'transparent';
@@ -284,12 +259,10 @@ function fillLootTable() {
   });
 }
 
-
 // --- Dropdowns ---
 function updateDropdowns() {
   const zone = zoneSelect.value;
   campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
-  campaignActSelect.classList.toggle('hidden', zone !== 'campaign');
   campaignStageSelect.classList.toggle('hidden', zone !== 'campaign');
   dungeonDifficultySelect.classList.toggle('hidden', zone !== 'dungeons');
   dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
@@ -317,26 +290,26 @@ function updateCalculation() {
   rarities.forEach(rarity => {
     const pointsForRarity = pointValues[rarity];
     const dropRates = loot[rarity] || [0,0,0,0,0,0];
-    for (let i = 0; i < 6; i++) totalAvgPoints += (dropRates[i] || 0) * (pointsForRarity[i] || 0);
+    for (let i=0;i<6;i++) totalAvgPoints += (dropRates[i]||0)*(pointsForRarity[i]||0);
   });
 
-  const runsNeeded = Math.ceil(remaining / totalAvgPoints);
-  const superrunsNeeded = Math.ceil(remaining / totalAvgPoints / 2);
+  const runsNeeded = Math.ceil(remaining/totalAvgPoints);
+  const superrunsNeeded = Math.ceil(remaining/totalAvgPoints/2);
   const totalEnergy = runsNeeded * energyPerRun;
   const gems = (totalEnergy / 3.25).toFixed(2);
 
   calculationResult.innerHTML = `
-  <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 10px;">
-    <div style="text-align: center;">
-      <div style="font-weight: bold; font-size: 18px; margin-bottom: 5px;">${totalEnergy}</div>
-      <div style="width: 64px; height: 64px; background-image: url('style/img/Misc/Energy.webp'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:10px;">
+    <div style="text-align:center;">
+      <div style="font-weight:bold;font-size:18px;margin-bottom:5px;">${totalEnergy}</div>
+      <div style="width:64px;height:64px;background-image:url('style/img/Misc/Energy.webp');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
     </div>
-    <div style="text-align: center;">
-      <div style="font-weight: bold; font-size: 18px; margin-bottom: 5px;">${gems}</div>
-      <div style="width: 64px; height: 64px; background-image: url('style/img/Misc/Gems.webp'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+    <div style="text-align:center;">
+      <div style="font-weight:bold;font-size:18px;margin-bottom:5px;">${gems}</div>
+      <div style="width:64px;height:64px;background-image:url('style/img/Misc/Gems.webp');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
     </div>
-    <div style="text-align: center; max-width: 300px;">
-      <div style="font-size: 15px;">
+    <div style="text-align:center;max-width:300px;">
+      <div style="font-size:15px;">
         ${runsNeeded} run(s) or ${superrunsNeeded} super raid(s)<br>
         to reach ${remaining} remaining points
       </div>
@@ -357,49 +330,49 @@ function updateTable() {
   pointsTableContainer.classList.remove('hidden');
   toggleBtn.style.display = 'inline-block';
   generateEmptyPointsTable();
-  if(displayMode === 'points') fillPointsTable(eventType);
+  if(displayMode==='points') fillPointsTable(eventType);
   else fillLootTable();
   updateCalculation();
 }
 
 // --- Listeners ---
 [currentPointsInput, targetPointsInput].forEach(input => input.addEventListener('input', updateCalculation));
-[eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect, campaignActSelect, campaignStageSelect].forEach(el => {
-  el.addEventListener('change', () => { updateDropdowns(); updateTable(); });
+[eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect, campaignStageSelect].forEach(el => {
+  el.addEventListener('change', ()=>{updateDropdowns();updateTable();});
 });
 
 dungeonDifficultySelect.addEventListener('change', () => {
   const diff = dungeonDifficultySelect.value;
   const maxStages = diff === 'normal' ? 25 : 10;
   dungeonStageSelect.innerHTML = '<option value="">-- Stage --</option>';
-  for (let i = 1; i <= maxStages; i++) {
+  for(let i=1;i<=maxStages;i++){
     const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = `Stage ${i}`;
+    opt.value=i;
+    opt.textContent=`Stage ${i}`;
     dungeonStageSelect.appendChild(opt);
   }
   updateTable();
 });
 
-toggleBtn.addEventListener('click', () => {
-  displayMode = displayMode === 'points' ? 'percent' : 'points';
-  toggleBtn.textContent = displayMode === 'points' ? 'Show Loot %' : 'Show Points';
+campaignDifficultySelect.addEventListener('change', () => {
+  const diff = campaignDifficultySelect.value;
+  if(!diff) return;
+  const maxStages = diff === 'normal' ? 25 : 25; // ajuster si besoin selon difficulté
+  campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
+  for(let i=1;i<=maxStages;i++){
+    const opt = document.createElement('option');
+    opt.value=i;
+    opt.textContent=`Stage ${i}`;
+    campaignStageSelect.appendChild(opt);
+  }
   updateTable();
 });
 
-// --- Campaign acts/stages ---
-for (let i = 1; i <= 12; i++) {
-  const opt = document.createElement('option');
-  opt.value = i;
-  opt.textContent = `Act ${i}`;
-  campaignActSelect.appendChild(opt);
-}
-for (let i = 1; i <= 7; i++) {
-  const opt = document.createElement('option');
-  opt.value = i;
-  opt.textContent = `Stage ${i}`;
-  campaignStageSelect.appendChild(opt);
-}
+toggleBtn.addEventListener('click', ()=>{
+  displayMode = displayMode==='points'?'percent':'points';
+  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
+  updateTable();
+});
 
 // --- Initial setup ---
 generateEmptyPointsTable();
