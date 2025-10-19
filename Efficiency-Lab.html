@@ -66,10 +66,10 @@
 
   <select id="campaign-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
-    <option value="normal">Normal</option>
-    <option value="hard">Hard</option>
-    <option value="brutal">Brutal</option>
-    <option value="nightmare">Nightmare</option>
+    <option value="Normal">Normal</option>
+    <option value="Hard">Hard</option>
+    <option value="Brutal">Brutal</option>
+    <option value="Nightmare">Nightmare</option>
   </select>
   <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
   <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
@@ -174,17 +174,19 @@ function fillPointsTable(eventType) {
 }
 
 function getLoot() {
-  const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
-  if (zone === 'dungeons') {
-    const difficulty = dungeonDifficultySelect.value;
-    const stage = dungeonStageSelect.value;
-    return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
-  } else if (zone === 'campaign') {
+  const zone = zoneSelect.value;
+  if(zone === "campaign") {
     const difficulty = campaignDifficultySelect.value;
     const act = campaignActSelect.value;
     const stage = campaignStageSelect.value;
-    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stage] || null;
+    const actData = pointsData.loot.campaign?.[difficulty]?.[act];
+    if(!actData) return null;
+    return stage === "7" ? actData["7"] : actData["1-6"];
+  } else if(zone === "dungeons") {
+    const difficulty = dungeonDifficultySelect.value;
+    const stage = dungeonStageSelect.value;
+    return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
   }
   return null;
 }
@@ -194,7 +196,6 @@ function getEnergy() {
   return loot ? loot.Energy || 0 : 0;
 }
 
-// ➕ NOUVELLE LOGIQUE pour pourcentages
 function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
@@ -274,7 +275,6 @@ function updateCalculation() {
 
   const energyPerRun = getEnergy();
   const eventType = eventTypeSelect.value;
-  const zone = zoneSelect.value;
 
   if (!energyPerRun || !pointsData.points?.[eventType]) {
     calculationResult.textContent = '';
