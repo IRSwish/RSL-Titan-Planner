@@ -139,7 +139,7 @@ const calculationResult = document.getElementById('calculation-result');
 let pointsData = {};
 let displayMode = 'points';
 
-// Charger le JSON
+// Chargement du JSON
 fetch('/points-data.json')
   .then(res => res.json())
   .then(data => pointsData = data)
@@ -165,7 +165,7 @@ function fillPointsTable(eventType) {
   if (!pointsData.points?.[eventType]) return;
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
-    const values = pointsData.points[eventType][rarity] || [0,0,0,0,0,0];
+    const values = pointsData.points[eventType][rarity];
     for (let col = 1; col <= 6; col++) {
       tr.cells[col].textContent = values[col-1] || 0;
       tr.cells[col].style.backgroundColor = '';
@@ -174,21 +174,21 @@ function fillPointsTable(eventType) {
   });
 }
 
-// Récupère le loot selon zone, difficulté, acte et stage
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
-  if (zone === 'dungeons') {
-    const difficulty = dungeonDifficultySelect.value;
-    const stage = dungeonStageSelect.value;
-    return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
-  } else if (zone === 'campaign') {
+
+  if (zone === 'campaign') {
     const difficulty = campaignDifficultySelect.value;
     const act = campaignActSelect.value;
     const stage = campaignStageSelect.value;
-    if(!difficulty || !act || !stage) return null;
-    const stageKey = stage <= 6 ? '1-6' : '7';
-    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stageKey] || null;
+    if (!difficulty || !act || !stage) return null;
+    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stage] || null;
+  } else if (zone === 'dungeons') {
+    const difficulty = dungeonDifficultySelect.value;
+    const stage = dungeonStageSelect.value;
+    if (!difficulty || !stage) return null;
+    return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
   }
   return null;
 }
@@ -198,18 +198,17 @@ function getEnergy() {
   return loot ? loot.Energy || 0 : 0;
 }
 
-// Remplir le tableau avec pourcentages
 function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
 
   const mystery = loot["Mystery Shard"] || 0;
-  const champions = loot["Champions"] || 0; // à la place de Brews
-  const gearFactor = 1 - (mystery + champions); // uniquement Myst + Champs
+  const champions = loot["Champions"] || 0; // pour campagne
+  const gearFactor = 1 - (mystery + champions);
 
   let maxValue = 0;
   rarities.forEach(rarity => {
-    const arr = loot[rarity] || [0,0,0,0,0,0];
+    const arr = loot[rarity] || [];
     arr.forEach(v => { 
       const adjusted = gearFactor > 0 ? (v / gearFactor) : 0;
       if(adjusted > maxValue) maxValue = adjusted;
@@ -218,7 +217,7 @@ function fillLootTable() {
 
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
-    const percentages = loot[rarity] || [0,0,0,0,0,0]; // fallback pour raretés inexistantes
+    const percentages = loot[rarity] || [0,0,0,0,0,0];
     for (let col = 1; col <= 6; col++) {
       const value = percentages[col-1] || 0;
       const adjusted = gearFactor > 0 ? (value / gearFactor) : 0;
@@ -277,18 +276,13 @@ function updateCalculation() {
 
   const energyPerRun = getEnergy();
   const eventType = eventTypeSelect.value;
-  const zone = zoneSelect.value;
-
-  if (!energyPerRun || !pointsData.points?.[eventType]) {
-    calculationResult.textContent = '';
-    return;
-  }
+  if (!energyPerRun || !pointsData.points?.[eventType]) return;
 
   let totalAvgPoints = 0;
   const pointValues = pointsData.points[eventType];
   const loot = getLoot();
   rarities.forEach(rarity => {
-    const pointsForRarity = pointValues[rarity] || [0,0,0,0,0,0];
+    const pointsForRarity = pointValues[rarity];
     const dropRates = loot[rarity] || [0,0,0,0,0,0];
     for (let i = 0; i < 6; i++) {
       totalAvgPoints += (dropRates[i] || 0) * (pointsForRarity[i] || 0);
@@ -304,25 +298,11 @@ function updateCalculation() {
   <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 10px;">
     <div style="text-align: center;">
       <div style="font-weight: bold; font-size: 18px; margin-bottom: 5px;">${totalEnergy}</div>
-      <div style="
-        width: 64px;
-        height: 64px;
-        background-image: url('style/img/Misc/Energy.webp');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      "></div>
+      <div style="width: 64px; height: 64px; background-image: url('style/img/Misc/Energy.webp'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
     </div>
     <div style="text-align: center;">
       <div style="font-weight: bold; font-size: 18px; margin-bottom: 5px;">${gems}</div>
-      <div style="
-        width: 64px;
-        height: 64px;
-        background-image: url('style/img/Misc/Gems.webp');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      "></div>
+      <div style="width: 64px; height: 64px; background-image: url('style/img/Misc/Gems.webp'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
     </div>
     <div style="text-align: center; max-width: 300px;">
       <div style="font-size: 15px;">
@@ -330,52 +310,55 @@ function updateCalculation() {
         to reach ${remaining} remaining points
       </div>
     </div>
-  </div>
-`;
+  </div>`;
 }
 
+// Listeners
 [currentPointsInput, targetPointsInput].forEach(input => {
   input.addEventListener('input', updateCalculation);
 });
-[eventTypeSelect, zoneSelect, dungeonStageSelect, dungeonDifficultySelect, campaignDifficultySelect, campaignActSelect, campaignStageSelect].forEach(el=>{
-  el.addEventListener('change',()=>{
+
+[eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect, campaignActSelect, campaignStageSelect].forEach(el => {
+  el.addEventListener('change', () => {
     updateDropdowns();
     updateTable();
   });
 });
 
-// Dungeon stage update
 dungeonDifficultySelect.addEventListener('change', () => {
   const diff = dungeonDifficultySelect.value;
-  const maxStages = diff==='normal'?25:10;
-  dungeonStageSelect.innerHTML='<option value="">-- Stage --</option>';
-  for(let i=1;i<=maxStages;i++){
-    const opt=document.createElement('option');
-    opt.value=i; opt.textContent=`Stage ${i}`;
+  const maxStages = diff === 'normal' ? 25 : 10;
+  dungeonStageSelect.innerHTML = '<option value="">-- Stage --</option>';
+  for (let i = 1; i <= maxStages; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Stage ${i}`;
     dungeonStageSelect.appendChild(opt);
   }
   updateTable();
 });
 
-// Toggle display
-toggleBtn.addEventListener('click', ()=>{
-  displayMode = displayMode==='points'?'percent':'points';
-  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
+toggleBtn.addEventListener('click', () => {
+  displayMode = displayMode === 'points' ? 'percent' : 'points';
+  toggleBtn.textContent = displayMode === 'points' ? 'Show Loot %' : 'Show Points';
   updateTable();
 });
 
-// Campaign Acts & Stages
-for (let i=1;i<=12;i++){
-  const opt=document.createElement('option');
-  opt.value=i; opt.textContent=`Act ${i}`;
+// Campaign acts/stages
+for (let i = 1; i <= 12; i++) {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = `Act ${i}`;
   campaignActSelect.appendChild(opt);
 }
-for (let i=1;i<=7;i++){
-  const opt=document.createElement('option');
-  opt.value=i; opt.textContent=`Stage ${i}`;
+for (let i = 1; i <= 7; i++) {
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = `Stage ${i}`;
   campaignStageSelect.appendChild(opt);
 }
 
+// Initial setup
 generateEmptyPointsTable();
 updateDropdowns();
 toggleBtn.style.display = 'none';
