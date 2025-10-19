@@ -176,14 +176,32 @@ function fillPointsTable(eventType) {
 function getLoot() {
   if (!pointsData.loot) return null;
   const zone = zoneSelect.value;
+
   if(zone === "campaign") {
     const difficulty = campaignDifficultySelect.value;
     const act = campaignActSelect.value;
     const stage = campaignStageSelect.value;
     const actData = pointsData.loot.campaign?.[difficulty]?.[act];
     if(!actData) return null;
-    return stage === "7" ? actData["7"] : actData["1-6"];
-  } else if(zone === "dungeons") {
+
+    // Stage 1 à 6 utilisent la clé "1-6", sinon stage 7 "7"
+    const stageKey = stage === "7" ? "7" : "1-6";
+    const stageData = actData?.[stageKey];
+    if(!stageData) return null;
+
+    // On renvoie un objet complet par rareté pour fillLootTable()
+    const lootByRarity = {};
+    rarities.forEach(rarity => {
+      lootByRarity[rarity] = stageData[rarity] || [0,0,0,0,0,0];
+    });
+    lootByRarity.Energy = stageData.Energy || 0;
+    lootByRarity["Mystery Shard"] = stageData["Mystery Shard"] || 0;
+    lootByRarity["Ancient Shard"] = stageData["Ancient Shard"] || 0;
+    lootByRarity["Brews"] = stageData["Brews"] || 0;
+
+    return lootByRarity;
+  } 
+  else if(zone === "dungeons") {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
