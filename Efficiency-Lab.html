@@ -176,16 +176,25 @@ function fillPointsTable(eventType) {
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
+
   if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
+
   } else if (zone === 'campaign') {
     const difficulty = campaignDifficultySelect.value;
-    const act = campaignActSelect.value;
-    const stage = campaignStageSelect.value;
-    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stage] || null;
+    const act = campaignActSelect.value;     // ✅ Acte choisi (même si pas utilisé ici)
+    const stage = Number(campaignStageSelect.value);
+    if (!difficulty || !act || !stage) return null;
+
+    const stageType = stage === 7 ? '7' : '1-6';
+    const loot = pointsData.loot.campaign?.[difficulty]?.[stageType] || null;
+
+    // Si plus tard tu veux des loots spécifiques par acte, c'est ici que tu pourras les ajouter
+    return loot;
   }
+
   return null;
 }
 
