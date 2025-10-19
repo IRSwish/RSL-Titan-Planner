@@ -83,7 +83,6 @@
     <option value="brutal">Brutal</option>
     <option value="nightmare">Nightmare</option>
   </select>
-  <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
   <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
 
   <select id="dungeon-difficulty" class="hidden">
@@ -192,7 +191,7 @@ function getCampaignStageData(difficulty, stage) {
   const campaignData = pointsData.loot.campaign?.[difficulty];
   if (!campaignData) return {};
 
-  // Les clés peuvent être des intervalles ou des numéros simples
+  // Parcours des clés, qui peuvent être des intervalles ou des stages simples
   for (const key of Object.keys(campaignData)) {
     if (key.includes('-')) {
       const [start, end] = key.split('-').map(Number);
@@ -204,6 +203,22 @@ function getCampaignStageData(difficulty, stage) {
   return {};
 }
 
+// --- Dropdown campagne
+campaignDifficultySelect.addEventListener('change', () => {
+  const diff = campaignDifficultySelect.value;
+  if (!diff) return;
+  // Supposons que chaque difficulté a max 25 stages
+  const maxStages = diff === 'normal' ? 25 : diff === 'hard' ? 25 : 25; 
+  campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
+  for (let i = 1; i <= maxStages; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Stage ${i}`;
+    campaignStageSelect.appendChild(opt);
+  }
+  updateTable();
+});
+
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
@@ -213,7 +228,7 @@ function getLoot() {
     const stage = Number(campaignStageSelect.value);
     if (difficulty && stage) return getCampaignStageData(difficulty, stage);
     return null;
-  } else if (zone === 'dungeons') {
+} else if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     if (difficulty && stage) return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
