@@ -192,14 +192,16 @@ function getCampaignStageData(difficulty, stage) {
   const campaignData = pointsData.loot.campaign?.[difficulty];
   if (!campaignData) return {};
 
-  let stageKey = null;
+  // Les clés peuvent être des intervalles ou des numéros simples
   for (const key of Object.keys(campaignData)) {
     if (key.includes('-')) {
       const [start, end] = key.split('-').map(Number);
-      if (stage >= start && stage <= end) stageKey = key;
-    } else if (Number(key) === stage) stageKey = key;
+      if (stage >= start && stage <= end) return campaignData[key];
+    } else if (Number(key) === stage) {
+      return campaignData[key];
+    }
   }
-  return stageKey ? campaignData[stageKey] : {};
+  return {};
 }
 
 function getLoot() {
@@ -226,41 +228,47 @@ function getEnergy() {
 }
 
 function fillLootTable() {
-  const loot = getLoot();
+  const zone = zoneSelect.value;
+  let loot = getLoot();
   if (!loot) return;
 
+  // Calcul du facteur gear si applicable
   const mystery = loot["Mystery Shard"] || 0;
   const champions = loot["Champions"] || 0;
   const gearFactor = 1 - (mystery + champions);
 
+  // Trouver la valeur maximale pour le gradient
   let maxValue = 0;
-  rarities.forEach((rarity, rowIndex) => {
+  rarities.forEach((rarity) => {
     const arr = loot[rarity] || [];
-    for(let i = arr.length; i < 6; i++) arr[i] = 0;
-    arr.forEach(v => { 
-      const adjusted = gearFactor > 0 ? (v / gearFactor) : 0;
+    for(let i = 0; i < 6; i++) {
+      const value = arr[i] || 0;
+      const adjusted = gearFactor > 0 ? value / gearFactor : 0;
       if(adjusted > maxValue) maxValue = adjusted;
-    });
+    }
   });
 
+  // Remplissage du tableau
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
-    const percentages = loot[rarity] || [];
-    for (let col = 1; col <= 6; col++) {
-      const value = percentages[col-1] || 0;
-      const adjusted = gearFactor > 0 ? (value / gearFactor) : 0;
-      tr.cells[col].textContent = (adjusted*100).toFixed(2) + '%';
+    const arr = loot[rarity] || [];
+    for (let i = 0; i < 6; i++) {
+      const value = arr[i] || 0;
+      const adjusted = gearFactor > 0 ? value / gearFactor : 0;
+      tr.cells[i+1].textContent = (adjusted*100).toFixed(2) + '%';
+      
       if(value === 0){
-        tr.cells[col].style.color = '#444';
-        tr.cells[col].style.backgroundColor = 'transparent';
+        tr.cells[i+1].style.color = '#444';
+        tr.cells[i+1].style.backgroundColor = 'transparent';
       } else {
-        tr.cells[col].style.color = '#fff';
-        const alpha = 0.1 + 0.4*(adjusted/maxValue);
-        tr.cells[col].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+        tr.cells[i+1].style.color = '#fff';
+        const alpha = 0.1 + 0.4 * (adjusted / maxValue);
+        tr.cells[i+1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
       }
     }
   });
 }
+
 
 // --- Dropdowns ---
 function updateDropdowns() {
