@@ -66,10 +66,10 @@
 
   <select id="campaign-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
-    <option value="Normal">Normal</option>
-    <option value="Hard">Hard</option>
-    <option value="Brutal">Brutal</option>
-    <option value="Nightmare">Nightmare</option>
+    <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+    <option value="brutal">Brutal</option>
+    <option value="nightmare">Nightmare</option>
   </select>
   <select id="campaign-act" class="hidden"><option value="">-- Act --</option></select>
   <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
@@ -139,6 +139,7 @@ const calculationResult = document.getElementById('calculation-result');
 let pointsData = {};
 let displayMode = 'points';
 
+// Charger le JSON
 fetch('/points-data.json')
   .then(res => res.json())
   .then(data => pointsData = data)
@@ -164,7 +165,7 @@ function fillPointsTable(eventType) {
   if (!pointsData.points?.[eventType]) return;
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
-    const values = pointsData.points[eventType][rarity];
+    const values = pointsData.points[eventType][rarity] || [0,0,0,0,0,0];
     for (let col = 1; col <= 6; col++) {
       tr.cells[col].textContent = values[col-1] || 0;
       tr.cells[col].style.backgroundColor = '';
@@ -173,20 +174,21 @@ function fillPointsTable(eventType) {
   });
 }
 
+// Récupère le loot selon zone, difficulté, acte et stage
 function getLoot() {
-  if (!pointsData.loot) return null;
   const zone = zoneSelect.value;
-  if(zone === "campaign") {
-    const difficulty = campaignDifficultySelect.value;
-    const act = campaignActSelect.value;
-    const stage = campaignStageSelect.value;
-    const actData = pointsData.loot.campaign?.[difficulty]?.[act];
-    if(!actData) return null;
-    return stage === "7" ? actData["7"] : actData["1-6"];
-  } else if(zone === "dungeons") {
+  if (!pointsData.loot) return null;
+  if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
+  } else if (zone === 'campaign') {
+    const difficulty = campaignDifficultySelect.value;
+    const act = campaignActSelect.value;
+    const stage = campaignStageSelect.value;
+    if(!difficulty || !act || !stage) return null;
+    const stageKey = stage <= 6 ? '1-6' : '7';
+    return pointsData.loot.campaign?.[difficulty]?.[act]?.[stageKey] || null;
   }
   return null;
 }
@@ -196,6 +198,7 @@ function getEnergy() {
   return loot ? loot.Energy || 0 : 0;
 }
 
+// Remplir le tableau avec pourcentages
 function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
@@ -207,7 +210,7 @@ function fillLootTable() {
 
   let maxValue = 0;
   rarities.forEach(rarity => {
-    const arr = loot[rarity] || [];
+    const arr = loot[rarity] || [0,0,0,0,0,0];
     arr.forEach(v => { 
       const adjusted = gearFactor > 0 ? (v / gearFactor) : 0;
       if(adjusted > maxValue) maxValue = adjusted;
@@ -275,6 +278,7 @@ function updateCalculation() {
 
   const energyPerRun = getEnergy();
   const eventType = eventTypeSelect.value;
+  const zone = zoneSelect.value;
 
   if (!energyPerRun || !pointsData.points?.[eventType]) {
     calculationResult.textContent = '';
@@ -285,7 +289,7 @@ function updateCalculation() {
   const pointValues = pointsData.points[eventType];
   const loot = getLoot();
   rarities.forEach(rarity => {
-    const pointsForRarity = pointValues[rarity];
+    const pointsForRarity = pointValues[rarity] || [0,0,0,0,0,0];
     const dropRates = loot[rarity] || [0,0,0,0,0,0];
     for (let i = 0; i < 6; i++) {
       totalAvgPoints += (dropRates[i] || 0) * (pointsForRarity[i] || 0);
@@ -341,6 +345,7 @@ function updateCalculation() {
   });
 });
 
+// Dungeon stage update
 dungeonDifficultySelect.addEventListener('change', () => {
   const diff = dungeonDifficultySelect.value;
   const maxStages = diff==='normal'?25:10;
@@ -353,12 +358,14 @@ dungeonDifficultySelect.addEventListener('change', () => {
   updateTable();
 });
 
+// Toggle display
 toggleBtn.addEventListener('click', ()=>{
   displayMode = displayMode==='points'?'percent':'points';
   toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
   updateTable();
 });
 
+// Campaign Acts & Stages
 for (let i=1;i<=12;i++){
   const opt=document.createElement('option');
   opt.value=i; opt.textContent=`Act ${i}`;
