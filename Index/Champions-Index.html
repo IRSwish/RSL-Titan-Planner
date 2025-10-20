@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+>
 <head>
   <meta charset="UTF-8">
   <title>Champions - RSL Tools</title>
@@ -76,7 +77,6 @@
       margin-bottom: 25px;
     }
 
-    /* FILTER SECTIONS */
     .filter-section {
       text-align: center;
       width: 250px;
@@ -90,9 +90,21 @@
 
     .filter-buttons {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
       justify-items: center;
       gap: 8px;
+    }
+
+    /* Grilles spécifiques */
+    .rarity-grid {
+      grid-template-columns: repeat(3, 1fr); /* 6 total → 3 + 3 */
+    }
+
+    .affinity-grid {
+      grid-template-columns: repeat(2, 1fr); /* 4 total → 2 + 2 */
+    }
+
+    .type-grid {
+      grid-template-columns: repeat(2, 1fr); /* 4 total → 2 + 2 */
     }
 
     .rarity-btn, .affinity-btn, .type-btn {
@@ -210,6 +222,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="search-bar">
@@ -220,11 +233,11 @@
 
     <!-- FILTER SECTIONS -->
     <div class="filters-wrapper">
-      
+
       <!-- RARITY -->
       <div class="filter-section">
         <div class="section-label">Rarity</div>
-        <div class="filter-buttons">
+        <div class="filter-buttons rarity-grid">
           <button class="rarity-btn" data-rarity="Mythical"><img src="img/rarity/Mythical_Icon.webp" alt="Mythical"></button>
           <button class="rarity-btn" data-rarity="Legendary"><img src="img/rarity/Legendary_Icon.webp" alt="Legendary"></button>
           <button class="rarity-btn" data-rarity="Epic"><img src="img/rarity/Epic_Icon.webp" alt="Epic"></button>
@@ -237,7 +250,7 @@
       <!-- AFFINITY -->
       <div class="filter-section">
         <div class="section-label">Affinity</div>
-        <div class="filter-buttons">
+        <div class="filter-buttons affinity-grid">
           <button class="affinity-btn" data-affinity="Force"><img src="img/affinity/Force.webp" alt="Force"></button>
           <button class="affinity-btn" data-affinity="Magic"><img src="img/affinity/Magic.webp" alt="Magic"></button>
           <button class="affinity-btn" data-affinity="Spirit"><img src="img/affinity/Spirit.webp" alt="Spirit"></button>
@@ -248,7 +261,7 @@
       <!-- TYPE -->
       <div class="filter-section">
         <div class="section-label">Type</div>
-        <div class="filter-buttons">
+        <div class="filter-buttons type-grid">
           <button class="type-btn" data-type="HP">HP</button>
           <button class="type-btn" data-type="Attack">Attack</button>
           <button class="type-btn" data-type="Defense">Defense</button>
@@ -260,7 +273,7 @@
 
     <div class="checkbox-container">
       <input type="checkbox" id="invocableOnly">
-      <label for="invocableOnly">Invocable only</label>
+      <label for="invocableOnly">Hide Non-Summonable Champions</label>
     </div>
 
     <div class="counter" id="championCount"></div>
@@ -379,7 +392,7 @@
         img.classList.add('champion-img');
 
         const frame = document.createElement('img');
-        frame.src = `img/rarity/${c.rarity}.webp`; // reverted to proper rarity frame
+        frame.src = `img/rarity/${c.rarity}.webp`;
         frame.alt = `${c.rarity} frame`;
         frame.classList.add('rarity-frame');
 
