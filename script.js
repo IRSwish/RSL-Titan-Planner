@@ -222,7 +222,7 @@ function renderTimeline(data) {
 }
 
 // --- Charger le menu externe d'abord ---
-fetch('menu.html')
+fetch('/menu.html')
   .then(response => response.text())
   .then(data => {
     document.getElementById('menu-container').innerHTML = data;
