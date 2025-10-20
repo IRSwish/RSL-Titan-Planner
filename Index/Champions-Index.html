@@ -19,7 +19,6 @@
       margin: 40px auto;
     }
 
-    /* Barre de recherche */
     .search-bar {
       text-align: center;
       margin-bottom: 15px;
@@ -37,7 +36,6 @@
       box-shadow: 0 0 8px #f52584;
     }
 
-    /* Factions */
     .faction-bar {
       display: flex;
       justify-content: center;
@@ -53,9 +51,9 @@
       border-radius: 5px;
       cursor: pointer;
       transition: transform 0.2s, border-color 0.2s;
-      object-fit: contain;       /* conserve les proportions */
-      background-color: #1a1a1a; /* optionnel : fond neutre */
-      padding: 4px;              /* optionnel : pour qu’elle ne touche pas les bords */
+      object-fit: contain;
+      background-color: #1a1a1a;
+      padding: 4px;
     }
 
     .faction-icon:hover {
@@ -67,7 +65,6 @@
       transform: scale(1.1);
     }
 
-    /* Filtres */
     .filters {
       display: flex;
       flex-wrap: wrap;
@@ -77,7 +74,7 @@
       align-items: center;
     }
 
-    .rarity-btn, .affinity-btn {
+    .rarity-btn, .affinity-btn, .type-btn {
       background: none;
       border: 1px solid #555;
       color: #fcf6ff;
@@ -87,7 +84,7 @@
       transition: all 0.2s;
     }
 
-    .rarity-btn.active, .affinity-btn.active {
+    .rarity-btn.active, .affinity-btn.active, .type-btn.active {
       border-color: #f52584;
       background: #f52584;
     }
@@ -98,7 +95,6 @@
       gap: 6px;
     }
 
-    /* === Carte du champion === */
     .champion-card {
       width: 100%;
       max-width: 140px;
@@ -111,14 +107,12 @@
       transform: scale(1.05);
     }
 
-    /* === Bloc image + cadre + affinité === */
     .card-image {
       position: relative;
       aspect-ratio: 140 / 182;
       width: 100%;
     }
 
-    /* === Image du champion === */
     .champion-img {
       width: 100%;
       height: 100%;
@@ -127,7 +121,6 @@
       display: block;
     }
 
-    /* === Cadre de rareté === */
     .rarity-frame {
       position: absolute;
       inset: 0;
@@ -136,20 +129,19 @@
       object-fit: contain;
       pointer-events: none;
     }
-    
-/* === Logo d’affinité === */
-.affinity-icon {
-  position: absolute;
-  bottom: 12px;
-  right: 10px;
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-  pointer-events: none;
-  z-index: 2;
-}
 
-    /* === Nom du champion === */
+    .affinity-icon {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
     .champion-name {
       font-size: 13px;
       font-weight: 600;
@@ -157,7 +149,6 @@
       text-align: center;
     }
 
-    /* Grille */
     .champion-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -206,6 +197,12 @@
       <button class="affinity-btn" data-affinity="Magic">Magie</button>
       <button class="affinity-btn" data-affinity="Spirit">Esprit</button>
       <button class="affinity-btn" data-affinity="Void">Néant</button>
+
+      <!-- Types -->
+      <button class="type-btn" data-type="HP">HP</button>
+      <button class="type-btn" data-type="Attack">Attaque</button>
+      <button class="type-btn" data-type="Defense">Défense</button>
+      <button class="type-btn" data-type="Support">Soutien</button>
     </div>
 
     <div class="counter" id="championCount"></div>
@@ -222,12 +219,14 @@
     const searchInput = document.getElementById('searchInput');
     const rarityButtons = document.querySelectorAll('.rarity-btn');
     const affinityButtons = document.querySelectorAll('.affinity-btn');
+    const typeButtons = document.querySelectorAll('.type-btn');
     const invocableCheckbox = document.getElementById('invocableOnly');
     const countDisplay = document.getElementById('championCount');
 
     let selectedFaction = null;
     let selectedRarities = [];
     let selectedAffinities = [];
+    let selectedTypes = [];
 
     fetch('champions.json')
       .then(res => res.json())
@@ -269,8 +268,9 @@
         const matchesFaction = !selectedFaction || c.faction === selectedFaction;
         const matchesRarity = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
         const matchesAffinity = selectedAffinities.length === 0 || selectedAffinities.includes(c.affinity);
+        const matchesType = selectedTypes.length === 0 || selectedTypes.includes(c.type);
         const matchesInvocable = !invocableOnly || c.invocable;
-        return matchesName && matchesFaction && matchesRarity && matchesAffinity && matchesInvocable;
+        return matchesName && matchesFaction && matchesRarity && matchesAffinity && matchesType && matchesInvocable;
       });
 
       grid.innerHTML = "";
@@ -323,11 +323,7 @@
       btn.addEventListener('click', () => {
         btn.classList.toggle('active');
         const rarity = btn.dataset.rarity;
-        if (selectedRarities.includes(rarity)) {
-          selectedRarities = selectedRarities.filter(r => r !== rarity);
-        } else {
-          selectedRarities.push(rarity);
-        }
+        selectedRarities = toggleSelection(selectedRarities, rarity);
         displayChampions();
       });
     });
@@ -336,14 +332,23 @@
       btn.addEventListener('click', () => {
         btn.classList.toggle('active');
         const affinity = btn.dataset.affinity;
-        if (selectedAffinities.includes(affinity)) {
-          selectedAffinities = selectedAffinities.filter(a => a !== affinity);
-        } else {
-          selectedAffinities.push(affinity);
-        }
+        selectedAffinities = toggleSelection(selectedAffinities, affinity);
         displayChampions();
       });
     });
+
+    typeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        const type = btn.dataset.type;
+        selectedTypes = toggleSelection(selectedTypes, type);
+        displayChampions();
+      });
+    });
+
+    function toggleSelection(array, value) {
+      return array.includes(value) ? array.filter(v => v !== value) : [...array, value];
+    }
   </script>
 </body>
 </html>
