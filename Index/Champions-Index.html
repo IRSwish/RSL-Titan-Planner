@@ -74,7 +74,7 @@
       align-items: center;
     }
 
-    .rarity-btn {
+    .rarity-btn, .affinity-btn {
       background: none;
       border: 1px solid #555;
       color: #fcf6ff;
@@ -84,7 +84,7 @@
       transition: all 0.2s;
     }
 
-    .rarity-btn.active {
+    .rarity-btn.active, .affinity-btn.active {
       border-color: #f52584;
       background: #f52584;
     }
@@ -105,12 +105,10 @@
 
     /* Carte champion */
     .champion-card {
-      background: none;
-      border: none;
-      text-align: center;
       position: relative;
       width: 120px;
       height: 120px;
+      text-align: center;
       cursor: pointer;
       transition: transform 0.2s;
     }
@@ -119,7 +117,6 @@
       transform: scale(1.05);
     }
 
-    /* Image du champion */
     .champion-img {
       width: 100%;
       height: 100%;
@@ -128,7 +125,7 @@
       display: block;
     }
 
-    /* Cadre de rareté superposé */
+    /* Cadre rareté superposé */
     .rarity-frame {
       position: absolute;
       top: 0;
@@ -139,7 +136,18 @@
       object-fit: contain;
     }
 
-    /* Nom du champion */
+    /* Logo affinité */
+    .affinity-icon {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
     .champion-name {
       font-size: 13px;
       font-weight: 600;
@@ -174,12 +182,20 @@
         <input type="checkbox" id="invocableOnly">
         <label for="invocableOnly">Invocables seulement</label>
       </div>
+
+      <!-- Boutons de rareté -->
       <button class="rarity-btn" data-rarity="Mythic">Mythique</button>
       <button class="rarity-btn" data-rarity="Legendary">Légendaire</button>
       <button class="rarity-btn" data-rarity="Epic">Épique</button>
       <button class="rarity-btn" data-rarity="Rare">Rare</button>
       <button class="rarity-btn" data-rarity="Uncommon">Peu commun</button>
       <button class="rarity-btn" data-rarity="Common">Commun</button>
+
+      <!-- Boutons d’affinité -->
+      <button class="affinity-btn" data-affinity="Force">Force</button>
+      <button class="affinity-btn" data-affinity="Magic">Magie</button>
+      <button class="affinity-btn" data-affinity="Spirit">Esprit</button>
+      <button class="affinity-btn" data-affinity="Void">Néant</button>
     </div>
 
     <div class="counter" id="championCount"></div>
@@ -195,13 +211,15 @@
     const factionBar = document.getElementById('factionBar');
     const searchInput = document.getElementById('searchInput');
     const rarityButtons = document.querySelectorAll('.rarity-btn');
+    const affinityButtons = document.querySelectorAll('.affinity-btn');
     const invocableCheckbox = document.getElementById('invocableOnly');
     const countDisplay = document.getElementById('championCount');
 
     let selectedFaction = null;
     let selectedRarities = [];
+    let selectedAffinities = [];
 
-    // Charger les données JSON
+    // Charger JSON
     fetch('champions.json')
       .then(res => res.json())
       .then(data => {
@@ -210,9 +228,7 @@
         renderFactions();
         displayChampions();
       })
-      .catch(err => {
-        console.error("Erreur de chargement du JSON:", err);
-      });
+      .catch(err => console.error("Erreur de chargement du JSON:", err));
 
     function renderFactions() {
       factions.forEach(f => {
@@ -243,8 +259,9 @@
         const matchesName = c.name.toLowerCase().includes(searchTerm);
         const matchesFaction = !selectedFaction || c.faction === selectedFaction;
         const matchesRarity = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
+        const matchesAffinity = selectedAffinities.length === 0 || selectedAffinities.includes(c.affinity);
         const matchesInvocable = !invocableOnly || c.invocable;
-        return matchesName && matchesFaction && matchesRarity && matchesInvocable;
+        return matchesName && matchesFaction && matchesRarity && matchesAffinity && matchesInvocable;
       });
 
       grid.innerHTML = "";
@@ -265,12 +282,18 @@
         frame.alt = `${c.rarity} frame`;
         frame.classList.add('rarity-frame');
 
+        const affinity = document.createElement('img');
+        affinity.src = `img/affinity/${c.affinity}.webp`;
+        affinity.alt = `${c.affinity} affinity`;
+        affinity.classList.add('affinity-icon');
+
         const name = document.createElement('div');
         name.classList.add('champion-name');
         name.textContent = c.name;
 
         card.appendChild(img);
         card.appendChild(frame);
+        card.appendChild(affinity);
         card.appendChild(name);
 
         grid.appendChild(card);
@@ -281,7 +304,7 @@
       }
     }
 
-    // Filtres interactifs
+    // Événements
     searchInput.addEventListener('input', displayChampions);
     invocableCheckbox.addEventListener('change', displayChampions);
 
@@ -293,6 +316,19 @@
           selectedRarities = selectedRarities.filter(r => r !== rarity);
         } else {
           selectedRarities.push(rarity);
+        }
+        displayChampions();
+      });
+    });
+
+    affinityButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        const affinity = btn.dataset.affinity;
+        if (selectedAffinities.includes(affinity)) {
+          selectedAffinities = selectedAffinities.filter(a => a !== affinity);
+        } else {
+          selectedAffinities.push(affinity);
         }
         displayChampions();
       });
