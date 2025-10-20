@@ -231,34 +231,21 @@ function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
 
-  const mystery = loot["Mystery Shard"] || 0;
-  const champions = loot["Champions"] || 0;
-  const gearFactor = 1 - (mystery + champions);
-
-  let maxValue = 0;
-  rarities.forEach(rarity => {
-    const arr = loot[rarity] || [];
-    for(let i=0;i<6;i++){
-      const value = arr[i] || 0;
-      const adjusted = gearFactor > 0 ? value / gearFactor : 0;
-      if(adjusted > maxValue) maxValue = adjusted;
-    }
-  });
-
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const arr = loot[rarity] || [];
-    for(let i=0;i<6;i++){
+
+    for (let i = 0; i < 6; i++) {
       const value = arr[i] || 0;
-      const adjusted = gearFactor > 0 ? value / gearFactor : 0;
-      tr.cells[i+1].textContent = (adjusted*100).toFixed(2)+'%';
-      if(value === 0){
-        tr.cells[i+1].style.color = '#444';
-        tr.cells[i+1].style.backgroundColor = 'transparent';
+      tr.cells[i + 1].textContent = (value * 100).toFixed(2) + '%';
+
+      if (value === 0) {
+        tr.cells[i + 1].style.color = '#444';
+        tr.cells[i + 1].style.backgroundColor = 'transparent';
       } else {
-        tr.cells[i+1].style.color = '#fff';
-        const alpha = 0.1 + 0.4 * (adjusted / maxValue);
-        tr.cells[i+1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+        tr.cells[i + 1].style.color = '#fff';
+        const alpha = 0.1 + 0.4 * value; // léger dégradé visuel facultatif
+        tr.cells[i + 1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
       }
     }
   });
