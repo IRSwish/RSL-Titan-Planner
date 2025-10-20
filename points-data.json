@@ -39,7 +39,7 @@
         "1": {
           "Energy": 8,
           "Mystery Shard": 0.1005,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.1005,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -51,7 +51,7 @@
 		"2": {
           "Energy": 8,
           "Mystery Shard": 0.0985,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0985,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -63,7 +63,7 @@
 		"3": {
           "Energy": 8,
           "Mystery Shard": 0.0965,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0965,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -75,7 +75,7 @@
 		"4": {
           "Energy": 10,
           "Mystery Shard": 0.0945,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0945,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -87,7 +87,7 @@
 		"5": {
           "Energy": 10,
           "Mystery Shard": 0.0925,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0925,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -99,7 +99,7 @@
 		"6": {
           "Energy": 10,
           "Mystery Shard": 0.0905,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0905,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -111,7 +111,7 @@
 		"7": {
           "Energy": 10,
           "Mystery Shard": 0.0885,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0885,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -123,7 +123,7 @@
 		"8": {
           "Energy": 12,
           "Mystery Shard": 0.0865,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0865,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -135,7 +135,7 @@
 		"9": {
           "Energy": 12,
           "Mystery Shard": 0.0845,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0845,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -147,7 +147,7 @@
 		"10": {
           "Energy": 12,
           "Mystery Shard": 0.0825,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0825,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -159,7 +159,7 @@
 		"11": {
           "Energy": 12,
           "Mystery Shard": 0.0805,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0805,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -171,7 +171,7 @@
 		"12": {
           "Energy": 14,
           "Mystery Shard": 0.0785,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0785,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -183,7 +183,7 @@
 		"13": {
           "Energy": 14,
           "Mystery Shard": 0.0765,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0765,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -195,7 +195,7 @@
 		"14": {
           "Energy": 14,
           "Mystery Shard": 0.0745,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0745,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -207,7 +207,7 @@
 		"15": {
           "Energy": 14,
           "Mystery Shard": 0.0725,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.0725,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -219,7 +219,7 @@
 		"16": {
           "Energy": 14,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -231,7 +231,7 @@
 		"17": {
           "Energy": 16,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -243,7 +243,7 @@
 		"18": {
           "Energy": 16,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -255,7 +255,7 @@
 		"19": {
           "Energy": 16,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -267,7 +267,7 @@
 		"20": {
           "Energy": 16,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -279,7 +279,7 @@
 		"21": {
           "Energy": 18,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -291,7 +291,7 @@
 		"22": {
           "Energy": 18,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -303,7 +303,7 @@
 		"23": {
           "Energy": 18,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -315,7 +315,7 @@
 		"24": {
           "Energy": 18,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -327,7 +327,7 @@
 		"25": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -341,7 +341,7 @@
         "1": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -353,7 +353,7 @@
 		"2": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -365,7 +365,7 @@
 		"3": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -377,7 +377,7 @@
 		"4": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -389,7 +389,7 @@
 		"5": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -401,7 +401,7 @@
 		"6": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -413,7 +413,7 @@
 		"7": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -425,7 +425,7 @@
 		"8": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -437,7 +437,7 @@
 		"9": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
@@ -449,7 +449,7 @@
 		"10": {
           "Energy": 20,
           "Mystery Shard": 0.00,
-          "Ancient Shard": 0.05,
+          "Ancient Shard": 0.005,
           "Brews": 0.00,
           "Common": [0, 0, 0, 0, 0, 0],
           "Uncommon": [0, 0, 0, 0, 0, 0],
