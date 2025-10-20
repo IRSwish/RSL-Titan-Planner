@@ -234,18 +234,16 @@ function fillLootTable() {
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const arr = loot[rarity] || [];
-
-    for (let i = 0; i < 6; i++) {
+    for (let i=0; i<6; i++){
       const value = arr[i] || 0;
-      tr.cells[i + 1].textContent = (value * 100).toFixed(2) + '%';
-
-      if (value === 0) {
-        tr.cells[i + 1].style.color = '#444';
-        tr.cells[i + 1].style.backgroundColor = 'transparent';
+      tr.cells[i+1].textContent = (value*100).toFixed(2)+'%';
+      if(value === 0){
+        tr.cells[i+1].style.color = '#444';
+        tr.cells[i+1].style.backgroundColor = 'transparent';
       } else {
-        tr.cells[i + 1].style.color = '#fff';
-        const alpha = 0.1 + 0.4 * value; // léger dégradé visuel facultatif
-        tr.cells[i + 1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+        tr.cells[i+1].style.color = '#fff';
+        const alpha = 0.1 + 0.4 * value;
+        tr.cells[i+1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
       }
     }
   });
@@ -274,19 +272,33 @@ function updateCalculation() {
 
   const energyPerRun = getEnergy();
   const eventType = eventTypeSelect.value;
+  const zone = zoneSelect.value;
   if (!energyPerRun || !pointsData.points?.[eventType]) return;
 
   let totalAvgPoints = 0;
   const pointValues = pointsData.points[eventType];
   const loot = getLoot();
+
+  // --- calcul des points moyens ---
   rarities.forEach(rarity => {
     const pointsForRarity = pointValues[rarity];
     const dropRates = loot[rarity] || [0,0,0,0,0,0];
-    for (let i=0;i<6;i++) totalAvgPoints += (dropRates[i]||0)*(pointsForRarity[i]||0);
+    for (let i=0; i<6; i++) totalAvgPoints += (dropRates[i]||0)*(pointsForRarity[i]||0);
   });
 
-  const runsNeeded = Math.ceil(remaining/totalAvgPoints);
-  const superrunsNeeded = Math.ceil(remaining/totalAvgPoints/2);
+  // --- réduction selon la zone ---
+  let uselessLoot = 0;
+  if (zone === 'campaign') {
+    uselessLoot = (loot["Mystery Shard"] || 0) + (loot["Champions"] || 0);
+  } else if (zone === 'dungeons') {
+    uselessLoot = (loot["Mystery Shard"] || 0) + (loot["Ancient Shard"] || 0) + (loot["Brews"] || 0);
+  }
+
+  const gearFactor = 1 - uselessLoot;
+  totalAvgPoints *= gearFactor;
+
+  const runsNeeded = Math.ceil(remaining / totalAvgPoints);
+  const superrunsNeeded = Math.ceil(remaining / totalAvgPoints / 2);
   const totalEnergy = runsNeeded * energyPerRun;
   const gems = (totalEnergy / 3.25).toFixed(2);
 
@@ -332,8 +344,6 @@ function updateTable() {
 [eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect].forEach(el => {
   el.addEventListener('change', ()=>{updateDropdowns();updateTable();});
 });
-
-// Rafraîchissement correct du tableau après sélection du stage
 campaignStageSelect.addEventListener('change', updateTable);
 
 dungeonDifficultySelect.addEventListener('change', () => {
@@ -352,7 +362,7 @@ dungeonDifficultySelect.addEventListener('change', () => {
 campaignDifficultySelect.addEventListener('change', () => {
   const diff = campaignDifficultySelect.value;
   if(!diff) return;
-  const maxStages = 7; // ajusté selon ton JSON (1-6 + 7)
+  const maxStages = 7;
   campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
   for(let i=1;i<=maxStages;i++){
     const opt = document.createElement('option');
