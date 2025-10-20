@@ -34,7 +34,7 @@
     { "name": "Richtoff the Bold", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Richtoff", "invocable": true },
     { "name": "Kaja the Wry", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "type": "Support", "image": "Kaja", "invocable": true },
     { "name": "Acelin the Stalwart", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "type": "Defense", "image": "Acelin", "invocable": true },
-    { "name": "Michelangelo", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Michelangelo", "invocable": false }
+    { "name": "Michelangelo", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Michelangelo", "invocable": false },
     { "name": "Raglin", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Raglin", "invocable": true },
     { "name": "Baron", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Baron", "invocable": true },
     { "name": "Taras the Fierce", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Void", "type": "HP", "image": "Taras", "invocable": true },
