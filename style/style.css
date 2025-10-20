@@ -514,12 +514,16 @@ select {
 .points-inputs {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;      /* ✅ Centre horizontalement le contenu */
+  justify-content: center;  /* ✅ Optionnel : centre verticalement si nécessaire */
   position: relative;
   z-index: 10000;
   gap: 10px;
-  margin: 20px 0;
+  margin: 20px auto;        /* ✅ Centre le bloc dans la page */
   flex-wrap: wrap;
+  text-align: center;       /* ✅ Centre le texte des labels et du span */
+  width: 100%;
+  max-width: 400px;         /* ✅ Optionnel : limite la largeur pour plus d’équilibre */
 }
 
 .points-inputs label {
