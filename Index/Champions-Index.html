@@ -183,7 +183,7 @@
         <label for="invocableOnly">Invocables seulement</label>
       </div>
 
-      <!-- Boutons de rareté -->
+      <!-- Raretés -->
       <button class="rarity-btn" data-rarity="Mythic">Mythique</button>
       <button class="rarity-btn" data-rarity="Legendary">Légendaire</button>
       <button class="rarity-btn" data-rarity="Epic">Épique</button>
@@ -191,7 +191,7 @@
       <button class="rarity-btn" data-rarity="Uncommon">Peu commun</button>
       <button class="rarity-btn" data-rarity="Common">Commun</button>
 
-      <!-- Boutons d’affinité -->
+      <!-- Affinités -->
       <button class="affinity-btn" data-affinity="Force">Force</button>
       <button class="affinity-btn" data-affinity="Magic">Magie</button>
       <button class="affinity-btn" data-affinity="Spirit">Esprit</button>
@@ -219,7 +219,6 @@
     let selectedRarities = [];
     let selectedAffinities = [];
 
-    // Charger JSON
     fetch('champions.json')
       .then(res => res.json())
       .then(data => {
@@ -233,7 +232,7 @@
     function renderFactions() {
       factions.forEach(f => {
         const img = document.createElement('img');
-        img.src = f.icon;
+        img.src = `img/factions/${f.icon}.webp`;
         img.alt = f.name;
         img.classList.add('faction-icon');
         img.dataset.faction = f.name;
@@ -272,7 +271,7 @@
         card.classList.add('champion-card');
 
         const img = document.createElement('img');
-        img.src = c.image;
+        img.src = `img/champions/${c.image}.webp`;
         img.alt = c.name;
         img.loading = "lazy";
         img.classList.add('champion-img');
@@ -304,7 +303,6 @@
       }
     }
 
-    // Événements
     searchInput.addEventListener('input', displayChampions);
     invocableCheckbox.addEventListener('change', displayChampions);
 
