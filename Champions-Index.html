@@ -19,9 +19,10 @@
       margin: 40px auto;
     }
 
+    /* === Barre de recherche === */
     .search-bar {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
 
     #searchInput {
@@ -34,13 +35,67 @@
       color: #fcf6ff;
       outline: none;
       box-shadow: 0 0 8px #f52584;
-      transition: box-shadow 0.3s;
     }
 
-    #searchInput:focus {
-      box-shadow: 0 0 15px #f52584;
+    /* === Factions === */
+    .faction-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
     }
 
+    .faction-icon {
+      width: 50px;
+      height: 50px;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .faction-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .faction-icon.active {
+      border-color: #f52584;
+      transform: scale(1.1);
+    }
+
+    /* === Filtres supplémentaires === */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      align-items: center;
+    }
+
+    .rarity-btn {
+      background: none;
+      border: 1px solid #555;
+      color: #fcf6ff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rarity-btn.active {
+      border-color: #f52584;
+      background: #f52584;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* === Grille de champions === */
     .champion-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -90,43 +145,88 @@
     @media (max-width: 700px) {
       #searchInput { width: 90%; }
       .champion-card { width: 100px; }
+      .faction-icon { width: 40px; height: 40px; }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
+    <!-- Recherche -->
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Rechercher un champion...">
     </div>
 
+    <!-- Factions -->
+    <div class="faction-bar" id="factionBar">
+      <!-- Exemple : remplace les src par tes vraies icônes -->
+      <img src="factions/bannerlords.png" alt="Banner Lords" class="faction-icon" data-faction="Banner Lords">
+      <img src="factions/highelves.png" alt="High Elves" class="faction-icon" data-faction="High Elves">
+      <img src="factions/sacredorder.png" alt="Sacred Order" class="faction-icon" data-faction="Sacred Order">
+      <img src="factions/barbarians.png" alt="Barbarians" class="faction-icon" data-faction="Barbarians">
+      <img src="factions/ogryntribes.png" alt="Ogryn Tribes" class="faction-icon" data-faction="Ogryn Tribes">
+      <img src="factions/lizardmen.png" alt="Lizard Men" class="faction-icon" data-faction="Lizard Men">
+      <img src="factions/skinwalkers.png" alt="Skinwalkers" class="faction-icon" data-faction="Skinwalkers">
+      <img src="factions/orcs.png" alt="Orcs" class="faction-icon" data-faction="Orcs">
+      <img src="factions/demonspawn.png" alt="Demonspawn" class="faction-icon" data-faction="Demonspawn">
+      <img src="factions/undeadhordes.png" alt="Undead Hordes" class="faction-icon" data-faction="Undead Hordes">
+      <img src="factions/darkelves.png" alt="Dark Elves" class="faction-icon" data-faction="Dark Elves">
+      <img src="factions/knightrevenant.png" alt="Knight Revenant" class="faction-icon" data-faction="Knight Revenant">
+      <img src="factions/dwarves.png" alt="Dwarves" class="faction-icon" data-faction="Dwarves">
+      <img src="factions/shadowkin.png" alt="Shadowkin" class="faction-icon" data-faction="Shadowkin">
+      <img src="factions/sylvanwatchers.png" alt="Sylvan Watchers" class="faction-icon" data-faction="Sylvan Watchers">
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters">
+      <div class="checkbox-container">
+        <input type="checkbox" id="invocableOnly">
+        <label for="invocableOnly">Invocables seulement</label>
+      </div>
+      <button class="rarity-btn" data-rarity="Mythic">Mythique</button>
+      <button class="rarity-btn" data-rarity="Legendary">Légendaire</button>
+      <button class="rarity-btn" data-rarity="Epic">Épique</button>
+      <button class="rarity-btn" data-rarity="Rare">Rare</button>
+      <button class="rarity-btn" data-rarity="Uncommon">Peu commun</button>
+      <button class="rarity-btn" data-rarity="Common">Commun</button>
+    </div>
+
+    <!-- Grille des champions -->
     <div id="championGrid" class="champion-grid"></div>
   </div>
 
   <script>
-    // Exemple minimal - tu pourras le remplacer par un JSON externe plus tard
     const champions = [
-      { name: "Arbiter", faction: "High Elves", rarity: "Legendary", image: "img/Arbiter.jpg" },
-      { name: "Septimus", faction: "Banner Lords", rarity: "Legendary", image: "img/Septimus.jpg" },
-      { name: "Kael", faction: "Dark Elves", rarity: "Rare", image: "img/Kael.jpg" },
-      { name: "Elhain", faction: "High Elves", rarity: "Rare", image: "img/Elhain.jpg" },
-      { name: "Galek", faction: "Orcs", rarity: "Rare", image: "img/Galek.jpg" },
-      { name: "Tayrel", faction: "High Elves", rarity: "Epic", image: "img/Tayrel.jpg" },
-      { name: "Trunda Giltmallet", faction: "Dwarves", rarity: "Legendary", image: "img/Trunda.jpg" },
-      { name: "Rhazin Scarhide", faction: "Lizard Men", rarity: "Legendary", image: "img/Rhazin.jpg" },
-      { name: "Bad-el-Kazar", faction: "Undead Hordes", rarity: "Legendary", image: "img/Badel.jpg" },
-      { name: "Aina", faction: "Barbarians", rarity: "Epic", image: "img/Aina.jpg" },
-      { name: "Ursuga Warcaller", faction: "Barbarians", rarity: "Legendary", image: "img/Ursuga.jpg" },
-      // ... tu pourras en ajouter des centaines ici ou charger depuis champions.json
+      { name: "Arbiter", faction: "High Elves", rarity: "Legendary", image: "img/Arbiter.jpg", invocable: false },
+      { name: "Kael", faction: "Dark Elves", rarity: "Rare", image: "img/Kael.jpg", invocable: true },
+      { name: "Elhain", faction: "High Elves", rarity: "Rare", image: "img/Elhain.jpg", invocable: true },
+      { name: "Tayrel", faction: "High Elves", rarity: "Epic", image: "img/Tayrel.jpg", invocable: true },
+      { name: "Trunda Giltmallet", faction: "Dwarves", rarity: "Legendary", image: "img/Trunda.jpg", invocable: true },
+      { name: "Septimus", faction: "Banner Lords", rarity: "Legendary", image: "img/Septimus.jpg", invocable: true },
+      { name: "Aina", faction: "Barbarians", rarity: "Epic", image: "img/Aina.jpg", invocable: true },
+      { name: "Urost the Soulcage", faction: "Undead Hordes", rarity: "Legendary", image: "img/Urost.jpg", invocable: false },
+      { name: "Rhazin Scarhide", faction: "Lizard Men", rarity: "Legendary", image: "img/Rhazin.jpg", invocable: true },
     ];
 
     const grid = document.getElementById('championGrid');
     const searchInput = document.getElementById('searchInput');
+    const factionIcons = document.querySelectorAll('.faction-icon');
+    const rarityButtons = document.querySelectorAll('.rarity-btn');
+    const invocableCheckbox = document.getElementById('invocableOnly');
 
-    function displayChampions(filter = "") {
-      const filtered = champions.filter(c => 
-        c.name.toLowerCase().includes(filter.toLowerCase())
-      );
+    let selectedFaction = null;
+    let selectedRarities = [];
+
+    function displayChampions() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const invocableOnly = invocableCheckbox.checked;
+
+      const filtered = champions.filter(c => {
+        const matchesName = c.name.toLowerCase().includes(searchTerm);
+        const matchesFaction = !selectedFaction || c.faction === selectedFaction;
+        const matchesRarity = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
+        const matchesInvocable = !invocableOnly || c.invocable;
+        return matchesName && matchesFaction && matchesRarity && matchesInvocable;
+      });
 
       grid.innerHTML = "";
 
@@ -146,11 +246,41 @@
       }
     }
 
-    searchInput.addEventListener('input', (e) => {
-      displayChampions(e.target.value);
+    // Recherche
+    searchInput.addEventListener('input', displayChampions);
+
+    // Factions
+    factionIcons.forEach(icon => {
+      icon.addEventListener('click', () => {
+        factionIcons.forEach(i => i.classList.remove('active'));
+        if (selectedFaction === icon.dataset.faction) {
+          selectedFaction = null; // désélection
+        } else {
+          icon.classList.add('active');
+          selectedFaction = icon.dataset.faction;
+        }
+        displayChampions();
+      });
     });
 
-    // Initial load
+    // Raretés
+    rarityButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        const rarity = btn.dataset.rarity;
+        if (selectedRarities.includes(rarity)) {
+          selectedRarities = selectedRarities.filter(r => r !== rarity);
+        } else {
+          selectedRarities.push(rarity);
+        }
+        displayChampions();
+      });
+    });
+
+    // Invocable seulement
+    invocableCheckbox.addEventListener('change', displayChampions);
+
+    // Initial
     displayChampions();
   </script>
 </body>
