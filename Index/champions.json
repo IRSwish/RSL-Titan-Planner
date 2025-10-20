@@ -1,0 +1,30 @@
+{
+  "factions": [
+    { "name": "Banner Lords", "icon": "factions/bannerlords.webp" },
+    { "name": "High Elves", "icon": "factions/highelves.webp" },
+    { "name": "Sacred Order", "icon": "factions/sacredorder.webp" },
+    { "name": "Barbarians", "icon": "factions/barbarians.webp" },
+    { "name": "Ogryn Tribes", "icon": "factions/ogryntribes.webp" },
+    { "name": "Lizard Men", "icon": "factions/lizardmen.webp" },
+    { "name": "Skinwalkers", "icon": "factions/skinwalkers.webp" },
+    { "name": "Orcs", "icon": "factions/orcs.webp" },
+    { "name": "Demonspawn", "icon": "factions/demonspawn.webp" },
+    { "name": "Undead Hordes", "icon": "factions/undeadhordes.webp" },
+    { "name": "Dark Elves", "icon": "factions/darkelves.webp" },
+    { "name": "Knight Revenant", "icon": "factions/knightrevenant.webp" },
+    { "name": "Dwarves", "icon": "factions/dwarves.webp" },
+    { "name": "Shadowkin", "icon": "factions/shadowkin.webp" },
+    { "name": "Sylvan Watchers", "icon": "factions/sylvanwatchers.webp" }
+  ],
+  "champions": [
+    { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "image": "img/Arbiter.webp", "invocable": false },
+    { "name": "Kael", "faction": "Dark Elves", "rarity": "Rare", "image": "img/Kael.webp", "invocable": true },
+    { "name": "Elhain", "faction": "High Elves", "rarity": "Rare", "image": "img/Elhain.webp", "invocable": true },
+    { "name": "Tayrel", "faction": "High Elves", "rarity": "Epic", "image": "img/Tayrel.webp", "invocable": true },
+    { "name": "Trunda Giltmallet", "faction": "Dwarves", "rarity": "Legendary", "image": "img/Trunda.webp", "invocable": true },
+    { "name": "Septimus", "faction": "Banner Lords", "rarity": "Legendary", "image": "img/Septimus.webp", "invocable": true },
+    { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "image": "img/Aina.webp", "invocable": true },
+    { "name": "Urost the Soulcage", "faction": "Undead Hordes", "rarity": "Legendary", "image": "img/Urost.webp", "invocable": false },
+    { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "image": "img/Rhazin.webp", "invocable": true }
+  ]
+}
