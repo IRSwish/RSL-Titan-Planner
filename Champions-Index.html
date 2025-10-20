@@ -2,16 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Index des Champions - RSL Tools</title>
+  <title>Champions - RSL Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* --- POLICE SUPPLÉMENTAIRE --- */
-    @font-face {
-      font-family: 'American Captain';
-      src: url('style/American Captain.otf') format('opentype');
-    }
-
-    /* --- STYLE GLOBAL --- */
     body {
       font-family: 'Inter', sans-serif;
       background-color: #0e0e0e;
@@ -20,59 +13,39 @@
       padding: 0;
     }
 
-    .inventory-container {
-      width: 90%;
-      max-width: 1200px;
+    .container {
+      width: 95%;
+      max-width: 1400px;
       margin: 40px auto;
     }
 
-    /* --- BARRE DE RECHERCHE --- */
     .search-bar {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     #searchInput {
       width: 60%;
-      padding: 10px 15px;
+      padding: 12px 16px;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
       background: #1a1a1a;
       color: #fcf6ff;
       outline: none;
       box-shadow: 0 0 8px #f52584;
+      transition: box-shadow 0.3s;
     }
 
-    /* --- ONGLET DES FACTIONS --- */
-    .factions-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 20px;
+    #searchInput:focus {
+      box-shadow: 0 0 15px #f52584;
     }
 
-    .faction-tab {
-      background: none;
-      border: 1px solid #f52584;
-      color: #fcf6ff;
-      padding: 8px 14px;
-      margin: 4px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-
-    .faction-tab.active, .faction-tab:hover {
-      background: #f52584;
-      transform: scale(1.05);
-    }
-
-    /* --- LISTE DES CHAMPIONS --- */
-    .champion-list {
+    .champion-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 15px;
+      justify-items: center;
     }
 
     .champion-card {
@@ -81,6 +54,7 @@
       border-radius: 10px;
       text-align: center;
       padding: 10px;
+      width: 120px;
       transition: transform 0.2s, border-color 0.3s;
     }
 
@@ -92,20 +66,20 @@
     .champion-card img {
       width: 100%;
       border-radius: 8px;
+      margin-bottom: 6px;
     }
 
-    .champion-card h3 {
-      margin: 8px 0 4px;
-      font-size: 16px;
-    }
-
-    .champion-card p {
-      margin: 0;
+    .champion-name {
       font-size: 13px;
-      opacity: 0.8;
+      font-weight: 600;
+      line-height: 1.2;
     }
 
-    /* --- COULEURS PAR RARETÉ --- */
+    .champion-rarity {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
     .rarity-Mythic { border-color: #d4af37; }
     .rarity-Legendary { border-color: #ff9b00; }
     .rarity-Epic { border-color: #a335ee; }
@@ -113,109 +87,70 @@
     .rarity-Uncommon { border-color: #1eff00; }
     .rarity-Common { border-color: #9d9d9d; }
 
-    /* --- ADAPTATION MOBILE --- */
-    @media (max-width: 600px) {
-      #searchInput {
-        width: 90%;
-      }
+    @media (max-width: 700px) {
+      #searchInput { width: 90%; }
+      .champion-card { width: 100px; }
     }
   </style>
 </head>
-
 <body>
-  <!-- BARRE DE MENU -->
-  <div id="menu-container"></div>
 
-  <!-- CONTENU PRINCIPAL -->
-  <div class="inventory-container">
-
-    <!-- BARRE DE RECHERCHE -->
+  <div class="container">
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Rechercher un champion...">
     </div>
 
-    <!-- ONGLET DES FACTIONS -->
-    <div class="factions-tabs">
-      <button class="faction-tab active" data-faction="BannerLords">Banner Lords</button>
-      <button class="faction-tab" data-faction="HighElves">High Elves</button>
-      <button class="faction-tab" data-faction="SacredOrder">Sacred Order</button>
-      <button class="faction-tab" data-faction="Barbarians">Barbarians</button>
-      <button class="faction-tab" data-faction="OgrynTribes">Ogryn Tribes</button>
-      <button class="faction-tab" data-faction="LizardMen">Lizard Men</button>
-      <button class="faction-tab" data-faction="Skinwalkers">Skinwalkers</button>
-      <button class="faction-tab" data-faction="Orcs">Orcs</button>
-      <button class="faction-tab" data-faction="Demonspawn">Demonspawn</button>
-      <button class="faction-tab" data-faction="UndeadHordes">Undead Hordes</button>
-      <button class="faction-tab" data-faction="DarkElves">Dark Elves</button>
-      <button class="faction-tab" data-faction="KnightRevenant">Knight Revenant</button>
-      <button class="faction-tab" data-faction="Dwarves">Dwarves</button>
-      <button class="faction-tab" data-faction="Shadowkin">Shadowkin</button>
-      <button class="faction-tab" data-faction="SylvanWatchers">Sylvan Watchers</button>
-    </div>
-
-    <!-- LISTE DES CHAMPIONS -->
-    <div id="championList" class="champion-list"></div>
-
+    <div id="championGrid" class="champion-grid"></div>
   </div>
 
-  <!-- SCRIPT JS -->
   <script>
+    // Exemple minimal - tu pourras le remplacer par un JSON externe plus tard
     const champions = [
-      { name: "Arbiter", faction: "HighElves", rarity: "Legendary", image: "img/Arbiter.jpg" },
-      { name: "Septimus", faction: "BannerLords", rarity: "Legendary", image: "img/Septimus.jpg" },
-      { name: "Tayrel", faction: "HighElves", rarity: "Epic", image: "img/Tayrel.jpg" },
+      { name: "Arbiter", faction: "High Elves", rarity: "Legendary", image: "img/Arbiter.jpg" },
+      { name: "Septimus", faction: "Banner Lords", rarity: "Legendary", image: "img/Septimus.jpg" },
+      { name: "Kael", faction: "Dark Elves", rarity: "Rare", image: "img/Kael.jpg" },
+      { name: "Elhain", faction: "High Elves", rarity: "Rare", image: "img/Elhain.jpg" },
       { name: "Galek", faction: "Orcs", rarity: "Rare", image: "img/Galek.jpg" },
-      { name: "Kael", faction: "DarkElves", rarity: "Rare", image: "img/Kael.jpg" },
-      { name: "Rhazin Scarhide", faction: "LizardMen", rarity: "Legendary", image: "img/Rhazin.jpg" },
-      { name: "Urost the Soulcage", faction: "UndeadHordes", rarity: "Legendary", image: "img/Urost.jpg" },
+      { name: "Tayrel", faction: "High Elves", rarity: "Epic", image: "img/Tayrel.jpg" },
       { name: "Trunda Giltmallet", faction: "Dwarves", rarity: "Legendary", image: "img/Trunda.jpg" },
-      { name: "Elhain", faction: "HighElves", rarity: "Rare", image: "img/Elhain.jpg" },
+      { name: "Rhazin Scarhide", faction: "Lizard Men", rarity: "Legendary", image: "img/Rhazin.jpg" },
+      { name: "Bad-el-Kazar", faction: "Undead Hordes", rarity: "Legendary", image: "img/Badel.jpg" },
       { name: "Aina", faction: "Barbarians", rarity: "Epic", image: "img/Aina.jpg" },
+      { name: "Ursuga Warcaller", faction: "Barbarians", rarity: "Legendary", image: "img/Ursuga.jpg" },
+      // ... tu pourras en ajouter des centaines ici ou charger depuis champions.json
     ];
 
-    const championList = document.getElementById('championList');
+    const grid = document.getElementById('championGrid');
     const searchInput = document.getElementById('searchInput');
-    const factionTabs = document.querySelectorAll('.faction-tab');
 
-    let currentFaction = 'BannerLords';
+    function displayChampions(filter = "") {
+      const filtered = champions.filter(c => 
+        c.name.toLowerCase().includes(filter.toLowerCase())
+      );
 
-    function displayChampions() {
-      const searchTerm = searchInput.value.toLowerCase();
-      championList.innerHTML = '';
-
-      const filtered = champions
-        .filter(c => c.faction === currentFaction)
-        .filter(c => c.name.toLowerCase().includes(searchTerm));
-
-      if (filtered.length === 0) {
-        championList.innerHTML = '<p style="grid-column: 1 / -1; text-align:center;">Aucun champion trouvé.</p>';
-        return;
-      }
+      grid.innerHTML = "";
 
       filtered.forEach(c => {
         const card = document.createElement('div');
         card.classList.add('champion-card', `rarity-${c.rarity}`);
         card.innerHTML = `
-          <img src="${c.image}" alt="${c.name}">
-          <h3>${c.name}</h3>
-          <p>${c.rarity}</p>
+          <img src="${c.image}" alt="${c.name}" loading="lazy">
+          <div class="champion-name">${c.name}</div>
+          <div class="champion-rarity">${c.rarity}</div>
         `;
-        championList.appendChild(card);
+        grid.appendChild(card);
       });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align:center;">Aucun champion trouvé.</p>';
+      }
     }
 
-    factionTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        factionTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentFaction = tab.dataset.faction;
-        displayChampions();
-      });
+    searchInput.addEventListener('input', (e) => {
+      displayChampions(e.target.value);
     });
 
-    searchInput.addEventListener('input', displayChampions);
-
-    // Initialisation
+    // Initial load
     displayChampions();
   </script>
 </body>
