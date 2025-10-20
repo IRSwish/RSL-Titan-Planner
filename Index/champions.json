@@ -41,15 +41,28 @@
     { "name": "Marichka the Unbreakable", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Marichka", "invocable": true },
     { "name": "Quintus the Triumphant", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Quintus", "invocable": false },
     { "name": "Titus Blackplume", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Void", "type": "Defense", "image": "Titus", "invocable": true },    
-    
-    { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "image": "Arbiter", "invocable": false },
-    { "name": "Kael", "faction": "Dark Elves", "rarity": "Rare", "affinity": "Magic", "image": "Kael", "invocable": true },
-    { "name": "Elhain", "faction": "High Elves", "rarity": "Rare", "affinity": "Magic", "image": "Elhain", "invocable": true },
-    { "name": "Tayrel", "faction": "High Elves", "rarity": "Epic", "affinity": "Spirit", "image": "Tayrel", "invocable": true },
-    { "name": "Trunda Giltmallet", "faction": "Dwarves", "rarity": "Legendary", "affinity": "Magic", "image": "Trunda", "invocable": true },
-    { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "affinity": "Void", "image": "img/Aina", "invocable": true },
-    { "name": "Urost the Soulcage", "faction": "Undead Hordes", "rarity": "Legendary", "affinity": "Void", "image": "Urost", "invocable": false },
-    { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "affinity": "Force", "image": "Rhazin", "invocable": true },
-    { "name": "Komidus Darksmile", "faction": "Demonspawn", "rarity": "Mythical", "affinity": "Magic", "type": "Support", "image": "Komidus_Darksmile", "invocable": true }
+
+    { "name": "Hordin", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Hordin", "invocable": true },
+    { "name": "Lordly Legionary", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Lordly-Legionary", "invocable": true },
+    { "name": "Archmage Hellmut", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Magic", "type": "Support", "image": "Hellmut", "invocable": false },
+    { "name": "Gerhard the Stone", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Gerhard", "invocable": true },
+    { "name": "Arndulf", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Magic", "type": "Defense", "image": "Arndulf", "invocable": true },
+    { "name": "Signy of Highshield", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Magic", "type": "HP", "image": "Signy", "invocable": true },
+    { "name": "Oathbound", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Force", "type": "Defense", "image": "Oathbound", "invocable": true },
+    { "name": "Chancellor Yasmin", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Force", "type": "Support", "image": "Yasmin", "invocable": true },
+    { "name": "Seneschal", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Force", "type": "Defense", "image": "Seneschal", "invocable": true },
+    { "name": "Alaric the Hooded", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Alaric", "invocable": true },
+    { "name": "Lady Quilen", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Quilen", "invocable": true },
+    { "name": "Sir Artimage", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Artimage", "invocable": true },
+    { "name": "Knight Errant", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Knight-Errant", "invocable": true },
+    { "name": "Stag Knight", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Stag-Knight", "invocable": true },
+    { "name": "Masked Fearmonger", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Fearmonger", "invocable": true },
+    { "name": "Giscard the Sigiled", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Defense", "image": "Giscard", "invocable": true },
+    { "name": "Eolfrig", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Eolfrig", "invocable": true },
+    { "name": "Lady Annabelle", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Annabelle", "invocable": true },
+    { "name": "Rowan", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Rowan", "invocable": true },
+    { "name": "Azur", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "HP", "image": "Azur", "invocable": true },
+    { "name": "Warcaster", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Warcaster", "invocable": true },
+    { "name": "Ursala the Mourner", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Ursala", "invocable": true }    
   ]
 }
