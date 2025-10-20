@@ -126,7 +126,7 @@
       "name": "Gear Hunters",
       "start_date": "2025-10-20",
       "end_date": "2025-10-23",
-      "points": [80]
+      "points": [10, 20, 50]
     }
   ]
 }
