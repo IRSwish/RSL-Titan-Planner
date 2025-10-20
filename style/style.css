@@ -11,7 +11,7 @@
 @font-face {
   font-family: 'American Captain';
   src: url('style/American Captain.otf') format('opentype');
-}    
+}
 
 body {
   position: relative;
@@ -22,9 +22,7 @@ body {
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
   overflow-x: hidden;
-
-  /* 🔸 Compense la hauteur de la barre */
-  padding-top: 70px;
+  padding-top: 70px; /* Compense la hauteur de la barre */
 }
 
 /* Overlay sombre */
@@ -40,36 +38,37 @@ body::before {
   z-index: 0;
 }
 
-header, .timeline-container, .summary-box {
+header,
+.timeline-container,
+.summary-box {
   position: relative;
   z-index: 1;
 }
 
 header {
-    display: inline-block;
-    text-align: center;
-    font-family: 'American Captain', sans-serif;
-    font-size: 48px;
-    letter-spacing: 2px;
-    margin-top:10px;
-    margin-bottom:10px;
-    background: linear-gradient(to bottom, #feeec1, #e09f40);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.2))
-            drop-shadow(-1px -1px 1px rgba(0, 0, 0, 0.5));
+  display: inline-block;
+  text-align: center;
+  font-family: 'American Captain', sans-serif;
+  font-size: 48px;
+  letter-spacing: 2px;
+  margin: 10px 0;
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(1px 1px 1px rgba(255, 255, 255, 0.2))
+          drop-shadow(-1px -1px 1px rgba(0, 0, 0, 0.5));
 }
 
 .header-wrapper {
-    text-align: center;
+  text-align: center;
 }
 
 /* Timeline globale */
 .timeline-container {
   overflow-x: hidden;
-  padding: 0px 50px;
+  padding: 0 50px;
 }
 
 .timeline {
@@ -97,7 +96,7 @@ header {
   font-size: 13px;
 }
 
-/* Ligne verticale gauche/droite */
+/* Lignes de la timeline */
 .date-column .grid-line {
   position: absolute;
   top: 0;
@@ -106,7 +105,6 @@ header {
   background-color: var(--grid-line-color);
 }
 
-/* Ligne horizontale sous les dates */
 .timeline-line {
   position: absolute;
   top: 55px;
@@ -121,7 +119,7 @@ header {
   position: absolute;
   background: var(--event-bg);
   border: 2px solid var(--event-border);
-  padding:4px;
+  padding: 4px;
   min-width: 50px;
   border-radius: 14px;
   text-align: center;
@@ -185,7 +183,7 @@ header {
   color: var(--line-color);
 }
 
-/* Points états */
+/* États des points */
 .point-box.state-upcoming {
   border: 2px solid #e0e0e0;
   box-shadow: inset 0 0 6px rgba(212,175,55,0.25);
@@ -196,7 +194,7 @@ header {
 }
 
 .point-box.state-upcoming span {
-  color:#e0e0e0;
+  color: #e0e0e0;
 }
 
 .point-box.state-ongoing {
@@ -210,7 +208,7 @@ header {
 }
 
 .point-box.state-validated span {
-  color:#4caf50;
+  color: #4caf50;
 }
 
 .point-box.state-passed {
@@ -219,7 +217,7 @@ header {
 }
 
 .point-box.state-passed span {
-  color:red;
+  color: red;
 }
 
 .point-box.state-passed img {
@@ -239,23 +237,25 @@ header {
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
   font-size: 14px;
-  display: block; 
+  display: block;
 }
+
 .summary-box div {
   margin-bottom: 6px;
 }
 
-/* Highlight de la colonne du jour actuel */
+/* Colonne du jour actuel */
 .date-column.today {
   background: linear-gradient(
-       to bottom,
-       rgba(212,175,55,0) 0%,
-       rgba(212,175,55,0.15) 20%,
-       rgba(212,175,55,0.15) 80%,
-       rgba(212,175,55,0) 100%
+    to bottom,
+    rgba(212,175,55,0) 0%,
+    rgba(212,175,55,0.15) 20%,
+    rgba(212,175,55,0.15) 80%,
+    rgba(212,175,55,0) 100%
   );
 }
 
+/* Légende */
 .legend {
   display: flex;
   justify-content: space-between;
@@ -279,30 +279,17 @@ header {
   display: inline-block;
 }
 
-.legend-dot.skipped {
-  background-color: red;
-}
+.legend-dot.skipped { background-color: red; }
+.legend-dot.in-progress { background-color: orange; }
+.legend-dot.done { background-color: #4caf50; }
+.legend-dot.not-started { background-color: #e0e0e0; }
 
-.legend-dot.in-progress {
-  background-color: orange;
-}
-
-.legend-dot.done {
-  background-color: #4caf50;
-}
-
-.legend-dot.not-started {
-  background-color: #e0e0e0;
-}
-
-/* BARRE PRINCIPALE FIXÉE */
+/* Barre principale fixée */
 .menu-bar {
   background: #1a1a1a;
   padding: 15px 0;
   display: flex;
   justify-content: center;
-
-  /* FIXATION EN HAUT */
   position: fixed;
   top: 0;
   left: 0;
@@ -336,7 +323,7 @@ header {
   border-radius: 5px;
 }
 
-/* DROPDOWN NIVEAU 1 */
+/* Dropdown niveau 1 */
 .dropdown-content {
   list-style: none;
   padding: 0;
@@ -366,12 +353,11 @@ header {
   background: #444;
 }
 
-/* AFFICHAGE AU SURVOL - NIVEAU 1 */
 .dropdown:hover .dropdown-content {
   display: flex;
 }
 
-/* ======== NIVEAU 2 (Sous-dropdown pour les années) ======== */
+/* Sous-dropdown niveau 2 */
 .dropdown-sub {
   position: relative;
 }
@@ -396,6 +382,10 @@ header {
   font-size: 12px;
   transform: rotate(0deg);
   transition: transform 0.2s;
+}
+
+.dropdown-sub:hover .arrow {
+  transform: rotate(90deg);
 }
 
 .dropdown-sub-content {
@@ -425,23 +415,18 @@ header {
   background: #444;
 }
 
-/* Affichage au survol - NIVEAU 2 */
 .dropdown-sub:hover .dropdown-sub-content {
   display: flex;
 }
 
-/* CALCULATOR */
+/* Calculator */
 .dropdown-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 300px;
-
-  /* ✅ Ajout pour passer au-dessus du voile sombre */
   position: relative;
   z-index: 10000;
-
-  /* ✅ Centrage */
   margin: 0 auto;
 }
 
@@ -459,10 +444,7 @@ select {
   display: none;
 }
 
-.dropdown-sub:hover .arrow {
-transform: rotate(90deg);
-}
-
+/* Tableau points */
 #points-table-container {
   margin: 30px auto;
   max-width: 700px;
@@ -470,8 +452,6 @@ transform: rotate(90deg);
   position: relative;
   z-index: 10000;
 }
-
-/* TABLE POINTS */
 
 #points-table {
   width: 100%;
@@ -499,6 +479,7 @@ transform: rotate(90deg);
   font-weight: 600;
 }
 
+/* Bouton toggle */
 .toggle-btn {
   background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
   border: 2px solid #d4af37;
@@ -509,33 +490,42 @@ transform: rotate(90deg);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin: 10px 0;
 }
 
 #toggle-btn {
-  display: none; /* caché par défaut */
+  display: none;
 }
 
+/* Résultat du calcul */
 #calculation-result {
   width: 100%;
-  border-collapse: collapse;
   text-align: center;
   font-family: 'Inter', sans-serif;
   color: var(--text-color);
   position: relative;
   z-index: 10000;
+  margin-top: 15px;
+  font-size: 15px;
+  font-style: italic;
 }
 
+/* Inputs */
 .points-inputs {
   display: flex;
-  flex-direction: column;  /* Empile les éléments verticalement */
-  align-items: flex-start;  /* Aligne à gauche */
+  flex-direction: column;
+  align-items: flex-start;
   position: relative;
   z-index: 10000;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
 }
 
 .points-inputs label {
   font-size: 0.9rem;
   color: #fcf6ff;
+  font-weight: 600;
 }
 
 .points-inputs input {
@@ -544,60 +534,30 @@ transform: rotate(90deg);
   border: none;
   border-radius: 6px;
   padding: 1rem;
-  padding-right: 2.5rem; /* 👈 espace entre le texte et le spinner */
+  padding-right: 2.5rem;
   width: 100%;
   max-width: 200px;
   box-sizing: border-box;
 }
 
-/* Chrome, Edge, Safari */
+/* Suppression des flèches sur les inputs numériques */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-/* Firefox */
 input[type=number] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
-/* Style du texte sous les inputs */
+/* Texte sous inputs */
 .points-inputs span {
   font-size: 0.9rem;
   color: #fcf6ff;
 }
 
-    td { text-align: center; padding: 5px; }
-    .toggle-btn {
-      margin: 10px 0;
-      padding: 6px 12px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .points-inputs {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-    .points-inputs label {
-      font-weight: 600;
-    }
-    .points-inputs input {
-      width: 100px;
-      padding: 4px;
-      text-align: right;
-    }
-    #points-remaining {
-      font-weight: bold;
-      font-size: 16px;
-    }
-    #calculation-result {
-      margin-top: 15px;
-      font-size: 15px;
-      font-style: italic;
-    }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-    th, td { border: 1px solid #fff; }
+#points-remaining {
+  font-weight: bold;
+  font-size: 16px;
+}
