@@ -43,7 +43,7 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-      margin: 20px 0;
+      margin: 25px 0;
     }
 
     .faction-icon {
@@ -67,22 +67,32 @@
       transform: scale(1.1);
     }
 
-    /* Filters sections */
-    .filters {
+    /* FILTERS GLOBAL WRAPPER */
+    .filters-wrapper {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
+      gap: 40px;
+      flex-wrap: wrap;
       margin-bottom: 25px;
-      align-items: center;
+    }
+
+    /* FILTER SECTIONS */
+    .filter-section {
+      text-align: center;
+      width: 250px;
     }
 
     .section-label {
-      width: 100%;
-      text-align: center;
-      margin: 10px 0 0 0;
       font-weight: 600;
       color: #bbbbbb;
+      margin-bottom: 8px;
+    }
+
+    .filter-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      justify-items: center;
+      gap: 8px;
     }
 
     .rarity-btn, .affinity-btn, .type-btn {
@@ -90,9 +100,20 @@
       border: 1px solid #555;
       color: #fcf6ff;
       border-radius: 8px;
-      padding: 6px 10px;
+      padding: 4px 8px;
       cursor: pointer;
       transition: all 0.2s;
+      width: 60px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rarity-btn img, .affinity-btn img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
     }
 
     .rarity-btn.active, .affinity-btn.active, .type-btn.active {
@@ -103,10 +124,12 @@
     .checkbox-container {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
+      margin-bottom: 15px;
     }
 
-    /* Champion grid */
+    /* CHAMPIONS GRID */
     .champion-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -114,7 +137,6 @@
       justify-items: center;
     }
 
-    /* Champion card */
     .champion-card {
       width: 100%;
       max-width: 140px;
@@ -176,6 +198,11 @@
       opacity: 0.8;
     }
 
+    @media (max-width: 900px) {
+      .filter-buttons { grid-template-columns: repeat(2, 1fr); }
+      .filters-wrapper { flex-direction: column; align-items: center; }
+    }
+
     @media (max-width: 700px) {
       #searchInput { width: 90%; }
       .champion-card { max-width: 100px; }
@@ -191,36 +218,47 @@
 
     <div class="faction-bar" id="factionBar"></div>
 
-    <!-- Filters: Rarity -->
-    <div class="section-label">Rarity</div>
-    <div class="filters" id="rarityFilters">
-      <button class="rarity-btn" data-rarity="Mythic"><img src="img/rarity/Mythic_Icon.webp" alt="Mythic" width="24" height="24"></button>
-      <button class="rarity-btn" data-rarity="Legendary"><img src="img/rarity/Legendary_Icon.webp" alt="Legendary" width="24" height="24"></button>
-      <button class="rarity-btn" data-rarity="Epic"><img src="img/rarity/Epic_Icon.webp" alt="Epic" width="24" height="24"></button>
-      <button class="rarity-btn" data-rarity="Rare"><img src="img/rarity/Rare_Icon.webp" alt="Rare" width="24" height="24"></button>
-      <button class="rarity-btn" data-rarity="Uncommon"><img src="img/rarity/Uncommon_Icon.webp" alt="Uncommon" width="24" height="24"></button>
-      <button class="rarity-btn" data-rarity="Common"><img src="img/rarity/Common_Icon.webp" alt="Common" width="24" height="24"></button>
+    <!-- FILTER SECTIONS -->
+    <div class="filters-wrapper">
+      
+      <!-- RARITY -->
+      <div class="filter-section">
+        <div class="section-label">Rarity</div>
+        <div class="filter-buttons">
+          <button class="rarity-btn" data-rarity="Mythical"><img src="img/rarity/Mythical_Icon.webp" alt="Mythical"></button>
+          <button class="rarity-btn" data-rarity="Legendary"><img src="img/rarity/Legendary_Icon.webp" alt="Legendary"></button>
+          <button class="rarity-btn" data-rarity="Epic"><img src="img/rarity/Epic_Icon.webp" alt="Epic"></button>
+          <button class="rarity-btn" data-rarity="Rare"><img src="img/rarity/Rare_Icon.webp" alt="Rare"></button>
+          <button class="rarity-btn" data-rarity="Uncommon"><img src="img/rarity/Uncommon_Icon.webp" alt="Uncommon"></button>
+          <button class="rarity-btn" data-rarity="Common"><img src="img/rarity/Common_Icon.webp" alt="Common"></button>
+        </div>
+      </div>
+
+      <!-- AFFINITY -->
+      <div class="filter-section">
+        <div class="section-label">Affinity</div>
+        <div class="filter-buttons">
+          <button class="affinity-btn" data-affinity="Force"><img src="img/affinity/Force.webp" alt="Force"></button>
+          <button class="affinity-btn" data-affinity="Magic"><img src="img/affinity/Magic.webp" alt="Magic"></button>
+          <button class="affinity-btn" data-affinity="Spirit"><img src="img/affinity/Spirit.webp" alt="Spirit"></button>
+          <button class="affinity-btn" data-affinity="Void"><img src="img/affinity/Void.webp" alt="Void"></button>
+        </div>
+      </div>
+
+      <!-- TYPE -->
+      <div class="filter-section">
+        <div class="section-label">Type</div>
+        <div class="filter-buttons">
+          <button class="type-btn" data-type="HP">HP</button>
+          <button class="type-btn" data-type="Attack">Attack</button>
+          <button class="type-btn" data-type="Defense">Defense</button>
+          <button class="type-btn" data-type="Support">Support</button>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Filters: Affinity -->
-    <div class="section-label">Affinity</div>
-    <div class="filters" id="affinityFilters">
-      <button class="affinity-btn" data-affinity="Force"><img src="img/affinity/Force.webp" alt="Force" width="24" height="24"></button>
-      <button class="affinity-btn" data-affinity="Magic"><img src="img/affinity/Magic.webp" alt="Magic" width="24" height="24"></button>
-      <button class="affinity-btn" data-affinity="Spirit"><img src="img/affinity/Spirit.webp" alt="Spirit" width="24" height="24"></button>
-      <button class="affinity-btn" data-affinity="Void"><img src="img/affinity/Void.webp" alt="Void" width="24" height="24"></button>
-    </div>
-
-    <!-- Filters: Type -->
-    <div class="section-label">Type</div>
-    <div class="filters" id="typeFilters">
-      <button class="type-btn" data-type="HP">HP</button>
-      <button class="type-btn" data-type="Attack">Attack</button>
-      <button class="type-btn" data-type="Defense">Defense</button>
-      <button class="type-btn" data-type="Support">Support</button>
-    </div>
-
-    <div class="checkbox-container" style="justify-content:center; margin-bottom: 15px;">
+    <div class="checkbox-container">
       <input type="checkbox" id="invocableOnly">
       <label for="invocableOnly">Invocable only</label>
     </div>
@@ -289,8 +327,7 @@
     rarityButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         btn.classList.toggle('active');
-        const rarity = btn.dataset.rarity;
-        selectedRarities = toggleSelection(selectedRarities, rarity);
+        selectedRarities = toggleSelection(selectedRarities, btn.dataset.rarity);
         displayChampions();
       });
     });
@@ -298,8 +335,7 @@
     affinityButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         btn.classList.toggle('active');
-        const affinity = btn.dataset.affinity;
-        selectedAffinities = toggleSelection(selectedAffinities, affinity);
+        selectedAffinities = toggleSelection(selectedAffinities, btn.dataset.affinity);
         displayChampions();
       });
     });
@@ -307,8 +343,7 @@
     typeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         btn.classList.toggle('active');
-        const type = btn.dataset.type;
-        selectedTypes = toggleSelection(selectedTypes, type);
+        selectedTypes = toggleSelection(selectedTypes, btn.dataset.type);
         displayChampions();
       });
     });
@@ -328,7 +363,7 @@
       });
 
       grid.innerHTML = "";
-      countDisplay.textContent = `${filtered.length} champion${filtered.length > 1 ? 's' : ''} found`;
+      countDisplay.textContent = `${filtered.length} champion${filtered.length !== 1 ? 's' : ''} found`;
 
       filtered.forEach(c => {
         const card = document.createElement('div');
@@ -344,7 +379,7 @@
         img.classList.add('champion-img');
 
         const frame = document.createElement('img');
-        frame.src = `img/rarity/${c.rarity}_Icon.webp`;
+        frame.src = `img/rarity/${c.rarity}.webp`; // reverted to proper rarity frame
         frame.alt = `${c.rarity} frame`;
         frame.classList.add('rarity-frame');
 
