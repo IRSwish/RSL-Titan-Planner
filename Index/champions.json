@@ -17,7 +17,7 @@
     { "name": "Sylvan Watchers", "icon": "sylvanwatchers" }
   ],
   "champions": [
-    { "name": "Lord Champfort", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Magic", "type": "HP", "image": "Lord_Champfort", "invocable": true ,
+    { "name": "Lord Champfort", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Magic", "type": "HP", "image": "Lord_Champfort", "invocable": true },
     { "name": "Sethallia", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Magic", "type": "Support", "image": "Sethallia", "invocable": true },
     { "name": "Cillian the Lucky", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Magic", "type": "Attack", "image": "Cillian_the_Lucky", "invocable": true },
     { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "image": "Arbiter", "invocable": false },
