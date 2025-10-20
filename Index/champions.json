@@ -28,6 +28,7 @@
     { "name": "Septimus", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "image": "Septimus", "invocable": true },
     { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "affinity": "Void", "image": "img/Aina", "invocable": true },
     { "name": "Urost the Soulcage", "faction": "Undead Hordes", "rarity": "Legendary", "affinity": "Void", "image": "Urost", "invocable": false },
-    { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "affinity": "Force", "image": "Rhazin", "invocable": true }
+    { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "affinity": "Force", "image": "Rhazin", "invocable": true },
+    { "name": "Komidus Darksmile", "faction": "Demonspawn", "rarity": "Mythical", "affinity": "Magic", "type": "Support", "image": "Komidus_Darksmile", "invocable": true }
   ]
 }
