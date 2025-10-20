@@ -5,220 +5,250 @@
   <title>Champions - RSL Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0e0e0e;
-      color: #fcf6ff;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      width: 95%;
-      max-width: 1400px;
-      margin: 40px auto;
-    }
-
-    /* Search bar */
-    .search-bar {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    #searchInput {
-      width: 60%;
-      padding: 12px 16px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      background: #1a1a1a;
-      color: #fcf6ff;
-      outline: none;
-      box-shadow: 0 0 8px #f52584;
-    }
-
-    /* Faction bar */
-    .faction-bar {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 25px 0;
-    }
-
-    .faction-icon {
-      width: 50px;
-      height: 50px;
-      border: 2px solid transparent;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s;
-      object-fit: contain;
-      background-color: #1a1a1a;
-      padding: 4px;
-    }
-
-    .faction-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .faction-icon.active {
-      border-color: #f52584;
-      transform: scale(1.1);
-    }
-
-    /* FILTERS GLOBAL WRAPPER */
-    .filters-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-bottom: 25px;
-    }
-
-    .filter-section {
-      text-align: center;
-      width: 250px;
-    }
-
-    .section-label {
-      font-weight: 600;
-      color: #bbbbbb;
-      margin-bottom: 8px;
-    }
-
+   body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0e0e0e;
+    color: #fcf6ff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 40px auto;
+  }
+  
+  /* Search bar */
+  .search-bar {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  #searchInput {
+    width: 60%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #d4af37;
+    background: #1a1a1a;
+    color: #fcf6ff;
+    outline: none;
+    transition: border 0.2s;
+  }
+  
+  #searchInput:focus {
+    border-color: #fce47e;
+  }
+  
+  /* Faction bar */
+  .faction-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 25px 0;
+  }
+  
+  .faction-icon {
+    width: 50px;
+    height: 50px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    object-fit: contain;
+    background-color: #1a1a1a;
+    padding: 4px;
+  }
+  
+  .faction-icon:hover {
+    transform: scale(1.1);
+    border-color: #d4af37;
+  }
+  
+  .faction-icon.active {
+    border-color: #d4af37;
+    transform: scale(1.1);
+  }
+  
+  /* FILTERS GLOBAL WRAPPER */
+  .filters-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+  
+  .filter-section {
+    text-align: center;
+    width: 250px;
+  }
+  
+  .section-label {
+    font-weight: 600;
+    color: #bbbbbb;
+    margin-bottom: 8px;
+  }
+  
+  .filter-buttons {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+  }
+  
+  /* Grilles spécifiques */
+  .rarity-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .affinity-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .type-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .rarity-btn,
+  .affinity-btn,
+  .type-btn {
+    background: none;
+    border: 1px solid #555;
+    color: #fcf6ff;
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 60px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .rarity-btn img,
+  .affinity-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+  
+  /* Boutons actifs → contour doré */
+  .rarity-btn.active,
+  .affinity-btn.active,
+  .type-btn.active {
+    border-color: #d4af37;
+    background: none;
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+  }
+  
+  /* Hover plus doux */
+  .rarity-btn:hover,
+  .affinity-btn:hover,
+  .type-btn:hover {
+    border-color: #d4af37;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 15px;
+  }
+  
+  .champion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    justify-items: center;
+  }
+  
+  .champion-card {
+    width: 100%;
+    max-width: 140px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .champion-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-image {
+    position: relative;
+    aspect-ratio: 140 / 182;
+    width: 100%;
+  }
+  
+  .champion-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+  
+  .rarity-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  
+  .affinity-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  .champion-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 6px;
+    text-align: center;
+  }
+  
+  .counter {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 15px;
+    opacity: 0.8;
+  }
+  
+  @media (max-width: 900px) {
     .filter-buttons {
-      display: grid;
-      justify-items: center;
-      gap: 8px;
+      grid-template-columns: repeat(2, 1fr);
     }
-
-    /* Grilles spécifiques */
-    .rarity-grid {
-      grid-template-columns: repeat(3, 1fr); /* 6 total → 3 + 3 */
-    }
-
-    .affinity-grid {
-      grid-template-columns: repeat(2, 1fr); /* 4 total → 2 + 2 */
-    }
-
-    .type-grid {
-      grid-template-columns: repeat(2, 1fr); /* 4 total → 2 + 2 */
-    }
-
-    .rarity-btn, .affinity-btn, .type-btn {
-      background: none;
-      border: 1px solid #555;
-      color: #fcf6ff;
-      border-radius: 8px;
-      padding: 4px 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      width: 60px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
+    .filters-wrapper {
+      flex-direction: column;
       align-items: center;
     }
-
-    .rarity-btn img, .affinity-btn img {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
+  }
+  
+  @media (max-width: 700px) {
+    #searchInput {
+      width: 90%;
     }
-
-    .rarity-btn.active, .affinity-btn.active, .type-btn.active {
-      border-color: #f52584;
-      background: #f52584;
-    }
-
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 15px;
-    }
-
-    /* CHAMPIONS GRID */
-    .champion-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 15px;
-      justify-items: center;
-    }
-
     .champion-card {
-      width: 100%;
-      max-width: 140px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s;
+      max-width: 100px;
     }
-
-    .champion-card:hover {
-      transform: scale(1.05);
+    .faction-icon {
+      width: 40px;
+      height: 40px;
     }
-
-    .card-image {
-      position: relative;
-      aspect-ratio: 140 / 182;
-      width: 100%;
-    }
-
-    .champion-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
-      display: block;
-    }
-
-    .rarity-frame {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-    }
-
-    .affinity-icon {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .champion-name {
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 6px;
-      text-align: center;
-    }
-
-    .counter {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 15px;
-      opacity: 0.8;
-    }
-
-    @media (max-width: 900px) {
-      .filter-buttons { grid-template-columns: repeat(2, 1fr); }
-      .filters-wrapper { flex-direction: column; align-items: center; }
-    }
-
-    @media (max-width: 700px) {
-      #searchInput { width: 90%; }
-      .champion-card { max-width: 100px; }
-      .faction-icon { width: 40px; height: 40px; }
-    }
+  }
   </style>
 </head>
 
