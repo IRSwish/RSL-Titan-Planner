@@ -1,20 +1,20 @@
 {
   "factions": [
-    { "name": "Banner Lords", "icon": "factions/bannerlords.webp" },
-    { "name": "High Elves", "icon": "factions/highelves.webp" },
-    { "name": "Sacred Order", "icon": "factions/sacredorder.webp" },
-    { "name": "Barbarians", "icon": "factions/barbarians.webp" },
-    { "name": "Ogryn Tribes", "icon": "factions/ogryntribes.webp" },
-    { "name": "Lizard Men", "icon": "factions/lizardmen.webp" },
-    { "name": "Skinwalkers", "icon": "factions/skinwalkers.webp" },
-    { "name": "Orcs", "icon": "factions/orcs.webp" },
-    { "name": "Demonspawn", "icon": "factions/demonspawn.webp" },
-    { "name": "Undead Hordes", "icon": "factions/undeadhordes.webp" },
-    { "name": "Dark Elves", "icon": "factions/darkelves.webp" },
-    { "name": "Knight Revenant", "icon": "factions/knightrevenant.webp" },
-    { "name": "Dwarves", "icon": "factions/dwarves.webp" },
-    { "name": "Shadowkin", "icon": "factions/shadowkin.webp" },
-    { "name": "Sylvan Watchers", "icon": "factions/sylvanwatchers.webp" }
+    { "name": "Banner Lords", "icon": "bannerlords" },
+    { "name": "High Elves", "icon": "highelves" },
+    { "name": "Sacred Order", "icon": "sacredorder" },
+    { "name": "Barbarians", "icon": "barbarians" },
+    { "name": "Ogryn Tribes", "icon": "ogryntribes" },
+    { "name": "Lizard Men", "icon": "lizardmen" },
+    { "name": "Skinwalkers", "icon": "skinwalkers" },
+    { "name": "Orcs", "icon": "orcs" },
+    { "name": "Demonspawn", "icon": "demonspawn" },
+    { "name": "Undead Hordes", "icon": "undeadhordes" },
+    { "name": "Dark Elves", "icon": "darkelves" },
+    { "name": "Knight Revenant", "icon": "knightrevenant" },
+    { "name": "Dwarves", "icon": "dwarves" },
+    { "name": "Shadowkin", "icon": "shadowkin" },
+    { "name": "Sylvan Watchers", "icon": "sylvanwatchers" }
   ],
   "champions": [
     { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "image": "Arbiter", "invocable": false },
@@ -23,7 +23,7 @@
     { "name": "Tayrel", "faction": "High Elves", "rarity": "Epic", "affinity": "Spirit", "image": "Tayrel", "invocable": true },
     { "name": "Trunda Giltmallet", "faction": "Dwarves", "rarity": "Legendary", "affinity": "Magic", "image": "Trunda", "invocable": true },
     { "name": "Septimus", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "image": "Septimus", "invocable": true },
-    { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "affinity": "Void", "image": "img/Aina.webp", "invocable": true },
+    { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "affinity": "Void", "image": "img/Aina", "invocable": true },
     { "name": "Urost the Soulcage", "faction": "Undead Hordes", "rarity": "Legendary", "affinity": "Void", "image": "Urost", "invocable": false },
     { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "affinity": "Force", "image": "Rhazin", "invocable": true }
   ]
