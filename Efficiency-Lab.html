@@ -76,6 +76,7 @@
     <option value="campaign">Campaign</option>
   </select>
 
+  <!-- Majuscules pour correspondre au JSON -->
   <select id="campaign-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
     <option value="Normal">Normal</option>
@@ -187,17 +188,21 @@ function fillPointsTable(eventType) {
 
 // --- Loot ---
 function getCampaignStageData(difficulty, stage) {
+  if (!difficulty || !stage) return null;
+
   const campaignData = pointsData.loot.campaign?.[difficulty];
-  if (!campaignData) return {};
+  if (!campaignData) return null;
+
   for (const key of Object.keys(campaignData)) {
     if (key.includes('-')) {
       const [start, end] = key.split('-').map(Number);
       if (stage >= start && stage <= end) return campaignData[key];
-    } else if (Number(key) === stage) {
+    } else if (parseInt(key) === stage) {
       return campaignData[key];
     }
   }
-  return {};
+
+  return null;
 }
 
 function getLoot() {
@@ -337,9 +342,12 @@ function updateTable() {
 
 // --- Listeners ---
 [currentPointsInput, targetPointsInput].forEach(input => input.addEventListener('input', updateCalculation));
-[eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect, campaignStageSelect].forEach(el => {
+[eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect].forEach(el => {
   el.addEventListener('change', ()=>{updateDropdowns();updateTable();});
 });
+
+// Rafraîchissement correct du tableau après sélection du stage
+campaignStageSelect.addEventListener('change', updateTable);
 
 dungeonDifficultySelect.addEventListener('change', () => {
   const diff = dungeonDifficultySelect.value;
@@ -357,7 +365,7 @@ dungeonDifficultySelect.addEventListener('change', () => {
 campaignDifficultySelect.addEventListener('change', () => {
   const diff = campaignDifficultySelect.value;
   if(!diff) return;
-  const maxStages = diff === 'normal' ? 25 : 25; // ajuster si besoin selon difficulté
+  const maxStages = 7; // ajusté selon ton JSON (1-6 + 7)
   campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
   for(let i=1;i<=maxStages;i++){
     const opt = document.createElement('option');
