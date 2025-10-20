@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventaire des Champions - RSL Tools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* --- POLICE SUPPLÉMENTAIRE --- */
+    @font-face {
+      font-family: 'American Captain';
+      src: url('style/American Captain.otf') format('opentype');
+    }
+
+    /* --- STYLE GLOBAL --- */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0e0e0e;
+      color: #fcf6ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .inventory-container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 40px auto;
+    }
+
+    /* --- BARRE DE RECHERCHE --- */
+    .search-bar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #searchInput {
+      width: 60%;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background: #1a1a1a;
+      color: #fcf6ff;
+      outline: none;
+      box-shadow: 0 0 8px #f52584;
+    }
+
+    /* --- ONGLET DES FACTIONS --- */
+    .factions-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .faction-tab {
+      background: none;
+      border: 1px solid #f52584;
+      color: #fcf6ff;
+      padding: 8px 14px;
+      margin: 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .faction-tab.active, .faction-tab:hover {
+      background: #f52584;
+      transform: scale(1.05);
+    }
+
+    /* --- LISTE DES CHAMPIONS --- */
+    .champion-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+    }
+
+    .champion-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      text-align: center;
+      padding: 10px;
+      transition: transform 0.2s, border-color 0.3s;
+    }
+
+    .champion-card:hover {
+      transform: scale(1.05);
+      border-color: #f52584;
+    }
+
+    .champion-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .champion-card h3 {
+      margin: 8px 0 4px;
+      font-size: 16px;
+    }
+
+    .champion-card p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    /* --- COULEURS PAR RARETÉ --- */
+    .rarity-Mythic { border-color: #d4af37; }
+    .rarity-Legendary { border-color: #ff9b00; }
+    .rarity-Epic { border-color: #a335ee; }
+    .rarity-Rare { border-color: #0070dd; }
+    .rarity-Uncommon { border-color: #1eff00; }
+    .rarity-Common { border-color: #9d9d9d; }
+
+    /* --- ADAPTATION MOBILE --- */
+    @media (max-width: 600px) {
+      #searchInput {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- BARRE DE MENU -->
+  <div id="menu-container"></div>
+
+  <!-- CONTENU PRINCIPAL -->
+  <div class="inventory-container">
+
+    <!-- BARRE DE RECHERCHE -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Rechercher un champion...">
+    </div>
+
+    <!-- ONGLET DES FACTIONS -->
+    <div class="factions-tabs">
+      <button class="faction-tab active" data-faction="BannerLords">Banner Lords</button>
+      <button class="faction-tab" data-faction="HighElves">High Elves</button>
+      <button class="faction-tab" data-faction="SacredOrder">Sacred Order</button>
+      <button class="faction-tab" data-faction="Barbarians">Barbarians</button>
+      <button class="faction-tab" data-faction="OgrynTribes">Ogryn Tribes</button>
+      <button class="faction-tab" data-faction="LizardMen">Lizard Men</button>
+      <button class="faction-tab" data-faction="Skinwalkers">Skinwalkers</button>
+      <button class="faction-tab" data-faction="Orcs">Orcs</button>
+      <button class="faction-tab" data-faction="Demonspawn">Demonspawn</button>
+      <button class="faction-tab" data-faction="UndeadHordes">Undead Hordes</button>
+      <button class="faction-tab" data-faction="DarkElves">Dark Elves</button>
+      <button class="faction-tab" data-faction="KnightRevenant">Knight Revenant</button>
+      <button class="faction-tab" data-faction="Dwarves">Dwarves</button>
+      <button class="faction-tab" data-faction="Shadowkin">Shadowkin</button>
+      <button class="faction-tab" data-faction="SylvanWatchers">Sylvan Watchers</button>
+    </div>
+
+    <!-- LISTE DES CHAMPIONS -->
+    <div id="championList" class="champion-list"></div>
+
+  </div>
+
+  <!-- SCRIPT JS -->
+  <script>
+    const champions = [
+      { name: "Arbiter", faction: "HighElves", rarity: "Legendary", image: "img/Arbiter.jpg" },
+      { name: "Septimus", faction: "BannerLords", rarity: "Legendary", image: "img/Septimus.jpg" },
+      { name: "Tayrel", faction: "HighElves", rarity: "Epic", image: "img/Tayrel.jpg" },
+      { name: "Galek", faction: "Orcs", rarity: "Rare", image: "img/Galek.jpg" },
+      { name: "Kael", faction: "DarkElves", rarity: "Rare", image: "img/Kael.jpg" },
+      { name: "Rhazin Scarhide", faction: "LizardMen", rarity: "Legendary", image: "img/Rhazin.jpg" },
+      { name: "Urost the Soulcage", faction: "UndeadHordes", rarity: "Legendary", image: "img/Urost.jpg" },
+      { name: "Trunda Giltmallet", faction: "Dwarves", rarity: "Legendary", image: "img/Trunda.jpg" },
+      { name: "Elhain", faction: "HighElves", rarity: "Rare", image: "img/Elhain.jpg" },
+      { name: "Aina", faction: "Barbarians", rarity: "Epic", image: "img/Aina.jpg" },
+    ];
+
+    const championList = document.getElementById('championList');
+    const searchInput = document.getElementById('searchInput');
+    const factionTabs = document.querySelectorAll('.faction-tab');
+
+    let currentFaction = 'BannerLords';
+
+    function displayChampions() {
+      const searchTerm = searchInput.value.toLowerCase();
+      championList.innerHTML = '';
+
+      const filtered = champions
+        .filter(c => c.faction === currentFaction)
+        .filter(c => c.name.toLowerCase().includes(searchTerm));
+
+      if (filtered.length === 0) {
+        championList.innerHTML = '<p style="grid-column: 1 / -1; text-align:center;">Aucun champion trouvé.</p>';
+        return;
+      }
+
+      filtered.forEach(c => {
+        const card = document.createElement('div');
+        card.classList.add('champion-card', `rarity-${c.rarity}`);
+        card.innerHTML = `
+          <img src="${c.image}" alt="${c.name}">
+          <h3>${c.name}</h3>
+          <p>${c.rarity}</p>
+        `;
+        championList.appendChild(card);
+      });
+    }
+
+    factionTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        factionTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFaction = tab.dataset.faction;
+        displayChampions();
+      });
+    });
+
+    searchInput.addEventListener('input', displayChampions);
+
+    // Initialisation
+    displayChampions();
+  </script>
+</body>
+</html>
