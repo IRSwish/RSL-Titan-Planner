@@ -17,14 +17,14 @@
     { "name": "Sylvan Watchers", "icon": "factions/sylvanwatchers.webp" }
   ],
   "champions": [
-    { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "image": "img/Arbiter.webp", "invocable": false },
-    { "name": "Kael", "faction": "Dark Elves", "rarity": "Rare", "image": "img/Kael.webp", "invocable": true },
-    { "name": "Elhain", "faction": "High Elves", "rarity": "Rare", "image": "img/Elhain.webp", "invocable": true },
-    { "name": "Tayrel", "faction": "High Elves", "rarity": "Epic", "image": "img/Tayrel.webp", "invocable": true },
-    { "name": "Trunda Giltmallet", "faction": "Dwarves", "rarity": "Legendary", "image": "img/Trunda.webp", "invocable": true },
-    { "name": "Septimus", "faction": "Banner Lords", "rarity": "Legendary", "image": "img/Septimus.webp", "invocable": true },
-    { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "image": "img/Aina.webp", "invocable": true },
-    { "name": "Urost the Soulcage", "faction": "Undead Hordes", "rarity": "Legendary", "image": "img/Urost.webp", "invocable": false },
-    { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "image": "img/Rhazin.webp", "invocable": true }
+    { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "image": "Arbiter", "invocable": false },
+    { "name": "Kael", "faction": "Dark Elves", "rarity": "Rare", "affinity": "Magic", "image": "Kael", "invocable": true },
+    { "name": "Elhain", "faction": "High Elves", "rarity": "Rare", "affinity": "Magic", "image": "Elhain", "invocable": true },
+    { "name": "Tayrel", "faction": "High Elves", "rarity": "Epic", "affinity": "Spirit", "image": "Tayrel", "invocable": true },
+    { "name": "Trunda Giltmallet", "faction": "Dwarves", "rarity": "Legendary", "affinity": "Magic", "image": "Trunda", "invocable": true },
+    { "name": "Septimus", "faction": "Banner Lords", "rarity": "Legendary", "affinity": "Spirit", "image": "Septimus", "invocable": true },
+    { "name": "Aina", "faction": "Barbarians", "rarity": "Epic", "affinity": "Void", "image": "img/Aina.webp", "invocable": true },
+    { "name": "Urost the Soulcage", "faction": "Undead Hordes", "rarity": "Legendary", "affinity": "Void", "image": "Urost", "invocable": false },
+    { "name": "Rhazin Scarhide", "faction": "Lizard Men", "rarity": "Legendary", "affinity": "Force", "image": "Rhazin", "invocable": true }
   ]
 }
