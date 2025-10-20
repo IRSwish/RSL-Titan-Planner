@@ -63,7 +63,7 @@
     { "name": "Eolfrig", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Eolfrig", "invocable": true },
     { "name": "Lady Annabelle", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Annabelle", "invocable": true },
     { "name": "Rowan", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Rowan", "invocable": true },
-    { "name": "Azur", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "HP", "image": "Azur", "invocable": true },
+    { "name": "Azure", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "HP", "image": "Azure", "invocable": true },
     { "name": "Warcaster", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Warcaster", "invocable": true },
     { "name": "Ursala the Mourner", "faction": "Banner Lords", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Ursala", "invocable": true }    
   ]
