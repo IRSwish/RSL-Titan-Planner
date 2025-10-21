@@ -5,7 +5,7 @@
     { "name": "Sacred Order", "icon": "sacredorder" },
     { "name": "Barbarians", "icon": "barbarians" },
     { "name": "Ogryn Tribes", "icon": "ogryntribes" },
-    { "name": "Lizard Men", "icon": "lizardmen" },
+    { "name": "Lizardmen", "icon": "lizardmen" },
     { "name": "Skinwalkers", "icon": "skinwalkers" },
     { "name": "Orcs", "icon": "orcs" },
     { "name": "Demonspawn", "icon": "demonspawn" },
@@ -292,7 +292,7 @@
     { "name": "Delaaja", "faction": "Lizardmen", "rarity": "Epic", "affinity": "Spirit", "type": "HP", "image": "Delaaja", "invocable": true },
     { "name": "Broadmaw", "faction": "Lizardmen", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Broadmaw", "invocable": true },
     { "name": "Skathix", "faction": "Lizardmen", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Skathix", "invocable": true },
-    { "name": "Slixus", "faction": "Lizardmen", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Slixus", "invocable": true },
+    { "name": "Slixus Stripehide", "faction": "Lizardmen", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Slixus", "invocable": true },
 
     { "name": "Muckstalker", "faction": "Lizardmen", "rarity": "Rare", "affinity": "Magic", "type": "HP", "image": "Muckstalker", "invocable": true },
     { "name": "Skink", "faction": "Lizardmen", "rarity": "Rare", "affinity": "Magic", "type": "Attack", "image": "Skink", "invocable": true },
