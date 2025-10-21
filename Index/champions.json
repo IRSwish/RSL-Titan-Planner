@@ -324,7 +324,7 @@
     { "name": "Line Infantry", "faction": "Dwarves", "rarity": "Uncommon", "affinity": "Force", "type": "Defense", "image": "Line-Infantry", "invocable": true },
     { "name": "Icebound Prospector", "faction": "Dwarves", "rarity": "Uncommon", "affinity": "Force", "type": "Attack", "image": "Icebound", "invocable": true },
     { "name": "Slicer", "faction": "Dwarves", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Slicer", "invocable": true },
-    { "name": "Tunnel Steward", "faction": "Dwarves", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Tunnel-Steward", "invocable": true }
+    { "name": "Tunnel Steward", "faction": "Dwarves", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Tunnel-Steward", "invocable": true },
          
     { "name": "Nais the Shadowthief", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Magic", "type": "Attack", "image": "Nais", "invocable": true },
     { "name": "Nell Blackteeth", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Magic", "type": "Support", "image": "Nell", "invocable": true },
