@@ -286,7 +286,7 @@
     { "name": "Locwain", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Locwain", "invocable": true },  
     { "name": "Criodan the Blue", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Support", "image": "Criodan", "invocable": true },
     { "name": "Duedan the Runic", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "HP", "image": "Duedan", "invocable": true },
-    { "name": "Mistrider Daithi", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Mistrider", "invocable": true },
+    { "name": "Mistrider Daithi", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Daithi", "invocable": true },
     { "name": "Pann the Bowhorn", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Pann", "invocable": true },
     { "name": "Arwydd Quivergrass", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Arwydd", "invocable": true },
     { "name": "Myciliac Priest Orn", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Spirit", "type": "HP", "image": "Orn", "invocable": true },
