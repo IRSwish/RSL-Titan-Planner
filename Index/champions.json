@@ -100,6 +100,30 @@
     { "name": "Pikeman", "faction": "Banner Lords", "rarity": "Common", "affinity": "Magic", "type": "Defense", "image": "Pikeman", "invocable": true },
     { "name": "Axeman", "faction": "Banner Lords", "rarity": "Common", "affinity": "Force", "type": "HP", "image": "Axeman", "invocable": true },
     { "name": "Bandit", "faction": "Banner Lords", "rarity": "Common", "affinity": "Spirit", "type": "Attack", "image": "Bandit", "invocable": true }
+
+    { "name": "Galathir", "faction": "High Elves", "rarity": "Mythical", "affinity": "Force", "type": "Support", "image": "Galathir", "invocable": true },
+
+    { "name": "Elenaril", "faction": "High Elves", "rarity": "Legendary", "affinity": "Magic", "type": "Attack", "image": "Elenaril", "invocable": true },
+    { "name": "Pyxniel", "faction": "High Elves", "rarity": "Legendary", "affinity": "Magic", "type": "Support", "image": "Pyxniel", "invocable": true },
+    { "name": "Aleksandr the Sharpshooter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Magic", "type": "Attack", "image": "Aleksandr", "invocable": false },
+    { "name": "Strategos Islin", "faction": "High Elves", "rarity": "Legendary", "affinity": "Magic", "type": "Defense", "image": "Islin", "invocable": true },
+    { "name": "Fyna", "faction": "High Elves", "rarity": "Legendary", "affinity": "Magic", "type": "Support", "image": "Fyna", "invocable": false },
+    { "name": "Wallmaster Othorion", "faction": "High Elves", "rarity": "Legendary", "affinity": "Magic", "type": "Attack", "image": "Othorion", "invocable": true },
+    { "name": "Shirimani", "faction": "High Elves", "rarity": "Legendary", "affinity": "Force", "type": "Support", "image": "Shirimani", "invocable": true },
+    { "name": "Lonatharil", "faction": "High Elves", "rarity": "Legendary", "affinity": "Force", "type": "HP", "image": "Lonatharil", "invocable": true },
+    { "name": "Basileus Roanas", "faction": "High Elves", "rarity": "Legendary", "affinity": "Force", "type": "Attack", "image": "Roanas", "invocable": true },
+    { "name": "Deliana", "faction": "High Elves", "rarity": "Legendary", "affinity": "Force", "type": "HP", "image": "Deliana", "invocable": true },
+    { "name": "The Incarnate", "faction": "High Elves", "rarity": "Legendary", "affinity": "Force", "type": "Defense", "image": "Incarnate", "invocable": true },
+    { "name": "Lyssandra", "faction": "High Elves", "rarity": "Legendary", "affinity": "Spirit", "type": "Support", "image": "Lyssandra", "invocable": true },
+    { "name": "Royal Huntsman", "faction": "High Elves", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Royal-Huntsman", "invocable": true },
+    { "name": "Yannica", "faction": "High Elves", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Yannica", "invocable": true },
+    { "name": "Tatura Rimehide", "faction": "High Elves", "rarity": "Legendary", "affinity": "Spirit", "type": "Defense", "image": "Tatura", "invocable": true },
+    { "name": "High Keeper Prysma", "faction": "High Elves", "rarity": "Legendary", "affinity": "Spirit", "type": "Support", "image": "Prysma", "invocable": true },
+    { "name": "Lysanthir", "faction": "High Elves", "rarity": "Legendary", "affinity": "Spirit", "type": "Defense", "image": "Lysanthir", "invocable": true },
+    { "name": "Ithos", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Ithos", "invocable": true },
+    { "name": "Belanor", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Belanor", "invocable": true },
+    { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Arbiter", "invocable": true },
+    { "name": "Supreme Elhain", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Supreme-Elhain", "invocable": true }
     
   ]
 }
