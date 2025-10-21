@@ -293,7 +293,7 @@
     { "name": "Melga Steelgirdle", "faction": "Dwarves", "rarity": "Epic", "affinity": "Spirit", "type": "HP", "image": "Melga", "invocable": true },
     { "name": "Fodbor the Bard", "faction": "Dwarves", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Fodbor", "invocable": true },
     { "name": "Morag Bronzelock", "faction": "Dwarves", "rarity": "Epic", "affinity": "Spirit", "type": "Defense", "image": "Morag", "invocable": true },
-    { "name": "Runekeeper Dazdurk", "faction": "Dwarves", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Runekeeper-Dazdurk", "invocable": true },
+    { "name": "Runekeeper Dazdurk", "faction": "Dwarves", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Dazdurk", "invocable": true },
     { "name": "Baerdal Fellhammer", "faction": "Dwarves", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Baerdal", "invocable": true },
     { "name": "Gala Longbraids", "faction": "Dwarves", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Gala", "invocable": true },
     { "name": "Rugnor Goldgleam", "faction": "Dwarves", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Rugnor", "invocable": true },
