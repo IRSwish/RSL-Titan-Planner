@@ -257,6 +257,61 @@
     { "name": "Knecht", "faction": "Sacred Order", "rarity": "Common", "affinity": "Spirit", "type": "Defense", "image": "Knecht", "invocable": true },
     { "name": "Novitiate", "faction": "Sacred Order", "rarity": "Common", "affinity": "Spirit", "type": "Attack", "image": "Novitiate", "invocable": true }
     
+    { "name": "Nais the Shadowthief", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Magic", "type": "Attack", "image": "Nais", "invocable": true },
+    { "name": "Nell Blackteeth", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Magic", "type": "Support", "image": "Nell", "invocable": true },
+    { "name": "Arbais the Stonethorn", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Force", "type": "Support", "image": "Arbais", "invocable": true },
+
+    { "name": "Elva Autumnborn", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Magic", "type": "Support", "image": "Elva", "invocable": true },
+    { "name": "King Gallcobar", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Magic", "type": "Support", "image": "Gallcobar", "invocable": true },
+    { "name": "Oella", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Magic", "type": "Support", "image": "Oella", "invocable": true },
+    { "name": "Caoilte the Asharrow", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Magic", "type": "Attack", "image": "Caoilte", "invocable": true },
+    { "name": "Greenwarden Ruarc", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Force", "type": "Defense", "image": "Ruarc", "invocable": true },
+    { "name": "Searsha the Charred", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Force", "type": "Support", "image": "Searsha", "invocable": false },
+    { "name": "Eostrid Dreamsong", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Force", "type": "Support", "image": "Eostrid", "invocable": true },
+    { "name": "Glaicad of the Meltwater", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Support", "type": "Defense", "image": "Glaicad", "invocable": true },
+    { "name": "Leminisi the Gold-wing", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Force", "type": "Attack", "image": "Leminisi", "invocable": true },
+    { "name": "Firrol the Barkhorn", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Spirit", "type": "Defense", "image": "Firrol", "invocable": true },
+    { "name": "Grand Oak Padraig", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Spirit", "type": "Support", "image": "Padraig", "invocable": true },
+    { "name": "Bladechorister Caldor", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Caldor", "invocable": false },
+    { "name": "Balar the Lost", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Balar", "invocable": true },
+    { "name": "Ailil", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Ailil", "invocable": true },
+    { "name": "Claidna", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "HP", "image": "Claidna", "invocable": true },
+    { "name": "Emic Trunkheart", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "HP", "image": "Emic", "invocable": true },
+    { "name": "Yncensa Grail-bearer", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Yncensa", "invocable": true },
+    { "name": "Aratheia Corpseflower", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Aratheia", "invocable": true },
+    { "name": "Niamhe, Spear of Nyresa", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "Defense", "image": "Niamhe", "invocable": true },
+
+    { "name": "Cormac the Highpeak", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Cormac", "invocable": true }  
+    { "name": "Kellan the Shrike", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Kellan", "invocable": true }  
+    { "name": "Locwain", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Locwain", "invocable": true }  
+    { "name": "Criodan the Blue", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Support", "image": "Criodan", "invocable": true },
+    { "name": "Duedan the Runic", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "HP", "image": "Duedan", "invocable": true },
+    { "name": "Mistrider Daithi", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Mistrider", "invocable": true },
+    { "name": "Pann the Bowhorn", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Pann", "invocable": true },
+    { "name": "Arwydd Quivergrass", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Arwydd", "invocable": true },
+    { "name": "Myciliac Priest Orn", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Spirit", "type": "HP", "image": "Orn", "invocable": true },
+    { "name": "Ruella", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Ruella", "invocable": true },
+    { "name": "Enda Moonbeam", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Enda", "invocable": true },
+    { "name": "Wyrennon the Silken", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Wyrennon", "invocable": true },
+    { "name": "White Dryad Nia", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Defense", "image": "Nia", "invocable": true },
+    { "name": "Aeila Lifebraid", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Aeila", "invocable": true },
+    { "name": "Dyana Gloompiercer", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Dyana", "invocable": true },
+    { "name": "Wysteri Vineguard", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Wysteri", "invocable": true },
+
+    { "name": "Pathfinder Cait", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Magic", "type": "Attack", "image": "Cait", "invocable": true },
+    { "name": "Tribuck Colwyn", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Magic", "type": "Defense", "image": "Colwyn", "invocable": true },
+    { "name": "Margrave Greenhawk", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Force", "type": "HP", "image": "Margrave", "invocable": true },
+    { "name": "Loneblade Riab", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Force", "type": "Attack", "image": "Riab", "invocable": true },
+    { "name": "Boughsmith Flannan", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Force", "type": "Defense", "image": "Flannan", "invocable": true },
+    { "name": "Shadowbow Tirlac", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Spirit", "type": "Defense", "image": "Tirlac", "invocable": true },
+    { "name": "Ingid Twyst-staff", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Spirit", "type": "Support", "image": "Ingid", "invocable": true },
+    { "name": "Treeshield Knott", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Void", "type": "Support", "image": "Knott", "invocable": true },
+    { "name": "Branch-arm Lasair", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Void", "type": "HP", "image": "Lasair", "invocable": true },
+    { "name": "Glensage Cithrel", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Void", "type": "Support", "image": "Cithrel", "invocable": true },
+    { "name": "Gladewulf", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Void", "type": "Defense", "image": "Gladewulf", "invocable": true },
     
+    { "name": "Glenspear", "faction": "Sylvan Watchers", "rarity": "Uncommon", "affinity": "Magic", "type": "Attack", "image": "Glenspear", "invocable": true },
+    { "name": "Branchweaver", "faction": "Sylvan Watchers", "rarity": "Uncommon", "affinity": "Spirit", "type": "Support", "image": "Branchweaver", "invocable": true }
+
   ]
 }
