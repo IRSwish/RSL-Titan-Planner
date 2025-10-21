@@ -281,9 +281,9 @@
     { "name": "Aratheia Corpseflower", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Aratheia", "invocable": true },
     { "name": "Niamhe, Spear of Nyresa", "faction": "Sylvan Watchers", "rarity": "Legendary", "affinity": "Void", "type": "Defense", "image": "Niamhe", "invocable": true },
 
-    { "name": "Cormac the Highpeak", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Cormac", "invocable": true }  
-    { "name": "Kellan the Shrike", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Kellan", "invocable": true }  
-    { "name": "Locwain", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Locwain", "invocable": true }  
+    { "name": "Cormac the Highpeak", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Cormac", "invocable": true },
+    { "name": "Kellan the Shrike", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Kellan", "invocable": true },
+    { "name": "Locwain", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Locwain", "invocable": true },  
     { "name": "Criodan the Blue", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Magic", "type": "Support", "image": "Criodan", "invocable": true },
     { "name": "Duedan the Runic", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "HP", "image": "Duedan", "invocable": true },
     { "name": "Mistrider Daithi", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Mistrider", "invocable": true },
