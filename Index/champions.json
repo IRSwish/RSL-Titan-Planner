@@ -123,7 +123,42 @@
     { "name": "Ithos", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Ithos", "invocable": true },
     { "name": "Belanor", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Belanor", "invocable": true },
     { "name": "Arbiter", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Arbiter", "invocable": true },
-    { "name": "Supreme Elhain", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Supreme-Elhain", "invocable": true }
+    { "name": "Supreme Elhain", "faction": "High Elves", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Supreme-Elhain", "invocable": true },
+
+    { "name": "Royal Guard", "faction": "High Elves", "rarity": "Epic", "affinity": "Magic", "type": "Attack", "image": "Royal-Guard", "invocable": true },
+    { "name": "Tayrel", "faction": "High Elves", "rarity": "Epic", "affinity": "Magic", "type": "Defense", "image": "Tayrel", "invocable": true },
+    { "name": "Skeuramis", "faction": "High Elves", "rarity": "Epic", "affinity": "Magic", "type": "HP", "image": "Skeuramis", "invocable": true },
+    { "name": "Endalia", "faction": "High Elves", "rarity": "Epic", "affinity": "Magic", "type": "HP", "image": "Endalia", "invocable": true },
+    { "name": "Thenasil", "faction": "High Elves", "rarity": "Epic", "affinity": "Force", "type": "Support", "image": "Thenasil", "invocable": true },
+    { "name": "Luthiea", "faction": "High Elves", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Luthiea", "invocable": true },
+    { "name": "Ilysinya", "faction": "High Elves", "rarity": "Epic", "affinity": "Force", "type": "HP", "image": "Ilysinya", "invocable": true },
+    { "name": "Ambassador Lethelin", "faction": "High Elves", "rarity": "Epic", "affinity": "Force", "type": "Support", "image": "Lethelin", "invocable": true },
+    { "name": "Neldor Rimeblade", "faction": "High Elves", "rarity": "Epic", "affinity": "Force", "type": "Attack", "image": "Neldor", "invocable": true },
+    { "name": "Vergis", "faction": "High Elves", "rarity": "Epic", "affinity": "Spirit", "type": "Defense", "image": "Vergis", "invocable": true },
+    { "name": "Marksman", "faction": "High Elves", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Marksman", "invocable": true },
+    { "name": "Jinglehunter", "faction": "High Elves", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Jinglehunter", "invocable": true },
+    { "name": "Battlesage", "faction": "High Elves", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Battlesage", "invocable": true },
+    { "name": "Exemplar", "faction": "High Elves", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Exemplar", "invocable": true },
+    { "name": "Andryssia", "faction": "High Elves", "rarity": "Epic", "affinity": "Void", "type": "Defense", "image": "Andryssia", "invocable": true },
+    { "name": "Ethlen the Golden", "faction": "High Elves", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Ethlen", "invocable": true },
+    { "name": "Lightward Siendra", "faction": "High Elves", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Siendra", "invocable": true },
     
+    { "name": "Apothecary", "faction": "High Elves", "rarity": "Rare", "affinity": "Magic", "type": "Support", "image": "Apothecary", "invocable": true },
+    { "name": "Avenger", "faction": "High Elves", "rarity": "Rare", "affinity": "Magic", "type": "Attack", "image": "Avenger", "invocable": true },
+    { "name": "Elhain", "faction": "High Elves", "rarity": "Rare", "affinity": "Magic", "type": "Attack", "image": "Elhain", "invocable": true },
+    { "name": "Adjudicator", "faction": "High Elves", "rarity": "Rare", "affinity": "Magic", "type": "Attack", "image": "Adjudicator", "invocable": true },
+    { "name": "Heiress", "faction": "High Elves", "rarity": "Rare", "affinity": "Force", "type": "Attack", "image": "Heiress", "invocable": true },
+    { "name": "Magister", "faction": "High Elves", "rarity": "Rare", "affinity": "Force", "type": "Support", "image": "Magister", "invocable": true },
+    { "name": "Fencer", "faction": "High Elves", "rarity": "Rare", "affinity": "Force", "type": "Attack", "image": "Fencer", "invocable": true },
+    { "name": "Hyria", "faction": "High Elves", "rarity": "Rare", "affinity": "Spirit", "type": "Attack", "image": "Hyria", "invocable": true },
+    { "name": "Prosecutor", "faction": "High Elves", "rarity": "Rare", "affinity": "Spirit", "type": "Attack", "image": "Prosecutor", "invocable": true },
+    { "name": "Medicus", "faction": "High Elves", "rarity": "Rare", "affinity": "Spirit", "type": "Support", "image": "Medicus", "invocable": true },
+    { "name": "Interceptor", "faction": "High Elves", "rarity": "Rare", "affinity": "Void", "type": "Defense", "image": "Interceptor", "invocable": true },
+    { "name": "Reliquary Tender", "faction": "High Elves", "rarity": "Rare", "affinity": "Void", "type": "Support", "image": "Reliquary-Tender", "invocable": true },
+    { "name": "Selinia Nightcloak", "faction": "High Elves", "rarity": "Rare", "affinity": "Void", "type": "Attack", "image": "Selinia", "invocable": true },
+    
+    { "name": "Aristocrat", "faction": "High Elves", "rarity": "Uncommon", "affinity": "Magic", "type": "Attack", "image": "Aristocrat", "invocable": true },
+    { "name": "Jaeger", "faction": "High Elves", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Jaeger", "invocable": true },
+    { "name": "Elfguard", "faction": "High Elves", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Elfguard", "invocable": true }
   ]
 }
