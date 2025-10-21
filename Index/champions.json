@@ -162,7 +162,7 @@
     { "name": "Elfguard", "faction": "High Elves", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Elfguard", "invocable": true },
 
     { "name": "Siegfrund the Nephilim", "faction": "Sacred Order", "rarity": "Mythical", "affinity": "Magic", "type": "Attack", "image": "Siegfrund", "invocable": true },
-    { "name": "Polara Fireheart", "faction": "Sacred Order", "rarity": "Mythical", "affinity": "Force", "type": "Attack", "image": "Polara", "invocable": false }
+    { "name": "Polara Fireheart", "faction": "Sacred Order", "rarity": "Mythical", "affinity": "Force", "type": "Attack", "image": "Polara", "invocable": false },
 
     { "name": "Roshcard the Tower", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Magic", "type": "HP", "image": "Roshcard", "invocable": true },
     { "name": "Corvis the Corruptor", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Magic", "type": "Defense", "image": "Corvis", "invocable": true },
