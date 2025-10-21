@@ -243,41 +243,58 @@
     transform: scale(1.05);
   }
   
-  .card-image {
-    position: relative;
-    aspect-ratio: 140 / 182;
-    width: 100%;
-  }
-  
-  .champion-img {
+ .card-image {
+  position: relative;
+  aspect-ratio: 140 / 182;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Glow noir entre l'image et le cadre */
+.card-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+  pointer-events: none;
+  z-index: 1; /* entre image (z=0) et frame (z=2) */
+}
+
+/* Image du champion */
+.champion-img {
+  position: relative;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
   display: block;
-  box-shadow: inset 0px 0px 4px 20px rgba(0, 0, 0, 0.8);
-  }
-  
-  .rarity-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-  }
-  
-  .affinity-icon {
-    position: absolute;
-    bottom: 14px;
-    left: 12px;
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 2;
-  }
+}
+
+/* Cadre de rareté */
+.rarity-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Icône d’affinité */
+.affinity-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 3;
+}
   
   .champion-name {
     font-size: 13px;
