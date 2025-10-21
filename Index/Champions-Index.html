@@ -220,7 +220,6 @@
     aspect-ratio: 140 / 182;
     width: 100%;
     overflow: hidden;
-    border-radius: 8px;
   }
 
   /* Glow interne selon rareté */
@@ -230,16 +229,15 @@
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    border-radius: 8px;
     box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.8);
   }
 
-  .card-image.mythical::before   { box-shadow: inset 0 0 22px rgba(255, 215, 0, 0.7); }
-  .card-image.legendary::before  { box-shadow: inset 0 0 22px rgba(255, 128, 0, 0.6); }
-  .card-image.epic::before       { box-shadow: inset 0 0 22px rgba(163, 53, 238, 0.6); }
-  .card-image.rare::before       { box-shadow: inset 0 0 22px rgba(0, 140, 255, 0.55); }
-  .card-image.uncommon::before   { box-shadow: inset 0 0 22px rgba(0, 200, 100, 0.5); }
-  .card-image.common::before     { box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.2); }
+  .card-image.mythical::before   { box-shadow: inset 0 -2px 2px 12px rgba(0, 0, 0, 0.8); }
+  .card-image.legendary::before  { box-shadow: inset 0 -2px 2px 11px rgba(0, 0, 0, 0.8); }
+  .card-image.epic::before       { box-shadow: inset 0 -1px 2px 9px rgba(0, 0, 0, 0.8); }
+  .card-image.rare::before       { box-shadow: inset 0 -1px 2px 8px rgba(0, 0, 0, 0.8); }
+  .card-image.uncommon::before   { box-shadow: inset 0 -1px 2px 8px rgba(0, 0, 0, 0.8); }
+  .card-image.common::before     { box-shadow: inset 0 0px 3px 6px rgba(0, 0, 0, 0.8); }
 
   .champion-img {
     position: relative;
