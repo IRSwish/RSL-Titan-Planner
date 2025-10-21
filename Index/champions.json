@@ -255,7 +255,7 @@
     { "name": "Sister Militant", "faction": "Sacred Order", "rarity": "Common", "affinity": "Force", "type": "Attack", "image": "Sister-Militant", "invocable": true },
     { "name": "Preacher", "faction": "Sacred Order", "rarity": "Common", "affinity": "Force", "type": "HP", "image": "Preacher", "invocable": true },
     { "name": "Knecht", "faction": "Sacred Order", "rarity": "Common", "affinity": "Spirit", "type": "Defense", "image": "Knecht", "invocable": true },
-    { "name": "Novitiate", "faction": "Sacred Order", "rarity": "Common", "affinity": "Spirit", "type": "Attack", "image": "Novitiate", "invocable": true }
+    { "name": "Novitiate", "faction": "Sacred Order", "rarity": "Common", "affinity": "Spirit", "type": "Attack", "image": "Novitiate", "invocable": true },
     
     { "name": "Nais the Shadowthief", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Magic", "type": "Attack", "image": "Nais", "invocable": true },
     { "name": "Nell Blackteeth", "faction": "Sylvan Watchers", "rarity": "Mythical", "affinity": "Magic", "type": "Support", "image": "Nell", "invocable": true },
