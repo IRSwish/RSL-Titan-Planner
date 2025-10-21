@@ -190,7 +190,7 @@
     { "name": "Cardiel", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Cardiel", "invocable": true },
     { "name": "Konstantin the Dayborn", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Konstantin", "invocable": true },
     { "name": "Supreme Athel", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Supreme-Athel", "invocable": true },
-    { "name": "Vitrius the Anointed", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Virtius", "invocable": true },
+    { "name": "Vitrius the Anointed", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Void", "type": "Attack", "image": "Vitrius", "invocable": true },
     { "name": "Lady Noelle", "faction": "Sacred Order", "rarity": "Legendary", "affinity": "Void", "type": "Support", "image": "Noelle", "invocable": true },
 
     { "name": "Canoness", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Magic", "type": "Defense", "image": "Canoness", "invocable": true },
@@ -208,7 +208,7 @@
     { "name": "Mordecai", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Force", "type": "Support", "image": "Mordecai", "invocable": true },
     { "name": "Bushi", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Bushi", "invocable": true },
     { "name": "Fenax", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "Attack", "image": "Fenax", "invocable": true },
-    { "name": "Deacon Armstrong", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Deacon-Armstrong", "invocable": true },
+    { "name": "Deacon Armstrong", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Armstrong", "invocable": true },
     { "name": "Mistress of Hymns", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Mistress", "invocable": true },
     { "name": "Lodric Falconheart", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "HP", "image": "Lodric", "invocable": true },
     { "name": "Anchorite", "faction": "Sacred Order", "rarity": "Epic", "affinity": "Spirit", "type": "Support", "image": "Anchorite", "invocable": true },
