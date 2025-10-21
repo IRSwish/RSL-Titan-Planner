@@ -425,7 +425,8 @@
     { "name": "Aeila Lifebraid", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Support", "image": "Aeila", "invocable": true },
     { "name": "Dyana Gloompiercer", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Dyana", "invocable": true },
     { "name": "Wysteri Vineguard", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Attack", "image": "Wysteri", "invocable": true },
-
+    { "name": "Thorn Golem", "faction": "Sylvan Watchers", "rarity": "Epic", "affinity": "Void", "type": "Defense", "image": "Thorn-Golem", "invocable": true },
+    
     { "name": "Pathfinder Cait", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Magic", "type": "Attack", "image": "Cait", "invocable": true },
     { "name": "Tribuck Colwyn", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Magic", "type": "Defense", "image": "Colwyn", "invocable": true },
     { "name": "Margrave Greenhawk", "faction": "Sylvan Watchers", "rarity": "Rare", "affinity": "Force", "type": "HP", "image": "Margrave", "invocable": true },
