@@ -211,7 +211,7 @@
   </div>
 
   <div class="pity-container">
-    <!-- Exemple: Ancient -->
+    <!-- Ancient -->
     <div class="shard-card" data-type="Ancient" data-max="220" data-base="0.5" data-start="201" data-inc="5">
       <img class="shard-img" src="style/img/Misc/Ancient.webp" alt="Ancient Shard">
       <div class="right-side">
@@ -234,8 +234,120 @@
       </div>
     </div>
 
-    <!-- Les autres shards (Void, Primal, Sacred, Remnant, Prism) identiques -->
-    <!-- ... (tu peux copier-coller les autres blocs à l’identique) ... -->
+    <!-- Void -->
+    <div class="shard-card" data-type="Void" data-max="220" data-base="0.5" data-start="201" data-inc="5">
+      <img class="shard-img" src="style/img/Misc/Void.webp" alt="Void Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
+      </div>
+    </div>
+
+    <!-- Primal -->
+    <div class="shard-card" data-type="Primal" data-max="210" data-base="0.5" data-start="201" data-inc="10">
+      <img class="shard-img" src="style/img/Misc/Primal.webp" alt="Primal Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">210</span>
+        </div>
+        <div class="chance">Mythical chance: <span class="percent">0.5%</span></div>
+      </div>
+    </div>
+
+    <!-- Sacred -->
+    <div class="shard-card" data-type="Sacred" data-max="59" data-base="6" data-start="13" data-inc="2">
+      <img class="shard-img" src="style/img/Misc/Sacred.webp" alt="Sacred Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">59</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">6%</span></div>
+      </div>
+    </div>
+
+    <!-- Remnant -->
+    <div class="shard-card" data-type="Remnant" data-max="122" data-base="2.5" data-start="25" data-inc="1">
+      <img class="shard-img" src="style/img/Misc/Remnant.webp" alt="Remnant Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">122</span>
+        </div>
+        <div class="chance">Mythical chance: <span class="percent">2.5%</span></div>
+      </div>
+    </div>
+
+    <!-- Prism -->
+    <div class="shard-card" data-type="Prism" data-max="52" data-base="6" data-start="21" data-inc="3">
+      <img class="shard-img" src="style/img/Misc/Prism.webp" alt="Prism Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">52</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">6%</span></div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
@@ -257,7 +369,6 @@
       const circumference = 2 * Math.PI * radius;
       circle.style.strokeDasharray = circumference;
 
-      // restore
       let value = parseInt(localStorage.getItem("pity_" + type)) || 0;
 
       function calcChance(v) {
