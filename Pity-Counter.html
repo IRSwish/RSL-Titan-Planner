@@ -10,9 +10,9 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 50px;
-      width: 90%;
-      max-width: 1200px;
+      width: fit-content;
       margin: 50px auto;
+      justify-content: center;
       justify-items: center;
     }
 
@@ -29,7 +29,6 @@
       transition: box-shadow 0.3s ease;
     }
 
-    /* Supprime le hover zoom */
     .shard-card:hover {
       box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
       transform: none;
@@ -136,22 +135,29 @@
       color: #0e0e0e;
     }
 
+    /* Texte x / max */
     .progress-info {
       margin-top: 6px;
       text-align: center;
       font-size: 14px;
       color: var(--text-color);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
     }
 
-    .progress-info input {
-      background: transparent;
-      border: none;
-      color: var(--line-color);
-      font-size: 14px;
-      text-align: center;
-      width: 40px;
-      outline: none;
-      font-weight: 600;
+    .progress-info .count {
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      color: var(--text-color);
+      display: inline-block;
+      min-width: 28px;
+      text-align: right;
+    }
+
+    .progress-info .max {
+      opacity: 0.8;
+      margin-left: 2px;
     }
 
     .chance {
@@ -183,8 +189,7 @@
   </div>
 
   <div class="pity-container">
-
-    <!-- Chaque shard contient son data-type -->
+    <!-- Example shard (les autres suivent le même modèle) -->
     <div class="shard-card" data-type="Ancient" data-max="220" data-base="0.5" data-start="201" data-inc="5">
       <img class="shard-img" src="style/img/Misc/Ancient.webp" alt="Ancient Shard">
       <div class="right-side">
@@ -200,9 +205,7 @@
           <button class="btn plus">+</button>
           <button class="reset-btn">Reset</button>
         </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
-        </div>
+        <div class="progress-info"><span class="count">0</span> / <span class="max">220</span></div>
         <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
       </div>
     </div>
@@ -222,9 +225,7 @@
           <button class="btn plus">+</button>
           <button class="reset-btn">Reset</button>
         </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
-        </div>
+        <div class="progress-info"><span class="count">0</span> / <span class="max">220</span></div>
         <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
       </div>
     </div>
@@ -244,9 +245,7 @@
           <button class="btn plus">+</button>
           <button class="reset-btn">Reset</button>
         </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">210</span>
-        </div>
+        <div class="progress-info"><span class="count">0</span> / <span class="max">210</span></div>
         <div class="chance">Mythical chance: <span class="percent">0.5%</span></div>
       </div>
     </div>
@@ -266,9 +265,7 @@
           <button class="btn plus">+</button>
           <button class="reset-btn">Reset</button>
         </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">59</span>
-        </div>
+        <div class="progress-info"><span class="count">0</span> / <span class="max">59</span></div>
         <div class="chance">Legendary chance: <span class="percent">6%</span></div>
       </div>
     </div>
@@ -288,9 +285,7 @@
           <button class="btn plus">+</button>
           <button class="reset-btn">Reset</button>
         </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">122</span>
-        </div>
+        <div class="progress-info"><span class="count">0</span> / <span class="max">122</span></div>
         <div class="chance">Mythical chance: <span class="percent">2.5%</span></div>
       </div>
     </div>
@@ -310,9 +305,7 @@
           <button class="btn plus">+</button>
           <button class="reset-btn">Reset</button>
         </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">52</span>
-        </div>
+        <div class="progress-info"><span class="count">0</span> / <span class="max">52</span></div>
         <div class="chance">Legendary chance: <span class="percent">6%</span></div>
       </div>
     </div>
@@ -325,9 +318,10 @@
       const plus = card.querySelector('.plus');
       const minus = card.querySelector('.minus');
       const reset = card.querySelector('.reset-btn');
-      const countInput = card.querySelector('.count');
+      const countText = card.querySelector('.count');
       const percent = card.querySelector('.percent');
       const circle = card.querySelector('.progress');
+      const type = card.dataset.type;
       const max = parseInt(card.dataset.max);
       const base = parseFloat(card.dataset.base);
       const start = parseInt(card.dataset.start);
@@ -335,30 +329,34 @@
       const radius = 45;
       const circumference = 2 * Math.PI * radius;
       circle.style.strokeDasharray = circumference;
-      circle.style.strokeDashoffset = circumference;
 
-      function calcChance(value) {
-        if (value < start) return base;
-        const extra = (value - start + 1) * inc;
+      // 🔄 Restaure la valeur depuis localStorage
+      const savedValue = localStorage.getItem("pity_" + type);
+      let value = savedValue ? parseInt(savedValue) : 0;
+
+      function calcChance(v) {
+        if (v < start) return base;
+        const extra = (v - start + 1) * inc;
         return Math.min(base + extra, 100);
       }
 
-      function setProgress(value) {
-        value = Math.max(0, Math.min(max, value));
-        const offset = circumference - (value / max) * circumference;
+      function setProgress(v) {
+        v = Math.max(0, Math.min(max, v));
+        const offset = circumference - (v / max) * circumference;
         circle.style.strokeDashoffset = offset;
-        countInput.value = value;
-        input.value = value;
-        percent.textContent = calcChance(value).toFixed(2) + "%";
+        input.value = v;
+        countText.textContent = v;
+        percent.textContent = calcChance(v).toFixed(2) + "%";
+        localStorage.setItem("pity_" + type, v);
       }
 
-      plus.onclick = () => setProgress(parseInt(countInput.value) + 1);
-      minus.onclick = () => setProgress(parseInt(countInput.value) - 1);
-      reset.onclick = () => setProgress(0);
-      input.oninput = () => setProgress(parseInt(input.value) || 0);
-      countInput.oninput = () => setProgress(parseInt(countInput.value) || 0);
+      plus.onclick = () => setProgress(value = Math.min(max, value + 1));
+      minus.onclick = () => setProgress(value = Math.max(0, value - 1));
+      reset.onclick = () => setProgress(value = 0);
+      input.oninput = () => setProgress(value = parseInt(input.value) || 0);
 
-      setProgress(0);
+      // Initialisation
+      setProgress(value);
     });
   </script>
 </body>
