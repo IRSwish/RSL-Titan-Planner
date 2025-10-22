@@ -11,7 +11,7 @@
     { "name": "Demonspawn", "icon": "demonspawn" },
     { "name": "Undead Hordes", "icon": "undeadhordes" },
     { "name": "Dark Elves", "icon": "darkelves" },
-    { "name": "Knight Revenant", "icon": "knightrevenant" },
+    { "name": "Knights Revenant", "icon": "knightsrevenant" },
     { "name": "Dwarves", "icon": "dwarves" },
     { "name": "Shadowkin", "icon": "shadowkin" },
     { "name": "Sylvan Watchers", "icon": "sylvanwatchers" }
@@ -824,6 +824,7 @@
     { "name": "Mother Cybele", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Force", "type": "Support", "image": "Mother-Cybele", "invocable": true },
     { "name": "Losan K'leth", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Force", "type": "Defense", "image": "Kleth", "invocable": true },
     { "name": "Mad Hatter", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Force", "type": "Support", "image": "Hatter", "invocable": true },
+    { "name": "Venalicia Thrallmother", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Force", "type": "Support", "image": "Venalicia", "invocable": true },
     { "name": "Tomb Lord", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Spirit", "type": "Support", "image": "Tomb-Lord", "invocable": true },
     { "name": "Teodor the Savant", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Spirit", "type": "Support", "image": "Teodor", "invocable": true },
     { "name": "Kalvalax", "faction": "Knights Revenant", "rarity": "Legendary", "affinity": "Spirit", "type": "Attack", "image": "Kalvalax", "invocable": true },
