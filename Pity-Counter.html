@@ -179,6 +179,17 @@
         grid-template-columns: 1fr;
       }
     }
+    
+    .cache-info {
+      color: var(--text-color);
+      font-style: italic;
+      text-align: center;
+      margin-top: -5px;
+      margin-bottom: 25px;
+      opacity: 0.8;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+    }
   </style>
 </head>
 <body>
@@ -186,6 +197,9 @@
 
   <div class="header-wrapper">
     <header id="page-title">PITY COUNTER</header>
+    <p class="cache-info">
+      Data is stored in your browser cache. Clearing your cache will reset all pity counters.
+    </p>
   </div>
 
   <div class="pity-container">
