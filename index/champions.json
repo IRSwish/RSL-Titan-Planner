@@ -467,7 +467,7 @@
     { "name": "Troglodyte", "faction": "Lizardmen", "rarity": "Common", "affinity": "Spirit", "type": "Defense", "image": "Troglodyte", "invocable": true },
 
     { "name": "Galleus Bloodcrest", "faction": "Skinwalkers", "rarity": "Mythical", "affinity": "Force", "type": "Defense", "image": "Galleus", "invocable": true },
-    { "name": "Mezomel Luperfang", "faction": "Skinwalkers", "rarity": "Mythical", "affinity": "Void", "type": "Attack", "image": "Mezomel", "invocable": true },
+    { "name": "Mezomel Luperfang", "faction": "Skinwalkers", "rarity": "Mythical", "affinity": "Spirit", "type": "Attack", "image": "Mezomel", "invocable": true },
 
     { "name": "Norog", "faction": "Skinwalkers", "rarity": "Legendary", "affinity": "Magic", "type": "Defense", "image": "Norog", "invocable": true },
     { "name": "Longbeard", "faction": "Skinwalkers", "rarity": "Legendary", "affinity": "Magic", "type": "Attack", "image": "Longbeard", "invocable": true },
