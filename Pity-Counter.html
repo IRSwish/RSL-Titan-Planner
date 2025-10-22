@@ -11,15 +11,8 @@
       src: url('style/American Captain.otf') format('opentype');
     }
 
-    body {
-      background-color: #0e0e0e;
-      color: #fcf6ff;
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
+    /* Mise en page principale */
+    .pity-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 40px;
@@ -30,12 +23,18 @@
 
     .shard-card {
       background: #1a1a1a;
-      border: 1px solid #f52584;
+      border: 2px solid #f52584;
       border-radius: 16px;
       padding: 20px;
       text-align: center;
       box-shadow: 0 0 10px #f52584;
       width: 250px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .shard-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #00c9ff;
     }
 
     .shard-card img {
@@ -43,6 +42,7 @@
       height: 80px;
     }
 
+    /* Cercle pity */
     .circle-container {
       position: relative;
       width: 120px;
@@ -85,6 +85,7 @@
       color: #fcf6ff;
     }
 
+    /* Boutons + / - */
     .buttons {
       display: flex;
       justify-content: center;
@@ -109,6 +110,7 @@
       background-color: #00c9ff;
     }
 
+    /* Infos sous le compteur */
     .progress-info {
       margin-top: 10px;
       font-size: 14px;
@@ -119,20 +121,26 @@
       margin-top: 6px;
       font-size: 16px;
       color: #00c9ff;
+      font-weight: 600;
     }
   </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
 </head>
 <body>
+  <!-- BARRE DE MENU -->
   <div id="menu-container"></div>
 
+  <!-- TITRE -->
   <div class="header-wrapper">
-    <header id="page-title">Pity Counter</header>
+    <header id="page-title">PITY COUNTER</header>
   </div>
 
-  <div class="container">
-    <!-- Exemple : Ancient -->
+  <!-- CONTENU PRINCIPAL -->
+  <div class="pity-container">
+
+    <!-- 1️⃣ Ancient -->
     <div class="shard-card" data-max="100" data-type="ancient">
-      <img src="img/Misc/ancient.webp" alt="Ancient Shard">
+      <img src="style/img/Misc/ancient.webp" alt="Ancient Shard">
       <div class="circle-container">
         <svg class="progress-ring" width="120" height="120">
           <circle class="background" r="50" cx="60" cy="60"></circle>
@@ -148,9 +156,9 @@
       <div class="chance">Chance légendaire : <span class="percent">0.5%</span></div>
     </div>
 
-    <!-- On duplique ensuite pour chaque shard -->
+    <!-- 2️⃣ Void -->
     <div class="shard-card" data-max="100" data-type="void">
-      <img src="img/Misc/void.webp" alt="Void Shard">
+      <img src="style/img/Misc/void.webp" alt="Void Shard">
       <div class="circle-container">
         <svg class="progress-ring" width="120" height="120">
           <circle class="background" r="50" cx="60" cy="60"></circle>
@@ -166,9 +174,82 @@
       <div class="chance">Chance légendaire : <span class="percent">0.5%</span></div>
     </div>
 
-    <!-- Tu pourras ajouter ici mythical, sacred, prism, remnant -->
+    <!-- 3️⃣ Primal -->
+    <div class="shard-card" data-max="100" data-type="primal">
+      <img src="style/img/Misc/primal.webp" alt="Primal Shard">
+      <div class="circle-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="background" r="50" cx="60" cy="60"></circle>
+          <circle class="progress" r="50" cx="60" cy="60"></circle>
+        </svg>
+        <input type="number" class="circle-input" value="0" min="0">
+      </div>
+      <div class="buttons">
+        <button class="btn minus">−</button>
+        <button class="btn plus">+</button>
+      </div>
+      <div class="progress-info"><span class="count">0</span> / 100</div>
+      <div class="chance">Chance légendaire : <span class="percent">0.5%</span></div>
+    </div>
+
+    <!-- 4️⃣ Sacred -->
+    <div class="shard-card" data-max="100" data-type="sacred">
+      <img src="style/img/Misc/sacred.webp" alt="Sacred Shard">
+      <div class="circle-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="background" r="50" cx="60" cy="60"></circle>
+          <circle class="progress" r="50" cx="60" cy="60"></circle>
+        </svg>
+        <input type="number" class="circle-input" value="0" min="0">
+      </div>
+      <div class="buttons">
+        <button class="btn minus">−</button>
+        <button class="btn plus">+</button>
+      </div>
+      <div class="progress-info"><span class="count">0</span> / 100</div>
+      <div class="chance">Chance légendaire : <span class="percent">6.0%</span></div>
+    </div>
+
+    <!-- 5️⃣ Remnant -->
+    <div class="shard-card" data-max="100" data-type="remnant">
+      <img src="style/img/Misc/remnant.webp" alt="Remnant Shard">
+      <div class="circle-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="background" r="50" cx="60" cy="60"></circle>
+          <circle class="progress" r="50" cx="60" cy="60"></circle>
+        </svg>
+        <input type="number" class="circle-input" value="0" min="0">
+      </div>
+      <div class="buttons">
+        <button class="btn minus">−</button>
+        <button class="btn plus">+</button>
+      </div>
+      <div class="progress-info"><span class="count">0</span> / 100</div>
+      <div class="chance">Chance légendaire : <span class="percent">1.0%</span></div>
+    </div>
+
+    <!-- 6️⃣ Prism -->
+    <div class="shard-card" data-max="100" data-type="prism">
+      <img src="style/img/Misc/prism.webp" alt="Prism Shard">
+      <div class="circle-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="background" r="50" cx="60" cy="60"></circle>
+          <circle class="progress" r="50" cx="60" cy="60"></circle>
+        </svg>
+        <input type="number" class="circle-input" value="0" min="0">
+      </div>
+      <div class="buttons">
+        <button class="btn minus">−</button>
+        <button class="btn plus">+</button>
+      </div>
+      <div class="progress-info"><span class="count">0</span> / 100</div>
+      <div class="chance">Chance légendaire : <span class="percent">2.0%</span></div>
+    </div>
+
   </div>
 
+  <!-- Scripts -->
+  <script src="script.js"></script>
   <script>
     document.querySelectorAll('.shard-card').forEach(card => {
       const input = card.querySelector('.circle-input');
@@ -188,7 +269,7 @@
         const offset = circumference - (value / max) * circumference;
         circle.style.strokeDashoffset = offset;
         countText.textContent = value;
-        // chance de base (exemple : 0.5% + 0.5% par 10 pulls)
+        const base = parseFloat(percent.textContent);
         const chance = (0.5 + value * 0.05).toFixed(2);
         percent.textContent = chance + "%";
       }
