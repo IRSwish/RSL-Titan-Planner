@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Swish - RSL Tools | Pity Counter</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'American Captain';
+      src: url('style/American Captain.otf') format('opentype');
+    }
+
+    body {
+      background-color: #0e0e0e;
+      color: #fcf6ff;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      width: 90%;
+      margin: 40px auto;
+      justify-items: center;
+    }
+
+    .shard-card {
+      background: #1a1a1a;
+      border: 1px solid #f52584;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 10px #f52584;
+      width: 250px;
+    }
+
+    .shard-card img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .circle-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 20px auto;
+    }
+
+    .progress-ring {
+      transform: rotate(-90deg);
+      width: 120px;
+      height: 120px;
+    }
+
+    .progress-ring circle {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+
+    .progress-ring .background {
+      stroke: #333;
+    }
+
+    .progress-ring .progress {
+      stroke: #00c9ff;
+      transition: stroke-dashoffset 0.3s ease;
+    }
+
+    .circle-input {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: #fcf6ff;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background-color: #f52584;
+      color: #fcf6ff;
+      border: none;
+      border-radius: 8px;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #00c9ff;
+    }
+
+    .progress-info {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #fcf6ff;
+    }
+
+    .chance {
+      margin-top: 6px;
+      font-size: 16px;
+      color: #00c9ff;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu-container"></div>
+
+  <div class="header-wrapper">
+    <header id="page-title">Pity Counter</header>
+  </div>
+
+  <div class="container">
+    <!-- Exemple : Ancient -->
+    <div class="shard-card" data-max="100" data-type="ancient">
+      <img src="img/Misc/ancient.webp" alt="Ancient Shard">
+      <div class="circle-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="background" r="50" cx="60" cy="60"></circle>
+          <circle class="progress" r="50" cx="60" cy="60"></circle>
+        </svg>
+        <input type="number" class="circle-input" value="0" min="0">
+      </div>
+      <div class="buttons">
+        <button class="btn minus">−</button>
+        <button class="btn plus">+</button>
+      </div>
+      <div class="progress-info"><span class="count">0</span> / 100</div>
+      <div class="chance">Chance légendaire : <span class="percent">0.5%</span></div>
+    </div>
+
+    <!-- On duplique ensuite pour chaque shard -->
+    <div class="shard-card" data-max="100" data-type="void">
+      <img src="img/Misc/void.webp" alt="Void Shard">
+      <div class="circle-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="background" r="50" cx="60" cy="60"></circle>
+          <circle class="progress" r="50" cx="60" cy="60"></circle>
+        </svg>
+        <input type="number" class="circle-input" value="0" min="0">
+      </div>
+      <div class="buttons">
+        <button class="btn minus">−</button>
+        <button class="btn plus">+</button>
+      </div>
+      <div class="progress-info"><span class="count">0</span> / 100</div>
+      <div class="chance">Chance légendaire : <span class="percent">0.5%</span></div>
+    </div>
+
+    <!-- Tu pourras ajouter ici mythical, sacred, prism, remnant -->
+  </div>
+
+  <script>
+    document.querySelectorAll('.shard-card').forEach(card => {
+      const input = card.querySelector('.circle-input');
+      const plus = card.querySelector('.plus');
+      const minus = card.querySelector('.minus');
+      const countText = card.querySelector('.count');
+      const percent = card.querySelector('.percent');
+      const circle = card.querySelector('.progress');
+      const max = parseInt(card.dataset.max);
+      const radius = 50;
+      const circumference = 2 * Math.PI * radius;
+
+      circle.style.strokeDasharray = circumference;
+      circle.style.strokeDashoffset = circumference;
+
+      function setProgress(value) {
+        const offset = circumference - (value / max) * circumference;
+        circle.style.strokeDashoffset = offset;
+        countText.textContent = value;
+        // chance de base (exemple : 0.5% + 0.5% par 10 pulls)
+        const chance = (0.5 + value * 0.05).toFixed(2);
+        percent.textContent = chance + "%";
+      }
+
+      plus.addEventListener('click', () => {
+        let val = Math.min(max, parseInt(input.value) + 1);
+        input.value = val;
+        setProgress(val);
+      });
+
+      minus.addEventListener('click', () => {
+        let val = Math.max(0, parseInt(input.value) - 1);
+        input.value = val;
+        setProgress(val);
+      });
+
+      input.addEventListener('input', () => {
+        let val = Math.max(0, Math.min(max, parseInt(input.value)));
+        setProgress(val);
+      });
+
+      setProgress(0);
+    });
+  </script>
+</body>
+</html>
