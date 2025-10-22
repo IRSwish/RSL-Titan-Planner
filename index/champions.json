@@ -406,7 +406,7 @@
     { "name": "Frostskin", "faction": "Ogryn Tribes", "rarity": "Uncommon", "affinity": "Magic", "type": "Support", "image": "Frostskin", "invocable": true },
     { "name": "Oldbeard", "faction": "Ogryn Tribes", "rarity": "Uncommon", "affinity": "Force", "type": "Defense", "image": "Oldbeard", "invocable": true },
     { "name": "Hungerer", "faction": "Ogryn Tribes", "rarity": "Uncommon", "affinity": "Force", "type": "HP", "image": "Hungerer", "invocable": true },
-    { "name": "Trasher", "faction": "Ogryn Tribes", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Trasher", "invocable": true },
+    { "name": "Thrasher", "faction": "Ogryn Tribes", "rarity": "Uncommon", "affinity": "Spirit", "type": "Attack", "image": "Thrasher", "invocable": true },
     
     { "name": "Hierophant Lazarius", "faction": "Lizardmen", "rarity": "Mythical", "affinity": "Magic", "type": "Support", "image": "Lazarius", "invocable": true },
 
