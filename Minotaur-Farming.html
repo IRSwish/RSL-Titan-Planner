@@ -7,11 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* Layout principal */
     body {
       font-family: 'Inter', sans-serif;
+      background: #0e0e0e;
       color: var(--text-color);
-      background-color: #0e0e0e;
       margin: 0;
     }
 
@@ -25,7 +24,7 @@
       letter-spacing: 2px;
       font-size: 42px;
       color: var(--text-color);
-      text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+      text-shadow: 0 0 12px rgba(212,175,55,0.25);
     }
 
     .cache-info {
@@ -35,72 +34,52 @@
       margin: 6px auto 24px;
       opacity: 0.85;
       font-size: 14px;
-      max-width: 900px;
     }
 
-    /* Carte unique */
     .mastery-card {
       background: var(--event-bg);
       border: 2px solid var(--event-border);
       border-radius: 16px;
-      box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
-      width: min(1100px, 95%);
+      box-shadow: 0 0 18px rgba(212,175,55,0.25);
+      width: min(1000px, 95%);
       margin: 0 auto 40px;
       padding: 22px;
     }
 
-    /* Grille des 3 scrolls */
-    .scrolls-grid {
+    .scrolls-list {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      align-items: start;
-      justify-items: center;
+      gap: 18px;
     }
 
-    @media (max-width: 1000px) {
-      .scrolls-grid { grid-template-columns: 1fr; }
-    }
-
-    .scroll-block {
-      display: flex;
-      flex-direction: column;
+    .scroll-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
       align-items: center;
-      width: 100%;
-      max-width: 320px;
-      padding: 12px 10px 16px;
+      gap: 18px;
       border: 1px solid rgba(212,175,55,0.35);
       border-radius: 12px;
       background: linear-gradient(145deg, #141414, #1b1b1b);
+      padding: 14px;
     }
 
-    .scroll-head {
+    .scroll-img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      justify-self: center;
+      filter: drop-shadow(0 0 8px rgba(212,175,55,0.25));
+    }
+
+    .right-part {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 22px;
     }
 
-    .scroll-head img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .scroll-title {
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: 0.3px;
-      color: var(--text-color);
-    }
-
-    /* Cercle de progression */
     .circle-container {
       position: relative;
       width: 120px;
       height: 120px;
-      margin: 6px auto 8px;
     }
 
     .progress-ring {
@@ -116,7 +95,7 @@
     }
 
     .progress-ring .background {
-      stroke: rgba(255, 255, 255, 0.12);
+      stroke: rgba(255,255,255,0.12);
     }
 
     .progress-ring .progress {
@@ -129,7 +108,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -52%);
-      width: 64px;
+      width: 68px;
       text-align: center;
       font-size: 18px;
       font-weight: 700;
@@ -139,42 +118,34 @@
       outline: none;
     }
 
-    /* Ligne x / max (max modifiable) */
     .progress-info {
-      margin-top: 6px;
-      text-align: center;
       font-size: 14px;
-      color: var(--text-color);
       font-weight: 600;
-      font-family: inherit;
     }
 
-    .progress-info input.count,
-    .progress-info input.max {
+    .progress-info input {
       background: transparent;
       border: none;
       border-bottom: 1px solid rgba(255,255,255,0.18);
       color: var(--text-color);
-      font-family: inherit;
-      font-size: inherit;
+      font: inherit;
       font-weight: inherit;
-      text-align: right;
-      width: 56px;
       outline: none;
       transition: border-color 0.2s ease;
       padding-bottom: 2px;
     }
 
-    .progress-info input.max { text-align: left; width: 64px; }
+    .progress-info input:focus {
+      border-color: var(--line-color);
+    }
 
-    .progress-info input:focus { border-color: var(--line-color); }
+    .count { width: 60px; text-align: right; }
+    .max { width: 70px; text-align: left; }
 
-    /* Footer actions */
     .actions-row {
       display: flex;
       justify-content: center;
-      margin-top: 18px;
-      gap: 12px;
+      margin-top: 22px;
     }
 
     .reset-btn {
@@ -188,9 +159,12 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .reset-btn:hover { background: var(--line-color); color: #0e0e0e; }
 
-    /* Résultats énergie/gemmes */
+    .reset-btn:hover {
+      background: var(--line-color);
+      color: #0e0e0e;
+    }
+
     .results {
       margin-top: 22px;
       padding-top: 16px;
@@ -198,10 +172,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-    }
-
-    @media (max-width: 700px) {
-      .results { grid-template-columns: 1fr; }
     }
 
     .result-card {
@@ -218,7 +188,6 @@
       width: 34px;
       height: 34px;
       object-fit: contain;
-      flex-shrink: 0;
       filter: drop-shadow(0 0 6px rgba(212,175,55,0.25));
     }
 
@@ -245,6 +214,10 @@
       font-style: italic;
       font-size: 13px;
     }
+
+    @media (max-width: 700px) {
+      .results { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -254,72 +227,58 @@
   <div class="header-wrapper">
     <header id="page-title">MINOTAUR MASTERY CALCULATOR</header>
     <p class="cache-info">
-      Data is stored in your browser cache. Clearing your cache will reset all values.
+      Data is not saved. Adjust your scrolls and values update dynamically.
     </p>
   </div>
 
   <div class="mastery-card">
-    <div class="scrolls-grid">
-      <!-- BASIC -->
-      <div class="scroll-block" data-type="Basic" data-default-max="100">
-        <div class="scroll-head">
-          <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scroll">
-          <div class="scroll-title">Basic Scrolls</div>
-        </div>
+    <div class="scrolls-list">
 
-        <div class="circle-container">
-          <svg class="progress-ring" width="120" height="120">
-            <circle class="background" r="52" cx="60" cy="60"></circle>
-            <circle class="progress" r="52" cx="60" cy="60"></circle>
-          </svg>
-          <input type="number" class="circle-input count" value="0" min="0">
-        </div>
-
-        <div class="progress-info">
-          <input type="number" class="count below" value="0" min="0"> /
-          <input type="number" class="max" value="100" min="1">
+      <div class="scroll-row" data-type="Basic">
+        <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scroll" class="scroll-img">
+        <div class="right-part">
+          <div class="circle-container">
+            <svg class="progress-ring" width="120" height="120">
+              <circle class="background" r="52" cx="60" cy="60"></circle>
+              <circle class="progress" r="52" cx="60" cy="60"></circle>
+            </svg>
+            <input type="number" class="circle-input count" value="0" min="0">
+          </div>
+          <div class="progress-info">
+            <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="100" min="1">
+          </div>
         </div>
       </div>
 
-      <!-- ADVANCED -->
-      <div class="scroll-block" data-type="Advanced" data-default-max="600">
-        <div class="scroll-head">
-          <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scroll">
-          <div class="scroll-title">Advanced Scrolls</div>
-        </div>
-
-        <div class="circle-container">
-          <svg class="progress-ring" width="120" height="120">
-            <circle class="background" r="52" cx="60" cy="60"></circle>
-            <circle class="progress" r="52" cx="60" cy="60"></circle>
-          </svg>
-          <input type="number" class="circle-input count" value="0" min="0">
-        </div>
-
-        <div class="progress-info">
-          <input type="number" class="count below" value="0" min="0"> /
-          <input type="number" class="max" value="600" min="1">
+      <div class="scroll-row" data-type="Advanced">
+        <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scroll" class="scroll-img">
+        <div class="right-part">
+          <div class="circle-container">
+            <svg class="progress-ring" width="120" height="120">
+              <circle class="background" r="52" cx="60" cy="60"></circle>
+              <circle class="progress" r="52" cx="60" cy="60"></circle>
+            </svg>
+            <input type="number" class="circle-input count" value="0" min="0">
+          </div>
+          <div class="progress-info">
+            <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="600" min="1">
+          </div>
         </div>
       </div>
 
-      <!-- DIVINE -->
-      <div class="scroll-block" data-type="Divine" data-default-max="950">
-        <div class="scroll-head">
-          <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scroll">
-          <div class="scroll-title">Divine Scrolls</div>
-        </div>
-
-        <div class="circle-container">
-          <svg class="progress-ring" width="120" height="120">
-            <circle class="background" r="52" cx="60" cy="60"></circle>
-            <circle class="progress" r="52" cx="60" cy="60"></circle>
-          </svg>
-          <input type="number" class="circle-input count" value="0" min="0">
-        </div>
-
-        <div class="progress-info">
-          <input type="number" class="count below" value="0" min="0"> /
-          <input type="number" class="max" value="950" min="1">
+      <div class="scroll-row" data-type="Divine">
+        <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scroll" class="scroll-img">
+        <div class="right-part">
+          <div class="circle-container">
+            <svg class="progress-ring" width="120" height="120">
+              <circle class="background" r="52" cx="60" cy="60"></circle>
+              <circle class="progress" r="52" cx="60" cy="60"></circle>
+            </svg>
+            <input type="number" class="circle-input count" value="0" min="0">
+          </div>
+          <div class="progress-info">
+            <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="950" min="1">
+          </div>
         </div>
       </div>
     </div>
@@ -328,7 +287,7 @@
       <button class="reset-btn" id="resetAll">Reset</button>
     </div>
 
-    <div class="results" id="results">
+    <div class="results">
       <div class="result-card">
         <img src="style/img/Misc/Energy.webp" alt="Energy">
         <div class="result-text">
@@ -341,7 +300,7 @@
       <div class="result-card">
         <img src="style/img/Misc/Gems.webp" alt="Gems">
         <div class="result-text">
-          <span class="result-label">Gems equivalent:</span>
+          <span class="result-label">Gem equivalent:</span>
           <span class="result-value" id="gemsNeeded">0</span>
           <span class="muted">1 refill = 130 energy = 40 gems</span>
         </div>
@@ -349,184 +308,69 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
   <script>
-    // --- Paramètres étage 15 Minotaure ---
     const ENERGY_PER_RUN = 14;
-    const AVG_BASIC_PER_RUN = 28;     // moyenne 24–32
-    const AVG_ADVANCED_PER_RUN = 13.5; // moyenne 11–16
-    const AVG_DIVINE_PER_RUN = 9;     // moyenne 6–12
-
-    // Refill/gems (constantes usuelles)
+    const AVG_BASIC_PER_RUN = 28;
+    const AVG_ADVANCED_PER_RUN = 13.5;
+    const AVG_DIVINE_PER_RUN = 9;
     const REFILL_ENERGY = 130;
     const REFILL_GEMS = 40;
 
-    // Helpers localStorage
-    const LS_KEYS = {
-      Basic:    { cur: 'mino_Basic_cur',    max: 'mino_Basic_max' },
-      Advanced: { cur: 'mino_Advanced_cur', max: 'mino_Advanced_max' },
-      Divine:   { cur: 'mino_Divine_cur',   max: 'mino_Divine_max' },
-    };
-
-    // Initialisation des 3 blocs
-    document.querySelectorAll('.scroll-block').forEach(block => {
-      const type = block.dataset.type;
-      const defaultMax = parseInt(block.dataset.defaultMax, 10);
-
-      const circle = block.querySelector('.progress');
-      const circleInput = block.querySelector('.circle-input.count'); // centre
-      const belowInput = block.querySelector('.progress-info .count.below'); // x
-      const maxInput = block.querySelector('.progress-info .max'); // y (modifiable)
-
-      // Cercle
+    document.querySelectorAll('.scroll-row').forEach(row => {
+      const circle = row.querySelector('.progress');
+      const countInputs = row.querySelectorAll('.count');
+      const maxInput = row.querySelector('.max');
       const radius = 52;
       const circumference = 2 * Math.PI * radius;
-      circle.style.strokeDasharray = String(circumference);
+      circle.style.strokeDasharray = circumference;
 
-      // Charger depuis LS
-      let cur = parseInt(localStorage.getItem(LS_KEYS[type].cur) || '0', 10);
-      let max = parseInt(localStorage.getItem(LS_KEYS[type].max) || String(defaultMax), 10);
-
-      // Garde-fous
-      if (isNaN(cur) || cur < 0) cur = 0;
-      if (isNaN(max) || max < 1) max = defaultMax;
-      if (cur > max) cur = max;
-
-      // Applique les valeurs dans les inputs
-      circleInput.value = cur;
-      belowInput.value = cur;
-      maxInput.value = max;
-
-      // Mise à jour cercle
-      function setProgress(v, m) {
-        const clamped = Math.max(0, Math.min(m, v));
-        const offset = circumference - (clamped / m) * circumference;
-        circle.style.strokeDashoffset = String(offset);
-
-        // Sync inputs + persist
-        circleInput.value = clamped;
-        belowInput.value = clamped;
-        localStorage.setItem(LS_KEYS[type].cur, String(clamped));
-
-        maxInput.value = m;
-        localStorage.setItem(LS_KEYS[type].max, String(m));
-
-        // Recalcule les résultats globaux
-        calculateEnergyAndGems();
+      function updateCircle() {
+        const current = parseFloat(countInputs[0].value || 0);
+        const max = parseFloat(maxInput.value || 1);
+        const offset = circumference - (current / max) * circumference;
+        circle.style.strokeDashoffset = offset;
+        countInputs.forEach(i => i.value = current);
+        calculate();
       }
 
-      // Handlers de saisie
-      function handleCurChange(newVal) {
-        let m = parseInt(maxInput.value || '0', 10);
-        if (isNaN(m) || m < 1) m = defaultMax;
-        let v = parseInt(newVal || '0', 10);
-        if (isNaN(v) || v < 0) v = 0;
-        if (v > m) v = m;
-        setProgress(v, m);
-      }
-
-      function handleMaxChange(newMaxVal) {
-        let m = parseInt(newMaxVal || '0', 10);
-        if (isNaN(m) || m < 1) m = 1;
-        let v = parseInt(circleInput.value || '0', 10);
-        if (isNaN(v) || v < 0) v = 0;
-        if (v > m) v = m;
-        setProgress(v, m);
-      }
-
-      circleInput.addEventListener('input', () => handleCurChange(circleInput.value));
-      belowInput.addEventListener('input', () => handleCurChange(belowInput.value));
-      maxInput.addEventListener('input', () => handleMaxChange(maxInput.value));
-
-      // Première peinture
-      setProgress(cur, max);
+      countInputs.forEach(i => i.addEventListener('input', updateCircle));
+      maxInput.addEventListener('input', updateCircle);
+      updateCircle();
     });
 
-    // Reset global
     document.getElementById('resetAll').addEventListener('click', () => {
-      document.querySelectorAll('.scroll-block').forEach(block => {
-        const type = block.dataset.type;
-        const defaultMax = parseInt(block.dataset.defaultMax, 10);
-
-        const circle = block.querySelector('.progress');
-        const circleInput = block.querySelector('.circle-input.count');
-        const belowInput = block.querySelector('.progress-info .count.below');
-        const maxInput = block.querySelector('.progress-info .max');
-
-        // Remet les max par défaut, valeurs à 0
-        maxInput.value = defaultMax;
-        circleInput.value = 0;
-        belowInput.value = 0;
-
-        localStorage.setItem(LS_KEYS[type].cur, '0');
-        localStorage.setItem(LS_KEYS[type].max, String(defaultMax));
-
-        // Met à jour progression visuelle
-        const radius = 52;
-        const circumference = 2 * Math.PI * radius;
-        circle.style.strokeDasharray = String(circumference);
-        circle.style.strokeDashoffset = String(circumference);
-
+      document.querySelectorAll('.scroll-row').forEach(row => {
+        row.querySelectorAll('.count').forEach(i => i.value = 0);
+        row.querySelector('.progress').style.strokeDashoffset = 2 * Math.PI * 52;
       });
-      calculateEnergyAndGems();
+      calculate();
     });
 
-    // Calcul énergie + gemmes (utilise le max des runs requis parmi les 3 types)
-    function getValues() {
-      const get = (type, key) => parseFloat(localStorage.getItem(LS_KEYS[type][key]) || (
-        key === 'max'
-          ? document.querySelector(`.scroll-block[data-type="${type}"]`).dataset.defaultMax
-          : 0
-      ));
+    function calculate() {
+      const basic = getMissing('Basic');
+      const adv = getMissing('Advanced');
+      const div = getMissing('Divine');
 
-      const curBasic = get('Basic', 'cur');
-      const maxBasic = get('Basic', 'max');
-      const curAdv   = get('Advanced', 'cur');
-      const maxAdv   = get('Advanced', 'max');
-      const curDiv   = get('Divine', 'cur');
-      const maxDiv   = get('Divine', 'max');
+      const energy =
+        (basic / AVG_BASIC_PER_RUN +
+         adv / AVG_ADVANCED_PER_RUN +
+         div / AVG_DIVINE_PER_RUN) * ENERGY_PER_RUN;
 
-      return {
-        missingBasic: Math.max(0, maxBasic - curBasic),
-        missingAdv:   Math.max(0, maxAdv - curAdv),
-        missingDiv:   Math.max(0, maxDiv - curDiv),
-      };
-    }
-
-    function calculateEnergyAndGems() {
-      const { missingBasic, missingAdv, missingDiv } = getValues();
-
-      // Nombre de runs nécessaires (arrondi au supérieur)
-      const runsBasic = missingBasic / AVG_BASIC_PER_RUN;
-      const runsAdv   = missingAdv   / AVG_ADVANCED_PER_RUN;
-      const runsDiv   = missingDiv   / AVG_DIVINE_PER_RUN;
-
-      const runsNeeded = Math.max(runsBasic, runsAdv, runsDiv);
-      const runsInt = Math.ceil(runsNeeded);
-
-      const energy = runsInt * ENERGY_PER_RUN;
       const gems = (energy / REFILL_ENERGY) * REFILL_GEMS;
 
-      // Affichage
-      const energyNode = document.getElementById('energyNeeded');
-      const gemsNode = document.getElementById('gemsNeeded');
-      const runsHint = document.getElementById('runsHint');
-
-      // Si tout est déjà atteint
-      if (missingBasic === 0 && missingAdv === 0 && missingDiv === 0) {
-        energyNode.textContent = '0';
-        gemsNode.textContent = '0';
-        runsHint.textContent = 'All masteries complete.';
-        return;
-      }
-
-      energyNode.textContent = String(energy);
-      gemsNode.textContent = (Math.round(gems * 10) / 10).toFixed(1);
-      runsHint.textContent = `≈ ${runsInt} runs (avg drops per run)`;
+      document.getElementById('energyNeeded').textContent = Math.round(energy);
+      document.getElementById('gemsNeeded').textContent = Math.round(gems);
+      document.getElementById('runsHint').textContent = "≈ " + Math.round(energy / ENERGY_PER_RUN) + " runs total";
     }
 
-    // Première passe
-    calculateEnergyAndGems();
+    function getMissing(type) {
+      const row = document.querySelector(`.scroll-row[data-type="${type}"]`);
+      const cur = parseFloat(row.querySelectorAll('.count')[0].value || 0);
+      const max = parseFloat(row.querySelector('.max').value || 0);
+      return Math.max(0, max - cur);
+    }
+
+    calculate();
   </script>
 </body>
 </html>
