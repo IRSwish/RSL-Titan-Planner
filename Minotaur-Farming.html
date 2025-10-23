@@ -37,21 +37,23 @@
     }
 
     .mastery-card {
-      background: var(--event-bg);
-      border: 2px solid var(--event-border);
-      border-radius: 16px;
-      box-shadow: 0 0 18px rgba(212,175,55,0.25);
-      width: min(1100px, 95%);
-      margin: 0 auto 40px;
-      padding: 22px;
+        background: var(--event-bg);
+        border: 2px solid var(--event-border);
+        border-radius: 16px;
+        box-shadow: 0 0 18px rgba(212,175,55,0.25);
+        width: min(1100px, 95%);
+        margin: 0 auto 40px;
+        padding: 22px;
+        overflow: hidden; /* sécurité visuelle */
     }
 
     .scrolls-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      align-items: center;
-      justify-items: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 28px;
+        align-items: center;
+        justify-items: center;
+        justify-content: center;
     }
 
     @media (max-width: 900px) {
@@ -59,29 +61,32 @@
     }
 
     .scroll-block {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      width: 360px;               /* un peu plus large pour cas limites */
-      padding: 14px 14px;
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 12px;
-      background: linear-gradient(145deg, #141414, #1b1b1b);
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        max-width: 340px;      /* réduit légèrement */
+        padding: 14px 14px;
+        border: 1px solid rgba(212,175,55,0.35);
+        border-radius: 12px;
+        background: linear-gradient(145deg, #141414, #1b1b1b);
     }
 
     .scroll-img {
-      width: 90px; height: 90px; object-fit: contain;
-      margin-right: 16px;
-      filter: drop-shadow(0 0 6px rgba(212,175,55,0.25));
-      flex-shrink: 0;
+        width: 90px;
+        height: 90px;
+        object-fit: contain;
+        margin-right: 16px;
+        filter: drop-shadow(0 0 6px rgba(212,175,55,0.25));
+        flex-shrink: 0;
     }
 
     .right-side {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1 1 auto;
-      min-width: 0; /* évite les débordements */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
     }
 
     /* Circle */
