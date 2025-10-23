@@ -116,16 +116,16 @@
     {
       "name": "Gear Hunters",
 	  "type": "Event",
-      "start_date": "2025-10-01",
-      "end_date": "2025-10-04",
+      "start_date": "2025-11-01",
+      "end_date": "2025-11-04",
       "reward": "Fragments",
       "points": [25]
     },
     {
       "name": "Gear Enhancement",
 	  "type": "Event",
-      "start_date": "2025-10-02",
-      "end_date": "2025-10-05",
+      "start_date": "2025-11-02",
+      "end_date": "2025-11-05",
       "reward": "Fragments",
       "points": [25]
     }
