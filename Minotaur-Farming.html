@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
+    /* Safety: avoid layout surprises */
+    * { box-sizing: border-box; }
+
     body {
       font-family: 'Inter', sans-serif;
       color: var(--text-color);
@@ -14,10 +17,7 @@
       margin: 0;
     }
 
-    .header-wrapper {
-      text-align: center;
-      margin-top: 30px;
-    }
+    .header-wrapper { text-align: center; margin-top: 30px; }
 
     #page-title {
       font-family: 'American Captain', Impact, sans-serif;
@@ -62,40 +62,41 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      width: 100%;
-      max-width: 320px;
-      padding: 14px 12px;
+      width: 360px;               /* un peu plus large pour cas limites */
+      padding: 14px 14px;
       border: 1px solid rgba(212,175,55,0.35);
       border-radius: 12px;
       background: linear-gradient(145deg, #141414, #1b1b1b);
     }
 
     .scroll-img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
+      width: 90px; height: 90px; object-fit: contain;
       margin-right: 16px;
       filter: drop-shadow(0 0 6px rgba(212,175,55,0.25));
+      flex-shrink: 0;
     }
 
     .right-side {
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex-grow: 1;
+      flex: 1 1 auto;
+      min-width: 0; /* évite les débordements */
     }
 
+    /* Circle */
     .circle-container {
       position: relative;
-      width: 100px;
-      height: 100px;
+      width: 120px; height: 120px;
       margin: 6px auto 8px;
+      overflow: visible; /* IMPORTANT: pas de rognage */
     }
 
     .progress-ring {
       transform: rotate(-90deg);
-      width: 100px;
-      height: 100px;
+      width: 120px; height: 120px;
+      overflow: visible; /* IMPORTANT: pas de rognage */
+      display: block;
     }
 
     .progress-ring circle {
@@ -104,132 +105,60 @@
       stroke-linecap: round;
     }
 
-    .progress-ring .background {
-      stroke: rgba(255,255,255,0.12);
-    }
-
-    .progress-ring .progress {
-      stroke: var(--line-color);
-      transition: stroke-dashoffset 0.25s ease;
-    }
+    .progress-ring .background { stroke: rgba(255,255,255,0.12); }
+    .progress-ring .progress   { stroke: var(--line-color); transition: stroke-dashoffset 0.25s ease; }
 
     .circle-input {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 64px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 700;
-      border: none;
-      background: transparent;
-      color: var(--text-color);
-      outline: none;
+      width: 64px; text-align: center;
+      font-size: 18px; font-weight: 700;
+      border: none; background: transparent; color: var(--text-color); outline: none;
     }
 
     .progress-info {
-      text-align: center;
-      font-size: 14px;
-      color: var(--text-color);
-      font-weight: 600;
+      text-align: center; font-size: 14px; color: var(--text-color); font-weight: 600;
+      white-space: nowrap; /* évite le wrap qui écrase le cercle */
     }
 
     .progress-info input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.18);
-      color: var(--text-color);
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      text-align: right;
-      width: 56px;
-      outline: none;
-      transition: border-color 0.2s ease;
+      background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.18);
+      color: var(--text-color); font: inherit; font-weight: inherit;
+      text-align: right; width: 56px; outline: none; transition: border-color 0.2s ease; padding-bottom: 2px;
     }
 
-    .progress-info input.max {
-      text-align: left;
-      width: 64px;
-    }
+    .progress-info input.max { text-align: left; width: 64px; }
 
     .progress-info input:focus { border-color: var(--line-color); }
 
-    .actions-row {
-      display: flex;
-      justify-content: center;
-      margin-top: 18px;
-    }
+    .actions-row { display: flex; justify-content: center; margin-top: 18px; }
 
     .reset-btn {
-      background: transparent;
-      border: 1px solid var(--line-color);
-      color: var(--line-color);
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 14px;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      background: transparent; border: 1px solid var(--line-color); color: var(--line-color);
+      border-radius: 10px; font-weight: 700; font-size: 14px; padding: 8px 14px;
+      cursor: pointer; transition: all 0.2s ease;
     }
-
     .reset-btn:hover { background: var(--line-color); color: #0e0e0e; }
 
     .results {
-      margin-top: 22px;
-      padding-top: 16px;
-      border-top: 1px dashed rgba(212,175,55,0.35);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      margin-top: 22px; padding-top: 16px; border-top: 1px dashed rgba(212,175,55,0.35);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
     }
 
-    @media (max-width: 700px) {
-      .results { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 700px) { .results { grid-template-columns: 1fr; } }
 
     .result-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 12px;
-      background: linear-gradient(145deg, #141414, #1b1b1b);
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border: 1px solid rgba(212,175,55,0.35);
+      border-radius: 12px; background: linear-gradient(145deg, #141414, #1b1b1b);
     }
 
-    .result-card img {
-      width: 34px;
-      height: 34px;
-      object-fit: contain;
-      flex-shrink: 0;
-      filter: drop-shadow(0 0 6px rgba(212,175,55,0.25));
-    }
+    .result-card img { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 0 6px rgba(212,175,55,0.25)); }
 
-    .result-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.25;
-    }
-
-    .result-label {
-      font-size: 13px;
-      opacity: 0.85;
-    }
-
-    .result-value {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      color: var(--text-color);
-    }
-
-    .muted {
-      opacity: 0.7;
-      font-style: italic;
-      font-size: 13px;
-    }
+    .result-text { display: flex; flex-direction: column; line-height: 1.25; }
+    .result-label { font-size: 13px; opacity: 0.85; }
+    .result-value { font-size: 20px; font-weight: 800; letter-spacing: 0.3px; color: var(--text-color); }
+    .muted { opacity: 0.7; font-style: italic; font-size: 13px; }
   </style>
 </head>
 
@@ -243,6 +172,7 @@
 
   <div class="mastery-card">
     <div class="scrolls-grid">
+      <!-- BASIC -->
       <div class="scroll-block" data-type="Basic" data-max="100">
         <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scroll" class="scroll-img">
         <div class="right-side">
@@ -259,6 +189,7 @@
         </div>
       </div>
 
+      <!-- ADVANCED -->
       <div class="scroll-block" data-type="Advanced" data-max="600">
         <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scroll" class="scroll-img">
         <div class="right-side">
@@ -275,6 +206,7 @@
         </div>
       </div>
 
+      <!-- DIVINE -->
       <div class="scroll-block" data-type="Divine" data-max="950">
         <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scroll" class="scroll-img">
         <div class="right-side">
@@ -317,18 +249,17 @@
     </div>
   </div>
 
+  <!-- Your global script -->
   <script src="script.js"></script>
+
   <script>
     const ENERGY_PER_RUN = 14;
     const AVG_BASIC = 28, AVG_ADV = 13.5, AVG_DIV = 9;
     const REFILL_ENERGY = 130, REFILL_GEMS = 40;
 
-    const scrolls = {
-      Basic: { max: 100 },
-      Advanced: { max: 600 },
-      Divine: { max: 950 },
-    };
+    const scrollCaps = { Basic: 100, Advanced: 600, Divine: 950 };
 
+    // Init circles + handlers
     document.querySelectorAll('.scroll-block').forEach(block => {
       const type = block.dataset.type;
       const circle = block.querySelector('.progress');
@@ -337,92 +268,101 @@
       circle.style.strokeDasharray = circumference;
 
       const circleInput = block.querySelector('.circle-input');
-      const countInput = block.querySelector('.count');
-      const maxInput = block.querySelector('.max');
+      const countInput  = block.querySelector('.count');
+      const maxInput    = block.querySelector('.max');
 
-      function update(v, m = scrolls[type].max) {
-        v = Math.max(0, Math.min(m, v));
-        const offset = circumference - (v / m) * circumference;
-        circle.style.strokeDashoffset = offset;
-        circleInput.value = v;
-        countInput.value = v;
+      // Hard cap on max input (can't exceed canonical cap)
+      maxInput.addEventListener('input', () => {
+        const hardCap = scrollCaps[type];
+        if (parseFloat(maxInput.value) > hardCap) maxInput.value = hardCap;
+        // If current > new max, clamp it
+        const cur = Math.min(parseFloat(circleInput.value || 0), parseFloat(maxInput.value || hardCap));
+        setValue(type, cur);
         calculate();
-      }
+      });
 
+      // When editing current value (center or below), clamp to [0,max] and apply logic
       [circleInput, countInput].forEach(inp => {
         inp.addEventListener('input', () => {
+          const m = Math.min(parseFloat(maxInput.value || scrollCaps[type]), scrollCaps[type]);
           let v = parseFloat(inp.value) || 0;
-          const m = parseFloat(maxInput.value) || scrolls[type].max;
           if (v > m) v = m;
-          update(v, m);
-          handleLogic(type, v);
+          setValue(type, v);
+          applyInterlock(type, v); // grey/green/red logic
+          calculate();
         });
       });
 
-      maxInput.addEventListener('input', () => {
-        const maxLimit = scrolls[type].max;
-        if (parseFloat(maxInput.value) > maxLimit) maxInput.value = maxLimit;
-        calculate();
-      });
-
-      update(0);
+      // First paint
+      setValue(type, 0);
     });
 
+    // Reset
     document.getElementById('resetAll').addEventListener('click', () => {
-      document.querySelectorAll('.scroll-block').forEach(b => {
-        b.querySelector('.circle-input').value = 0;
-        b.querySelector('.count').value = 0;
-        const circle = b.querySelector('.progress');
-        circle.style.strokeDashoffset = 2 * Math.PI * 52;
-      });
+      setValue('Basic', 0);
+      setValue('Advanced', 0);
+      setValue('Divine', 0);
       calculate();
     });
 
-    function handleLogic(type, value) {
-      const get = t => document.querySelector(`.scroll-block[data-type="${t}"]`);
-      const basic = get('Basic');
-      const adv = get('Advanced');
-      const div = get('Divine');
+    // Set a block value + update its circle visuals
+    function setValue(type, v) {
+      const block = document.querySelector(`.scroll-block[data-type="${type}"]`);
+      const max = Math.min(parseFloat(block.querySelector('.max').value || scrollCaps[type]), scrollCaps[type]);
+      const circle = block.querySelector('.progress');
+      const circleInput = block.querySelector('.circle-input');
+      const countInput  = block.querySelector('.count');
 
-      const setVal = (el, v) => {
-        const max = parseFloat(el.querySelector('.max').value);
-        const ci = el.querySelector('.circle-input');
-        const ct = el.querySelector('.count');
-        ci.value = v;
-        ct.value = v;
-        const c = el.querySelector('.progress');
-        const offset = 2 * Math.PI * 52 - (v / max) * (2 * Math.PI * 52);
-        c.style.strokeDashoffset = offset;
-      };
+      const radius = 52;
+      const circumference = 2 * Math.PI * radius;
 
-      if (type === 'Basic') {
-        if (value < 100) {
-          setVal(adv, 0);
-          setVal(div, 0);
+      const clamped = Math.max(0, Math.min(max, v));
+      const offset = circumference - (clamped / max) * circumference;
+
+      circle.style.strokeDashoffset = offset;
+      circleInput.value = clamped;
+      countInput.value  = clamped;
+    }
+
+    // Interlock logic between scroll types
+    function applyInterlock(changedType, value) {
+      const setTo = (t, val) => setValue(t, val);
+
+      if (changedType === 'Basic') {
+        // If Basic < 100 => Advanced=0, Divine=0
+        const basicMax = Math.min(getMax('Basic'), scrollCaps.Basic);
+        if (value < basicMax) {
+          setTo('Advanced', 0);
+          setTo('Divine', 0);
         }
+      } else if (changedType === 'Advanced') {
+        // If Advanced < 600 => Divine=0; Basic=100 (full)
+        const advMax = Math.min(getMax('Advanced'), scrollCaps.Advanced);
+        if (value < advMax) setTo('Divine', 0);
+        setTo('Basic', Math.min(getMax('Basic'), scrollCaps.Basic));
+      } else if (changedType === 'Divine') {
+        // Starting red implies green & grey are full
+        setTo('Basic', Math.min(getMax('Basic'), scrollCaps.Basic));
+        setTo('Advanced', Math.min(getMax('Advanced'), scrollCaps.Advanced));
       }
-      if (type === 'Advanced') {
-        if (value < 600) setVal(div, 0);
-        setVal(basic, 100);
-      }
-      if (type === 'Divine') {
-        setVal(basic, 100);
-        setVal(adv, 600);
-      }
-      calculate();
+    }
+
+    function getMax(type) {
+      const block = document.querySelector(`.scroll-block[data-type="${type}"]`);
+      return parseFloat(block.querySelector('.max').value) || scrollCaps[type];
+    }
+
+    function getMissing(type) {
+      const block = document.querySelector(`.scroll-block[data-type="${type}"]`);
+      const cur = parseFloat(block.querySelector('.count').value) || 0;
+      const max = Math.min(parseFloat(block.querySelector('.max').value) || scrollCaps[type], scrollCaps[type]);
+      return Math.max(0, max - cur);
     }
 
     function calculate() {
-      const get = t => {
-        const b = document.querySelector(`.scroll-block[data-type="${t}"]`);
-        const cur = parseFloat(b.querySelector('.count').value) || 0;
-        const max = parseFloat(b.querySelector('.max').value) || 0;
-        return Math.max(0, max - cur);
-      };
-
-      const b = get('Basic');
-      const a = get('Advanced');
-      const d = get('Divine');
+      const b = getMissing('Basic');
+      const a = getMissing('Advanced');
+      const d = getMissing('Divine');
 
       const runsB = Math.ceil(b / AVG_BASIC);
       const runsA = Math.ceil(a / AVG_ADV);
