@@ -36,82 +36,86 @@
       font-size: 14px;
     }
 
-    .mastery-card {
-      background: var(--event-bg);
-      border: 2px solid var(--event-border);
-      border-radius: 16px;
-      box-shadow: 0 0 18px rgba(212,175,55,0.25);
-      width: min(1000px, 95%);
-      margin: 0 auto 40px;
-      padding: 22px;
-    }
-
-    .scrolls-list {
+    .pity-container {
       display: grid;
-      gap: 18px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      width: fit-content;
+      margin: 50px auto;
+      justify-content: center;
+      justify-items: center;
     }
 
-    .scroll-row {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      align-items: center;
-      gap: 18px;
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 12px;
-      background: linear-gradient(145deg, #141414, #1b1b1b);
-      padding: 14px;
-    }
-
-    .scroll-img {
-      width: 120px;
-      height: 120px;
-      object-fit: contain;
-      justify-self: center;
-      filter: drop-shadow(0 0 8px rgba(212,175,55,0.25));
-    }
-
-    .right-part {
+    .shard-card {
       display: flex;
       align-items: center;
-      gap: 22px;
+      justify-content: flex-start;
+      background: var(--event-bg);
+      border: 2px solid var(--event-border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(212,175,55,0.25);
+      width: 320px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .shard-card:hover {
+      box-shadow: 0 0 20px rgba(212,175,55,0.5);
+    }
+
+    .shard-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-right: 18px;
+      filter: drop-shadow(0 0 8px rgba(212,175,55,0.3));
+    }
+
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
     }
 
     .circle-container {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
+      margin: 5px auto;
     }
 
     .progress-ring {
       transform: rotate(-90deg);
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
     }
 
     .progress-ring circle {
       fill: none;
-      stroke-width: 10;
+      stroke-width: 8;
       stroke-linecap: round;
     }
 
     .progress-ring .background {
-      stroke: rgba(255,255,255,0.12);
+      stroke: rgba(255, 255, 255, 0.1);
     }
 
     .progress-ring .progress {
       stroke: var(--line-color);
-      transition: stroke-dashoffset 0.25s ease;
+      transition: stroke-dashoffset 0.3s ease;
     }
 
     .circle-input {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -52%);
-      width: 68px;
+      transform: translate(-50%, -50%);
+      width: 50px;
       text-align: center;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 16px;
+      font-weight: 600;
       border: none;
       background: transparent;
       color: var(--text-color);
@@ -119,45 +123,49 @@
     }
 
     .progress-info {
+      margin-top: 6px;
+      text-align: center;
       font-size: 14px;
+      color: var(--text-color);
+      font-family: 'Inter', sans-serif;
       font-weight: 600;
     }
 
-    .progress-info input {
+    .progress-info input.count {
       background: transparent;
       border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.18);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
       color: var(--text-color);
-      font: inherit;
+      font-family: inherit;
+      font-size: inherit;
       font-weight: inherit;
+      text-align: right;
+      width: 35px;
       outline: none;
       transition: border-color 0.2s ease;
-      padding-bottom: 2px;
     }
 
-    .progress-info input:focus {
+    .progress-info input.count:focus {
       border-color: var(--line-color);
     }
 
-    .count { width: 60px; text-align: right; }
-    .max { width: 70px; text-align: left; }
-
-    .actions-row {
-      display: flex;
-      justify-content: center;
-      margin-top: 22px;
+    .progress-info .max {
+      opacity: 0.8;
+      margin-left: 2px;
     }
 
     .reset-btn {
+      display: block;
       background: transparent;
       border: 1px solid var(--line-color);
       color: var(--line-color);
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 14px;
-      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 4px 10px;
       cursor: pointer;
       transition: all 0.2s ease;
+      margin: 20px auto 0;
     }
 
     .reset-btn:hover {
@@ -166,35 +174,33 @@
     }
 
     .results {
-      margin-top: 22px;
-      padding-top: 16px;
-      border-top: 1px dashed rgba(212,175,55,0.35);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      width: fit-content;
+      margin: 30px auto;
+      display: flex;
+      gap: 20px;
     }
 
     .result-card {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 12px;
+      gap: 10px;
       background: linear-gradient(145deg, #141414, #1b1b1b);
+      border: 1px solid rgba(212,175,55,0.35);
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: 0 0 10px rgba(212,175,55,0.15);
     }
 
     .result-card img {
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       object-fit: contain;
-      filter: drop-shadow(0 0 6px rgba(212,175,55,0.25));
     }
 
     .result-text {
       display: flex;
       flex-direction: column;
-      line-height: 1.25;
+      line-height: 1.2;
     }
 
     .result-label {
@@ -203,7 +209,7 @@
     }
 
     .result-value {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: 0.3px;
       color: var(--text-color);
@@ -212,11 +218,7 @@
     .muted {
       opacity: 0.7;
       font-style: italic;
-      font-size: 13px;
-    }
-
-    @media (max-width: 700px) {
-      .results { grid-template-columns: 1fr; }
+      font-size: 12px;
     }
   </style>
 </head>
@@ -226,148 +228,150 @@
 
   <div class="header-wrapper">
     <header id="page-title">MINOTAUR MASTERY CALCULATOR</header>
-    <p class="cache-info">
-      Data is not saved. Adjust your scrolls and values update dynamically.
-    </p>
+    <p class="cache-info">Data is not saved. Adjust your scrolls and values update dynamically.</p>
   </div>
 
-  <div class="mastery-card">
-    <div class="scrolls-list">
-
-      <div class="scroll-row" data-type="Basic">
-        <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scroll" class="scroll-img">
-        <div class="right-part">
-          <div class="circle-container">
-            <svg class="progress-ring" width="120" height="120">
-              <circle class="background" r="52" cx="60" cy="60"></circle>
-              <circle class="progress" r="52" cx="60" cy="60"></circle>
-            </svg>
-            <input type="number" class="circle-input count" value="0" min="0">
-          </div>
-          <div class="progress-info">
-            <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="100" min="1">
-          </div>
+  <div class="pity-container">
+    <!-- Basic -->
+    <div class="shard-card" data-type="Basic">
+      <img class="shard-img" src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scroll">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input count" value="0" min="0">
         </div>
-      </div>
-
-      <div class="scroll-row" data-type="Advanced">
-        <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scroll" class="scroll-img">
-        <div class="right-part">
-          <div class="circle-container">
-            <svg class="progress-ring" width="120" height="120">
-              <circle class="background" r="52" cx="60" cy="60"></circle>
-              <circle class="progress" r="52" cx="60" cy="60"></circle>
-            </svg>
-            <input type="number" class="circle-input count" value="0" min="0">
-          </div>
-          <div class="progress-info">
-            <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="600" min="1">
-          </div>
-        </div>
-      </div>
-
-      <div class="scroll-row" data-type="Divine">
-        <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scroll" class="scroll-img">
-        <div class="right-part">
-          <div class="circle-container">
-            <svg class="progress-ring" width="120" height="120">
-              <circle class="background" r="52" cx="60" cy="60"></circle>
-              <circle class="progress" r="52" cx="60" cy="60"></circle>
-            </svg>
-            <input type="number" class="circle-input count" value="0" min="0">
-          </div>
-          <div class="progress-info">
-            <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="950" min="1">
-          </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="100" min="1">
         </div>
       </div>
     </div>
 
-    <div class="actions-row">
-      <button class="reset-btn" id="resetAll">Reset</button>
-    </div>
-
-    <div class="results">
-      <div class="result-card">
-        <img src="style/img/Misc/Energy.webp" alt="Energy">
-        <div class="result-text">
-          <span class="result-label">Energy needed (Stage 15):</span>
-          <span class="result-value" id="energyNeeded">0</span>
-          <span class="muted" id="runsHint">Based on average drops per run.</span>
+    <!-- Advanced -->
+    <div class="shard-card" data-type="Advanced">
+      <img class="shard-img" src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scroll">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input count" value="0" min="0">
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="600" min="1">
         </div>
       </div>
+    </div>
 
-      <div class="result-card">
-        <img src="style/img/Misc/Gems.webp" alt="Gems">
-        <div class="result-text">
-          <span class="result-label">Gem equivalent:</span>
-          <span class="result-value" id="gemsNeeded">0</span>
-          <span class="muted">1 refill = 130 energy = 40 gems</span>
+    <!-- Divine -->
+    <div class="shard-card" data-type="Divine">
+      <img class="shard-img" src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scroll">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input count" value="0" min="0">
         </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <input type="number" class="max" value="950" min="1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="resetAll">Reset</button>
+
+  <div class="results">
+    <div class="result-card">
+      <img src="style/img/Misc/Energy.webp" alt="Energy">
+      <div class="result-text">
+        <span class="result-label">Energy needed (Stage 15):</span>
+        <span class="result-value" id="energyNeeded">0</span>
+        <span class="muted" id="runsHint">Based on average drops per run.</span>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <img src="style/img/Misc/Gems.webp" alt="Gems">
+      <div class="result-text">
+        <span class="result-label">Gem equivalent:</span>
+        <span class="result-value" id="gemsNeeded">0</span>
+        <span class="muted">1 refill = 130 energy = 40 gems</span>
       </div>
     </div>
   </div>
 
   <script>
     const ENERGY_PER_RUN = 14;
-    const AVG_BASIC_PER_RUN = 28;
-    const AVG_ADVANCED_PER_RUN = 13.5;
-    const AVG_DIVINE_PER_RUN = 9;
-    const REFILL_ENERGY = 130;
-    const REFILL_GEMS = 40;
+    const AVG_BASIC = 28, AVG_ADV = 13.5, AVG_DIV = 9;
+    const REFILL_ENERGY = 130, REFILL_GEMS = 40;
 
-    document.querySelectorAll('.scroll-row').forEach(row => {
-      const circle = row.querySelector('.progress');
-      const countInputs = row.querySelectorAll('.count');
-      const maxInput = row.querySelector('.max');
-      const radius = 52;
+    document.querySelectorAll('.shard-card').forEach(card => {
+      const type = card.dataset.type;
+      const circle = card.querySelector('.progress');
+      const radius = 45;
       const circumference = 2 * Math.PI * radius;
       circle.style.strokeDasharray = circumference;
 
-      function updateCircle() {
-        const current = parseFloat(countInputs[0].value || 0);
-        const max = parseFloat(maxInput.value || 1);
-        const offset = circumference - (current / max) * circumference;
+      const circleInput = card.querySelector('.circle-input');
+      const countInput = card.querySelectorAll('.count')[1];
+      const maxInput = card.querySelector('.max');
+
+      function update(v, m) {
+        v = Math.max(0, Math.min(m, v));
+        const offset = circumference - (v / m) * circumference;
         circle.style.strokeDashoffset = offset;
-        countInputs.forEach(i => i.value = current);
+        circleInput.value = v;
+        countInput.value = v;
         calculate();
       }
 
-      countInputs.forEach(i => i.addEventListener('input', updateCircle));
-      maxInput.addEventListener('input', updateCircle);
-      updateCircle();
+      [circleInput, countInput].forEach(inp => {
+        inp.addEventListener('input', () => {
+          const m = parseFloat(maxInput.value) || 1;
+          const v = parseFloat(inp.value) || 0;
+          update(v, m);
+        });
+      });
+
+      maxInput.addEventListener('input', () => {
+        const m = parseFloat(maxInput.value) || 1;
+        const v = parseFloat(circleInput.value) || 0;
+        update(v, m);
+      });
+
+      update(0, parseFloat(maxInput.value));
     });
 
     document.getElementById('resetAll').addEventListener('click', () => {
-      document.querySelectorAll('.scroll-row').forEach(row => {
-        row.querySelectorAll('.count').forEach(i => i.value = 0);
-        row.querySelector('.progress').style.strokeDashoffset = 2 * Math.PI * 52;
+      document.querySelectorAll('.shard-card').forEach(card => {
+        card.querySelectorAll('.count').forEach(i => (i.value = 0));
+        card.querySelector('.circle-input').value = 0;
+        const c = card.querySelector('.progress');
+        const r = 45;
+        c.style.strokeDashoffset = 2 * Math.PI * r;
       });
       calculate();
     });
 
     function calculate() {
-      const basic = getMissing('Basic');
-      const adv = getMissing('Advanced');
-      const div = getMissing('Divine');
-
-      const energy =
-        (basic / AVG_BASIC_PER_RUN +
-         adv / AVG_ADVANCED_PER_RUN +
-         div / AVG_DIVINE_PER_RUN) * ENERGY_PER_RUN;
-
-      const gems = (energy / REFILL_ENERGY) * REFILL_GEMS;
-
+      const get = (type) => {
+        const card = document.querySelector(`.shard-card[data-type="${type}"]`);
+        const v = parseFloat(card.querySelectorAll('.count')[1].value) || 0;
+        const m = parseFloat(card.querySelector('.max').value) || 0;
+        return Math.max(0, m - v);
+      };
+      const b = get('Basic'), a = get('Advanced'), d = get('Divine');
+      const energy = ((b/AVG_BASIC)+(a/AVG_ADV)+(d/AVG_DIV))*ENERGY_PER_RUN;
+      const gems = (energy/REFILL_ENERGY)*REFILL_GEMS;
       document.getElementById('energyNeeded').textContent = Math.round(energy);
       document.getElementById('gemsNeeded').textContent = Math.round(gems);
-      document.getElementById('runsHint').textContent = "≈ " + Math.round(energy / ENERGY_PER_RUN) + " runs total";
-    }
-
-    function getMissing(type) {
-      const row = document.querySelector(`.scroll-row[data-type="${type}"]`);
-      const cur = parseFloat(row.querySelectorAll('.count')[0].value || 0);
-      const max = parseFloat(row.querySelector('.max').value || 0);
-      return Math.max(0, max - cur);
+      document.getElementById('runsHint').textContent = `≈ ${Math.round(energy/ENERGY_PER_RUN)} runs total`;
     }
 
     calculate();
