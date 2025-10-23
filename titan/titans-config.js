@@ -1,10 +1,7 @@
-// titans-config.js
+// fusions-config.js
 window.fusions = {
-  Ace-Reporter: {
+  Maria: {
     name: "Ace Reporter Titan Event",
     json: "Ace-Reporter.json"
   }
 };
-
-
-
