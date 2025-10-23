@@ -1,499 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Swish - RSL Tools | Mercy Tracker</title>
-  <link rel="stylesheet" href="style/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    /* Default dark theme variables for self-contained code */
-    :root {
-      --bg-color: #1e1e2f;
-      --text-color: #f0f0f0;
-      --primary-color: #6a1b9a; /* Purple */
-      --accent-color: #ffd700; /* Gold */
-      --event-bg: #2a2a3a;
-      --event-border: #444455;
-      --line-color: var(--accent-color);
+  <meta charset="UTF-8">
+  <title>Swish - RSL Tools | Mercy Tracker</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    .pity-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 50px;
+      width: fit-content;
+      margin: 50px auto;
+      justify-content: center;
+      justify-items: center;
     }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
+
+    .shard-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--event-bg);
+      border: 2px solid var(--event-border);
+      border-radius: 14px;
       padding: 20px;
-      line-height: 1.6;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+      width: 360px;
+      transition: box-shadow 0.3s ease;
     }
 
-    .header-wrapper {
-        text-align: center;
-        padding-top: 10px;
-        margin-bottom: 20px;
+    .shard-card:hover {
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      transform: none;
     }
 
-    #page-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--accent-color);
-        letter-spacing: 2px;
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    .shard-img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin-right: 20px;
     }
 
-    .pity-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px; /* Reduced gap for smaller screens */
-      width: 100%;
-      max-width: 1200px;
-      margin: 20px auto;
-      justify-content: center;
-      justify-items: center;
-    }
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      transform: scale(0.9);
+    }
 
-    .shard-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--event-bg);
-      border: 2px solid var(--event-border);
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
-      width: 100%;
-      max-width: 380px;
-      transition: box-shadow 0.3s ease;
-    }
+    .circle-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 5px auto;
+    }
 
-    .shard-card:hover {
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-      transform: none;
-    }
+    .progress-ring {
+      transform: rotate(-90deg);
+      width: 100px;
+      height: 100px;
+    }
 
-    .shard-img {
-      width: 80px; /* Smaller image for better fit */
-      height: 80px;
-      object-fit: contain;
-      flex-shrink: 0;
-      margin-right: 20px;
-    }
+    .progress-ring circle {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
 
-    .right-side {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-grow: 1;
-      transform: scale(1); /* No scale needed */
-    }
+    .progress-ring .background {
+      stroke: rgba(255, 255, 255, 0.1);
+    }
 
-    .circle-container {
-      position: relative;
-      width: 80px; /* Smaller circle */
-      height: 80px;
-      margin: 5px auto;
-    }
+    .progress-ring .progress {
+      stroke: var(--line-color);
+      transition: stroke-dashoffset 0.3s ease;
+    }
 
-    .progress-ring {
-      transform: rotate(-90deg);
-      width: 80px;
-      height: 80px;
-    }
-
-    .progress-ring circle {
-      fill: none;
-      stroke-width: 6; /* Thinner stroke */
-      stroke-linecap: round;
-    }
-
-    .progress-ring .background {
-      stroke: rgba(255, 255, 255, 0.1);
-    }
-
-    .progress-ring .progress {
-      stroke: var(--line-color);
-      transition: stroke-dashoffset 0.3s ease;
-    }
-
-    .circle-input {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 40px; /* Smaller input */
-      text-align: center;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      background: transparent;
-      color: var(--text-color);
-      outline: none;
-    }
-
-    /* input du x / max */
-    .progress-info {
-      margin-top: 6px;
-      text-align: center;
-      font-size: 14px;
-      color: var(--text-color);
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-    }
-
-    .progress-info input.count {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      color: var(--text-color);
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      text-align: right;
-      width: 35px;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    .progress-info input.count:focus {
-      border-color: var(--line-color);
-    }
-
-    .progress-info .max {
-      opacity: 0.8;
-      margin-left: 2px;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .btn {
-      background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
-      border: 2px solid var(--event-border);
-      color: var(--text-color);
-      border-radius: 6px;
-      width: 28px;
-      height: 28px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn:hover:not(:disabled) { /* Apply hover only when not disabled */
-      background: var(--line-color);
-      color: #0e0e0e;
-    }
-
-    .btn:disabled { /* NEW: Style for disabled buttons */
-      opacity: 0.3;
-      cursor: not-allowed;
-      box-shadow: none;
-      background: #2b2b2b;
-      border-color: var(--event-border);
+    .circle-input {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
       color: var(--text-color);
     }
 
-    .reset-btn {
-      background: transparent;
-      border: 1px solid var(--line-color);
-      color: var(--line-color);
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 12px;
-      padding: 3px 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+    /* input du x / max */
+    .progress-info {
+      margin-top: 6px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-color);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
 
-    .reset-btn:hover {
-      background: var(--line-color);
-      color: #0e0e0e;
-    }
+    .progress-info input.count {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      color: var(--text-color);
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      text-align: right;
+      width: 35px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
 
-    .chance {
-      margin-top: 2px;
-      text-align: center;
-      font-size: 15px;
-      color: var(--line-color);
-      font-weight: 600;
-    }
+    .progress-info input.count:focus {
+      border-color: var(--line-color);
+    }
 
-    .cache-info {
-      color: var(--text-color);
-      font-style: italic;
-      text-align: center;
-      margin-top: -5px;
-      margin-bottom: 25px;
-      opacity: 0.8;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-    }
+    .progress-info .max {
+      opacity: 0.8;
+      margin-left: 2px;
+    }
 
-    @media (max-width: 1250px) {
-      .pity-container {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 800px;
-      }
-      .shard-card {
-        max-width: none;
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+      border: 2px solid var(--event-border);
+      color: var(--text-color);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--line-color);
+      color: #0e0e0e;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid var(--line-color);
+      color: var(--line-color);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background: var(--line-color);
+      color: #0e0e0e;
+    }
+
+    .chance {
+      margin-top: 2px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--line-color);
+      font-weight: 600;
+    }
+
+    .cache-info {
+      color: var(--text-color);
+      font-style: italic;
+      text-align: center;
+      margin-top: -5px;
+      margin-bottom: 25px;
+      opacity: 0.8;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    @media (max-width: 1000px) {
+      .pity-container {
+        grid-template-columns: repeat(2, 1fr);
       }
-    }
+    }
 
-    @media (max-width: 600px) {
-      .pity-container {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-      }
-      .shard-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 15px;
-        max-width: 100%;
+    @media (max-width: 700px) {
+      .pity-container {
+        grid-template-columns: 1fr;
       }
-      .shard-img {
-        margin-right: 0;
-        margin-bottom: 15px;
-        width: 100px;
-        height: 100px;
-      }
-    }
-  </style>
+    }
+  </style>
 </head>
 <body>
-  <div id="menu-container"></div>
+  <div id="menu-container"></div>
 
-  <div class="header-wrapper">
-    <header id="page-title">MERCY TRACKER</header>
-    <p class="cache-info">
-      Data is stored in your browser cache. Clearing your cache will reset all pity counters.
-    </p>
-  </div>
+  <div class="header-wrapper">
+    <header id="page-title">MERCY TRACKER</header>
+    <p class="cache-info">
+      Data is stored in your browser cache. Clearing your cache will reset all pity counters.
+    </p>
+  </div>
 
-  <div class="pity-container">
-    <!-- Ancient -->
-    <div class="shard-card" data-type="Ancient" data-max="220" data-base="0.5" data-start="201" data-inc="5">
-      <img class="shard-img" src="https://placehold.co/80x80/2a2a3a/ffd700?text=Ancient" alt="Ancient Shard">
-      <div class="right-side">
-        <div class="circle-container">
-          <svg class="progress-ring" width="80" height="80">
-            <circle class="background" r="37" cx="40" cy="40"></circle>
-            <circle class="progress" r="37" cx="40" cy="40"></circle>
-          </svg>
-          <input type="number" class="circle-input" value="0" min="0">
-        </div>
-        <div class="buttons">
-          <button class="btn minus">−</button>
-          <button class="btn plus">+</button>
-          <button class="reset-btn">Reset</button>
-        </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
-        </div>
-        <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
-      </div>
-    </div>
+  <div class="pity-container">
+    <!-- Ancient -->
+    <div class="shard-card" data-type="Ancient" data-max="220" data-base="0.5" data-start="201" data-inc="5">
+      <img class="shard-img" src="style/img/Misc/Ancient.webp" alt="Ancient Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
+      </div>
+    </div>
 
-    <!-- Void -->
-    <div class="shard-card" data-type="Void" data-max="220" data-base="0.5" data-start="201" data-inc="5">
-      <img class="shard-img" src="https://placehold.co/80x80/2a2a3a/ffd700?text=Void" alt="Void Shard">
-      <div class="right-side">
-        <div class="circle-container">
-          <svg class="progress-ring" width="80" height="80">
-            <circle class="background" r="37" cx="40" cy="40"></circle>
-            <circle class="progress" r="37" cx="40" cy="40"></circle>
-          </svg>
-          <input type="number" class="circle-input" value="0" min="0">
-        </div>
-        <div class="buttons">
-          <button class="btn minus">−</button>
-          <button class="btn plus">+</button>
-          <button class="reset-btn">Reset</button>
-        </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
-        </div>
-        <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
-      </div>
-    </div>
+    <!-- Void -->
+    <div class="shard-card" data-type="Void" data-max="220" data-base="0.5" data-start="201" data-inc="5">
+      <img class="shard-img" src="style/img/Misc/Void.webp" alt="Void Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">220</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">0.5%</span></div>
+      </div>
+    </div>
 
-    <!-- Primal -->
-    <div class="shard-card" data-type="Primal" data-max="210" data-base="0.5" data-start="201" data-inc="10">
-      <img class="shard-img" src="https://placehold.co/80x80/2a2a3a/ffd700?text=Primal" alt="Primal Shard">
-      <div class="right-side">
-        <div class="circle-container">
-          <svg class="progress-ring" width="80" height="80">
-            <circle class="background" r="37" cx="40" cy="40"></circle>
-            <circle class="progress" r="37" cx="40" cy="40"></circle>
-          </svg>
-          <input type="number" class="circle-input" value="0" min="0">
-        </div>
-        <div class="buttons">
-          <button class="btn minus">−</button>
-          <button class="btn plus">+</button>
-          <button class="reset-btn">Reset</button>
-        </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">210</span>
-        </div>
-        <div class="chance">Mythical chance: <span class="percent">0.5%</span></div>
-      </div>
-    </div>
+    <!-- Primal -->
+    <div class="shard-card" data-type="Primal" data-max="210" data-base="0.5" data-start="201" data-inc="10">
+      <img class="shard-img" src="style/img/Misc/Primal.webp" alt="Primal Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">210</span>
+        </div>
+        <div class="chance">Mythical chance: <span class="percent">0.5%</span></div>
+      </div>
+    </div>
 
-    <!-- Sacred -->
-    <div class="shard-card" data-type="Sacred" data-max="59" data-base="6" data-start="13" data-inc="2">
-      <img class="shard-img" src="https://placehold.co/80x80/2a2a3a/ffd700?text=Sacred" alt="Sacred Shard">
-      <div class="right-side">
-        <div class="circle-container">
-          <svg class="progress-ring" width="80" height="80">
-            <circle class="background" r="37" cx="40" cy="40"></circle>
-            <circle class="progress" r="37" cx="40" cy="40"></circle>
-          </svg>
-          <input type="number" class="circle-input" value="0" min="0">
-        </div>
-        <div class="buttons">
-          <button class="btn minus">−</button>
-          <button class="btn plus">+</button>
-          <button class="reset-btn">Reset</button>
-        </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">59</span>
-        </div>
-        <div class="chance">Legendary chance: <span class="percent">6%</span></div>
-      </div>
-    </div>
+    <!-- Sacred -->
+    <div class="shard-card" data-type="Sacred" data-max="59" data-base="6" data-start="13" data-inc="2">
+      <img class="shard-img" src="style/img/Misc/Sacred.webp" alt="Sacred Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">59</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">6%</span></div>
+      </div>
+    </div>
 
-    <!-- Remnant -->
-    <div class="shard-card" data-type="Remnant" data-max="122" data-base="2.5" data-start="25" data-inc="1">
-      <img class="shard-img" src="https://placehold.co/80x80/2a2a3a/ffd700?text=Remnant" alt="Remnant Shard">
-      <div class="right-side">
-        <div class="circle-container">
-          <svg class="progress-ring" width="80" height="80">
-            <circle class="background" r="37" cx="40" cy="40"></circle>
-            <circle class="progress" r="37" cx="40" cy="40"></circle>
-          </svg>
-          <input type="number" class="circle-input" value="0" min="0">
-        </div>
-        <div class="buttons">
-          <button class="btn minus">−</button>
-          <button class="btn plus">+</button>
-          <button class="reset-btn">Reset</button>
-        </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">122</span>
-        </div>
-        <div class="chance">Mythical chance: <span class="percent">2.5%</span></div>
-      </div>
-    </div>
+    <!-- Remnant -->
+    <div class="shard-card" data-type="Remnant" data-max="122" data-base="2.5" data-start="25" data-inc="1">
+      <img class="shard-img" src="style/img/Misc/Remnant.webp" alt="Remnant Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">122</span>
+        </div>
+        <div class="chance">Mythical chance: <span class="percent">2.5%</span></div>
+      </div>
+    </div>
 
-    <!-- Prism -->
-    <div class="shard-card" data-type="Prism" data-max="52" data-base="6" data-start="21" data-inc="3">
-      <img class="shard-img" src="https://placehold.co/80x80/2a2a3a/ffd700?text=Prism" alt="Prism Shard">
-      <div class="right-side">
-        <div class="circle-container">
-          <svg class="progress-ring" width="80" height="80">
-            <circle class="background" r="37" cx="40" cy="40"></circle>
-            <circle class="progress" r="37" cx="40" cy="40"></circle>
-          </svg>
-          <input type="number" class="circle-input" value="0" min="0">
-        </div>
-        <div class="buttons">
-          <button class="btn minus">−</button>
-          <button class="btn plus">+</button>
-          <button class="reset-btn">Reset</button>
-        </div>
-        <div class="progress-info">
-          <input type="number" class="count" value="0" min="0"> / <span class="max">52</span>
-        </div>
-        <div class="chance">Legendary chance: <span class="percent">6%</span></div>
-      </div>
-    </div>
-  </div>
+    <!-- Prism -->
+    <div class="shard-card" data-type="Prism" data-max="52" data-base="6" data-start="21" data-inc="3">
+      <img class="shard-img" src="style/img/Misc/Prism.webp" alt="Prism Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
+        </div>
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">52</span>
+        </div>
+        <div class="chance">Legendary chance: <span class="percent">6%</span></div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    // Fallback for missing images, using placeholder URLs
-    document.querySelectorAll('.shard-img').forEach(img => {
-        const type = img.alt.replace(' Shard', '');
-        if (img.src.includes('style/img/Misc/')) {
-            // Replace with placeholder if the original image path is used, assuming it's not available
-            let text;
-            let size = '80x80';
-            switch(type) {
-                case 'Ancient': text = 'A'; break;
-                case 'Void': text = 'V'; break;
-                case 'Primal': text = 'P'; break;
-                case 'Sacred': text = 'S'; break;
-                case 'Remnant': text = 'R'; break;
-                case 'Prism': text = 'P2'; break;
-                default: text = type.substring(0, 1);
-            }
-            img.src = `https://placehold.co/${size}/2a2a3a/ffd700?text=${text}`;
-        }
+  <script src="script.js"></script>
+  <script>
+    document.querySelectorAll('.shard-card').forEach(card => {
+      const type = card.dataset.type;
+      const max = parseInt(card.dataset.max);
+      const base = parseFloat(card.dataset.base);
+      const start = parseInt(card.dataset.start);
+      const inc = parseFloat(card.dataset.inc);
+      const inputCircle = card.querySelector('.circle-input');
+      const inputCount = card.querySelector('.count');
+      const plus = card.querySelector('.plus');
+      const minus = card.querySelector('.minus');
+      const reset = card.querySelector('.reset-btn');
+      const percent = card.querySelector('.percent');
+      const circle = card.querySelector('.progress');
+      const radius = 45;
+      const circumference = 2 * Math.PI * radius;
+      circle.style.strokeDasharray = circumference;
+
+      let value = parseInt(localStorage.getItem("pity_" + type)) || 0;
+
+      function calcChance(v) {
+        if (v < start) return base;
+        const extra = (v - start + 1) * inc;
+        return Math.min(base + extra, 100);
+      }
+
+      function setProgress(v) {
+        v = Math.max(0, Math.min(max, v));
+        const offset = circumference - (v / max) * circumference;
+        circle.style.strokeDashoffset = offset;
+        inputCircle.value = v;
+        inputCount.value = v;
+        percent.textContent = calcChance(v).toFixed(2) + "%";
+        localStorage.setItem("pity_" + type, v);
+      }
+
+      plus.onclick = () => setProgress(++value);
+      minus.onclick = () => setProgress(--value);
+      reset.onclick = () => setProgress(value = 0);
+      inputCircle.oninput = () => setProgress(value = parseInt(inputCircle.value) || 0);
+      inputCount.oninput = () => setProgress(value = parseInt(inputCount.value) || 0);
+
+      setProgress(value);
     });
-
-    document.querySelectorAll('.shard-card').forEach(card => {
-      const type = card.dataset.type;
-      const max = parseInt(card.dataset.max);
-      const base = parseFloat(card.dataset.base);
-      const start = parseInt(card.dataset.start);
-      const inc = parseFloat(card.dataset.inc);
-      const inputCircle = card.querySelector('.circle-input');
-      const inputCount = card.querySelector('.count');
-      const plus = card.querySelector('.plus');
-      const minus = card.querySelector('.minus');
-      const reset = card.querySelector('.reset-btn');
-      const percent = card.querySelector('.percent');
-      const circle = card.querySelector('.progress');
-      const radius = 37; // Updated radius to match smaller circle
-      const circumference = 2 * Math.PI * radius;
-      circle.style.strokeDasharray = circumference;
-
-      let value = parseInt(localStorage.getItem("pity_" + type)) || 0;
-
-      function calcChance(v) {
-        if (v < start) return base;
-        const extra = (v - start + 1) * inc;
-        return Math.min(base + extra, 100);
-      }
-
-      function setProgress(v) {
-        // 1. Clamp the value between 0 and max
-        const clampedValue = Math.max(0, Math.min(max, v));
-        value = clampedValue; // Update the external 'value' variable
-
-        // 2. UI Updates
-        const offset = circumference - (value / max) * circumference;
-        circle.style.strokeDashoffset = offset;
-        inputCircle.value = value;
-        inputCount.value = value;
-        percent.textContent = calcChance(value).toFixed(2) + "%";
-        
-        // 3. New logic: Enable/Disable buttons
-        minus.disabled = value <= 0;
-        plus.disabled = value >= max;
-
-        // 4. Persistence
-        localStorage.setItem("pity_" + type, value);
-      }
-
-      // Handle plus/minus clicks
-      plus.onclick = () => setProgress(value + 1);
-      minus.onclick = () => setProgress(value - 1);
-      
-      // Handle reset
-      reset.onclick = () => setProgress(0);
-      
-      // Handle manual input (circle and text box)
-      inputCircle.oninput = () => setProgress(parseInt(inputCircle.value) || 0);
-      inputCount.oninput = () => setProgress(parseInt(inputCount.value) || 0);
-
-      // Initial setup
-      setProgress(value);
-    });
-  </script>
+  </script>
 </body>
 </html>
