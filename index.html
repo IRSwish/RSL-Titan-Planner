@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Swish - RSL Tools</title>
@@ -10,21 +10,66 @@
       font-family: 'American Captain';
       src: url('style/American Captain.otf') format('opentype');
     }
+
+    body {
+      background-color: #0e0e0e;
+      color: #fcf6ff;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .presentation {
+      max-width: 800px;
+      margin: 60px auto;
+      line-height: 1.6;
+      font-size: 16px;
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 0 15px rgba(245, 37, 132, 0.2);
+    }
+
+    .presentation strong {
+      color: #f52584;
+    }
+
+    .presentation h2 {
+      font-family: 'American Captain', sans-serif;
+      letter-spacing: 1px;
+      font-size: 28px;
+      margin-top: 0;
+      color: #00c9ff;
+    }
   </style>
+
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
 </head>
 <body>
   
-<!-- BARRE DE MENU CENTRÉE -->
- <div id="menu-container"></div>
+  <!-- CENTERED MENU BAR -->
+  <div id="menu-container"></div>
 
   <div class="header-wrapper">
     <header id="page-title"></header>
   </div> 
 
-  <div style="margin:0 auto;">
-    Hello and welcome to my website, here, you'll find various tools to help you track your progress in Raid: Shadow Legends.
-    <br />Have fun exploring the site !
+  <div class="presentation">
+    <h2>Welcome to RSL Tools</h2>
+    <p>
+      <strong>Swish - RSL Tools</strong> is a collection of utilities designed to enhance your experience in <strong>Raid: Shadow Legends</strong>.  
+      Whether you’re a new player optimizing your first summons or a veteran tracking your legendary progress, this site gives you all the tools you need to go further.
+    </p>
+    <p>
+      Explore features like the <strong>Pity Counter</strong>, the <strong>Champion Database</strong>, and event calculators for <strong>Fusions, Tournaments</strong> and <strong>Clan Events</strong>.  
+      Each section is crafted to provide clear, precise, and customizable insights into your account progression.
+    </p>
+    <p>
+      <em>Your data is stored locally in your browser — clearing your cache will reset your information.</em>  
+      Enjoy the experience, and may the RNG gods smile upon your shards!
+    </p>
   </div>
 
   <script src="script.js"></script>
