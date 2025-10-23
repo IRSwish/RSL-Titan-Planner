@@ -1,3 +1,133 @@
 {
-  "title": "SANGUINE MARIA FUSION • 23/10/2025 - ?"
+  "title": "SANGUINE MARIA FUSION • 23/10/2025 - 06/11/2025",
+  "events": [
+    {
+      "name": "Champion Training Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-10-23",
+      "end_date": "2025-10-27",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Ice Golem Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-10-24",
+      "end_date": "2025-10-27",
+      "reward": "Fragments",
+      "points": [25]
+    },
+        {
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-10-25",
+      "end_date": "2025-10-28",
+      "reward": "Fragments",
+      "points": [25]
+    },
+        {
+      "name": "Spider Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-10-27",
+      "end_date": "2025-10-30",
+      "reward": "Fragments",
+      "points": [25]
+    },
+        {
+      "name": "Fire Knight Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-10-30",
+      "end_date": "2025-11-02",
+      "reward": "Fragments",
+      "points": [25]
+    },
+        {
+      "name": "Champion Chase Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-10-31",
+      "end_date": "2025-11-03",
+      "reward": "Fragments",
+      "points": [25]
+    },
+        {
+      "name": "Classic Arena",
+	  "type": "Tournament",
+      "start_date": "2025-11-01",
+      "end_date": "2025-11-04",
+      "reward": "Fragments",
+      "points": [25]
+    },
+        {
+      "name": "Dragon Tournament",
+	  "type": "Tournament",
+      "start_date": "2025-11-02",
+      "end_date": "2025-11-05",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Gear Hunters",
+	  "type": "Event",
+      "start_date": "2025-10-23",
+      "end_date": "2025-10-26",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Summon Rush",
+	  "type": "Event",
+      "start_date": "2025-10-24",
+      "end_date": "2025-10-27",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-10-24",
+      "end_date": "2025-10-27",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Hero's Path",
+	  "type": "Event",
+      "start_date": "2025-10-27",
+      "end_date": "2025-10-31",
+      "reward": "Fragments, Fragments",
+      "points": [25, 50]
+    },
+    {
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-10-28",
+      "end_date": "2025-10-31",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Champion Training Event",
+	  "type": "Event",
+      "start_date": "2025-10-29",
+      "end_date": "2025-11-02",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Gear Hunters",
+	  "type": "Event",
+      "start_date": "2025-10-01",
+      "end_date": "2025-10-04",
+      "reward": "Fragments",
+      "points": [25]
+    },
+    {
+      "name": "Gear Enhancement",
+	  "type": "Event",
+      "start_date": "2025-10-02",
+      "end_date": "2025-10-05",
+      "reward": "Fragments",
+      "points": [25]
+    }
+  ]
 }
