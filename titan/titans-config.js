@@ -1,6 +1,6 @@
 // fusions-config.js
 window.fusions = {
-  Maria: {
+  Ace-Reporter: {
     name: "Ace Reporter Titan Event",
     json: "Ace-Reporter.json"
   }
