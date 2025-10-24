@@ -108,16 +108,38 @@
     const usableWidth = timelineContainer.clientWidth - paddingLeft - paddingRight;
     const dayWidth = usableWidth / totalDays;
 
+    // --- Sélection multiple ---
+    const selectedDates = new Set();
+    function highlightByDates() {
+      document.querySelectorAll('.date-column').forEach(col => {
+        const date = col.dataset.date;
+        col.classList.toggle('date-selected', selectedDates.has(date));
+      });
+
+      document.querySelectorAll('.event-block').forEach(block => {
+        const start = new Date(block.dataset.start);
+        const end = new Date(block.dataset.end);
+        let highlighted = false;
+        selectedDates.forEach(dateStr => {
+          const d = new Date(dateStr);
+          if (d >= start && d <= end) highlighted = true;
+        });
+        block.classList.toggle('event-highlight', highlighted);
+      });
+    }
+
     // Colonnes de dates
     for (let i = 0; i < totalDays; i++) {
       const currentDate = new Date(minDate);
       currentDate.setDate(minDate.getDate() + i);
       const day = currentDate.toLocaleDateString('en-US', { weekday: 'short' });
       const date = currentDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+      const isoDate = currentDate.toISOString().split('T')[0];
 
       const col = document.createElement('div');
       col.classList.add('date-column');
       col.style.width = `${dayWidth}px`;
+      col.dataset.date = isoDate;
 
       if (currentDate.getTime() === today.getTime()) {
         col.style.backgroundColor = 'rgba(212,175,55,0.15)';
@@ -138,6 +160,17 @@
         col.appendChild(rightLine);
       }
 
+      // ✅ Click pour sélectionner / désélectionner
+      col.addEventListener('click', () => {
+        const date = col.dataset.date;
+        if (selectedDates.has(date)) {
+          selectedDates.delete(date);
+        } else {
+          selectedDates.add(date);
+        }
+        highlightByDates();
+      });
+
       timeline.appendChild(col);
     }
 
@@ -153,8 +186,8 @@
       const top = item.top + 100;
       const start = new Date(event.start_date);
       const end = new Date(event.end_date);
-      const dayStart = (start - minDate) / (1000 * 60 * 60 * 24);
-      const dayEnd = (end - minDate) / (1000 * 60 * 60 * 24);
+      const dayStart = ((start - minDate) / (1000 * 60 * 60 * 24)) + 0.5;
+      const dayEnd = ((end - minDate) / (1000 * 60 * 60 * 24)) + 0.5;
 
       const block = document.createElement('div');
       const left = Math.round(dayStart * dayWidth + horizontalGap / 2);
