@@ -196,11 +196,11 @@
 <script>
 (() => {
   // ---------- CONFIG ----------
-  const TIER_COUNTS = [2,4,4,4,4,4];           // tiers 1..6
+  const TIER_COUNTS = [2,4,4,4,4,4];           
   const TIER_COST   = {1:5, 2:5, 3:30, 4:30, 5:200, 6:350};
-  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]); // T1 = col 2 & 3
+  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]);
 
-  // ---------- BUILD (idempotent) ----------
+  // ---------- BUILD ----------
   const trees = document.querySelectorAll('.tree');
   trees.forEach(tree => {
     if (tree.dataset._built) return;
@@ -218,11 +218,10 @@
       ABS_COLS(tier).forEach(colAbs => {
         const m = document.createElement('div');
         m.className = 'mastery';
-        m.dataset.id   = `${branch}-${tier}-${colAbs}`; // IDs en colonnes absolues
+        m.dataset.id   = `${branch}-${tier}-${colAbs}`;
         m.dataset.tier = String(tier);
         m.dataset.col  = String(colAbs);
 
-        // (optionnel) connexion verticale visuelle si même colonne existe en dessous
         if (tier < 6 && ABS_COLS(tier+1).includes(colAbs)) {
           const conn = document.createElement('div');
           conn.className = 'connection';
@@ -234,7 +233,6 @@
       });
     }
 
-    // Reset de l'arbre
     const btn = tree.querySelector('.reset-tree');
     if (btn) btn.addEventListener('click', () => {
       tree.querySelectorAll('.mastery.active').forEach(x => x.classList.remove('active'));
@@ -283,26 +281,19 @@
   }
 
   // ---------- ADJACENCY ----------
-  // Règles : peut débloquer si (même branche) :
-  // - T-1 : vertical (col), diagonales (col±1)
-  // - T   : horizontal (col±1) mais seulement si T a déjà au moins 1 active (et celle-ci est adjacente)
   function isAdjacentAllowed(m) {
     const [branch, tStr, cStr] = m.dataset.id.split('-');
     const tier = +tStr, col = +cStr;
+    if (tier === 1) return true;
 
-    if (tier === 1) {
-      // T1: on testera la règle "1 max par branche" ailleurs, ici l’adjacence est triviale
-      return true;
-    }
-
-    // check depuis Tier-1 (vertical / diagonales)
+    // check depuis Tier-1
     const prevTier = tier - 1;
     for (const d of [-1,0,1]) {
       const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col+d}"]`);
       if (prev && prev.classList.contains('active')) return true;
     }
 
-    // check horizontal same tier (adjacent ±1) — seulement si il existe déjà au moins une active à ce tier
+    // check horizontal même tier
     const anyActiveThisTier = !!document.querySelector(`.mastery.active[data-id^="${branch}-${tier}-"]`);
     if (anyActiveThisTier) {
       for (const d of [-1,1]) {
@@ -320,34 +311,38 @@
     const [branch, tStr] = m.dataset.id.split('-');
     const tier = +tStr;
 
-    // 2 arbres max
     if (!activeTrees.has(branch) && activeTrees.size >= 2) return false;
-
-    // Adjacence obligatoire (verticale, diagonale, ou horizontale)
     if (!isAdjacentAllowed(m)) return false;
 
-    // Règles de quotas par TIER
     if (tier === 1) {
-      // 1 seule T1 par branche
       if (perTierPerBranch[branch][1] >= 1) return false;
       return true;
     }
 
     if (tier >= 2 && tier <= 5) {
-      // max 3 au total sur ce tier (toutes branches confondues)
       if (perTierGlobal[tier] >= 3) return false;
-      // max 2 par branche sur ce tier
       if (perTierPerBranch[branch][tier] >= 2) return false;
       return true;
     }
 
     if (tier === 6) {
-      // 1 seule T6 au global
       if (totalT6 >= 1) return false;
       return true;
     }
 
     return true;
+  }
+
+  // ---------- VALIDATION DYNAMIQUE (dépropagation) ----------
+  function validateActiveConnections() {
+    let changed = false;
+    document.querySelectorAll('.mastery.active').forEach(m => {
+      if (!isAdjacentAllowed(m)) {
+        m.classList.remove('active');
+        changed = true;
+      }
+    });
+    if (changed) updateAll(); // relancer pour cascade
   }
 
   // ---------- VISU & COUNTS ----------
@@ -361,20 +356,15 @@
 
   function updateLocksAndAvailable() {
     const { activeTrees } = getState();
-
     masteries.forEach(m => {
       if (m.classList.contains('active')) {
         m.classList.remove('locked','available');
         return;
       }
-      // 3e arbre bloqué si 2 déjà actifs
       const branch = m.dataset.id.split('-')[0];
       let lock = false;
       if (!activeTrees.has(branch) && activeTrees.size >= 2) lock = true;
-
-      // test complet de sélection
       const selectable = !lock && canSelect(m);
-
       m.classList.toggle('locked', !selectable);
       m.classList.toggle('available', selectable);
     });
@@ -399,11 +389,12 @@
 
   function updateAll() {
     updateConnections();
+    validateActiveConnections(); // <- vérifie et retire celles déconnectées
     updateLocksAndAvailable();
     updateScrolls();
   }
 
-  // ---------- INITIAL (+ support ?m=) ----------
+  // ---------- INITIAL ----------
   const params = new URLSearchParams(location.search);
   if (params.has('m')) {
     const ids = atob(params.get('m')).split(',').filter(Boolean);
@@ -412,6 +403,7 @@
   updateAll();
 })();
 </script>
+
 
 
 </body>
