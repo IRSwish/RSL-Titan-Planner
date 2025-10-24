@@ -87,13 +87,13 @@ header {
   box-sizing: border-box;
   border-radius: 4px;
 
-  /* 🎨 état neutre mais concret : gradient très léger pour permettre la transition */
+  /* état neutre mais interpolable */
   background: linear-gradient(
     to bottom,
     rgba(0,201,255,0.01) 0%,
     rgba(0,201,255,0.01) 100%
   );
-  transition: background 1s ease;
+  transition: background 0.6s ease;
 }
 
 .date-column.date-selected {
@@ -104,7 +104,7 @@ header {
     rgba(0,201,255,0.15) 80%,
     rgba(0,201,255,0) 100%
   );
-  transition: background 1s ease;
+  transition: background 0.6s ease;
 }
 
 .date-column .day {
