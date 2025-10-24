@@ -2,155 +2,169 @@
   "offense": [
     [
       {
-        "id": "offense-1-1",
-        "name": "Deadly Precision",
-        "description": "Increases C. RATE by 5%.",
+        "id": "offense-1-2",
+        "name": "Blade Discriple",
+        "description": "Attack +75.",
         "cost": 5,
-        "icon": "deadly-precision"
+        "icon": "blade-disciple"
       },
       {
         "id": "offense-1-2",
-        "name": "Keen Strike",
-        "description": "Increases C. DMG by 10%.",
+        "name": "Deadly Precision",
+        "description": "Critical Rate +5%.",
         "cost": 5,
-        "icon": "keen-strike"
+        "icon": "deadly-precision"
       }
     ],
     [
       {
         "id": "offense-2-1",
-        "name": "Shield Breaker",
-        "description": "Increases damage inflicted to targets under Shield buffs by 25%.",
-        "cost": 30,
-        "icon": "shield-breaker"
-      },
-      {
-        "id": "offense-2-2",
         "name": "Heart of Glory",
-        "description": "Increases damage inflicted by 5% when HP is above 80%.",
+        "description": "Increases damage inflicted by 5% when attacking with full HP.",
         "cost": 30,
         "icon": "heart-of-glory"
       },
       {
+        "id": "offense-2-2",
+        "name": "Keen Strike",
+        "description": "Critical Damage +10%.",
+        "cost": 30,
+        "icon": "keen-strike"
+      },
+      {
         "id": "offense-2-3",
         "name": "Grim Resolve",
-        "description": "Increases damage inflicted by 5% when HP is less than 50%.",
+        "description": "Increases damage inflicted to Shield buffs on targets by 25%.",
         "cost": 30,
         "icon": "grim-resolve"
       },
       {
         "id": "offense-2-4",
-        "name": "Whirlwind of Death",
-        "description": "Increases SPD by 6 for each enemy killed by this Champion, up to 18 SPD.",
+        "name": "Grim Resolve",
+        "description": "Increases damage inflicted by 5% when attacking with 50% HP or less.",
         "cost": 30,
-        "icon": "whirlwind-of-death"
+        "icon": "grim-resolve"
       }
     ],
     [
       {
         "id": "offense-3-1",
-        "name": "Life Drinker",
-        "description": "Heals by 5% of damage inflicted when attacking with HP less than 50%.",
-        "cost": 80,
-        "icon": "life-drinker"
-      },
-      {
-        "id": "offense-3-2",
-        "name": "Ruthless Ambush",
-        "description": "Increases damage inflicted by 8% for the first hit on each enemy.",
-        "cost": 80,
-        "icon": "ruthless-ambush"
-      },
-      {
-        "id": "offense-3-3",
         "name": "Single Out",
         "description": "Increases damage inflicted to targets with less than 40% HP by 8%.",
         "cost": 80,
         "icon": "single-out"
       },
       {
-        "id": "offense-3-4",
-        "name": "Wrath of the Slain",
-        "description": "Increases damage inflicted by 5% for each dead ally, up to 10%.",
+        "id": "offense-3-2",
+        "name": "Life Drinker",
+        "description": "Heals by 5% of damage inflicted when attacking with 50 % HP or less",
         "cost": 80,
-        "icon": "wrath-of-the-slain"
+        "icon": "life-drinker"
+      },
+      {
+        "id": "offense-3-3",
+        "name": "Whirlwind of Death",
+        "description": "Increases SPD by 6 for each enemy killed by this Champion. Stacks across each round in a battle, up to 18 SPD.",
+        "cost": 80,
+        "icon": "whirlwind-of-death"
+      },
+      {
+        "id": "offense-3-4",
+        "name": "Ruthless Ambush",
+        "description": "Increases damage inflicted by 8% for the first hit on each enemy.",
+        "cost": 80,
+        "icon": "ruthless-ambush"
       }
     ],
     [
       {
         "id": "offense-4-1",
+        "name": "Bring it Down",
+        "description": "Increases damage inflicted by 6% when attacking targets with higher MAX HP.",
+        "cost": 120,
+        "icon": "bring-it-down"
+      },
+      {
+        "id": "offense-4-2",
+        "name": "Wrath of the slain",
+        "description": "Increases damage inflicted by 5% for each dead ally. Stacks up to 10%.",
+        "cost": 120,
+        "icon": "wrath-of-the-slain"
+      },
+      {
+        "id": "offense-4-3",
         "name": "Cycle of Violence",
-        "description": "Has a 30% chance of decreasing the cooldown of a random skill by 1 turn if the damage inflicted exceeds 30% of the target's MAX HP.",
+        "description": "Has a 30% chance of decreasing the cooldown of a random skill by 1 turn if the damage inflicted by a skill exceeds 30% of the target's MAX HP. Occurs once per turn.",
         "cost": 120,
         "icon": "cycle-of-violence"
       },
       {
-        "id": "offense-4-2",
-        "name": "Wrath of the Dead",
-        "description": "Increases damage inflicted by 5% for each dead ally, up to 10%.",
-        "cost": 120,
-        "icon": "wrath-of-the-dead"
-      },
-      {
-        "id": "offense-4-3",
-        "name": "Kill Streak",
-        "description": "Increases damage inflicted by 6% in the Arena and by 3% in all other locations, stacking up to 12%.",
-        "cost": 120,
-        "icon": "kill-streak"
-      },
-      {
         "id": "offense-4-4",
-        "name": "Blood Shield",
-        "description": "Places a Shield buff on this Champion equal to 15% of the damage inflicted after each attack. Shield lasts for 1 turn.",
+        "name": "Opportunist",
+        "description": "Increases damage inflicted to targets with Stun, Sleep, Fear, True Fear, Freeze, Petrification debuffs by 12%",
         "cost": 120,
-        "icon": "blood-shield"
+        "icon": "opportunist"
       }
     ],
     [
       {
         "id": "offense-5-1",
-        "name": "Flawless Execution",
-        "description": "Increases C. DMG by 20%.",
-        "cost": 200,
-        "icon": "flawless-execution"
-      },
-      {
-        "id": "offense-5-2",
         "name": "Methodical",
-        "description": "Increases the damage inflicted by this Champion’s default Skill by 2% each time it is used during battle. Stacks up to 10%.",
+        "description": "Increases the damage inflicted by this Champion’s default Skill by 2% each time it is used during battle. Stacks across each round in a battle, up to 10%.",
         "cost": 200,
         "icon": "methodical"
       },
       {
-        "id": "offense-5-3",
-        "name": "Kill Stroke",
-        "description": "Increases damage inflicted by 6% in the Arena and by 3% in all other locations.",
+        "id": "offense-5-2",
+        "name": "Kill Streak",
+        "description": "Increases damage inflicted by 6% in Arena and Siege battles and 3% in all other locations for each enemy killed by this Champion in battle. Stacks across each Round in a battle, up to 12%.",
         "cost": 200,
-        "icon": "kill-stroke"
+        "icon": "kill-streak"
+      },
+      {
+        "id": "offense-5-3",
+        "name": "Blood Shield",
+        "description": "Places a Shield buff on this Champion equal to 15% of the damage inflicted after each attack. Shield lasts for 1 turn.",
+        "cost": 200,
+        "icon": "blood-shield"
+      },
+      {
+        "id": "offense-5-4",
+        "name": "Stoked to Fury",
+        "description": "Increases damage inflicted by 4% for each debuff on this Champion. Stacks up to 12%.",
+        "cost": 200,
+        "icon": "stoked-to-fury"
       }
     ],
     [
       {
         "id": "offense-6-1",
+        "name": "Warmaster",
+        "description": "Has a 60% chance of inflicting bonus damage when attacking. Bonus damage is equal to 10% of the target's MAX HP or 4% of the target's MAX HP when attacking Bosses. Bonus damage can only occur once per Skill and does not count as an extra hit.",
+        "cost": 350,
+        "icon": "warmaster"
+      },
+      {
+        "id": "offense-6-2",
         "name": "Helmsmasher",
-        "description": "Has a 50% chance to ignore 25% of enemy DEF. This chance increases by 1% per 1% of C. DMG over 100%.",
+        "description": "Has a 50% chance of ignoring 25% of the target's DEF. For Skills that ignore DEF, this 25% is in addition to the amount ignored by the Skill.",
         "cost": 350,
         "icon": "helmsmasher"
       },
       {
-        "id": "offense-6-2",
+        "id": "offense-6-3",
         "name": "Giant Slayer",
-        "description": "Has a 30% chance of inflicting bonus damage equal to 7.5% of target MAX HP on each hit of a multi-hit Skill.",
+        "description": "Has a 30% chance of inflicting bonus damage when attacking. Bonus damage is equal to 7.5% of target Champion's MAX HP or 3% of the target's MAX HP when attacking Bossed. Bonus damage can occur on each hit of a Skill, but does not count as an extra hit.",
         "cost": 350,
         "icon": "giant-slayer"
       },
       {
-        "id": "offense-6-3",
-        "name": "Warmaster",
-        "description": "Has a 60% chance of inflicting bonus damage equal to 10% of the target's MAX HP when attacking. Damage capped vs bosses.",
+        "id": "offense-6-4",
+        "name": "Flawless Execution",
+        "description": "Critical Damage +20%.",
         "cost": 350,
-        "icon": "warmaster"
-      }
+        "icon": "flawless-execution"
+      }      
     ]
   ],
   "defense": [
