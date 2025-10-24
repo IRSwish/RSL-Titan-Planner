@@ -7,7 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-/* ====== MASTERIES BUILDER ====== */
+/* ====== MASTERIES BUILDER CLEAN VERSION ====== */
+
 #builder {
   display: flex;
   justify-content: center;
@@ -33,13 +34,11 @@
   font-weight: 600;
   font-size: 18px;
   color: var(--text-color);
-  text-shadow: 0 0 5px rgba(212,175,55,0.3);
 }
 
 .scroll-type img {
   width: 36px;
   height: 36px;
-  filter: drop-shadow(0 0 6px rgba(212,175,55,0.3));
 }
 
 /* ===== TREES ===== */
@@ -50,24 +49,18 @@
   padding: 25px 20px 35px;
   width: 360px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(212,175,55,0.25);
   position: relative;
   transition: all 0.3s ease;
-}
-
-.tree:hover {
-  box-shadow: 0 0 25px rgba(212,175,55,0.45);
-  transform: translateY(-2px);
 }
 
 .tree h2 {
   font-family: 'American Captain', sans-serif;
   color: #d4af37;
-  font-size: 28px;
+  font-size: 26px;
   letter-spacing: 1px;
   margin-bottom: 10px;
   text-transform: uppercase;
-  text-shadow: 0 0 6px rgba(212,175,55,0.5);
+  text-shadow: none; /* ✅ pas de glow */
 }
 
 /* ===== RESET BUTTON ===== */
@@ -122,9 +115,16 @@
   background-position: center;
 }
 
+/* ✅ pas de hover glow pour l’instant */
+.mastery:hover:not(.locked):not(.active) {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ✅ active = neutre, pas de rose ni de glow */
 .mastery.active {
   border-color: var(--line-color);
-  box-shadow: 0 0 15px var(--line-color);
+  box-shadow: none;
   background-color: rgba(212,175,55,0.1);
 }
 
@@ -136,14 +136,8 @@
 
 .mastery.available:not(.active):not(.locked) {
   border-color: var(--line-color);
-  box-shadow: 0 0 12px rgba(212,175,55,0.45);
-  animation: pulse-available 1.4s ease-in-out infinite;
-}
-
-@keyframes pulse-available {
-  0% { box-shadow: 0 0 6px rgba(212,175,55,0.25); }
-  50%{ box-shadow: 0 0 18px rgba(212,175,55,0.65); }
-  100%{ box-shadow: 0 0 6px rgba(212,175,55,0.25); }
+  box-shadow: none;
+  animation: none;
 }
 
 /* ===== TOOLTIP ===== */
@@ -162,7 +156,7 @@
   z-index: 9999;
   opacity: 0;
   transition: opacity 0.15s ease;
-  box-shadow: 0 0 15px rgba(212,175,55,0.35);
+  box-shadow: 0 0 15px rgba(212,175,55,0.15);
   backdrop-filter: blur(4px);
 }
 
@@ -177,7 +171,7 @@
   color: #d4af37;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-shadow: 0 0 6px rgba(212,175,55,0.6);
+  text-shadow: none; /* ✅ pas de glow */
 }
 
 .mastery-tooltip p {
@@ -194,28 +188,6 @@
   padding-top: 4px;
   margin-top: 4px;
   font-style: italic;
-}
-
-/* ===== TREE COLORS ===== */
-[data-branch="offense"] .mastery.active {
-  border-color: #f52584;
-  box-shadow: 0 0 12px #f52584;
-}
-
-[data-branch="defense"] .mastery.active {
-  border-color: #00c9ff;
-  box-shadow: 0 0 12px #00c9ff;
-}
-
-[data-branch="support"] .mastery.active {
-  border-color: #3df56e;
-  box-shadow: 0 0 12px #3df56e;
-}
-
-/* petit effet hover global */
-.mastery:hover:not(.locked):not(.active) {
-  transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(212,175,55,0.3);
 }
   </style>
 </head>
