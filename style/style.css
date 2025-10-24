@@ -86,17 +86,13 @@ header {
   padding: 0 2px;
   box-sizing: border-box;
   border-radius: 4px;
-
-  /* état neutre mais interpolable */
-  background: linear-gradient(
-    to bottom,
-    rgba(0,201,255,0.01) 0%,
-    rgba(0,201,255,0.01) 100%
-  );
-  transition: background 3s ease;
+  overflow: hidden; /* nécessaire pour que le ::after ne déborde pas */
 }
 
-.date-column.date-selected {
+.date-column::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     to bottom,
     #00ffdd00 0%,
@@ -104,7 +100,20 @@ header {
     rgba(0,201,255,0.15) 80%,
     rgba(0,201,255,0) 100%
   );
-  transition: background 3s ease;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.date-column.date-selected::after {
+  opacity: 1;
+}
+
+.date-column .day,
+.date-column .date {
+  position: relative;
+  z-index: 1;
 }
 
 .date-column .day {
