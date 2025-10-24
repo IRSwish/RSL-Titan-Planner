@@ -191,26 +191,34 @@
     }
   }
 
-  fetch('masteries.json')
-    .then(res => res.json())
-    .then(data => {
-      for (const branch in data) {
-        data[branch].flat().forEach(m => {
-          const el = document.querySelector(`[data-id="${m.id}"]`);
-          if (!el) return;
-          el.dataset.info = JSON.stringify({
-            name: m.name,
-            description: m.description,
-            cost: m.cost
-          });
-          if (m.icon) {
-            el.style.backgroundImage = `url('style/img/masteries/${m.icon}.webp')`;
-            el.style.backgroundSize = "cover";
-            el.style.backgroundPosition = "center";
-          } else el.textContent = m.name.split(" ")[0];
+fetch('masteries.json')
+  .then(res => res.json())
+  .then(data => {
+    for (const branch in data) {
+      data[branch].flat().forEach(m => {
+        const el = document.querySelector(`[data-id="${m.id}"]`);
+        if (!el) return;
+
+        // on stocke le coût pour cette maîtrise
+        MASTERY_COSTS[m.id] = m.cost || 0;
+
+        el.dataset.info = JSON.stringify({
+          name: m.name,
+          description: m.description,
+          cost: m.cost
         });
-      }
-    });
+
+        if (m.icon) {
+          el.style.backgroundImage = `url('style/img/masteries/${m.icon}.webp')`;
+          el.style.backgroundSize = "cover";
+          el.style.backgroundPosition = "center";
+        } else el.textContent = m.name.split(" ")[0];
+      });
+    }
+
+    // une fois les coûts connus, on met à jour les compteurs
+    updateAll(true);
+  });
 
   const params = new URLSearchParams(location.search);
   if (params.has('m')) {
