@@ -1,7 +1,7 @@
 {
   "offense": [
     [
-      { "id": "offense-1-2", "name": "Blade Discriple", "description": "Attack +75.", "cost": 5, "icon": "blade-disciple" },
+      { "id": "offense-1-2", "name": "Blade Disciple", "description": "Attack +75.", "cost": 5, "icon": "blade-disciple" },
       { "id": "offense-1-3", "name": "Deadly Precision", "description": "Critical Rate +5%.", "cost": 5, "icon": "deadly-precision" }
     ],
     [
