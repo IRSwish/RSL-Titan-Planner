@@ -26,17 +26,17 @@
       },
       {
         "id": "offense-2-2",
-        "name": "Grim Resolve",
-        "description": "Increases damage inflicted by 5% when HP is less than 50%.",
-        "cost": 30,
-        "icon": "grim-resolve"
-      },
-      {
-        "id": "offense-2-3",
         "name": "Heart of Glory",
         "description": "Increases damage inflicted by 5% when HP is above 80%.",
         "cost": 30,
         "icon": "heart-of-glory"
+      },
+      {
+        "id": "offense-2-3",
+        "name": "Grim Resolve",
+        "description": "Increases damage inflicted by 5% when HP is less than 50%.",
+        "cost": 30,
+        "icon": "grim-resolve"
       },
       {
         "id": "offense-2-4",
@@ -45,8 +45,170 @@
         "cost": 30,
         "icon": "whirlwind-of-death"
       }
+    ],
+    [
+      {
+        "id": "offense-3-1",
+        "name": "Life Drinker",
+        "description": "Heals by 5% of damage inflicted when attacking with HP less than 50%.",
+        "cost": 80,
+        "icon": "life-drinker"
+      },
+      {
+        "id": "offense-3-2",
+        "name": "Ruthless Ambush",
+        "description": "Increases damage inflicted by 8% for the first hit on each enemy.",
+        "cost": 80,
+        "icon": "ruthless-ambush"
+      },
+      {
+        "id": "offense-3-3",
+        "name": "Single Out",
+        "description": "Increases damage inflicted to targets with less than 40% HP by 8%.",
+        "cost": 80,
+        "icon": "single-out"
+      },
+      {
+        "id": "offense-3-4",
+        "name": "Wrath of the Slain",
+        "description": "Increases damage inflicted by 5% for each dead ally, up to 10%.",
+        "cost": 80,
+        "icon": "wrath-of-the-slain"
+      }
+    ],
+    [
+      {
+        "id": "offense-4-1",
+        "name": "Cycle of Violence",
+        "description": "Has a 30% chance of decreasing the cooldown of a random skill by 1 turn if the damage inflicted exceeds 30% of the target's MAX HP.",
+        "cost": 120,
+        "icon": "cycle-of-violence"
+      },
+      {
+        "id": "offense-4-2",
+        "name": "Wrath of the Dead",
+        "description": "Increases damage inflicted by 5% for each dead ally, up to 10%.",
+        "cost": 120,
+        "icon": "wrath-of-the-dead"
+      },
+      {
+        "id": "offense-4-3",
+        "name": "Kill Streak",
+        "description": "Increases damage inflicted by 6% in the Arena and by 3% in all other locations, stacking up to 12%.",
+        "cost": 120,
+        "icon": "kill-streak"
+      },
+      {
+        "id": "offense-4-4",
+        "name": "Blood Shield",
+        "description": "Places a Shield buff on this Champion equal to 15% of the damage inflicted after each attack. Shield lasts for 1 turn.",
+        "cost": 120,
+        "icon": "blood-shield"
+      }
+    ],
+    [
+      {
+        "id": "offense-5-1",
+        "name": "Flawless Execution",
+        "description": "Increases C. DMG by 20%.",
+        "cost": 200,
+        "icon": "flawless-execution"
+      },
+      {
+        "id": "offense-5-2",
+        "name": "Methodical",
+        "description": "Increases the damage inflicted by this Champion’s default Skill by 2% each time it is used during battle. Stacks up to 10%.",
+        "cost": 200,
+        "icon": "methodical"
+      },
+      {
+        "id": "offense-5-3",
+        "name": "Kill Stroke",
+        "description": "Increases damage inflicted by 6% in the Arena and by 3% in all other locations.",
+        "cost": 200,
+        "icon": "kill-stroke"
+      }
+    ],
+    [
+      {
+        "id": "offense-6-1",
+        "name": "Helmsmasher",
+        "description": "Has a 50% chance to ignore 25% of enemy DEF. This chance increases by 1% per 1% of C. DMG over 100%.",
+        "cost": 350,
+        "icon": "helmsmasher"
+      },
+      {
+        "id": "offense-6-2",
+        "name": "Giant Slayer",
+        "description": "Has a 30% chance of inflicting bonus damage equal to 7.5% of target MAX HP on each hit of a multi-hit Skill.",
+        "cost": 350,
+        "icon": "giant-slayer"
+      },
+      {
+        "id": "offense-6-3",
+        "name": "Warmaster",
+        "description": "Has a 60% chance of inflicting bonus damage equal to 10% of the target's MAX HP when attacking. Damage capped vs bosses.",
+        "cost": 350,
+        "icon": "warmaster"
+      }
     ]
   ],
-  "defense": [],
-  "support": []
+  "defense": [
+    [
+      { "id": "defense-1-1", "name": "Tough Skin", "description": "Increases DEF by 75.", "cost": 5, "icon": "tough-skin" },
+      { "id": "defense-1-2", "name": "Defiant", "description": "Resists +10.", "cost": 5, "icon": "defiant" }
+    ],
+    [
+      { "id": "defense-2-1", "name": "Blastproof", "description": "Decreases damage taken from AoE attacks by 5%.", "cost": 30, "icon": "blastproof" },
+      { "id": "defense-2-2", "name": "Rejuvenation", "description": "Increases the amount of healing and the value of shields this Champion receives by 5%.", "cost": 30, "icon": "rejuvenation" },
+      { "id": "defense-2-3", "name": "Mighty Endurance", "description": "Decreases damage received by 10% while under a stun, sleep, fear, true fear, or freeze debuff.", "cost": 30, "icon": "mighty-endurance" },
+      { "id": "defense-2-4", "name": "Improved Parry", "description": "Decreases damage received from critical hits by 8%.", "cost": 30, "icon": "improved-parry" }
+    ],
+    [
+      { "id": "defense-3-1", "name": "Bloodthirst", "description": "Heals this Champion by 5% of their MAX HP when they kill an enemy.", "cost": 80, "icon": "bloodthirst" },
+      { "id": "defense-3-2", "name": "Resurgent", "description": "Has a 50% chance to remove 1 random debuff when this Champion loses 25% of their MAX HP in one attack.", "cost": 80, "icon": "resurgent" },
+      { "id": "defense-3-3", "name": "Delay Death", "description": "Decreases damage received by 0.75% per each debuff on this Champion. Stacks up to 6% reduction.", "cost": 80, "icon": "delay-death" },
+      { "id": "defense-3-4", "name": "Harvest Despair", "description": "Has a 60% chance of placing a Leech debuff for 1 turn when placing a stun, sleep, fear, true fear, or freeze debuff.", "cost": 80, "icon": "harvest-despair" }
+    ],
+    [
+      { "id": "defense-4-1", "name": "Wisdom of Battle", "description": "Has a 30% chance of placing a Block Debuffs buff for 1 turn when a debuff expires on this Champion.", "cost": 120, "icon": "wisdom-of-battle" },
+      { "id": "defense-4-2", "name": "Solidarity", "description": "Increases Ally RESIST by 5 for each buff placed on this Champion.", "cost": 120, "icon": "solidarity" },
+      { "id": "defense-4-3", "name": "Stubbornness", "description": "Increases RESIST by 10 for each debuff this Champion is under, stacking up to 30.", "cost": 120, "icon": "stubbornness" },
+      { "id": "defense-4-4", "name": "Cycle of Revenge", "description": "Has a 50% chance of increasing Turn Meter by 15% when an ally is attacked with a critical hit.", "cost": 120, "icon": "cycle-of-revenge" }
+    ],
+    [
+      { "id": "defense-5-1", "name": "Retribution", "description": "Has a 50% chance to counterattack when this Champion loses 25% of their MAX HP in one attack.", "cost": 200, "icon": "retribution" },
+      { "id": "defense-5-2", "name": "Deterrence", "description": "Has a 20% chance to counterattack when an ally is attacked by an enemy under stun, sleep, fear, true fear, or freeze debuffs.", "cost": 200, "icon": "deterrence" },
+      { "id": "defense-5-3", "name": "Fearsome Presence", "description": "Increases the chance of placing a stun, sleep, freeze, fear, true fear, or provoke debuff from skills or artifacts by 5%.", "cost": 200, "icon": "fearsome-presence" }
+    ]
+  ],
+  "support": [
+    [
+      { "id": "support-1-1", "name": "Steadfast", "description": "MAX HP +810.", "cost": 5, "icon": "steadfast" },
+      { "id": "support-1-2", "name": "Pinpoint Accuracy", "description": "Increases ACC by 10.", "cost": 5, "icon": "pinpoint-accuracy" }
+    ],
+    [
+      { "id": "support-2-1", "name": "Charged Focus", "description": "Increases ACC by 20 when no skills are on cooldown.", "cost": 30, "icon": "charged-focus" },
+      { "id": "support-2-2", "name": "Lay on Hands", "description": "Increases the value of heals this Champion casts by 5%.", "cost": 30, "icon": "lay-on-hands" },
+      { "id": "support-2-3", "name": "Shieldbearer", "description": "Increases the value of Shield buffs this Champion casts by 5%.", "cost": 30, "icon": "shieldbearer" },
+      { "id": "support-2-4", "name": "Exalt in Death", "description": "Heals this Champion by 10% of their MAX HP the first time an enemy is killed in each round.", "cost": 30, "icon": "exalt-in-death" }
+    ],
+    [
+      { "id": "support-3-1", "name": "Cycle of Magic", "description": "Has a 5% chance of decreasing the cooldown of a random skill by 1 turn at the start of every turn.", "cost": 80, "icon": "cycle-of-magic" },
+      { "id": "support-3-2", "name": "Lore of Steel", "description": "Increases the Set Bonuses of Basic Artifact Sets by 15%.", "cost": 80, "icon": "lore-of-steel" },
+      { "id": "support-3-3", "name": "Merciful Aid", "description": "Increases the amount of healing and the value of Shield buffs placed by 15% when used on allies under stun, sleep, fear, true fear, or freeze debuffs.", "cost": 80, "icon": "merciful-aid" },
+      { "id": "support-3-4", "name": "Rapid Response", "description": "Has a 30% chance of increasing Turn Meter by 10% when a buff cast by this Champion is removed or expires.", "cost": 80, "icon": "rapid-response" }
+    ],
+    [
+      { "id": "support-4-1", "name": "Healing Savior", "description": "Increases the amount of healing and value of Shield buffs placed by 10% when used on allies with less than 40% HP.", "cost": 120, "icon": "healing-savior" },
+      { "id": "support-4-2", "name": "Master Hexer", "description": "Has a 30% chance to extend the duration of any debuff cast by this Champion for 1 turn.", "cost": 120, "icon": "master-hexer" },
+      { "id": "support-4-3", "name": "Sniper", "description": "Increases the chance of placing any debuff from Skills or Artifacts by 5%.", "cost": 120, "icon": "sniper" },
+      { "id": "support-4-4", "name": "Swarm Smiter", "description": "Increases ACC by 4 for each enemy alive, up to 20.", "cost": 120, "icon": "swarm-smiter" }
+    ],
+    [
+      { "id": "support-5-1", "name": "Lasting Gifts", "description": "Has a 30% chance to extend the duration of any buff cast by this Champion for 1 turn.", "cost": 200, "icon": "lasting-gifts" },
+      { "id": "support-5-2", "name": "Spirit Haste", "description": "Increases SPD by 8 for each dead ally, up to 24.", "cost": 200, "icon": "spirit-haste" },
+      { "id": "support-5-3", "name": "Oppressor", "description": "Increases Turn Meter fill rate by 2.5% for each active debuff cast by this Champion, stacking up to 10%.", "cost": 200, "icon": "oppressor" }
+    ]
+  ]
 }
