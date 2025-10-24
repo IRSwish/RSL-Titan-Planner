@@ -194,6 +194,7 @@
   </div>
 
 <script>
+// ---- logique du builder (version finale avec cascade descendante) ----
 (() => {
   const TIER_COST   = {1:5, 2:5, 3:30, 4:30, 5:200, 6:350};
   const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]);
@@ -219,7 +220,6 @@
         m.dataset.id   = `${branch}-${tier}-${colAbs}`;
         m.dataset.tier = String(tier);
         m.dataset.col  = String(colAbs);
-
         row.appendChild(m);
       });
     }
@@ -237,13 +237,11 @@
   masteries.forEach(m => {
     m.addEventListener('click', () => {
       if (m.classList.contains('locked')) return;
-
       if (m.classList.contains('active')) {
         m.classList.remove('active');
         updateAll(true);
         return;
       }
-
       if (!canSelect(m)) return;
       m.classList.add('active');
       updateAll(true);
@@ -362,7 +360,6 @@
         }
       }
 
-      // désactiver les actives non atteintes
       actives.forEach(el => {
         if (!reachable.has(el.dataset.id)) {
           el.classList.remove('active');
@@ -385,7 +382,6 @@
       const branch = m.dataset.id.split('-')[0];
       let lock = false;
       if (!activeTrees.has(branch) && activeTrees.size >= 2) lock = true;
-
       const selectable = !lock && canSelect(m);
       m.classList.toggle('locked', !selectable);
       m.classList.toggle('available', selectable);
@@ -412,7 +408,6 @@
   function updateAll(doCascade=false) {
     updateLocksAndAvailable();
     updateScrolls();
-
     if (doCascade) {
       const removed = validateActiveConnections();
       if (removed) {
@@ -421,6 +416,32 @@
       }
     }
   }
+
+  // ---------- CHARGEMENT DU JSON DES MAÎTRISES ----------
+  fetch('masteries.json')
+    .then(res => res.json())
+    .then(data => {
+      for (const branch in data) {
+        data[branch].flat().forEach(m => {
+          const el = document.querySelector(`[data-id="${m.id}"]`);
+          if (el) {
+            el.title = `${m.name}\n${m.description}\nScroll cost: ${m.cost}`;
+            el.textContent = m.name.split(' ')[0]; // texte temporaire visible
+            const tier = parseInt(el.dataset.tier);
+            // couleur de fond indicative selon le tier
+            const colors = {
+              1: '#222830',
+              2: '#252a35',
+              3: '#2d323f',
+              4: '#343a48',
+              5: '#404856',
+              6: '#505a6a'
+            };
+            el.style.backgroundColor = colors[tier];
+          }
+        });
+      }
+    });
 
   // ---------- INITIAL ----------
   const params = new URLSearchParams(location.search);
@@ -431,6 +452,10 @@
   updateAll(true);
 })();
 </script>
+
+<!-- menu / autres scripts -->
+<script src="script.js"></script>
+
 
 </body>
 </html>
