@@ -85,7 +85,7 @@
     ],
     [
       { "id": "support-3-1", "name": "Healing Savior", "description": "Increases the amount of healing and value of Shield buffs placed by 10% if the target ally has 40% HP or less.", "cost": 80, "icon": "healing-savior" },
-      { "id": "support-3-2", "name": "Rapid Response", "description": "Has a 30% chance of increasing Turn Meter by 10% when a buff cast by this Champion is removed or expires.", "cost": 80, "icon": "rapid-response" }
+      { "id": "support-3-2", "name": "Rapid Response", "description": "Has a 30% chance of increasing Turn Meter by 10% when a buff cast by this Champion is removed or expires.", "cost": 80, "icon": "rapid-response" },
       { "id": "support-3-3", "name": "Swarm Smiter", "description": "Increases Accuracy by 4 for each enemy alive, Stacks up to 16.", "cost": 80, "icon": "swarm-smiter" },
       { "id": "support-3-4", "name": "Arcane Celerity", "description": "Has a 30% chance of increasing the Turn Meter by 10% when a debuff cast by this champion is removed or expires.", "cost": 80, "icon": "arcane-celerity" }
     ],
@@ -93,19 +93,19 @@
       { "id": "support-4-1", "name": "Merciful Aid", "description": "Increases the amount of healing and the value of Shield buffs placed by 15% if the target ally has Stun, Sleep, Fear, True fear or Freeze debuffs.", "cost": 120, "icon": "merciful-aid" },
       { "id": "support-4-2", "name": "Cycle of Magic", "description": "Has a 5% chance of decreasing the cooldown of a random skill by 1 turn at the start of every turn.", "cost": 120, "icon": "cycle-of-magic" },
       { "id": "support-4-3", "name": "Lore of Steel", "description": "Increases the Base Stat Set Bonuses of all Artifact Sets that increase Base Stats by 15%. This increase is multiplicative, not additive.", "cost": 120, "icon": "lore-of-steel" },
-      { "id": "support-4-4", "name": "Evil Eye", "description": "Decreases the target's Turn Meter when this Champion hits them with the default Skill for the first time. Decreases the Turn Meter by 20% with single-target Skills and by 5% with AoE Skills. Occurs once per target.", "cost": 120, "icon": "evil-eye" },
+      { "id": "support-4-4", "name": "Evil Eye", "description": "Decreases the target's Turn Meter when this Champion hits them with the default Skill for the first time. Decreases the Turn Meter by 20% with single-target Skills and by 5% with AoE Skills. Occurs once per target.", "cost": 120, "icon": "evil-eye" }
     ],
     [
       { "id": "support-5-1", "name": "Lasting Gifts", "description": "Has a 30% chance to extend the duration of any buff cast by this Champion by 1 turn. It will not extend Block Damage, Unkillable, Revive on Thead, or Taunt buffs.", "cost": 200, "icon": "lasting-gifts" },
       { "id": "support-5-2", "name": "Spirit Haste", "description": "Increases Speed by 8 for each dead ally. Stacks up to 24.", "cost": 200, "icon": "spirit-haste" },
       { "id": "support-5-3", "name": "Sniper", "description": "Increases the chance of placing any debuff from Skills or Artifacts by 5%. It will not increase the chances of placing Stun, Sleep, Freeze, Fear, True Fear, Provoke or Petrification debuffs.", "cost": 200, "icon": "sniper" },
-      { "id": "support-5-4", "name": "Master Hexer", "description": "Has a 30% chance to extend the duration of any debuff cast by this Champion by 1 turn. It will not extend Stun, Sleep, Freeze, Provoke, Fear, True Fear, Bomb or Petrification debuffs.", "cost": 200, "icon": "master-hexer" },
+      { "id": "support-5-4", "name": "Master Hexer", "description": "Has a 30% chance to extend the duration of any debuff cast by this Champion by 1 turn. It will not extend Stun, Sleep, Freeze, Provoke, Fear, True Fear, Bomb or Petrification debuffs.", "cost": 200, "icon": "master-hexer" }
       
     ],
     [
-      { "id": "support-6-1", "name": "Elixir of Life", "description": "MAX HP +3000.", "cost": 350, "icon": "elixir-of-life" }
-      { "id": "support-6-2", "name": "Timely Intervention", "description": "Increases this Champion's Turn Meter by 20% whenever an ally hero drops below 25% HP.", "cost": 350, "icon": "timely-intervention" }
-      { "id": "support-6-3", "name": "Oppressor", "description": "Increases Turn Meter fill rate by 2.5% for each active debuff cast by this Champion. Stacks up to 10%.", "cost": 350, "icon": "oppressor" }
+      { "id": "support-6-1", "name": "Elixir of Life", "description": "MAX HP +3000.", "cost": 350, "icon": "elixir-of-life" },
+      { "id": "support-6-2", "name": "Timely Intervention", "description": "Increases this Champion's Turn Meter by 20% whenever an ally hero drops below 25% HP.", "cost": 350, "icon": "timely-intervention" },
+      { "id": "support-6-3", "name": "Oppressor", "description": "Increases Turn Meter fill rate by 2.5% for each active debuff cast by this Champion. Stacks up to 10%.", "cost": 350, "icon": "oppressor" },
       { "id": "support-6-4", "name": "Eagle-Eye", "description": "Accuracy +50.", "cost": 350, "icon": "eagle-eye" }
     ]
   ]
