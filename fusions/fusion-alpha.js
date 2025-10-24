@@ -186,8 +186,8 @@
       const top = item.top + 100;
       const start = new Date(event.start_date);
       const end = new Date(event.end_date);
-      const dayStart = (start - minDate) / (1000 * 60 * 60 * 24);
-      const dayEnd = (end - minDate) / (1000 * 60 * 60 * 24);
+      const dayStart = ((start - minDate) / (1000 * 60 * 60 * 24)) + 0.5;
+      const dayEnd = ((end - minDate) / (1000 * 60 * 60 * 24)) + 0.5;
 
       const block = document.createElement('div');
       const left = Math.round(dayStart * dayWidth + horizontalGap / 2);
