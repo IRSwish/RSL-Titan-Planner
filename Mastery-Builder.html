@@ -195,10 +195,8 @@
 
 <script>
 (() => {
-  // ---------- CONFIG ----------
-  const TIER_COUNTS = [2,4,4,4,4,4];           
   const TIER_COST   = {1:5, 2:5, 3:30, 4:30, 5:200, 6:350};
-  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]); // colonnes absolues (T1 = 2 & 3)
+  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]);
 
   // ---------- BUILD ----------
   const trees = document.querySelectorAll('.tree');
@@ -222,14 +220,6 @@
         m.dataset.tier = String(tier);
         m.dataset.col  = String(colAbs);
 
-        // connexion visuelle verticale si même colonne existe au tier suivant
-        if (tier < 6 && ABS_COLS(tier+1).includes(colAbs)) {
-          const conn = document.createElement('div');
-          conn.className = 'connection';
-          conn.dataset.from = `${branch}-${tier}-${colAbs}`;
-          conn.dataset.to   = `${branch}-${tier+1}-${colAbs}`;
-          m.appendChild(conn);
-        }
         row.appendChild(m);
       });
     }
@@ -250,9 +240,10 @@
 
       if (m.classList.contains('active')) {
         m.classList.remove('active');
-        updateAll(true); // true = autorise la dépropagation
+        updateAll(true);
         return;
       }
+
       if (!canSelect(m)) return;
       m.classList.add('active');
       updateAll(true);
@@ -286,20 +277,19 @@
   }
 
   // ---------- ADJACENCY ----------
-  // autorisations d'ouverture : vertical/diagonale (tier+1) + horizontale (même tier ±1 si une active adjacente existe)
   function isAdjacentAllowed(m) {
     const [branch, tStr, cStr] = m.dataset.id.split('-');
     const tier = +tStr, col = +cStr;
     if (tier === 1) return true;
 
-    // depuis T-1 : vertical / diagonales
+    // depuis T-1
     const prevTier = tier - 1;
     for (const d of [-1,0,1]) {
       const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col+d}"]`);
       if (prev && prev.classList.contains('active')) return true;
     }
 
-    // horizontale au même tier (adjacente ±1) si au moins une active à ce tier
+    // horizontale (même tier ±1)
     const anyActiveThisTier = !!document.querySelector(`.mastery.active[data-id^="${branch}-${tier}-"]`);
     if (anyActiveThisTier) {
       for (const d of [-1,1]) {
@@ -307,37 +297,8 @@
         if (adj && adj.classList.contains('active')) return true;
       }
     }
+
     return false;
-  }
-
-  // voisinage pour la connectivité (graph des actives) — même règles que ci-dessus mais **entre actives**
-  function activeNeighbors(el, activeSet) {
-    const [branch, tStr, cStr] = el.dataset.id.split('-');
-    const tier = +tStr, col = +cStr;
-    const res = [];
-
-    // liens horizontaux (même tier ±1)
-    for (const d of [-1,1]) {
-      const adj = document.querySelector(`[data-id="${branch}-${tier}-${col+d}"]`);
-      if (adj && activeSet.has(adj.dataset.id)) res.push(adj);
-    }
-    // liens vers tier-1 (vertical/diagonales)
-    if (tier > 1) {
-      const prevTier = tier - 1;
-      for (const d of [-1,0,1]) {
-        const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col+d}"]`);
-        if (prev && activeSet.has(prev.dataset.id)) res.push(prev);
-      }
-    }
-    // liens vers tier+1 (vertical/diagonales)
-    if (tier < 6) {
-      const nextTier = tier + 1;
-      for (const d of [-1,0,1]) {
-        const nxt = document.querySelector(`[data-id="${branch}-${nextTier}-${col+d}"]`);
-        if (nxt && activeSet.has(nxt.dataset.id)) res.push(nxt);
-      }
-    }
-    return res;
   }
 
   // ---------- RULES ----------
@@ -346,82 +307,74 @@
     const [branch, tStr] = m.dataset.id.split('-');
     const tier = +tStr;
 
-    // 2 arbres max
     if (!activeTrees.has(branch) && activeTrees.size >= 2) return false;
-
-    // adjacency
     if (!isAdjacentAllowed(m)) return false;
 
-    // quotas par tier
-    if (tier === 1) {
-      if (perTierPerBranch[branch][1] >= 1) return false;
-      return true;
-    }
-    if (tier >= 2 && tier <= 5) {
-      if (perTierGlobal[tier] >= 3) return false;
-      if (perTierPerBranch[branch][tier] >= 2) return false;
-      return true;
-    }
-    if (tier === 6) {
-      if (totalT6 >= 1) return false;
-      return true;
-    }
+    if (tier === 1) return perTierPerBranch[branch][1] < 1;
+    if (tier >= 2 && tier <= 5)
+      return perTierGlobal[tier] < 3 && perTierPerBranch[branch][tier] < 2;
+    if (tier === 6) return totalT6 < 1;
     return true;
   }
 
-  // ---------- VALIDATION & CASCADE ----------
+  // ---------- VALIDATION DESCENDANTE ----------
   function validateActiveConnections() {
-    const { active, byBranch } = getState();
-    let removedAny = false;
+    const { byBranch } = getState();
+    let changed = false;
 
-    // pour chaque arbre, s'assurer que toutes les actives sont connectées à sa T1 via le graphe d'adjacence
     ['offense','defense','support'].forEach(branch => {
       const actives = byBranch[branch];
       if (!actives || actives.length === 0) return;
 
-      // trouver la T1 active (ancre); s'il n'y en a pas -> tout doit sauter
       const anchor = actives.find(el => +el.dataset.tier === 1);
       if (!anchor) {
-        actives.forEach(el => { el.classList.remove('active'); removedAny = true; });
+        actives.forEach(el => el.classList.remove('active'));
+        changed = true;
         return;
       }
 
-      const activeSet = new Set(actives.map(el => el.dataset.id));
-      // BFS/DFS depuis l’ancre
+      const reachable = new Set([anchor.dataset.id]);
       const stack = [anchor];
-      const visited = new Set([anchor.dataset.id]);
 
+      // parcours descendant uniquement
       while (stack.length) {
         const cur = stack.pop();
-        activeNeighbors(cur, activeSet).forEach(n => {
-          if (!visited.has(n.dataset.id)) {
-            visited.add(n.dataset.id);
-            stack.push(n);
+        const [b, tStr, cStr] = cur.dataset.id.split('-');
+        const tier = +tStr, col = +cStr;
+        if (tier >= 6) continue;
+
+        const nextTier = tier + 1;
+        for (const d of [-1,0,1]) {
+          const next = document.querySelector(`[data-id="${branch}-${nextTier}-${col+d}"]`);
+          if (next && next.classList.contains('active') && !reachable.has(next.dataset.id)) {
+            reachable.add(next.dataset.id);
+            stack.push(next);
           }
-        });
+        }
+
+        // horizontales (même tier ±1)
+        for (const d of [-1,1]) {
+          const side = document.querySelector(`[data-id="${branch}-${tier}-${col+d}"]`);
+          if (side && side.classList.contains('active') && !reachable.has(side.dataset.id)) {
+            reachable.add(side.dataset.id);
+            stack.push(side);
+          }
+        }
       }
 
-      // toutes les actives non visitées = déconnectées -> on retire
+      // désactiver les actives non atteintes
       actives.forEach(el => {
-        if (!visited.has(el.dataset.id)) {
+        if (!reachable.has(el.dataset.id)) {
           el.classList.remove('active');
-          removedAny = true;
+          changed = true;
         }
       });
     });
 
-    return removedAny;
+    return changed;
   }
 
   // ---------- VISU & COUNTS ----------
-  function updateConnections() {
-    document.querySelectorAll('.connection').forEach(c => {
-      const from = document.querySelector(`[data-id="${c.dataset.from}"]`);
-      const to   = document.querySelector(`[data-id="${c.dataset.to}"]`);
-      c.classList.toggle('active', !!(from && to && from.classList.contains('active') && to.classList.contains('active')));
-    });
-  }
-
   function updateLocksAndAvailable() {
     const { activeTrees } = getState();
     masteries.forEach(m => {
@@ -457,16 +410,12 @@
   }
 
   function updateAll(doCascade=false) {
-    // 1) une première passe visuelle
-    updateConnections();
     updateLocksAndAvailable();
     updateScrolls();
 
-    // 2) dépropagation et seconde passe si on a retiré des nodes
     if (doCascade) {
       const removed = validateActiveConnections();
       if (removed) {
-        updateConnections();
         updateLocksAndAvailable();
         updateScrolls();
       }
