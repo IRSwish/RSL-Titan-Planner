@@ -117,6 +117,18 @@
     cursor: not-allowed;
   }
 
+    /* états visuels supplémentaires */
+    .mastery.available:not(.active):not(.locked) {
+    border-color: var(--line-color);
+    box-shadow: 0 0 10px rgba(212,175,55,0.35);
+    animation: pulse-available 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse-available {
+    0% { box-shadow: 0 0 6px rgba(212,175,55,0.2); }
+    50%{ box-shadow: 0 0 14px rgba(212,175,55,0.55); }
+    100%{ box-shadow: 0 0 6px rgba(212,175,55,0.2); }
+    }
+
   /* Connection lines */
   .connection {
     position: absolute;
@@ -183,14 +195,12 @@
 
 <script>
 (() => {
-  // ----- CONFIG -----
-  const TIER_COUNTS = [2,4,4,4,4,4]; // tiers 1..6
+  // ---------- CONFIG ----------
+  const TIER_COUNTS = [2,4,4,4,4,4];           // tiers 1..6
   const TIER_COST   = {1:5, 2:5, 3:30, 4:30, 5:200, 6:350};
+  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]); // T1 = col 2 & 3
 
-  // helpers colonnes absolues par tier (ligne 1 = colonnes 2 et 3)
-  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]);
-
-  // ----- BUILD (idempotent) -----
+  // ---------- BUILD (idempotent) ----------
   const trees = document.querySelectorAll('.tree');
   trees.forEach(tree => {
     if (tree.dataset._built) return;
@@ -208,27 +218,23 @@
       ABS_COLS(tier).forEach(colAbs => {
         const m = document.createElement('div');
         m.className = 'mastery';
-        m.dataset.id  = `${branch}-${tier}-${colAbs}`; // <-- col absolu 1..4 (tier1 = 2,3)
+        m.dataset.id   = `${branch}-${tier}-${colAbs}`; // IDs en colonnes absolues
         m.dataset.tier = String(tier);
         m.dataset.col  = String(colAbs);
 
-        // connexion visuelle verticale (même colonne) uniquement
-        if (tier < 6) {
-          const nextCols = ABS_COLS(tier+1);
-          if (nextCols.includes(colAbs)) {
-            const conn = document.createElement('div');
-            conn.className = 'connection';
-            conn.dataset.from = `${branch}-${tier}-${colAbs}`;
-            conn.dataset.to   = `${branch}-${tier+1}-${colAbs}`;
-            m.appendChild(conn);
-          }
+        // (optionnel) connexion verticale visuelle si même colonne existe en dessous
+        if (tier < 6 && ABS_COLS(tier+1).includes(colAbs)) {
+          const conn = document.createElement('div');
+          conn.className = 'connection';
+          conn.dataset.from = `${branch}-${tier}-${colAbs}`;
+          conn.dataset.to   = `${branch}-${tier+1}-${colAbs}`;
+          m.appendChild(conn);
         }
-
         row.appendChild(m);
       });
     }
 
-    // reset par arbre
+    // Reset de l'arbre
     const btn = tree.querySelector('.reset-tree');
     if (btn) btn.addEventListener('click', () => {
       tree.querySelectorAll('.mastery.active').forEach(x => x.classList.remove('active'));
@@ -238,10 +244,11 @@
 
   const masteries = Array.from(document.querySelectorAll('.mastery'));
 
-  // ----- EVENTS -----
+  // ---------- EVENTS ----------
   masteries.forEach(m => {
     m.addEventListener('click', () => {
       if (m.classList.contains('locked')) return;
+
       if (m.classList.contains('active')) {
         m.classList.remove('active');
         updateAll();
@@ -253,64 +260,89 @@
     });
   });
 
-  // ----- STATE & RULES -----
+  // ---------- STATE ----------
   function getState() {
     const active = new Set(Array.from(document.querySelectorAll('.mastery.active')).map(x => x.dataset.id));
     const activeTrees = new Set();
-    const perTree235 = {offense:0, defense:0, support:0};
-    let total235 = 0, totalT6 = 0;
+    const perTierGlobal = {1:0,2:0,3:0,4:0,5:0,6:0};
+    const perTierPerBranch = { offense:{1:0,2:0,3:0,4:0,5:0,6:0},
+                               defense:{1:0,2:0,3:0,4:0,5:0,6:0},
+                               support:{1:0,2:0,3:0,4:0,5:0,6:0} };
+    let totalT6 = 0;
 
     active.forEach(id => {
       const [b, tStr] = id.split('-');
       const t = +tStr;
       activeTrees.add(b);
-      if (t>=2 && t<=5) { total235++; perTree235[b]++; }
-      if (t===6) totalT6++;
+      perTierGlobal[t] += 1;
+      perTierPerBranch[b][t] += 1;
+      if (t === 6) totalT6++;
     });
-    return {active, activeTrees, perTree235, total235, totalT6};
+
+    return { active, activeTrees, perTierGlobal, perTierPerBranch, totalT6 };
   }
 
-  // connectivité : parent au tier-1 même branche, colAbs ∈ {col-1, col, col+1}
-  function isConnected(m) {
+  // ---------- ADJACENCY ----------
+  // Règles : peut débloquer si (même branche) :
+  // - T-1 : vertical (col), diagonales (col±1)
+  // - T   : horizontal (col±1) mais seulement si T a déjà au moins 1 active (et celle-ci est adjacente)
+  function isAdjacentAllowed(m) {
     const [branch, tStr, cStr] = m.dataset.id.split('-');
     const tier = +tStr, col = +cStr;
-    if (tier === 1) return true;
+
+    if (tier === 1) {
+      // T1: on testera la règle "1 max par branche" ailleurs, ici l’adjacence est triviale
+      return true;
+    }
+
+    // check depuis Tier-1 (vertical / diagonales)
     const prevTier = tier - 1;
     for (const d of [-1,0,1]) {
       const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col+d}"]`);
       if (prev && prev.classList.contains('active')) return true;
     }
+
+    // check horizontal same tier (adjacent ±1) — seulement si il existe déjà au moins une active à ce tier
+    const anyActiveThisTier = !!document.querySelector(`.mastery.active[data-id^="${branch}-${tier}-"]`);
+    if (anyActiveThisTier) {
+      for (const d of [-1,1]) {
+        const adj = document.querySelector(`[data-id="${branch}-${tier}-${col+d}"]`);
+        if (adj && adj.classList.contains('active')) return true;
+      }
+    }
+
     return false;
   }
 
+  // ---------- RULES ----------
   function canSelect(m) {
-    const {activeTrees, perTree235, total235, totalT6} = getState();
+    const { activeTrees, perTierGlobal, perTierPerBranch, totalT6 } = getState();
     const [branch, tStr] = m.dataset.id.split('-');
     const tier = +tStr;
 
-    // max 2 arbres
+    // 2 arbres max
     if (!activeTrees.has(branch) && activeTrees.size >= 2) return false;
 
-    // connectivité
-    if (!isConnected(m)) return false;
+    // Adjacence obligatoire (verticale, diagonale, ou horizontale)
+    if (!isAdjacentAllowed(m)) return false;
 
-    // quotas par tier
+    // Règles de quotas par TIER
     if (tier === 1) {
-      // 1 seule en T1 par arbre
-      if (document.querySelectorAll(`.mastery.active[data-id^="${branch}-1-"]`).length >= 1) return false;
+      // 1 seule T1 par branche
+      if (perTierPerBranch[branch][1] >= 1) return false;
       return true;
     }
 
     if (tier >= 2 && tier <= 5) {
-      // max 3 picks au total sur T2..T5
-      if (total235 >= 3) return false;
-      // max 2 picks dans le même arbre sur T2..T5
-      if (perTree235[branch] >= 2) return false;
+      // max 3 au total sur ce tier (toutes branches confondues)
+      if (perTierGlobal[tier] >= 3) return false;
+      // max 2 par branche sur ce tier
+      if (perTierPerBranch[branch][tier] >= 2) return false;
       return true;
     }
 
     if (tier === 6) {
-      // 1 seule en T6 au global
+      // 1 seule T6 au global
       if (totalT6 >= 1) return false;
       return true;
     }
@@ -318,6 +350,7 @@
     return true;
   }
 
+  // ---------- VISU & COUNTS ----------
   function updateConnections() {
     document.querySelectorAll('.connection').forEach(c => {
       const from = document.querySelector(`[data-id="${c.dataset.from}"]`);
@@ -326,33 +359,24 @@
     });
   }
 
-  function updateLocks() {
-    const {activeTrees, perTree235, total235} = getState();
+  function updateLocksAndAvailable() {
+    const { activeTrees } = getState();
 
     masteries.forEach(m => {
-      if (m.classList.contains('active')) { m.classList.remove('locked'); return; }
-
-      const [branch, tStr] = m.dataset.id.split('-');
-      const tier = +tStr;
+      if (m.classList.contains('active')) {
+        m.classList.remove('locked','available');
+        return;
+      }
+      // 3e arbre bloqué si 2 déjà actifs
+      const branch = m.dataset.id.split('-')[0];
       let lock = false;
-
-      // 3e arbre bloqué si 2 arbres déjà actifs
       if (!activeTrees.has(branch) && activeTrees.size >= 2) lock = true;
 
-      // connectivité
-      if (tier > 1 && !isConnected(m)) lock = true;
+      // test complet de sélection
+      const selectable = !lock && canSelect(m);
 
-      // quotas
-      if (tier === 1) {
-        if (document.querySelectorAll(`.mastery.active[data-id^="${branch}-1-"]`).length >= 1) lock = true;
-      } else if (tier >= 2 && tier <= 5) {
-        if (total235 >= 3) lock = true;
-        if (perTree235[branch] >= 2) lock = true;
-      } else if (tier === 6) {
-        if (document.querySelector('.mastery.active[data-id*="-6-"]')) lock = true;
-      }
-
-      m.classList.toggle('locked', lock);
+      m.classList.toggle('locked', !selectable);
+      m.classList.toggle('available', selectable);
     });
   }
 
@@ -375,11 +399,11 @@
 
   function updateAll() {
     updateConnections();
-    updateLocks();
+    updateLocksAndAvailable();
     updateScrolls();
   }
 
-  // initial + support lien ?m=
+  // ---------- INITIAL (+ support ?m=) ----------
   const params = new URLSearchParams(location.search);
   if (params.has('m')) {
     const ids = atob(params.get('m')).split(',').filter(Boolean);
@@ -388,6 +412,7 @@
   updateAll();
 })();
 </script>
+
 
 </body>
 </html>
