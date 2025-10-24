@@ -86,7 +86,7 @@ header {
   padding: 0 2px;
   box-sizing: border-box;
   background: linear-gradient(to bottom,#00ffdd00 0%, rgba(0,201,255,0) 20%, rgba(0,201,255,0) 80%, rgba(0,201,255,0) 100%);
-  transition: background 0.25s ease, box-shadow 0.25s ease;
+  transition: background 1s ease, box-shadow 0.25s ease;
 }
 
 .date-column .day {
@@ -129,7 +129,7 @@ header {
   box-sizing: border-box;
 
   /* 🔹 Ajout pour transition fluide */
-  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: background 1s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   box-shadow: 0 0 0 rgba(0,201,255,0);
 }
 
