@@ -85,6 +85,7 @@ header {
   position: relative;
   padding: 0 2px;
   box-sizing: border-box;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
 }
 
 .date-column .day {
