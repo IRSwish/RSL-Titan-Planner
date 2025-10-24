@@ -1,205 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>RSL Tools | Mastery Builder</title>
-  <link rel="stylesheet" href="style/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-  /* === Layout === */
-  #builder {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin: 40px auto;
-    max-width: 1400px;
-  }
-
-  .scroll-counter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    margin-top: 20px;
-  }
-
-  .scroll-type {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 18px;
-    color: var(--text-color);
-  }
-
-  .scroll-type img {
-    width: 36px;
-    height: 36px;
-  }
-
-  .tree {
-    background: var(--event-bg);
-    border: 2px solid var(--event-border);
-    border-radius: 12px;
-    padding: 20px;
-    width: 360px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(212,175,55,0.2);
-    position: relative;
-  }
-
-  .tree h2 {
-    font-family: 'American Captain';
-    color: var(--line-color);
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-
-  .reset-tree {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
-    border: 2px solid var(--event-border);
-    color: var(--text-color);
-    font-weight: 600;
-    font-size: 13px;
-    padding: 4px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .reset-tree:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 8px var(--event-border);
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin: 25px 0;
-    position: relative;
-  }
-
-  .row.centered {
-    justify-content: center;
-  }
-
-  .mastery {
-    width: 70px;
-    height: 70px;
-    background: #1a1a1a;
-    border: 2px solid #555;
-    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 2;
-    opacity: 1;
-  }
-
-  .mastery:hover {
-    box-shadow: 0 0 10px rgba(212,175,55,0.3);
-  }
-
-  .mastery.active {
-    border-color: var(--line-color);
-    box-shadow: 0 0 12px var(--line-color);
-    background-color: rgba(212,175,55,0.1);
-  }
-
-  .mastery.locked {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-
-    /* états visuels supplémentaires */
-    .mastery.available:not(.active):not(.locked) {
-    border-color: var(--line-color);
-    box-shadow: 0 0 10px rgba(212,175,55,0.35);
-    animation: pulse-available 1.4s ease-in-out infinite;
-    }
-    @keyframes pulse-available {
-    0% { box-shadow: 0 0 6px rgba(212,175,55,0.2); }
-    50%{ box-shadow: 0 0 14px rgba(212,175,55,0.55); }
-    100%{ box-shadow: 0 0 6px rgba(212,175,55,0.2); }
-    }
-
-  /* Connection lines */
-  .connection {
-    position: absolute;
-    width: 4px;
-    height: 40px;
-    left: 50%;
-    top: 70px;
-    transform: translateX(-50%);
-    background: rgba(212,175,55,0.15);
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.2s ease, box-shadow 0.3s ease;
-  }
-
-  .connection.active {
-    opacity: 1;
-    background: linear-gradient(to bottom, #d4af37, #fce39b);
-    box-shadow: 0 0 10px #d4af37;
-  }
-
-  </style>
-</head>
-<body>
-  <div id="menu-container"></div>
-
-  <div class="header-wrapper">
-    <header id="page-title">Mastery Builder</header>
-  </div>
-
-  <div class="scroll-counter">
-    <div class="scroll-type" id="basic-scrolls">
-      <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scrolls">
-      <span>0 / 100</span>
-    </div>
-    <div class="scroll-type" id="advanced-scrolls">
-      <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scrolls">
-      <span>0 / 600</span>
-    </div>
-    <div class="scroll-type" id="divine-scrolls">
-      <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scrolls">
-      <span>0 / 950</span>
-    </div>
-  </div>
-
-  <div id="builder">
-    <div class="tree" data-branch="offense">
-      <button class="reset-tree">Reset</button>
-      <h2>Offense</h2>
-      <div class="rows"></div>
-    </div>
-
-    <div class="tree" data-branch="defense">
-      <button class="reset-tree">Reset</button>
-      <h2>Defense</h2>
-      <div class="rows"></div>
-    </div>
-
-    <div class="tree" data-branch="support">
-      <button class="reset-tree">Reset</button>
-      <h2>Support</h2>
-      <div class="rows"></div>
-    </div>
-  </div>
-
-<script>
-// ---- logique du builder (version finale avec cascade descendante) ----
 (() => {
   const TIER_COST   = {1:5, 2:5, 3:30, 4:30, 5:200, 6:350};
   const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]);
-
-  // ---------- BUILD ----------
   const trees = document.querySelectorAll('.tree');
   trees.forEach(tree => {
     if (tree.dataset._built) return;
@@ -213,7 +14,6 @@
       const row = document.createElement('div');
       row.className = 'row' + (tier===1 ? ' centered' : '');
       rows.appendChild(row);
-
       ABS_COLS(tier).forEach(colAbs => {
         const m = document.createElement('div');
         m.className = 'mastery';
@@ -233,7 +33,6 @@
 
   const masteries = Array.from(document.querySelectorAll('.mastery'));
 
-  // ---------- EVENTS ----------
   masteries.forEach(m => {
     m.addEventListener('click', () => {
       if (m.classList.contains('locked')) return;
@@ -248,7 +47,6 @@
     });
   });
 
-  // ---------- STATE ----------
   function getState() {
     const activeEls = Array.from(document.querySelectorAll('.mastery.active'));
     const active = new Set(activeEls.map(x => x.dataset.id));
@@ -270,24 +68,18 @@
       perTierPerBranch[b][t] += 1;
       if (t === 6) totalT6++;
     });
-
     return { active, byBranch, activeTrees, perTierGlobal, perTierPerBranch, totalT6 };
   }
 
-  // ---------- ADJACENCY ----------
   function isAdjacentAllowed(m) {
     const [branch, tStr, cStr] = m.dataset.id.split('-');
     const tier = +tStr, col = +cStr;
     if (tier === 1) return true;
-
-    // depuis T-1
     const prevTier = tier - 1;
     for (const d of [-1,0,1]) {
       const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col+d}"]`);
       if (prev && prev.classList.contains('active')) return true;
     }
-
-    // horizontale (même tier ±1)
     const anyActiveThisTier = !!document.querySelector(`.mastery.active[data-id^="${branch}-${tier}-"]`);
     if (anyActiveThisTier) {
       for (const d of [-1,1]) {
@@ -295,19 +87,15 @@
         if (adj && adj.classList.contains('active')) return true;
       }
     }
-
     return false;
   }
 
-  // ---------- RULES ----------
   function canSelect(m) {
     const { activeTrees, perTierGlobal, perTierPerBranch, totalT6 } = getState();
     const [branch, tStr] = m.dataset.id.split('-');
     const tier = +tStr;
-
     if (!activeTrees.has(branch) && activeTrees.size >= 2) return false;
     if (!isAdjacentAllowed(m)) return false;
-
     if (tier === 1) return perTierPerBranch[branch][1] < 1;
     if (tier >= 2 && tier <= 5)
       return perTierGlobal[tier] < 3 && perTierPerBranch[branch][tier] < 2;
@@ -315,32 +103,25 @@
     return true;
   }
 
-  // ---------- VALIDATION DESCENDANTE ----------
   function validateActiveConnections() {
     const { byBranch } = getState();
     let changed = false;
-
     ['offense','defense','support'].forEach(branch => {
       const actives = byBranch[branch];
-      if (!actives || actives.length === 0) return;
-
+      if (!actives.length) return;
       const anchor = actives.find(el => +el.dataset.tier === 1);
       if (!anchor) {
         actives.forEach(el => el.classList.remove('active'));
         changed = true;
         return;
       }
-
       const reachable = new Set([anchor.dataset.id]);
       const stack = [anchor];
-
-      // parcours descendant uniquement
       while (stack.length) {
         const cur = stack.pop();
         const [b, tStr, cStr] = cur.dataset.id.split('-');
         const tier = +tStr, col = +cStr;
         if (tier >= 6) continue;
-
         const nextTier = tier + 1;
         for (const d of [-1,0,1]) {
           const next = document.querySelector(`[data-id="${branch}-${nextTier}-${col+d}"]`);
@@ -349,8 +130,6 @@
             stack.push(next);
           }
         }
-
-        // horizontales (même tier ±1)
         for (const d of [-1,1]) {
           const side = document.querySelector(`[data-id="${branch}-${tier}-${col+d}"]`);
           if (side && side.classList.contains('active') && !reachable.has(side.dataset.id)) {
@@ -359,7 +138,6 @@
           }
         }
       }
-
       actives.forEach(el => {
         if (!reachable.has(el.dataset.id)) {
           el.classList.remove('active');
@@ -367,18 +145,14 @@
         }
       });
     });
-
     return changed;
   }
 
-  // ---------- VISU & COUNTS ----------
   function updateLocksAndAvailable() {
     const { activeTrees } = getState();
+    const masteries = document.querySelectorAll('.mastery');
     masteries.forEach(m => {
-      if (m.classList.contains('active')) {
-        m.classList.remove('locked','available');
-        return;
-      }
+      if (m.classList.contains('active')) { m.classList.remove('locked','available'); return; }
       const branch = m.dataset.id.split('-')[0];
       let lock = false;
       if (!activeTrees.has(branch) && activeTrees.size >= 2) lock = true;
@@ -397,53 +171,41 @@
       else if (tier<=4) adv += cost;
       else div += cost;
     });
-    const basicEl = document.querySelector('#basic-scrolls span');
-    const advEl   = document.querySelector('#advanced-scrolls span');
-    const divEl   = document.querySelector('#divine-scrolls span');
-    if (basicEl) basicEl.textContent = `${Math.min(basic,100)} / 100`;
-    if (advEl)   advEl.textContent   = `${Math.min(adv,600)} / 600`;
-    if (divEl)   divEl.textContent   = `${Math.min(div,950)} / 950`;
+    document.querySelector('#basic-scrolls span').textContent = `${Math.min(basic,100)} / 100`;
+    document.querySelector('#advanced-scrolls span').textContent = `${Math.min(adv,600)} / 600`;
+    document.querySelector('#divine-scrolls span').textContent = `${Math.min(div,950)} / 950`;
   }
 
-  function updateAll(doCascade=false) {
+  function updateAll(cascade=false) {
     updateLocksAndAvailable();
     updateScrolls();
-    if (doCascade) {
-      const removed = validateActiveConnections();
-      if (removed) {
-        updateLocksAndAvailable();
-        updateScrolls();
-      }
+    if (cascade && validateActiveConnections()) {
+      updateLocksAndAvailable();
+      updateScrolls();
     }
   }
 
-  // ---------- CHARGEMENT DU JSON DES MAÎTRISES ----------
   fetch('masteries.json')
     .then(res => res.json())
     .then(data => {
       for (const branch in data) {
         data[branch].flat().forEach(m => {
           const el = document.querySelector(`[data-id="${m.id}"]`);
-          if (el) {
-            el.title = `${m.name}\n${m.description}\nScroll cost: ${m.cost}`;
-            el.textContent = m.name.split(' ')[0]; // texte temporaire visible
-            const tier = parseInt(el.dataset.tier);
-            // couleur de fond indicative selon le tier
-            const colors = {
-              1: '#222830',
-              2: '#252a35',
-              3: '#2d323f',
-              4: '#343a48',
-              5: '#404856',
-              6: '#505a6a'
-            };
-            el.style.backgroundColor = colors[tier];
-          }
+          if (!el) return;
+          el.dataset.info = JSON.stringify({
+            name: m.name,
+            description: m.description,
+            cost: m.cost
+          });
+          if (m.icon) {
+            el.style.backgroundImage = `url('style/img/masteries/${m.icon}.webp')`;
+            el.style.backgroundSize = "cover";
+            el.style.backgroundPosition = "center";
+          } else el.textContent = m.name.split(" ")[0];
         });
       }
     });
 
-  // ---------- INITIAL ----------
   const params = new URLSearchParams(location.search);
   if (params.has('m')) {
     const ids = atob(params.get('m')).split(',').filter(Boolean);
@@ -451,11 +213,3 @@
   }
   updateAll(true);
 })();
-</script>
-
-<!-- menu / autres scripts -->
-<script src="script.js"></script>
-
-
-</body>
-</html>

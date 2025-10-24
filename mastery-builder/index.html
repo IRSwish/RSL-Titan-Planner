@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RSL Tools | Mastery Builder</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+  /* ====== LAYOUT ====== */
+  #builder {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    max-width: 1400px;
+  }
+
+  .scroll-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .scroll-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: var(--text-color);
+  }
+
+  .scroll-type img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .tree {
+    background: var(--event-bg);
+    border: 2px solid var(--event-border);
+    border-radius: 12px;
+    padding: 20px;
+    width: 360px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(212,175,55,0.2);
+    position: relative;
+  }
+
+  .tree h2 {
+    font-family: 'American Captain';
+    color: var(--line-color);
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .reset-tree {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+    border: 2px solid var(--event-border);
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .reset-tree:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px var(--event-border);
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 25px 0;
+    position: relative;
+  }
+
+  .row.centered {
+    justify-content: center;
+  }
+
+  .mastery {
+    width: 70px;
+    height: 70px;
+    background: #1a1a1a;
+    border: 2px solid #555;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .mastery.active {
+    border-color: var(--line-color);
+    box-shadow: 0 0 12px var(--line-color);
+    background-color: rgba(212,175,55,0.15);
+  }
+
+  .mastery.locked {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .mastery.available:not(.active):not(.locked) {
+    border-color: var(--line-color);
+    box-shadow: 0 0 10px rgba(212,175,55,0.35);
+    animation: pulse-available 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-available {
+    0% { box-shadow: 0 0 6px rgba(212,175,55,0.2); }
+    50%{ box-shadow: 0 0 14px rgba(212,175,55,0.55); }
+    100%{ box-shadow: 0 0 6px rgba(212,175,55,0.2); }
+  }
+
+  /* ===== TOOLTIP STYLE ===== */
+  .mastery-tooltip {
+    position: fixed;
+    background: rgba(15, 15, 15, 0.95);
+    border: 2px solid #d4af37;
+    color: #fcf6ff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.3;
+    padding: 10px 14px;
+    border-radius: 8px;
+    max-width: 280px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    box-shadow: 0 0 12px rgba(212,175,55,0.35);
+  }
+
+  .mastery-tooltip.visible {
+    opacity: 1;
+  }
+
+  .mastery-tooltip h4 {
+    margin: 0 0 6px;
+    font-family: 'American Captain';
+    font-size: 20px;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .mastery-tooltip p {
+    margin: 0 0 6px;
+  }
+
+  .mastery-tooltip .cost {
+    font-size: 13px;
+    color: #999;
+    text-align: right;
+    border-top: 1px solid rgba(212,175,55,0.2);
+    padding-top: 4px;
+    margin-top: 4px;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="menu-container"></div>
+
+  <div class="header-wrapper">
+    <header id="page-title">Mastery Builder</header>
+  </div>
+
+  <div class="scroll-counter">
+    <div class="scroll-type" id="basic-scrolls">
+      <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scrolls">
+      <span>0 / 100</span>
+    </div>
+    <div class="scroll-type" id="advanced-scrolls">
+      <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scrolls">
+      <span>0 / 600</span>
+    </div>
+    <div class="scroll-type" id="divine-scrolls">
+      <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scrolls">
+      <span>0 / 950</span>
+    </div>
+  </div>
+
+  <div id="builder">
+    <div class="tree" data-branch="offense">
+      <button class="reset-tree">Reset</button>
+      <h2>Offense</h2>
+      <div class="rows"></div>
+    </div>
+
+    <div class="tree" data-branch="defense">
+      <button class="reset-tree">Reset</button>
+      <h2>Defense</h2>
+      <div class="rows"></div>
+    </div>
+
+    <div class="tree" data-branch="support">
+      <button class="reset-tree">Reset</button>
+      <h2>Support</h2>
+      <div class="rows"></div>
+    </div>
+  </div>
+
+  <!-- === Builder Logic === -->
+  <script src="builder.js"></script>
+
+  <!-- === Tooltip Logic === -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let tooltip = document.createElement("div");
+    tooltip.className = "mastery-tooltip";
+    document.body.appendChild(tooltip);
+
+    document.querySelectorAll(".mastery").forEach(el => {
+      el.addEventListener("mousemove", e => {
+        const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
+        if (!data) return;
+        tooltip.innerHTML = `
+          <h4>${data.name}</h4>
+          <p>${data.description}</p>
+          <div class="cost">Scroll cost: ${data.cost}</div>
+        `;
+        tooltip.style.left = e.pageX + 20 + "px";
+        tooltip.style.top = e.pageY + 20 + "px";
+        tooltip.classList.add("visible");
+      });
+      el.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
+    });
+  });
+  </script>
+
+  <!-- === Menu Script === -->
+  <script src="script.js"></script>
+</body>
+</html>
