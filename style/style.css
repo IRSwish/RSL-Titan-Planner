@@ -85,6 +85,7 @@ header {
   position: relative;
   padding: 0 2px;
   box-sizing: border-box;
+  background: linear-gradient(to bottom,#00ffdd00 0%, rgba(0,201,255,0) 20%, rgba(0,201,255,0) 80%, rgba(0,201,255,0) 100%);
   transition: background 0.25s ease, box-shadow 0.25s ease;
 }
 
