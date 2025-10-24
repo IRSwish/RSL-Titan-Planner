@@ -6,80 +6,92 @@
   <link rel="stylesheet" href="style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
+
+  <style>
+  #builder {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    max-width: 1400px;
+  }
+
+  .tree {
+    background: var(--event-bg);
+    border: 2px solid var(--event-border);
+    border-radius: 12px;
+    padding: 20px;
+    width: 340px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(212,175,55,0.2);
+  }
+
+  .tree h2 {
+    font-family: 'American Captain';
+    color: var(--line-color);
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  /* Grille 4 colonnes × 6 lignes */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: 14px;
+    justify-items: center;
+  }
+
+  /* Octogones */
+  .mastery {
+    width: 70px;
+    height: 70px;
+    background: #1a1a1a;
+    border: 2px solid #555;
+    clip-path: polygon(
+      30% 0%, 70% 0%, 100% 30%, 100% 70%, 
+      70% 100%, 30% 100%, 0% 70%, 0% 30%
+    );
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .mastery:hover {
+    box-shadow: 0 0 10px rgba(212,175,55,0.3);
+  }
+
+  .mastery.active {
+    border-color: var(--line-color);
+    box-shadow: 0 0 12px var(--line-color);
+    background: radial-gradient(circle at center, rgba(212,175,55,0.15), #1a1a1a);
+  }
+
+  .buttons {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .buttons button {
+    background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+    border: 2px solid var(--event-border);
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: all 0.2s ease;
+  }
+
+  .buttons button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px var(--event-border);
+  }
+  </style>
 </head>
-<style>
-#builder {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-  margin: 40px auto;
-  max-width: 1200px;
-}
-
-.tree {
-  background: var(--event-bg);
-  border: 2px solid var(--event-border);
-  border-radius: 12px;
-  padding: 20px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(212,175,55,0.2);
-}
-
-.tree h2 {
-  font-family: 'American Captain';
-  color: var(--line-color);
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.mastery {
-  width: 70px;
-  height: 70px;
-  border: 2px solid #555;
-  border-radius: 10px;
-  background: #1a1a1a;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.mastery.active {
-  border-color: var(--line-color);
-  box-shadow: 0 0 10px var(--line-color);
-  background: rgba(212,175,55,0.15);
-}
-
-.buttons {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.buttons button {
-  background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
-  border: 2px solid var(--event-border);
-  color: var(--text-color);
-  font-weight: 600;
-  font-size: 15px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 0 10px;
-  transition: all 0.2s ease;
-}
-
-.buttons button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 8px var(--event-border);
-}
-
-</style>
 <body>
   <div id="menu-container"></div>
 
@@ -91,36 +103,28 @@
     <div class="tree" data-branch="offense">
       <h2>Attaque</h2>
       <div class="grid">
-        <div class="mastery" data-id="off1" title="Maîtrise Attaque 1"></div>
-        <div class="mastery" data-id="off2" title="Maîtrise Attaque 2"></div>
-        <div class="mastery" data-id="off3" title="Maîtrise Attaque 3"></div>
-        <div class="mastery" data-id="off4" title="Maîtrise Attaque 4"></div>
-        <div class="mastery" data-id="off5" title="Maîtrise Attaque 5"></div>
-        <div class="mastery" data-id="off6" title="Maîtrise Attaque 6"></div>
+        <!-- 4 colonnes × 6 lignes -->
+        ${Array.from({ length: 24 }).map((_, i) => `
+          <div class="mastery" data-id="off-${i + 1}" title="Maîtrise Attaque ${i + 1}"></div>
+        `).join('')}
       </div>
     </div>
 
     <div class="tree" data-branch="defense">
       <h2>Défense</h2>
       <div class="grid">
-        <div class="mastery" data-id="def1" title="Maîtrise Défense 1"></div>
-        <div class="mastery" data-id="def2" title="Maîtrise Défense 2"></div>
-        <div class="mastery" data-id="def3" title="Maîtrise Défense 3"></div>
-        <div class="mastery" data-id="def4" title="Maîtrise Défense 4"></div>
-        <div class="mastery" data-id="def5" title="Maîtrise Défense 5"></div>
-        <div class="mastery" data-id="def6" title="Maîtrise Défense 6"></div>
+        ${Array.from({ length: 24 }).map((_, i) => `
+          <div class="mastery" data-id="def-${i + 1}" title="Maîtrise Défense ${i + 1}"></div>
+        `).join('')}
       </div>
     </div>
 
     <div class="tree" data-branch="support">
       <h2>Soutien</h2>
       <div class="grid">
-        <div class="mastery" data-id="sup1" title="Maîtrise Soutien 1"></div>
-        <div class="mastery" data-id="sup2" title="Maîtrise Soutien 2"></div>
-        <div class="mastery" data-id="sup3" title="Maîtrise Soutien 3"></div>
-        <div class="mastery" data-id="sup4" title="Maîtrise Soutien 4"></div>
-        <div class="mastery" data-id="sup5" title="Maîtrise Soutien 5"></div>
-        <div class="mastery" data-id="sup6" title="Maîtrise Soutien 6"></div>
+        ${Array.from({ length: 24 }).map((_, i) => `
+          <div class="mastery" data-id="sup-${i + 1}" title="Maîtrise Soutien ${i + 1}"></div>
+        `).join('')}
       </div>
     </div>
   </div>
@@ -134,6 +138,18 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Crée dynamiquement les maîtrises (pour éviter de les écrire à la main)
+  document.querySelectorAll('.tree .grid').forEach(grid => {
+    const branch = grid.closest('.tree').dataset.branch;
+    for (let i = 1; i <= 24; i++) {
+      const div = document.createElement('div');
+      div.className = 'mastery';
+      div.dataset.id = `${branch}-${i}`;
+      div.title = `Maîtrise ${branch} ${i}`;
+      grid.appendChild(div);
+    }
+  });
+
   const masteryEls = document.querySelectorAll('.mastery');
   const copyBtn = document.getElementById('copy-link');
   const resetBtn = document.getElementById('reset');
@@ -164,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Reset
   resetBtn.addEventListener('click', () => {
-    masteryEls.forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.mastery.active').forEach(el => el.classList.remove('active'));
     shareLink.textContent = '';
     history.replaceState(null, '', window.location.pathname);
   });
