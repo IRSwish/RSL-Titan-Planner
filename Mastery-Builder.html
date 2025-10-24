@@ -5,9 +5,9 @@
   <title>RSL Tools | Mastery Builder</title>
   <link rel="stylesheet" href="style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
 
   <style>
+  /* === Layout === */
   #builder {
     display: flex;
     justify-content: center;
@@ -17,11 +17,33 @@
     max-width: 1400px;
   }
 
+  .scroll-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .scroll-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: var(--text-color);
+  }
+
+  .scroll-type img {
+    width: 36px;
+    height: 36px;
+  }
+
   .tree {
     background: var(--event-bg);
     border: 2px solid var(--event-border);
     border-radius: 12px;
-    padding: 20px 20px 40px;
+    padding: 20px;
     width: 360px;
     text-align: center;
     box-shadow: 0 0 10px rgba(212,175,55,0.2);
@@ -32,7 +54,27 @@
     font-family: 'American Captain';
     color: var(--line-color);
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  }
+
+  .reset-tree {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+    border: 2px solid var(--event-border);
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .reset-tree:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px var(--event-border);
   }
 
   .row {
@@ -50,13 +92,14 @@
   .mastery {
     width: 70px;
     height: 70px;
-    background: #1a1a1a center/contain no-repeat;
+    background: #1a1a1a;
     border: 2px solid #555;
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
     z-index: 2;
+    opacity: 1;
   }
 
   .mastery:hover {
@@ -69,7 +112,12 @@
     background-color: rgba(212,175,55,0.1);
   }
 
-  /* vertical connectors */
+  .mastery.locked {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* Connection lines */
   .connection {
     position: absolute;
     width: 4px;
@@ -89,28 +137,6 @@
     box-shadow: 0 0 10px #d4af37;
   }
 
-  .buttons {
-    text-align: center;
-    margin-top: 25px;
-  }
-
-  .buttons button {
-    background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
-    border: 2px solid var(--event-border);
-    color: var(--text-color);
-    font-weight: 600;
-    font-size: 15px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 0 10px;
-    transition: all 0.2s ease;
-  }
-
-  .buttons button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 8px var(--event-border);
-  }
   </style>
 </head>
 <body>
@@ -120,130 +146,183 @@
     <header id="page-title">Mastery Builder</header>
   </div>
 
+  <div class="scroll-counter">
+    <div class="scroll-type" id="basic-scrolls">
+      <img src="style/img/Misc/Scroll-Basic.webp" alt="Basic Scrolls">
+      <span>0 / 100</span>
+    </div>
+    <div class="scroll-type" id="advanced-scrolls">
+      <img src="style/img/Misc/Scroll-Advanced.webp" alt="Advanced Scrolls">
+      <span>0 / 600</span>
+    </div>
+    <div class="scroll-type" id="divine-scrolls">
+      <img src="style/img/Misc/Scroll-Divine.webp" alt="Divine Scrolls">
+      <span>0 / 950</span>
+    </div>
+  </div>
+
   <div id="builder">
     <div class="tree" data-branch="offense">
+      <button class="reset-tree">Reset</button>
       <h2>Offense</h2>
       <div class="rows"></div>
     </div>
 
     <div class="tree" data-branch="defense">
+      <button class="reset-tree">Reset</button>
       <h2>Defense</h2>
       <div class="rows"></div>
     </div>
 
     <div class="tree" data-branch="support">
+      <button class="reset-tree">Reset</button>
       <h2>Support</h2>
       <div class="rows"></div>
     </div>
   </div>
 
-  <div class="buttons">
-    <button id="copy-link">Copy Link</button>
-    <button id="reset">Reset</button>
-  </div>
-
-  <p id="share-link" style="margin-top:10px; font-size:14px; font-style:italic;"></p>
-
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", () => {
   const layout = [2, 4, 4, 4, 4, 4];
-  const masteryData = await fetch('masteries.json').then(r => r.json());
+  const trees = document.querySelectorAll(".tree");
 
-  // Build trees
-  document.querySelectorAll('.tree').forEach(tree => {
+  // Build mastery layout
+  trees.forEach(tree => {
     const branch = tree.dataset.branch;
-    const rowsContainer = tree.querySelector('.rows');
+    const container = tree.querySelector(".rows");
 
     layout.forEach((cols, row) => {
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row' + (cols === 2 ? ' centered' : '');
-      rowsContainer.appendChild(rowDiv);
+      const rowDiv = document.createElement("div");
+      rowDiv.className = "row" + (cols === 2 ? " centered" : "");
+      container.appendChild(rowDiv);
 
       for (let col = 0; col < cols; col++) {
-        const mastery = document.createElement('div');
-        mastery.className = 'mastery';
-        mastery.dataset.id = `${branch}-${row + 1}-${col + 1}`;
-        rowDiv.appendChild(mastery);
+        const m = document.createElement("div");
+        m.className = "mastery";
+        m.dataset.id = `${branch}-${row + 1}-${col + 1}`;
 
-        // connector
+        // connection
         if (row < layout.length - 1) {
-          const line = document.createElement('div');
-          line.className = 'connection';
-          line.dataset.from = `${branch}-${row + 1}-${col + 1}`;
-          line.dataset.to = `${branch}-${row + 2}-${col + 1}`;
-          mastery.appendChild(line);
+          const conn = document.createElement("div");
+          conn.className = "connection";
+          conn.dataset.from = `${branch}-${row + 1}-${col + 1}`;
+          conn.dataset.to = `${branch}-${row + 2}-${col + 1}`;
+          m.appendChild(conn);
         }
+
+        rowDiv.appendChild(m);
       }
     });
   });
 
-  // Apply names, tooltips, icons
-  for (const branch in masteryData) {
-    masteryData[branch].flat().forEach(m => {
-      const el = document.querySelector(`[data-id="${m.id}"]`);
-      if (!el) return;
-      el.title = `${m.name}\n${m.description}\nScroll cost: ${m.cost}`;
-      el.style.backgroundImage = `url('img/masteries/${m.icon}.png')`;
-    });
-  }
+  const masteries = document.querySelectorAll(".mastery");
 
-  const masteryEls = document.querySelectorAll('.mastery');
-  const copyBtn = document.getElementById('copy-link');
-  const resetBtn = document.getElementById('reset');
-  const shareLink = document.getElementById('share-link');
+  // === Scroll costs ===
+  const tierCost = { 1: 5, 2: 5, 3: 30, 4: 30, 5: 200, 6: 350 };
+  const scrollDisplay = {
+    basic: document.querySelector("#basic-scrolls span"),
+    advanced: document.querySelector("#advanced-scrolls span"),
+    divine: document.querySelector("#divine-scrolls span"),
+  };
 
-  masteryEls.forEach(el => {
-    el.addEventListener('click', () => {
-      el.classList.toggle('active');
+  // === Selection logic ===
+  masteries.forEach(m => {
+    m.addEventListener("click", () => {
+      if (m.classList.contains("locked")) return;
+      const branch = m.dataset.id.split("-")[0];
+      const tier = parseInt(m.dataset.id.split("-")[1]);
+
+      const activeTrees = getActiveTrees();
+      const currentTree = document.querySelector(`[data-branch="${branch}"]`);
+
+      // rule: max 2 trees
+      if (!activeTrees.includes(branch) && activeTrees.length >= 2) return;
+
+      // toggle
+      if (m.classList.contains("active")) {
+        m.classList.remove("active");
+      } else {
+        // enforce tier/row rules
+        const rowMasteries = Array.from(currentTree.querySelectorAll(`.mastery[data-id^="${branch}-${tier}-"]`));
+        const totalActiveThisTree = currentTree.querySelectorAll(".mastery.active").length;
+
+        if (tier === 1 && rowMasteries.some(el => el.classList.contains("active"))) return; // only 1 in tier 1
+        if (tier === 6 && currentTree.querySelectorAll('[data-id^="' + branch + '-6-"].active').length >= 1) return;
+        if ([2,3,4,5].includes(tier) && totalActiveThisTree >= 3) return;
+
+        // connection validation
+        if (!isConnected(m)) return;
+
+        m.classList.add("active");
+      }
+
       updateConnections();
-      updateLink();
+      updateLocks();
+      updateScrolls();
     });
   });
+
+  // === Helpers ===
+  function getActiveTrees() {
+    return Array.from(trees)
+      .filter(t => t.querySelector(".mastery.active"))
+      .map(t => t.dataset.branch);
+  }
+
+  function isConnected(m) {
+    const [branch, tier, col] = m.dataset.id.split("-").map((x,i)=>i>0?parseInt(x):x);
+    if (tier === 1) return true; // always allowed
+    const prevTier = tier - 1;
+    for (let delta of [-1, 0, 1]) {
+      const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col + delta}"]`);
+      if (prev && prev.classList.contains("active")) return true;
+    }
+    return false;
+  }
 
   function updateConnections() {
-    document.querySelectorAll('.connection').forEach(conn => {
-      const from = conn.dataset.from;
-      const to = conn.dataset.to;
-      const fromEl = document.querySelector(`[data-id="${from}"]`);
-      const toEl = document.querySelector(`[data-id="${to}"]`);
-      if (fromEl?.classList.contains('active') && toEl?.classList.contains('active')) {
-        conn.classList.add('active');
-      } else {
-        conn.classList.remove('active');
-      }
+    document.querySelectorAll(".connection").forEach(c => {
+      const from = document.querySelector(`[data-id="${c.dataset.from}"]`);
+      const to = document.querySelector(`[data-id="${c.dataset.to}"]`);
+      c.classList.toggle("active", from?.classList.contains("active") && to?.classList.contains("active"));
     });
   }
 
-  function updateLink() {
-    const activeIds = [...document.querySelectorAll('.mastery.active')].map(el => el.dataset.id);
-    const encoded = btoa(activeIds.join(','));
-    shareLink.textContent = `${window.location.origin}${window.location.pathname}?m=${encoded}`;
+  function updateLocks() {
+    const activeTrees = getActiveTrees();
+    trees.forEach(tree => {
+      if (activeTrees.length >= 2 && !activeTrees.includes(tree.dataset.branch))
+        tree.querySelectorAll(".mastery").forEach(m => m.classList.add("locked"));
+      else
+        tree.querySelectorAll(".mastery").forEach(m => m.classList.remove("locked"));
+    });
   }
 
-  copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(shareLink.textContent);
-    copyBtn.textContent = 'Copied ✅';
-    setTimeout(() => (copyBtn.textContent = 'Copy Link'), 1500);
-  });
-
-  resetBtn.addEventListener('click', () => {
-    document.querySelectorAll('.mastery.active').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.connection.active').forEach(el => el.classList.remove('active'));
-    shareLink.textContent = '';
-    history.replaceState(null, '', window.location.pathname);
-  });
-
-  // decode shared link
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('m')) {
-    const data = atob(params.get('m')).split(',');
-    data.forEach(id => document.querySelector(`[data-id="${id}"]`)?.classList.add('active'));
-    updateConnections();
-    updateLink();
+  function updateScrolls() {
+    let basic = 0, advanced = 0, divine = 0;
+    document.querySelectorAll(".mastery.active").forEach(m => {
+      const tier = parseInt(m.dataset.id.split("-")[1]);
+      const cost = tierCost[tier];
+      if (tier <= 2) basic += cost;
+      else if (tier <= 4) advanced += cost;
+      else divine += cost;
+    });
+    scrollDisplay.basic.textContent = `${Math.min(basic,100)} / 100`;
+    scrollDisplay.advanced.textContent = `${Math.min(advanced,600)} / 600`;
+    scrollDisplay.divine.textContent = `${Math.min(divine,950)} / 950`;
   }
+
+  // reset buttons
+  document.querySelectorAll(".reset-tree").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const tree = e.target.closest(".tree");
+      tree.querySelectorAll(".mastery.active").forEach(m => m.classList.remove("active"));
+      updateConnections();
+      updateLocks();
+      updateScrolls();
+    });
+  });
 });
 </script>
-
-<script src="script.js"></script>
 </body>
 </html>
