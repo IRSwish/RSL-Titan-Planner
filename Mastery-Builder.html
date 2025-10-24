@@ -34,13 +34,16 @@
     margin-bottom: 15px;
   }
 
-  /* Grille 4 colonnes × 6 lignes */
+  /* 4 colonnes / 6 lignes, mais la première ligne a seulement 2 maîtrises */
   .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(6, auto);
     gap: 14px;
     justify-items: center;
+  }
+
+  .row {
+    display: contents;
   }
 
   /* Octogones */
@@ -50,12 +53,11 @@
     background: #1a1a1a;
     border: 2px solid #555;
     clip-path: polygon(
-      30% 0%, 70% 0%, 100% 30%, 100% 70%, 
+      30% 0%, 70% 0%, 100% 30%, 100% 70%,
       70% 100%, 30% 100%, 0% 70%, 0% 30%
     );
     transition: all 0.2s ease;
     cursor: pointer;
-    position: relative;
   }
 
   .mastery:hover {
@@ -102,30 +104,17 @@
   <div id="builder">
     <div class="tree" data-branch="offense">
       <h2>Attaque</h2>
-      <div class="grid">
-        <!-- 4 colonnes × 6 lignes -->
-        ${Array.from({ length: 24 }).map((_, i) => `
-          <div class="mastery" data-id="off-${i + 1}" title="Maîtrise Attaque ${i + 1}"></div>
-        `).join('')}
-      </div>
+      <div class="grid"></div>
     </div>
 
     <div class="tree" data-branch="defense">
       <h2>Défense</h2>
-      <div class="grid">
-        ${Array.from({ length: 24 }).map((_, i) => `
-          <div class="mastery" data-id="def-${i + 1}" title="Maîtrise Défense ${i + 1}"></div>
-        `).join('')}
-      </div>
+      <div class="grid"></div>
     </div>
 
     <div class="tree" data-branch="support">
       <h2>Soutien</h2>
-      <div class="grid">
-        ${Array.from({ length: 24 }).map((_, i) => `
-          <div class="mastery" data-id="sup-${i + 1}" title="Maîtrise Soutien ${i + 1}"></div>
-        `).join('')}
-      </div>
+      <div class="grid"></div>
     </div>
   </div>
 
@@ -138,15 +127,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Crée dynamiquement les maîtrises (pour éviter de les écrire à la main)
-  document.querySelectorAll('.tree .grid').forEach(grid => {
-    const branch = grid.closest('.tree').dataset.branch;
-    for (let i = 1; i <= 24; i++) {
-      const div = document.createElement('div');
-      div.className = 'mastery';
-      div.dataset.id = `${branch}-${i}`;
-      div.title = `Maîtrise ${branch} ${i}`;
-      grid.appendChild(div);
+  // Génère dynamiquement 6 lignes / 4 colonnes (sauf la première à 2 centrées)
+  document.querySelectorAll('.tree').forEach(tree => {
+    const branch = tree.dataset.branch;
+    const grid = tree.querySelector('.grid');
+    for (let row = 1; row <= 6; row++) {
+      const columns = row === 1 ? 2 : 4; // première ligne : 2 maîtrises
+      const startCol = row === 1 ? 2 : 1; // centrées
+      for (let col = 0; col < columns; col++) {
+        const div = document.createElement('div');
+        div.className = 'mastery';
+        div.dataset.id = `${branch}-${row}-${col + 1}`;
+        div.title = `Maîtrise ${branch} ${row}-${col + 1}`;
+        // alignement visuel de la première ligne
+        if (row === 1) div.style.gridColumn = `${startCol + col} / span 1`;
+        grid.appendChild(div);
+      }
     }
   });
 
@@ -171,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shareLink.textContent = link;
   }
 
-  // Copie dans le presse-papiers
+  // Copie
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(shareLink.textContent);
     copyBtn.textContent = 'Lien copié ✅';
@@ -185,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     history.replaceState(null, '', window.location.pathname);
   });
 
-  // Décodage si lien avec ?m=
+  // Décodage si lien existant
   const params = new URLSearchParams(window.location.search);
   if (params.has('m')) {
     const data = atob(params.get('m')).split(',');
