@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Swish - RSL Tools | Mastery Builder</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
+</head>
+<style>
+#builder {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin: 40px auto;
+  max-width: 1200px;
+}
+
+.tree {
+  background: var(--event-bg);
+  border: 2px solid var(--event-border);
+  border-radius: 12px;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(212,175,55,0.2);
+}
+
+.tree h2 {
+  font-family: 'American Captain';
+  color: var(--line-color);
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.mastery {
+  width: 70px;
+  height: 70px;
+  border: 2px solid #555;
+  border-radius: 10px;
+  background: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mastery.active {
+  border-color: var(--line-color);
+  box-shadow: 0 0 10px var(--line-color);
+  background: rgba(212,175,55,0.15);
+}
+
+.buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.buttons button {
+  background: linear-gradient(145deg, #1a1a1a, #2b2b2b);
+  border: 2px solid var(--event-border);
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: all 0.2s ease;
+}
+
+.buttons button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px var(--event-border);
+}
+
+</style>
+<body>
+  <div id="menu-container"></div>
+
+  <div class="header-wrapper">
+    <header id="page-title">Mastery Builder</header>
+  </div>
+
+  <div id="builder">
+    <div class="tree" data-branch="offense">
+      <h2>Attaque</h2>
+      <div class="grid">
+        <div class="mastery" data-id="off1" title="Maîtrise Attaque 1"></div>
+        <div class="mastery" data-id="off2" title="Maîtrise Attaque 2"></div>
+        <div class="mastery" data-id="off3" title="Maîtrise Attaque 3"></div>
+        <div class="mastery" data-id="off4" title="Maîtrise Attaque 4"></div>
+        <div class="mastery" data-id="off5" title="Maîtrise Attaque 5"></div>
+        <div class="mastery" data-id="off6" title="Maîtrise Attaque 6"></div>
+      </div>
+    </div>
+
+    <div class="tree" data-branch="defense">
+      <h2>Défense</h2>
+      <div class="grid">
+        <div class="mastery" data-id="def1" title="Maîtrise Défense 1"></div>
+        <div class="mastery" data-id="def2" title="Maîtrise Défense 2"></div>
+        <div class="mastery" data-id="def3" title="Maîtrise Défense 3"></div>
+        <div class="mastery" data-id="def4" title="Maîtrise Défense 4"></div>
+        <div class="mastery" data-id="def5" title="Maîtrise Défense 5"></div>
+        <div class="mastery" data-id="def6" title="Maîtrise Défense 6"></div>
+      </div>
+    </div>
+
+    <div class="tree" data-branch="support">
+      <h2>Soutien</h2>
+      <div class="grid">
+        <div class="mastery" data-id="sup1" title="Maîtrise Soutien 1"></div>
+        <div class="mastery" data-id="sup2" title="Maîtrise Soutien 2"></div>
+        <div class="mastery" data-id="sup3" title="Maîtrise Soutien 3"></div>
+        <div class="mastery" data-id="sup4" title="Maîtrise Soutien 4"></div>
+        <div class="mastery" data-id="sup5" title="Maîtrise Soutien 5"></div>
+        <div class="mastery" data-id="sup6" title="Maîtrise Soutien 6"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button id="copy-link">Copier le lien</button>
+    <button id="reset">Réinitialiser</button>
+  </div>
+
+  <p id="share-link" style="margin-top:10px; font-size:14px; font-style:italic;"></p>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const masteryEls = document.querySelectorAll('.mastery');
+  const copyBtn = document.getElementById('copy-link');
+  const resetBtn = document.getElementById('reset');
+  const shareLink = document.getElementById('share-link');
+
+  // Toggle activation
+  masteryEls.forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('active');
+      updateLink();
+    });
+  });
+
+  // Génère le lien
+  function updateLink() {
+    const activeIds = [...document.querySelectorAll('.mastery.active')].map(el => el.dataset.id);
+    const encoded = btoa(activeIds.join(','));
+    const link = `${window.location.origin}${window.location.pathname}?m=${encoded}`;
+    shareLink.textContent = link;
+  }
+
+  // Copie dans le presse-papiers
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(shareLink.textContent);
+    copyBtn.textContent = 'Lien copié ✅';
+    setTimeout(() => (copyBtn.textContent = 'Copier le lien'), 1500);
+  });
+
+  // Reset
+  resetBtn.addEventListener('click', () => {
+    masteryEls.forEach(el => el.classList.remove('active'));
+    shareLink.textContent = '';
+    history.replaceState(null, '', window.location.pathname);
+  });
+
+  // Décodage si lien avec ?m=
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('m')) {
+    const data = atob(params.get('m')).split(',');
+    data.forEach(id => document.querySelector(`[data-id="${id}"]`)?.classList.add('active'));
+    updateLink();
+  }
+});
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
