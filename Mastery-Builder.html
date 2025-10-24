@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Swish - RSL Tools | Mastery Builder</title>
+  <title>RSL Tools | Mastery Builder</title>
   <link rel="stylesheet" href="style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
@@ -50,7 +50,7 @@
   .mastery {
     width: 70px;
     height: 70px;
-    background: #1a1a1a;
+    background: #1a1a1a center/contain no-repeat;
     border: 2px solid #555;
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     cursor: pointer;
@@ -66,10 +66,10 @@
   .mastery.active {
     border-color: var(--line-color);
     box-shadow: 0 0 12px var(--line-color);
-    background: radial-gradient(circle at center, rgba(212,175,55,0.15), #1a1a1a);
+    background-color: rgba(212,175,55,0.1);
   }
 
-  /* lignes de connexion verticales */
+  /* vertical connectors */
   .connection {
     position: absolute;
     width: 4px;
@@ -122,61 +122,70 @@
 
   <div id="builder">
     <div class="tree" data-branch="offense">
-      <h2>Attaque</h2>
+      <h2>Offense</h2>
       <div class="rows"></div>
     </div>
 
     <div class="tree" data-branch="defense">
-      <h2>Défense</h2>
+      <h2>Defense</h2>
       <div class="rows"></div>
     </div>
 
     <div class="tree" data-branch="support">
-      <h2>Soutien</h2>
+      <h2>Support</h2>
       <div class="rows"></div>
     </div>
   </div>
 
   <div class="buttons">
-    <button id="copy-link">Copier le lien</button>
-    <button id="reset">Réinitialiser</button>
+    <button id="copy-link">Copy Link</button>
+    <button id="reset">Reset</button>
   </div>
 
   <p id="share-link" style="margin-top:10px; font-size:14px; font-style:italic;"></p>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const layout = [2, 4, 4, 4, 4, 4];
+  const masteryData = await fetch('masteries.json').then(r => r.json());
 
-  const layout = [2, 4, 4, 4, 4, 4]; // 2 centrées sur la 1ère ligne
-
+  // Build trees
   document.querySelectorAll('.tree').forEach(tree => {
     const branch = tree.dataset.branch;
-    const container = tree.querySelector('.rows');
+    const rowsContainer = tree.querySelector('.rows');
 
     layout.forEach((cols, row) => {
       const rowDiv = document.createElement('div');
       rowDiv.className = 'row' + (cols === 2 ? ' centered' : '');
-      container.appendChild(rowDiv);
+      rowsContainer.appendChild(rowDiv);
 
       for (let col = 0; col < cols; col++) {
-        const div = document.createElement('div');
-        div.className = 'mastery';
-        div.dataset.id = `${branch}-${row + 1}-${col + 1}`;
-        div.title = `Maîtrise ${branch} ${row + 1}-${col + 1}`;
+        const mastery = document.createElement('div');
+        mastery.className = 'mastery';
+        mastery.dataset.id = `${branch}-${row + 1}-${col + 1}`;
+        rowDiv.appendChild(mastery);
 
-        // connexion vers le bas (sauf dernière ligne)
+        // connector
         if (row < layout.length - 1) {
           const line = document.createElement('div');
           line.className = 'connection';
           line.dataset.from = `${branch}-${row + 1}-${col + 1}`;
           line.dataset.to = `${branch}-${row + 2}-${col + 1}`;
-          div.appendChild(line);
+          mastery.appendChild(line);
         }
-
-        rowDiv.appendChild(div);
       }
     });
   });
+
+  // Apply names, tooltips, icons
+  for (const branch in masteryData) {
+    masteryData[branch].flat().forEach(m => {
+      const el = document.querySelector(`[data-id="${m.id}"]`);
+      if (!el) return;
+      el.title = `${m.name}\n${m.description}\nScroll cost: ${m.cost}`;
+      el.style.backgroundImage = `url('img/masteries/${m.icon}.png')`;
+    });
+  }
 
   const masteryEls = document.querySelectorAll('.mastery');
   const copyBtn = document.getElementById('copy-link');
@@ -208,14 +217,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateLink() {
     const activeIds = [...document.querySelectorAll('.mastery.active')].map(el => el.dataset.id);
     const encoded = btoa(activeIds.join(','));
-    const link = `${window.location.origin}${window.location.pathname}?m=${encoded}`;
-    shareLink.textContent = link;
+    shareLink.textContent = `${window.location.origin}${window.location.pathname}?m=${encoded}`;
   }
 
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(shareLink.textContent);
-    copyBtn.textContent = 'Lien copié ✅';
-    setTimeout(() => (copyBtn.textContent = 'Copier le lien'), 1500);
+    copyBtn.textContent = 'Copied ✅';
+    setTimeout(() => (copyBtn.textContent = 'Copy Link'), 1500);
   });
 
   resetBtn.addEventListener('click', () => {
@@ -225,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     history.replaceState(null, '', window.location.pathname);
   });
 
+  // decode shared link
   const params = new URLSearchParams(window.location.search);
   if (params.has('m')) {
     const data = atob(params.get('m')).split(',');

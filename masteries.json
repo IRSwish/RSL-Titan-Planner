@@ -1,0 +1,52 @@
+{
+  "offense": [
+    [
+      {
+        "id": "offense-1-1",
+        "name": "Deadly Precision",
+        "description": "Increases C. RATE by 5%.",
+        "cost": 5,
+        "icon": "deadly-precision"
+      },
+      {
+        "id": "offense-1-2",
+        "name": "Keen Strike",
+        "description": "Increases C. DMG by 10%.",
+        "cost": 5,
+        "icon": "keen-strike"
+      }
+    ],
+    [
+      {
+        "id": "offense-2-1",
+        "name": "Shield Breaker",
+        "description": "Increases damage inflicted to targets under Shield buffs by 25%.",
+        "cost": 30,
+        "icon": "shield-breaker"
+      },
+      {
+        "id": "offense-2-2",
+        "name": "Grim Resolve",
+        "description": "Increases damage inflicted by 5% when HP is less than 50%.",
+        "cost": 30,
+        "icon": "grim-resolve"
+      },
+      {
+        "id": "offense-2-3",
+        "name": "Heart of Glory",
+        "description": "Increases damage inflicted by 5% when HP is above 80%.",
+        "cost": 30,
+        "icon": "heart-of-glory"
+      },
+      {
+        "id": "offense-2-4",
+        "name": "Whirlwind of Death",
+        "description": "Increases SPD by 6 for each enemy killed by this Champion, up to 18 SPD.",
+        "cost": 30,
+        "icon": "whirlwind-of-death"
+      }
+    ]
+  ],
+  "defense": [],
+  "support": []
+}
