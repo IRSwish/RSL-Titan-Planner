@@ -162,18 +162,24 @@
     });
   }
 
+  // dictionnaire des coûts réels par ID (sera rempli après chargement du JSON)
+  const MASTERY_COSTS = {};
+
   function updateScrolls() {
-    let basic=0, adv=0, div=0;
+    let basic = 0, adv = 0, div = 0;
+
     document.querySelectorAll('.mastery.active').forEach(m => {
       const tier = +m.dataset.tier;
-      const cost = TIER_COST[tier] || 0;
-      if (tier<=2) basic += cost;
-      else if (tier<=4) adv += cost;
+      const cost = MASTERY_COSTS[m.dataset.id] || 0;
+
+      if (tier <= 2) basic += cost;
+      else if (tier <= 4) adv += cost;
       else div += cost;
     });
-    document.querySelector('#basic-scrolls span').textContent = `${Math.min(basic,100)} / 100`;
-    document.querySelector('#advanced-scrolls span').textContent = `${Math.min(adv,600)} / 600`;
-    document.querySelector('#divine-scrolls span').textContent = `${Math.min(div,950)} / 950`;
+
+    document.querySelector('#basic-scrolls span').textContent = `${Math.min(basic, 100)} / 100`;
+    document.querySelector('#advanced-scrolls span').textContent = `${Math.min(adv, 600)} / 600`;
+    document.querySelector('#divine-scrolls span').textContent = `${Math.min(div, 950)} / 950`;
   }
 
   function updateAll(cascade=false) {
