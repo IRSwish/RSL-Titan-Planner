@@ -37,8 +37,8 @@
   ],
   "defense": [
     [
-      { "id": "defense-1-1", "name": "Tough Skin", "description": "Defence +75.", "cost": 5, "icon": "tough-skin" },
-      { "id": "defense-1-2", "name": "Defiant", "description": "Resistance +10.", "cost": 5, "icon": "defiant" }
+      { "id": "defense-1-2", "name": "Tough Skin", "description": "Defence +75.", "cost": 5, "icon": "tough-skin" },
+      { "id": "defense-1-3", "name": "Defiant", "description": "Resistance +10.", "cost": 5, "icon": "defiant" }
     ],
     [
       { "id": "defense-2-1", "name": "Blastproof", "description": "Decreases damage received from AoE attacks by 5%.", "cost": 30, "icon": "blastproof" },
@@ -74,8 +74,8 @@
   ],
   "support": [
     [
-      { "id": "support-1-1", "name": "Steadfast", "description": "MAX HP +810.", "cost": 5, "icon": "steadfast" },
-      { "id": "support-1-2", "name": "Pinpoint Accuracy", "description": "Increases Accuracy by 10.", "cost": 5, "icon": "pinpoint-accuracy" }
+      { "id": "support-1-2", "name": "Steadfast", "description": "MAX HP +810.", "cost": 5, "icon": "steadfast" },
+      { "id": "support-1-3", "name": "Pinpoint Accuracy", "description": "Increases Accuracy by 10.", "cost": 5, "icon": "pinpoint-accuracy" }
     ],
     [
       { "id": "support-2-1", "name": "Lay on Hands", "description": "Increases the value of heals this Champion casts by 5%.", "cost": 30, "icon": "lay-on-hands" },
