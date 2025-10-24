@@ -21,10 +21,11 @@
     background: var(--event-bg);
     border: 2px solid var(--event-border);
     border-radius: 12px;
-    padding: 20px;
+    padding: 20px 20px 40px;
     width: 340px;
     text-align: center;
     box-shadow: 0 0 10px rgba(212,175,55,0.2);
+    position: relative;
   }
 
   .tree h2 {
@@ -34,19 +35,15 @@
     margin-bottom: 15px;
   }
 
-  /* 4 colonnes / 6 lignes, mais la première ligne a seulement 2 maîtrises */
   .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    gap: 16px;
     justify-items: center;
+    position: relative;
   }
 
-  .row {
-    display: contents;
-  }
-
-  /* Octogones */
+  /* --- OCTOGONES --- */
   .mastery {
     width: 70px;
     height: 70px;
@@ -58,6 +55,8 @@
     );
     transition: all 0.2s ease;
     cursor: pointer;
+    position: relative;
+    z-index: 2;
   }
 
   .mastery:hover {
@@ -68,6 +67,25 @@
     border-color: var(--line-color);
     box-shadow: 0 0 12px var(--line-color);
     background: radial-gradient(circle at center, rgba(212,175,55,0.15), #1a1a1a);
+  }
+
+  /* --- CONNEXIONS --- */
+  .connection {
+    position: absolute;
+    width: 4px;
+    height: 60px;
+    background: rgba(212,175,55,0.15);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .connection.active {
+    background: linear-gradient(to bottom, #d4af37, #fce39b);
+    box-shadow: 0 0 12px #d4af37;
+    opacity: 1;
   }
 
   .buttons {
@@ -127,39 +145,63 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Génère dynamiquement 6 lignes / 4 colonnes (sauf la première à 2 centrées)
+
+  // ---- GÉNÉRATION DES MAÎTRISES ----
+  const layout = [2, 4, 4, 4, 4, 4]; // nombre de maîtrises par ligne
   document.querySelectorAll('.tree').forEach(tree => {
     const branch = tree.dataset.branch;
     const grid = tree.querySelector('.grid');
-    for (let row = 1; row <= 6; row++) {
-      const columns = row === 1 ? 2 : 4; // première ligne : 2 maîtrises
-      const startCol = row === 1 ? 2 : 1; // centrées
-      for (let col = 0; col < columns; col++) {
+    layout.forEach((cols, row) => {
+      const startCol = cols < 4 ? Math.ceil((4 - cols) / 2) + 1 : 1;
+      for (let col = 0; col < cols; col++) {
         const div = document.createElement('div');
         div.className = 'mastery';
-        div.dataset.id = `${branch}-${row}-${col + 1}`;
-        div.title = `Maîtrise ${branch} ${row}-${col + 1}`;
-        // alignement visuel de la première ligne
-        if (row === 1) div.style.gridColumn = `${startCol + col} / span 1`;
+        div.dataset.id = `${branch}-${row + 1}-${col + 1}`;
+        div.title = `Maîtrise ${branch} ${row + 1}-${col + 1}`;
+        if (cols < 4) div.style.gridColumn = `${startCol + col} / span 1`;
         grid.appendChild(div);
+
+        // ajout de la connexion sauf pour la dernière ligne
+        if (row < layout.length - 1) {
+          const conn = document.createElement('div');
+          conn.className = 'connection';
+          conn.dataset.from = `${branch}-${row + 1}-${col + 1}`;
+          conn.dataset.to = `${branch}-${row + 2}-${col + 1}`;
+          grid.appendChild(conn);
+        }
       }
-    }
+    });
   });
 
+  // ---- GESTION DES SÉLECTIONS ----
   const masteryEls = document.querySelectorAll('.mastery');
   const copyBtn = document.getElementById('copy-link');
   const resetBtn = document.getElementById('reset');
   const shareLink = document.getElementById('share-link');
+  const connections = document.querySelectorAll('.connection');
 
-  // Toggle activation
   masteryEls.forEach(el => {
     el.addEventListener('click', () => {
       el.classList.toggle('active');
+      updateConnections();
       updateLink();
     });
   });
 
-  // Génère le lien
+  // --- met à jour les liens entre maîtrises ---
+  function updateConnections() {
+    connections.forEach(line => {
+      const from = document.querySelector(`[data-id="${line.dataset.from}"]`);
+      const to = document.querySelector(`[data-id="${line.dataset.to}"]`);
+      if (from && to && from.classList.contains('active') && to.classList.contains('active')) {
+        line.classList.add('active');
+      } else {
+        line.classList.remove('active');
+      }
+    });
+  }
+
+  // --- génère le lien partageable ---
   function updateLink() {
     const activeIds = [...document.querySelectorAll('.mastery.active')].map(el => el.dataset.id);
     const encoded = btoa(activeIds.join(','));
@@ -167,25 +209,27 @@ document.addEventListener('DOMContentLoaded', () => {
     shareLink.textContent = link;
   }
 
-  // Copie
+  // --- copie du lien ---
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(shareLink.textContent);
     copyBtn.textContent = 'Lien copié ✅';
     setTimeout(() => (copyBtn.textContent = 'Copier le lien'), 1500);
   });
 
-  // Reset
+  // --- reset ---
   resetBtn.addEventListener('click', () => {
     document.querySelectorAll('.mastery.active').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.connection.active').forEach(el => el.classList.remove('active'));
     shareLink.textContent = '';
     history.replaceState(null, '', window.location.pathname);
   });
 
-  // Décodage si lien existant
+  // --- décodage depuis le lien ---
   const params = new URLSearchParams(window.location.search);
   if (params.has('m')) {
     const data = atob(params.get('m')).split(',');
     data.forEach(id => document.querySelector(`[data-id="${id}"]`)?.classList.add('active'));
+    updateConnections();
     updateLink();
   }
 });
