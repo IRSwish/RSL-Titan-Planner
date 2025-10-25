@@ -134,11 +134,11 @@
   left: calc(var(--border-width) - var(--border-fix));
   right: calc(var(--border-width) - var(--border-fix));
   bottom: calc(var(--border-width) - var(--border-fix));
-  background: var(--fill-gradient);
+  background: var(--fill-gradient, linear-gradient(to bottom, #111, #000));
   clip-path: var(--octagon-path);
   background-size: cover;
   background-position: center;
-  transition: filter 0.25s ease;
+  transition: background 0.25s ease, filter 0.25s ease;
   z-index: 1;
 }
 
@@ -444,11 +444,10 @@
   background: linear-gradient(to bottom, #3bb2f7, #187dc6);
 }
 
-/* === COLORATION DU FOND GRIS DE BASE (ancien fond neutre) === */
-
+/* === COLORATION DU FOND GRIS DE BASE === */
 /* 🟥 OFFENSE */
-.tree[data-branch="offense"] .mastery:not(.active) .octogone {
-  --fill-gradient: linear-gradient(to bottom, #2a0f0b, #1a0705);
+.tree[data-branch="offense"] .mastery .octogone {
+  --fill-gradient: linear-gradient(to bottom, #1a0907, #0d0403);
 }
 .tree[data-branch="offense"] .mastery.available:not(.active) .octogone {
   --fill-gradient: linear-gradient(to bottom, #3c1410, #250b08);
@@ -458,8 +457,8 @@
 }
 
 /* 🟩 DEFENSE */
-.tree[data-branch="defense"] .mastery:not(.active) .octogone {
-  --fill-gradient: linear-gradient(to bottom, #122607, #0c1905);
+.tree[data-branch="defense"] .mastery .octogone {
+  --fill-gradient: linear-gradient(to bottom, #0e1d06, #071003);
 }
 .tree[data-branch="defense"] .mastery.available:not(.active) .octogone {
   --fill-gradient: linear-gradient(to bottom, #1d3b0a, #102406);
@@ -469,7 +468,7 @@
 }
 
 /* 🟦 SUPPORT */
-.tree[data-branch="support"] .mastery:not(.active) .octogone {
+.tree[data-branch="support"] .mastery .octogone {
   --fill-gradient: linear-gradient(to bottom, #061b2c, #040f1c);
 }
 .tree[data-branch="support"] .mastery.available:not(.active) .octogone {
