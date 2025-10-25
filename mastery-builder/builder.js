@@ -256,7 +256,7 @@
           // 🔹 Application de l’image sur le nouvel élément séparé
           const imgEl = masteryEl.querySelector(".octogone-image");
           if (m.icon && imgEl) {
-            imgEl.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
+            imgEl.style.setProperty("--mastery-icon", `url('../style/img/masteries/${m.icon}.webp')`);
           } else if (imgEl) {
             imgEl.style.backgroundImage = 'none';
           }

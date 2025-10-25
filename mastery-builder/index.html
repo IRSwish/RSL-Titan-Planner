@@ -185,6 +185,27 @@
     var(--mastery-icon);
 }
 
+/* OFFENSE (rouge vif) */
+[data-branch="offense"] .mastery.active .octogone-image {
+  background-image:
+    linear-gradient(to bottom, #d52317, #d52317),
+    var(--mastery-icon);
+}
+
+/* DEFENSE (vert vif) */
+[data-branch="defense"] .mastery.active .octogone-image {
+  background-image:
+    linear-gradient(to bottom, #6b9e08, #e4f230),
+    var(--mastery-icon);
+}
+
+/* SUPPORT (bleu vif) */
+[data-branch="support"] .mastery.active .octogone-image {
+  background-image:
+    linear-gradient(to bottom, #187dc6, #84f7f7),
+    var(--mastery-icon);
+}
+
 /* BORDURE INTERNE GLOW */
 .octogone::after {
   content: "";
