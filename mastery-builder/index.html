@@ -288,92 +288,106 @@
   filter: grayscale(100%);
 }
 
-/* === OCTOGONES STYLISÉS (RSL TOOLS STYLE) === */
+/* === OCTOGONES STYLISÉS (version corrigée) === */
 
 .mastery {
   position: relative;
   width: 72px;
   height: 72px;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  clip-path: polygon(
+    30% 0%, 70% 0%, 100% 30%,
+    100% 70%, 70% 100%, 30% 100%,
+    0% 70%, 0% 30%
+  );
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: #1a1a1a;
+  transition: all 0.25s ease;
+  background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
   box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
   border: none;
 }
 
-/* ====== GLOW GÉNÉRAL ====== */
+/* Inner glow commun (masque clip-path) */
 .mastery::before {
   content: "";
   position: absolute;
   inset: 0;
   clip-path: inherit;
   pointer-events: none;
-  border-radius: 2px;
+  background: inherit; /* pour que le glow ait une base */
   box-shadow: inset 0 0 0 transparent;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
-/* ====== LOCKED ====== */
+/* === LOCKED === */
 .mastery.locked {
   background: linear-gradient(to bottom, #3b3b3b, #272727);
-  border: none;
+  border: 1px solid #2b2b2b;
+  opacity: 0.7;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.6);
 }
 
 .mastery.locked::before {
-  box-shadow: inset 0 0 10px #5a5a5a;
+  background: linear-gradient(to bottom, #3b3b3b, #272727);
+  box-shadow: inset 0 0 12px #5a5a5a;
   opacity: 0.6;
 }
 
-/* ====== OFFENSE ACTIVE ====== */
+/* === OFFENSE ACTIVE (ROUGE) === */
 [data-branch="offense"] .mastery.active {
   background: linear-gradient(to bottom, #611b0f, #170600);
   border: 2px solid transparent;
   border-image: linear-gradient(to bottom, #ced3bd, #f7db39) 1;
+  border-style: solid; /* ✅ nécessaire pour afficher le gradient */
 }
 
 [data-branch="offense"] .mastery.active::before {
+  background: linear-gradient(to bottom, #611b0f, #170600);
   box-shadow: inset 0 0 20px #bd2e07;
   opacity: 0.9;
 }
 
-/* ====== DEFENSE ACTIVE (VERT) ====== */
+/* === DEFENSE ACTIVE (VERT) === */
 [data-branch="defense"] .mastery.active {
   background: linear-gradient(to bottom, #2e680e, #041100);
   border: 2px solid transparent;
   border-image: linear-gradient(to bottom, #c3d3bd, #b4f739) 1;
+  border-style: solid;
 }
 
 [data-branch="defense"] .mastery.active::before {
+  background: linear-gradient(to bottom, #2e680e, #041100);
   box-shadow: inset 0 0 20px #42ad18;
   opacity: 0.9;
 }
 
-/* ====== SUPPORT ACTIVE (BLEU) ====== */
+/* === SUPPORT ACTIVE (BLEU) === */
 [data-branch="support"] .mastery.active {
   background: linear-gradient(to bottom, #124071, #020e1d);
   border: 2px solid transparent;
   border-image: linear-gradient(to bottom, #bdc7d3, #39d4f7) 1;
+  border-style: solid;
 }
 
 [data-branch="support"] .mastery.active::before {
+  background: linear-gradient(to bottom, #124071, #020e1d);
   box-shadow: inset 0 0 20px #1854ad;
   opacity: 0.9;
 }
 
-/* ====== NEUTRE (disponible, non sélectionné) ====== */
+/* === DISPONIBLE (non active) === */
 .mastery.available:not(.active):not(.locked) {
-  background: linear-gradient(to bottom, #242424, #181818);
-  border: 1px solid #7a7a7a;
+  background: linear-gradient(to bottom, #262626, #171717);
+  border: 1px solid #8f8f8f;
 }
 
 .mastery.available:not(.active):not(.locked)::before {
-  box-shadow: inset 0 0 6px rgba(255,255,255,0.05);
+  background: linear-gradient(to bottom, #262626, #171717);
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.05);
 }
 
-/* ====== HOVER ====== */
+/* === HOVER === */
 .mastery.available:hover {
-  transform: scale(1.04);
+  transform: scale(1.05);
   filter: brightness(1.1);
 }
   </style>
