@@ -134,12 +134,10 @@
   left: calc(var(--border-width) - var(--border-fix));
   right: calc(var(--border-width) - var(--border-fix));
   bottom: calc(var(--border-width) - var(--border-fix));
-  background: var(--fill-gradient, linear-gradient(to bottom, #111, #000));
   clip-path: var(--octagon-path);
-  background-size: cover;
-  background-position: center;
-  transition: background 0.25s ease, filter 0.25s ease;
   z-index: 1;
+  overflow: hidden; /* important pour contenir ::before et ::after */
+  transition: filter 0.25s ease;
 }
 
 .octogone-image {
