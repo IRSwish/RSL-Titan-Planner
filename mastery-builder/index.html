@@ -153,6 +153,11 @@
   pointer-events: none;
   transition: all 0.3s ease;
   transform: scale(var(--inner-border-scale));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: smooth;
+  image-rendering: high-quality;
+  -ms-interpolation-mode: bicubic;
+  filter: contrast(1.02) saturate(1.05);
 }
 
 /* BORDURE INTERNE GLOW */
