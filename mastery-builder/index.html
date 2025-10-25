@@ -444,10 +444,11 @@
   background: linear-gradient(to bottom, #3bb2f7, #187dc6);
 }
 
-/* === COLORATION DU FOND GRIS DE BASE === */
+/* === FOND INTERNE SELON LA BRANCHE ET L’ÉTAT === */
+
 /* 🟥 OFFENSE */
-.tree[data-branch="offense"] .mastery .octogone {
-  --fill-gradient: linear-gradient(to bottom, #1a0907, #0d0403);
+.tree[data-branch="offense"] .mastery:not(.active) .octogone {
+  --fill-gradient: linear-gradient(to bottom, #2a0f0b, #1a0705);
 }
 .tree[data-branch="offense"] .mastery.available:not(.active) .octogone {
   --fill-gradient: linear-gradient(to bottom, #3c1410, #250b08);
@@ -457,8 +458,8 @@
 }
 
 /* 🟩 DEFENSE */
-.tree[data-branch="defense"] .mastery .octogone {
-  --fill-gradient: linear-gradient(to bottom, #0e1d06, #071003);
+.tree[data-branch="defense"] .mastery:not(.active) .octogone {
+  --fill-gradient: linear-gradient(to bottom, #122607, #0c1905);
 }
 .tree[data-branch="defense"] .mastery.available:not(.active) .octogone {
   --fill-gradient: linear-gradient(to bottom, #1d3b0a, #102406);
@@ -468,7 +469,7 @@
 }
 
 /* 🟦 SUPPORT */
-.tree[data-branch="support"] .mastery .octogone {
+.tree[data-branch="support"] .mastery:not(.active) .octogone {
   --fill-gradient: linear-gradient(to bottom, #061b2c, #040f1c);
 }
 .tree[data-branch="support"] .mastery.available:not(.active) .octogone {
@@ -476,6 +477,17 @@
 }
 .tree[data-branch="support"] .mastery.active .octogone {
   --fill-gradient: linear-gradient(to bottom, #14537d, #0a2b44);
+}
+
+/* === COULEUR DU FOND INTERNE (le gris sous l'image) === */
+.octogone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: var(--octagon-path);
+  background: var(--fill-gradient, linear-gradient(to bottom, #111, #000));
+  z-index: 0; /* Derrière tout le reste */
+  transition: background 0.3s ease;
 }
   </style>
 </head>
