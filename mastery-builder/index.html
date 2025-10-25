@@ -335,13 +335,29 @@
   content: "";
   position: absolute;
   inset: 0;
-  transform: rotate(0deg); /* redresse le fond à plat */
-  background: var(--mastery-bg, linear-gradient(to bottom, #1a1a1a, #0e0e0e));
+  /* ✅ on redresse complètement l'image */
+  transform: rotate(45deg) translateZ(0);
+  transform-origin: center center;
+  background-image: var(--mastery-bg, linear-gradient(to bottom, #1a1a1a, #0e0e0e));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: opacity 0.2s ease;
+  transition: none !important;
   z-index: -1;
+  pointer-events: none;
+}
+
+.mastery,
+.mastery::after {
+  backface-visibility: hidden;
+  will-change: auto;
+}
+
+.mastery:hover,
+.mastery:focus {
+  transform: rotate(-45deg) !important;
+  transition: none !important;
+  filter: none !important;
 }
 
 /* AUCUNE rotation ni zoom au hover */
