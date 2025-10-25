@@ -312,8 +312,6 @@
 
 /* === OCTOGONES  === */
 
-/* === OCTOGONES PARFAITS, BORDURES VISIBLES === */
-
 /* Le wrapper crée la vraie forme octogonale */
 .mastery-wrap {
   width: 72px;
@@ -385,6 +383,30 @@
   border-image: linear-gradient(to bottom, #bdc7d3, #39d4f7) 1;
   background: linear-gradient(to bottom, #124071, #020e1d);
   box-shadow: inset 0 0 20px #1854ad;
+}
+
+/* === Alignement parfait de la première ligne (Tier 1) === */
+.row.centered {
+  justify-content: center;
+  position: relative;
+}
+
+/* décale légèrement les deux octogones pour compenser la rotation */
+.row.centered .mastery-wrap:first-child {
+  transform: translateX(35px) rotate(45deg);
+}
+
+.row.centered .mastery-wrap:last-child {
+  transform: translateX(-35px) rotate(45deg);
+}
+
+@media (max-width: 600px) {
+  .row.centered .mastery-wrap:first-child {
+    transform: translateX(25px) rotate(45deg);
+  }
+  .row.centered .mastery-wrap:last-child {
+    transform: translateX(-25px) rotate(45deg);
+  }
 }
   </style>
 </head>
