@@ -27,9 +27,9 @@
 
         const m = document.createElement('div');
         m.className = 'mastery';
-        m.dataset.id = `${branch}-${tier}-${colAbs}`;
+        m.dataset.id   = `${branch}-${tier}-${colAbs}`;
         m.dataset.tier = String(tier);
-        m.dataset.col = String(colAbs);
+        m.dataset.col  = String(colAbs);
 
         wrap.appendChild(m);
         row.appendChild(wrap);
