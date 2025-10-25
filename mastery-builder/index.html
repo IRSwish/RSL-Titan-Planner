@@ -138,57 +138,81 @@
 /* ---------------------------------------------------- */
 /* OCTOGONE INTERNE (FOND)                              */
 /* ---------------------------------------------------- */
-/* === IMAGE TEINTÉE SELON L'ÉTAT === */
-.octogone::before {
+.octogone {
+  position: absolute;
+  top: calc(var(--border-width) - var(--border-fix));
+  left: calc(var(--border-width) - var(--border-fix));
+  right: calc(var(--border-width) - var(--border-fix));
+  bottom: calc(var(--border-width) - var(--border-fix));
+  background: var(--fill-gradient);
+  clip-path: var(--octagon-path);
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.25s ease;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------- */
+/* BORDURE INTERNE GLOW                                 */
+/* ---------------------------------------------------- */
+.octogone::after {
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: inherit;
-
-  /* l'image webp sert de masque alpha */
-  -webkit-mask-image: inherit;
-  -webkit-mask-size: cover;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-image: inherit;
-  mask-size: cover;
-  mask-repeat: no-repeat;
-  mask-position: center;
-
-  /* on applique directement le dégradé coloré */
-  background: var(--tinted-gradient, linear-gradient(to bottom, #1a1a1a, #0e0e0e));
-  z-index: 5;
+  clip-path: var(--octagon-path);
+  background: var(--inner-border-gradient);
+  opacity: var(--inner-border-opacity);
+  transform: scale(var(--inner-border-scale));
+  filter: blur(var(--inner-border-blur));
+  z-index: 2;
   pointer-events: none;
-  transition: background 0.3s ease;
 }
 
-/* === TEINTES PAR BRANCHE ET ÉTAT === */
-
-/* 🔴 OFFENSE */
-[data-branch="offense"] .mastery.locked .octogone::before,
-[data-branch="offense"] .mastery.available:not(.active):not(.locked) .octogone::before {
-  --tinted-gradient: linear-gradient(to bottom, #4b1a15, #4b1a15);
+/* ---------------------------------------------------- */
+/* ETATS                                                */
+/* ---------------------------------------------------- */
+.mastery.locked .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #3b3b3b, #272727);
 }
-[data-branch="offense"] .mastery.active .octogone::before {
-  --tinted-gradient: linear-gradient(to bottom, #d52317, #d52317);
-}
-
-/* 🟢 DEFENSE */
-[data-branch="defense"] .mastery.locked .octogone::before,
-[data-branch="defense"] .mastery.available:not(.active):not(.locked) .octogone::before {
-  --tinted-gradient: linear-gradient(to bottom, #24490c, #23350c);
-}
-[data-branch="defense"] .mastery.active .octogone::before {
-  --tinted-gradient: linear-gradient(to bottom, #6b9e08, #e4f230);
+.mastery.locked .octogone {
+  --fill-gradient: linear-gradient(to bottom, #3b3b3b, #272727);
+  --inner-border-gradient: linear-gradient(to bottom, #5a5a5a, #2f2f2f);
+  filter: grayscale(0.8) brightness(0.7);
 }
 
-/* 🔵 SUPPORT */
-[data-branch="support"] .mastery.locked .octogone::before,
-[data-branch="support"] .mastery.available:not(.active):not(.locked) .octogone::before {
-  --tinted-gradient: linear-gradient(to bottom, #092f50, #15333e);
+.mastery.available:not(.active):not(.locked) .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #666, #333);
 }
-[data-branch="support"] .mastery.active .octogone::before {
-  --tinted-gradient: linear-gradient(to bottom, #187dc6, #84f7f7);
+.mastery.available:not(.active):not(.locked) .octogone {
+  --fill-gradient: linear-gradient(to bottom, #262626, #171717);
+  --inner-border-gradient: linear-gradient(to bottom, #888, #444);
+}
+
+/* === OFFENSE ACTIVE === */
+[data-branch="offense"] .mastery.active .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #f7db39, #bd2e07);
+}
+[data-branch="offense"] .mastery.active .octogone {
+  --fill-gradient: linear-gradient(to bottom, #611b0f, #170600);
+  --inner-border-gradient: linear-gradient(to bottom, #c22a00, #170600);
+}
+
+/* === DEFENSE ACTIVE === */
+[data-branch="defense"] .mastery.active .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #c3d3bd, #b4f739);
+}
+[data-branch="defense"] .mastery.active .octogone {
+  --fill-gradient: linear-gradient(to bottom, #2e680e, #041100);
+  --inner-border-gradient: linear-gradient(to bottom, #42ad18, #041100);
+}
+
+/* === SUPPORT ACTIVE === */
+[data-branch="support"] .mastery.active .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #bdc7d3, #39d4f7);
+}
+[data-branch="support"] .mastery.active .octogone {
+  --fill-gradient: linear-gradient(to bottom, #124071, #020e1d);
+  --inner-border-gradient: linear-gradient(to bottom, #1854ad, #020e1d);
 }
 
 /* Hover simple */
