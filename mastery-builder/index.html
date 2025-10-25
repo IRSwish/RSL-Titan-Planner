@@ -453,7 +453,14 @@
 
         tooltip.style.left = `${x}px`;
         tooltip.style.top = `${y}px`;
-        tooltip.classList.add("visible");
+        // Forcer le navigateur à calculer la position avant d’animer
+        tooltip.style.left = e.clientX + 20 + "px";
+        tooltip.style.top = e.clientY + 20 + "px";
+
+        // petit délai (1 frame) pour que la transition s'applique
+        requestAnimationFrame(() => {
+          tooltip.classList.add("visible");
+        });
       });
       el.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
     });
