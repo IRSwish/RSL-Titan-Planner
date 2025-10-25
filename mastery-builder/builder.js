@@ -193,6 +193,30 @@
     return changed;
   }
 
+function updateLocksAndAvailable() {
+  const { activeTrees } = getState();
+  document.querySelectorAll('.mastery').forEach(m => {
+    if (m.classList.contains('active')) {
+      m.classList.remove('locked', 'available');
+      applyGradientFor(m, 'active');
+      return;
+    }
+
+    const branch = m.dataset.id.split('-')[0];
+    let lock = false;
+    if (!activeTrees.has(branch) && activeTrees.size >= 2) lock = true;
+
+    const selectable = !lock && canSelect(m);
+    m.classList.toggle('locked', !selectable);
+    m.classList.toggle('available', selectable);
+
+    // -> teinte par état (couleur branchée garantie)
+    if (selectable) applyGradientFor(m, 'available');
+    else applyGradientFor(m, 'inactive');
+  });
+}
+
+
   function updateLocksAndAvailable() {
     const { activeTrees } = getState();
     document.querySelectorAll('.mastery').forEach(m => {
