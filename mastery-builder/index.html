@@ -149,15 +149,40 @@
   clip-path: var(--octagon-path);
   background-size: cover;
   background-position: center;
-  z-index: 5; /* AU-DESSUS */
+  z-index: 5;
   pointer-events: none;
-  transition: all 0.3s ease;
   transform: scale(var(--inner-border-scale));
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: smooth;
+  transition: all 0.3s ease;
   image-rendering: high-quality;
   -ms-interpolation-mode: bicubic;
-  filter: contrast(1.02) saturate(1.05);
+
+  /* On prépare un blend mode pour la teinte */
+  background-blend-mode: multiply;
+  opacity: 0.95;
+}
+
+/* OFFENSE (rouge) */
+[data-branch="offense"] .mastery.locked .octogone-image,
+[data-branch="offense"] .mastery:not(.active):not(.available) .octogone-image {
+  background-image:
+    linear-gradient(to bottom, #4b1a15, #4b1a15),
+    var(--mastery-icon);
+}
+
+/* DEFENSE (vert) */
+[data-branch="defense"] .mastery.locked .octogone-image,
+[data-branch="defense"] .mastery:not(.active):not(.available) .octogone-image {
+  background-image:
+    linear-gradient(to bottom, #24490c, #23350c),
+    var(--mastery-icon);
+}
+
+/* SUPPORT (bleu) */
+[data-branch="support"] .mastery.locked .octogone-image,
+[data-branch="support"] .mastery:not(.active):not(.available) .octogone-image {
+  background-image:
+    linear-gradient(to bottom, #092f50, #15333e),
+    var(--mastery-icon);
 }
 
 /* BORDURE INTERNE GLOW */
