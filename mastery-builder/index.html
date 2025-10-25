@@ -291,24 +291,19 @@
 /* === OCTOGONES STYLISÉS (version corrigée) === */
 
 .mastery {
-  position: relative;
-  width: 72px;
-  height: 72px;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.25s ease;
+  width:72px;
+  height:72px;
+  background:linear-gradient(#611b0f,#170600);
+  -webkit-mask:url("/style/img/masks/octo.webp") center/contain no-repeat;
+          mask:url("/style/img/masks/octo.webp") center/contain no-repeat;
 }
-
-/* couche 1 : fond */
-.mastery::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  clip-path: inherit;
-  background: linear-gradient(to bottom, #1f1f1f, #0e0e0e);
-  z-index: 1;
-  transition: all 0.25s ease;
+.mastery::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  -webkit-mask:inherit;
+          mask:inherit;
+  background:radial-gradient(circle at 50% 50%,rgba(189,46,7,.5),transparent 70%);
 }
 
 /* couche 2 : inner glow */
