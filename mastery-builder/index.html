@@ -168,30 +168,41 @@
   -webkit-mask-position: center;
 }
 
-/* ÉTATS INACTIFS OU BLOQUÉS */
-[data-branch="offense"] .mastery.locked .octogone-image,
-[data-branch="offense"] .mastery:not(.active):not(.available) .octogone-image {
+/* ÉTATS INACTIFS / BLOQUÉS */
+
+/* OFFENSE */
+.tree[data-branch="offense"] .mastery.locked .octogone-image,
+.tree[data-branch="offense"] .mastery:not(.active):not(.available) .octogone-image {
   --mastery-gradient: linear-gradient(to bottom, #4b1a15, #4b1a15);
 }
 
-[data-branch="defense"] .mastery.locked .octogone-image,
-[data-branch="defense"] .mastery:not(.active):not(.available) .octogone-image {
+/* DEFENSE */
+.tree[data-branch="defense"] .mastery.locked .octogone-image,
+.tree[data-branch="defense"] .mastery:not(.active):not(.available) .octogone-image {
   --mastery-gradient: linear-gradient(to bottom, #24490c, #23350c);
 }
 
-[data-branch="support"] .mastery.locked .octogone-image,
-[data-branch="support"] .mastery:not(.active):not(.available) .octogone-image {
+/* SUPPORT */
+.tree[data-branch="support"] .mastery.locked .octogone-image,
+.tree[data-branch="support"] .mastery:not(.active):not(.available) .octogone-image {
   --mastery-gradient: linear-gradient(to bottom, #092f50, #15333e);
 }
 
+
 /* ÉTATS ACTIFS */
-[data-branch="offense"] .mastery.active .octogone-image {
+
+/* OFFENSE */
+.tree[data-branch="offense"] .mastery.active .octogone-image {
   --mastery-gradient: linear-gradient(to bottom, #d52317, #d52317);
 }
-[data-branch="defense"] .mastery.active .octogone-image {
+
+/* DEFENSE */
+.tree[data-branch="defense"] .mastery.active .octogone-image {
   --mastery-gradient: linear-gradient(to bottom, #6b9e08, #e4f230);
 }
-[data-branch="support"] .mastery.active .octogone-image {
+
+/* SUPPORT */
+.tree[data-branch="support"] .mastery.active .octogone-image {
   --mastery-gradient: linear-gradient(to bottom, #187dc6, #84f7f7);
 }
 
