@@ -158,13 +158,18 @@
   pointer-events: none;
   z-index: 9999;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transform: translateY(8px); /* ↓ départ légèrement en dessous */
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s ease; /* glissement fluide */
   box-shadow: 0 0 15px rgba(212,175,55,0.15);
   backdrop-filter: blur(4px);
 }
 
+/* Quand le tooltip devient visible */
 .mastery-tooltip.visible {
   opacity: 1;
+  transform: translateY(0); /* ↑ remonte doucement en place */
 }
 
 .mastery-tooltip h4 {
