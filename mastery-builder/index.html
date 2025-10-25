@@ -318,6 +318,11 @@
   z-index: 1;
 }
 
+.mastery {
+  will-change: auto;
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
 /* ✅ Image redressée (ne tourne plus) */
 .mastery::after {
   content: "";
@@ -334,8 +339,9 @@
 
 /* AUCUNE rotation ni zoom au hover */
 .mastery:hover {
-  transform: rotate(-45deg);
+  transform: none !important;
   filter: none;
+  transition: none !important; /* désactive toute interpolation */
 }
 
 /* LOCKED */
