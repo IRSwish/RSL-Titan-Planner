@@ -336,6 +336,34 @@
 }
 .row.centered .mastery:first-child { transform: translateX(-12px); }
 .row.centered .mastery:last-child { transform: translateX(12px); }
+
+/* === ÉTAT SÉLECTIONNABLE — COULEUR ATTÉNUÉE (fidèle au jeu) === */
+
+/* OFFENSE */
+.tree[data-branch="offense"] .mastery.available:not(.active):not(.locked) .octogone-image {
+  --mastery-gradient: linear-gradient(to bottom, #79251c, #4b1a15) !important;
+  filter: brightness(1.15) saturate(0.85);
+  opacity: 0.95;
+}
+
+/* DEFENSE */
+.tree[data-branch="defense"] .mastery.available:not(.active):not(.locked) .octogone-image {
+  --mastery-gradient: linear-gradient(to bottom, #3d6b11, #23350c) !important;
+  filter: brightness(1.15) saturate(0.85);
+  opacity: 0.95;
+}
+
+/* SUPPORT */
+.tree[data-branch="support"] .mastery.available:not(.active):not(.locked) .octogone-image {
+  --mastery-gradient: linear-gradient(to bottom, #14537d, #15333e) !important;
+  filter: brightness(1.15) saturate(0.85);
+  opacity: 0.95;
+}
+
+/* LÉGER HALO INTÉRIEUR COMME DANS LE JEU */
+.mastery.available:not(.active):not(.locked) .octogone::after {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.12) inset;
+}
   </style>
 </head>
 
