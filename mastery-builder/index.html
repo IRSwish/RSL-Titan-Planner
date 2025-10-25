@@ -288,45 +288,29 @@
   filter: grayscale(100%);
 }
 
-/* === OCTOGONES RÉELS (vraie bordure + bon centrage) === */
+/* ==== OCTOGONES RÉELS, CENTRAGE CALIBRÉ ==== */
 
-/* Conteneur roté pour créer la forme octogonale */
+/* Forme octogonale : rotation 45° du conteneur */
 .mastery-wrap {
-  width: 72px;
-  height: 72px;
-  position: relative;
+  width: 70px;
+  height: 70px;
   overflow: hidden;
+  position: relative;
   transform: rotate(45deg);
 }
 
-/* Octogone interne droit */
+/* Intérieur redressé */
 .mastery {
   position: absolute;
   inset: 0;
   transform: rotate(-45deg);
   border: 2px solid #555;
-  background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
   box-sizing: border-box;
+  background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
   box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
 }
 
-/* === ALIGNEMENT DU TIER 1 === */
-.row.centered {
-  justify-content: center;
-  position: relative;
-  gap: 0;
-}
-
-.row.centered .mastery-wrap:first-child {
-  transform: translateX(58px) rotate(45deg);
-}
-.row.centered .mastery-wrap:last-child {
-  transform: translateX(-58px) rotate(45deg);
-}
-
-/* ---- ÉTATS ---- */
-
-/* LOCKED */
+/* ---- États ---- */
 .mastery.locked {
   background: linear-gradient(to bottom, #3b3b3b, #272727);
   border-color: transparent;
@@ -334,33 +318,42 @@
   opacity: 0.6;
 }
 
-/* DISPONIBLE */
 .mastery.available:not(.active):not(.locked) {
   background: linear-gradient(to bottom, #262626, #171717);
   border-color: #d4af37;
 }
 
-/* OFFENSE ACTIVE */
+/* Active par arbre */
 [data-branch="offense"] .mastery.active {
   border-image: linear-gradient(to bottom, #ced3bd, #f7db39) 1;
   background: linear-gradient(to bottom, #611b0f, #170600);
   box-shadow: inset 0 0 20px #bd2e07;
 }
-
-/* DEFENSE ACTIVE */
 [data-branch="defense"] .mastery.active {
   border-image: linear-gradient(to bottom, #c3d3bd, #b4f739) 1;
   background: linear-gradient(to bottom, #2e680e, #041100);
   box-shadow: inset 0 0 20px #42ad18;
 }
-
-/* SUPPORT ACTIVE */
 [data-branch="support"] .mastery.active {
   border-image: linear-gradient(to bottom, #bdc7d3, #39d4f7) 1;
   background: linear-gradient(to bottom, #124071, #020e1d);
   box-shadow: inset 0 0 20px #1854ad;
 }
 
+/* ==== Alignement exact du Tier 1 ==== */
+.row.centered {
+  justify-content: center;
+  position: relative;
+  gap: 0;
+}
+
+/* Calibrage : 70px × √2 ≈ 99px → on veut 99px + écart 20px ≈ 118px centre-à-centre */
+.row.centered .mastery-wrap:first-child {
+  margin-right: 59px; /* moitié de 118px */
+}
+.row.centered .mastery-wrap:last-child {
+  margin-left: 59px;
+}
   </style>
 </head>
 

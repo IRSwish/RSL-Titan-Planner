@@ -22,16 +22,16 @@
       rows.appendChild(row);
 
       ABS_COLS(tier).forEach(colAbs => {
-        const wrap = document.createElement('div');
-        wrap.className = 'mastery-wrap';
+        const wrap = document.createElement("div");
+        wrap.className = "mastery-wrap";
 
-        const m = document.createElement('div');
-        m.className = 'mastery';
-        m.dataset.id   = `${branch}-${tier}-${colAbs}`;
-        m.dataset.tier = String(tier);
-        m.dataset.col  = String(colAbs);
+        const mastery = document.createElement("div");
+        mastery.className = "mastery";
+        mastery.dataset.id = `${branch}-${tier}-${colAbs}`;
+        mastery.dataset.tier = String(tier);
+        mastery.dataset.col = String(colAbs);
 
-        wrap.appendChild(m);
+        wrap.appendChild(mastery);
         row.appendChild(wrap);
       });
     }
