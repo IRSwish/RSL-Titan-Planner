@@ -289,44 +289,41 @@
 }
 
 /* === NOUVEAU SYSTEME D’OCTOGONES REELS === */
+/* === OCTOGONES FIXES, AUCUNE ROTATION VISIBLE === */
+
 .mastery-wrap {
   width: 70px;
   height: 70px;
   position: relative;
   overflow: hidden;
+  /* crée la forme octogonale : on la garde, mais on ne la bouge plus jamais */
   transform: rotate(45deg);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-.mastery-wrap:hover {
-  transform: rotate(45deg) scale(1.05); /* zoom doux, pas de pivot */
 }
 
-/* octogone interne */
-.mastery {
+/* conteneur visuel pour le zoom */
+.mastery-zoom {
   position: absolute;
   inset: 0;
   transform: rotate(-45deg);
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* masteries : l'octogone réel */
+.mastery {
+  position: absolute;
+  inset: 0;
   border: 2px solid #555;
-  box-sizing: border-box;
   background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
   box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+  transition: all 0.25s ease;
 }
 
-/* inner glow */
-.mastery::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  bottom: -2px;
-  left: -2px;
-  transform: rotate(-45deg);
-  border: inherit;
+/* hover : zoom uniquement sur la couche neutre, donc pas d'effet de rotation */
+.mastery-wrap:hover .mastery-zoom {
+  transform: rotate(-45deg) scale(1.08);
 }
 
-/* LOCKED */
+/* locked */
 .mastery.locked {
   background: linear-gradient(to bottom, #3b3b3b, #272727);
   border-color: transparent;
@@ -334,27 +331,27 @@
   opacity: 0.6;
 }
 
-/* DISPONIBLE (neutre) */
+/* neutre disponible */
 .mastery.available:not(.active):not(.locked) {
   background: linear-gradient(to bottom, #262626, #171717);
   border-color: #d4af37;
 }
 
-/* OFFENSE ACTIVE (rouge) */
+/* offense */
 [data-branch="offense"] .mastery.active {
   border-image: linear-gradient(to bottom, #ced3bd, #f7db39) 1;
   background: linear-gradient(to bottom, #611b0f, #170600);
   box-shadow: inset 0 0 20px #bd2e07;
 }
 
-/* DEFENSE ACTIVE (vert) */
+/* defense */
 [data-branch="defense"] .mastery.active {
   border-image: linear-gradient(to bottom, #c3d3bd, #b4f739) 1;
   background: linear-gradient(to bottom, #2e680e, #041100);
   box-shadow: inset 0 0 20px #42ad18;
 }
 
-/* SUPPORT ACTIVE (bleu) */
+/* support */
 [data-branch="support"] .mastery.active {
   border-image: linear-gradient(to bottom, #bdc7d3, #39d4f7) 1;
   background: linear-gradient(to bottom, #124071, #020e1d);
