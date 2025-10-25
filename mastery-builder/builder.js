@@ -1,96 +1,92 @@
 (() => {
-  const ABS_COLS = tier => (tier === 1 ? [2, 3] : [1, 2, 3, 4]);
-  const trees = document.querySelectorAll(".tree");
+  const ABS_COLS = tier => (tier === 1 ? [2,3] : [1,2,3,4]);
+  const trees = document.querySelectorAll('.tree');
   const MASTERY_COSTS = {};
 
+  // === Construction du builder ===
   trees.forEach(tree => {
     if (tree.dataset._built) return;
-    tree.dataset._built = "1";
+    tree.dataset._built = '1';
     const branch = tree.dataset.branch;
 
-    const rows = tree.querySelector(".rows") || (() => {
-      const d = document.createElement("div");
-      d.className = "rows";
+    const rows = tree.querySelector('.rows') || (() => {
+      const d = document.createElement('div');
+      d.className = 'rows';
       tree.appendChild(d);
       return d;
     })();
 
-    // Création de la grille
     for (let tier = 1; tier <= 6; tier++) {
-      const row = document.createElement("div");
-      row.className = "row" + (tier === 1 ? " centered" : "");
+      const row = document.createElement('div');
+      row.className = 'row' + (tier === 1 ? ' centered' : '');
       rows.appendChild(row);
 
       ABS_COLS(tier).forEach(colAbs => {
-      const mastery = document.createElement("div");
-      mastery.className = "mastery";
-      mastery.dataset.id = `${branch}-${tier}-${colAbs}`;
-      mastery.dataset.tier = String(tier);
-      mastery.dataset.col = String(colAbs);
+        const mastery = document.createElement('div');
+        mastery.className = 'mastery';
+        mastery.dataset.id = `${branch}-${tier}-${colAbs}`;
+        mastery.dataset.tier = String(tier);
+        mastery.dataset.col = String(colAbs);
 
-      // === On reprend la structure exacte du CodePen ===
-      const container = document.createElement("div");
-      container.className = "octogone-container";
+        // Structure CodePen
+        const container = document.createElement('div');
+        container.className = 'octogone-container';
+        const octo = document.createElement('div');
+        octo.className = 'octogone';
+        container.appendChild(octo);
+        mastery.appendChild(container);
 
-      const octo = document.createElement("div");
-      octo.className = "octogone";
-      container.appendChild(octo);
-
-      mastery.appendChild(container);
-      row.appendChild(mastery);
-    });
+        row.appendChild(mastery);
+      });
     }
 
-    // Bouton reset individuel
-    const btn = tree.querySelector(".reset-tree");
+    // Bouton reset
+    const btn = tree.querySelector('.reset-tree');
     if (btn)
-      btn.addEventListener("click", () => {
-        tree.querySelectorAll(".mastery.active").forEach(x =>
-          x.classList.remove("active")
-        );
+      btn.addEventListener('click', () => {
+        tree.querySelectorAll('.mastery.active').forEach(x => x.classList.remove('active'));
         updateAll(true);
       });
   });
 
-  // Gestion des clics sur les maîtrises
+  // === Clics sur les maîtrises ===
   function attachEvents() {
-    document.querySelectorAll(".mastery").forEach(m => {
-      m.addEventListener("click", () => {
-        if (m.classList.contains("locked")) return;
+    document.querySelectorAll('.mastery').forEach(m => {
+      m.addEventListener('click', () => {
+        if (m.classList.contains('locked')) return;
 
-        if (m.classList.contains("active")) {
-          m.classList.remove("active");
+        if (m.classList.contains('active')) {
+          m.classList.remove('active');
           updateAll(true);
           return;
         }
 
         if (!canSelect(m)) return;
 
-        m.classList.add("active");
+        m.classList.add('active');
         updateAll(true);
       });
     });
   }
 
-  // ====== Logique du builder ======
-
+  // === Logique du builder ===
   function getState() {
-    const activeEls = Array.from(document.querySelectorAll(".mastery.active"));
+    const activeEls = Array.from(document.querySelectorAll('.mastery.active'));
     const active = new Set(activeEls.map(x => x.dataset.id));
     const byBranch = { offense: [], defense: [], support: [] };
-    activeEls.forEach(el => byBranch[el.dataset.id.split("-")[0]].push(el));
+    activeEls.forEach(el => byBranch[el.dataset.id.split('-')[0]].push(el));
 
     const activeTrees = new Set();
-    const perTierGlobal = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    const perTierGlobal = { 1:0,2:0,3:0,4:0,5:0,6:0 };
     const perTierPerBranch = {
-      offense: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-      defense: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
-      support: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
+      offense:{1:0,2:0,3:0,4:0,5:0,6:0},
+      defense:{1:0,2:0,3:0,4:0,5:0,6:0},
+      support:{1:0,2:0,3:0,4:0,5:0,6:0}
     };
     let totalT6 = 0;
 
     active.forEach(id => {
-      const [b, tStr] = id.split("-");
+      const [b, tStr] = id.split('-');
       const t = +tStr;
       activeTrees.add(b);
       perTierGlobal[t]++;
@@ -102,22 +98,21 @@
   }
 
   function isAdjacentAllowed(m) {
-    const [branch, tStr, cStr] = m.dataset.id.split("-");
-    const tier = +tStr,
-      col = +cStr;
+    const [branch, tStr, cStr] = m.dataset.id.split('-');
+    const tier = +tStr, col = +cStr;
     if (tier === 1) return true;
 
     const prevTier = tier - 1;
     for (const d of [-1, 0, 1]) {
       const prev = document.querySelector(`[data-id="${branch}-${prevTier}-${col + d}"]`);
-      if (prev && prev.classList.contains("active")) return true;
+      if (prev && prev.classList.contains('active')) return true;
     }
 
     const sameTierActive = !!document.querySelector(`.mastery.active[data-id^="${branch}-${tier}-"]`);
     if (sameTierActive) {
       for (const d of [-1, 1]) {
         const adj = document.querySelector(`[data-id="${branch}-${tier}-${col + d}"]`);
-        if (adj && adj.classList.contains("active")) return true;
+        if (adj && adj.classList.contains('active')) return true;
       }
     }
 
@@ -126,7 +121,7 @@
 
   function canSelect(m) {
     const { activeTrees, perTierGlobal, perTierPerBranch, totalT6 } = getState();
-    const [branch, tStr] = m.dataset.id.split("-");
+    const [branch, tStr] = m.dataset.id.split('-');
     const tier = +tStr;
 
     if (!activeTrees.has(branch) && activeTrees.size >= 2) return false;
@@ -143,13 +138,13 @@
     const { byBranch } = getState();
     let changed = false;
 
-    ["offense", "defense", "support"].forEach(branch => {
+    ['offense', 'defense', 'support'].forEach(branch => {
       const actives = byBranch[branch];
       if (!actives.length) return;
 
       const anchor = actives.find(el => +el.dataset.tier === 1);
       if (!anchor) {
-        actives.forEach(el => el.classList.remove("active"));
+        actives.forEach(el => el.classList.remove('active'));
         changed = true;
         return;
       }
@@ -159,15 +154,14 @@
 
       while (stack.length) {
         const cur = stack.pop();
-        const [b, tStr, cStr] = cur.dataset.id.split("-");
-        const tier = +tStr,
-          col = +cStr;
+        const [b, tStr, cStr] = cur.dataset.id.split('-');
+        const tier = +tStr, col = +cStr;
         if (tier >= 6) continue;
 
         const nextTier = tier + 1;
         for (const d of [-1, 0, 1]) {
           const next = document.querySelector(`[data-id="${branch}-${nextTier}-${col + d}"]`);
-          if (next && next.classList.contains("active") && !reachable.has(next.dataset.id)) {
+          if (next && next.classList.contains('active') && !reachable.has(next.dataset.id)) {
             reachable.add(next.dataset.id);
             stack.push(next);
           }
@@ -175,7 +169,7 @@
 
         for (const d of [-1, 1]) {
           const side = document.querySelector(`[data-id="${branch}-${tier}-${col + d}"]`);
-          if (side && side.classList.contains("active") && !reachable.has(side.dataset.id)) {
+          if (side && side.classList.contains('active') && !reachable.has(side.dataset.id)) {
             reachable.add(side.dataset.id);
             stack.push(side);
           }
@@ -184,7 +178,7 @@
 
       actives.forEach(el => {
         if (!reachable.has(el.dataset.id)) {
-          el.classList.remove("active");
+          el.classList.remove('active');
           changed = true;
         }
       });
@@ -195,27 +189,25 @@
 
   function updateLocksAndAvailable() {
     const { activeTrees } = getState();
-    document.querySelectorAll(".mastery").forEach(m => {
-      if (m.classList.contains("active")) {
-        m.classList.remove("locked", "available");
+    document.querySelectorAll('.mastery').forEach(m => {
+      if (m.classList.contains('active')) {
+        m.classList.remove('locked', 'available');
         return;
       }
 
-      const branch = m.dataset.id.split("-")[0];
+      const branch = m.dataset.id.split('-')[0];
       let lock = false;
       if (!activeTrees.has(branch) && activeTrees.size >= 2) lock = true;
 
       const selectable = !lock && canSelect(m);
-      m.classList.toggle("locked", !selectable);
-      m.classList.toggle("available", selectable);
+      m.classList.toggle('locked', !selectable);
+      m.classList.toggle('available', selectable);
     });
   }
 
   function updateScrolls() {
-    let basic = 0,
-      adv = 0,
-      div = 0;
-    document.querySelectorAll(".mastery.active").forEach(m => {
+    let basic = 0, adv = 0, div = 0;
+    document.querySelectorAll('.mastery.active').forEach(m => {
       const tier = +m.dataset.tier;
       const cost = MASTERY_COSTS[m.dataset.id] || 0;
 
@@ -224,9 +216,9 @@
       else div += cost;
     });
 
-    document.querySelector("#basic-scrolls span").textContent = `${Math.min(basic, 100)} / 100`;
-    document.querySelector("#advanced-scrolls span").textContent = `${Math.min(adv, 600)} / 600`;
-    document.querySelector("#divine-scrolls span").textContent = `${Math.min(div, 950)} / 950`;
+    document.querySelector('#basic-scrolls span').textContent = `${Math.min(basic, 100)} / 100`;
+    document.querySelector('#advanced-scrolls span').textContent = `${Math.min(adv, 600)} / 600`;
+    document.querySelector('#divine-scrolls span').textContent = `${Math.min(div, 950)} / 950`;
   }
 
   function updateAll(cascade = false) {
@@ -238,44 +230,94 @@
     }
   }
 
-  // Chargement du JSON
- fetch('masteries.json')
-  .then(res => res.json())
-  .then(data => {
-    for (const branch in data) {
-      data[branch].flat().forEach(m => {
-        const masteryEl = document.querySelector(`[data-id="${m.id}"]`);
-        if (!masteryEl) return;
+  // === Chargement du JSON et application des images ===
+  fetch('masteries.json')
+    .then(res => res.json())
+    .then(data => {
+      for (const branch in data) {
+        data[branch].flat().forEach(m => {
+          const masteryEl = document.querySelector(`[data-id="${m.id}"]`);
+          if (!masteryEl) return;
 
-        MASTERY_COSTS[m.id] = m.cost || 0;
+          MASTERY_COSTS[m.id] = m.cost || 0;
 
-        masteryEl.dataset.info = JSON.stringify({
-          name: m.name,
-          description: m.description,
-          cost: m.cost
+          masteryEl.dataset.info = JSON.stringify({
+            name: m.name,
+            description: m.description,
+            cost: m.cost
+          });
+
+          const octo = masteryEl.querySelector(".octogone");
+          if (m.icon && octo) {
+            octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
+            octo.style.backgroundSize = "cover";
+            octo.style.backgroundPosition = "center";
+          } else if (octo) {
+            octo.textContent = m.name.split(" ")[0];
+          }
         });
+      }
 
-        // Ajout de l’image à l’intérieur de .octogone
-        const octo = masteryEl.querySelector(".octogone");
-        if (m.icon && octo) {
-          octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
-          octo.style.backgroundSize = "cover";
-          octo.style.backgroundPosition = "center";
-        } else if (octo) {
-          octo.textContent = m.name.split(" ")[0];
-        }
+      updateAll(true);
+    });
+
+  // === Tooltips ===
+  document.addEventListener("DOMContentLoaded", () => {
+    const tooltip = document.createElement("div");
+    tooltip.className = "mastery-tooltip";
+    document.body.appendChild(tooltip);
+    let active = null;
+
+    document.querySelectorAll(".mastery").forEach(el => {
+      el.addEventListener("mouseenter", e => {
+        const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
+        if (!data) return;
+        tooltip.innerHTML = `
+          <h4>${data.name}</h4>
+          <p>${data.description}</p>
+          <div class="cost">Scroll cost: ${data.cost}</div>
+        `;
+        active = el;
+        const offset = 20;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
+
+        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+
+        tooltip.style.left = `${x}px`;
+        tooltip.style.top = `${y}px`;
+        tooltip.classList.remove("visible");
+        requestAnimationFrame(() => tooltip.classList.add("visible"));
       });
-    }
 
-    updateAll(true);
+      el.addEventListener("mousemove", e => {
+        if (!active) return;
+        const offset = 20;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
+
+        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+
+        tooltip.style.left = `${x}px`;
+        tooltip.style.top = `${y}px`;
+      });
+
+      el.addEventListener("mouseleave", () => {
+        tooltip.classList.remove("visible");
+        active = null;
+      });
+    });
   });
 
+  // === Lecture du lien partagé (param ?m=)
   const params = new URLSearchParams(location.search);
-  if (params.has("m")) {
-    const ids = atob(params.get("m"))
-      .split(",")
-      .filter(Boolean);
-    ids.forEach(id => document.querySelector(`[data-id="${id}"]`)?.classList.add("active"));
+  if (params.has('m')) {
+    const ids = atob(params.get('m')).split(',').filter(Boolean);
+    ids.forEach(id =>
+      document.querySelector(`[data-id="${id}"]`)?.classList.add('active')
+    );
   }
 
   attachEvents();
