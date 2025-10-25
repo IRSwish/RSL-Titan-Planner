@@ -249,7 +249,7 @@
           });
 
           if (m.icon) {
-            el.style.backgroundImage = `url('style/img/masteries/${m.icon}.webp')`;
+            el.style.backgroundImage = `url('/style/img/masteries/${m.icon}.webp')`;
             el.style.backgroundSize = 'cover';
             el.style.backgroundPosition = 'center';
           } else el.textContent = m.name.split(' ')[0];
