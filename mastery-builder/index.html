@@ -430,41 +430,41 @@
 
   <!-- === Tooltip Logic === -->
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    let tooltip = document.createElement("div");
-    tooltip.className = "mastery-tooltip";
-    document.body.appendChild(tooltip);
+document.addEventListener("DOMContentLoaded", () => {
+  const tooltip = document.createElement("div");
+  tooltip.className = "mastery-tooltip";
+  document.body.appendChild(tooltip);
 
-    document.querySelectorAll(".mastery").forEach(el => {
-      el.addEventListener("mousemove", e => {
-        const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
-        if (!data) return;
-        tooltip.innerHTML = `
-          <h4>${data.name}</h4>
-          <p>${data.description}</p>
-          <div class="cost">Scroll cost: ${data.cost}</div>
-        `;
-        const offset = 20;
-        let x = e.clientX + offset;
-        let y = e.clientY + offset;
+  let active = null;
 
-        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
-        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+  document.querySelectorAll(".mastery").forEach(el => {
+    el.addEventListener("mouseenter", e => {
+      const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
+      if (!data) return;
+      tooltip.innerHTML = `
+        <h4>${data.name}</h4>
+        <p>${data.description}</p>
+        <div class="cost">Scroll cost: ${data.cost}</div>
+      `;
+      active = el;
+      tooltip.style.left = e.pageX + 20 + "px";
+      tooltip.style.top = e.pageY + 20 + "px";
+      tooltip.classList.remove("visible");
+      requestAnimationFrame(() => tooltip.classList.add("visible"));
+    });
 
-        tooltip.style.left = `${x}px`;
-        tooltip.style.top = `${y}px`;
-        // Forcer le navigateur à calculer la position avant d’animer
-        tooltip.style.left = e.clientX + 20 + "px";
-        tooltip.style.top = e.clientY + 20 + "px";
+    el.addEventListener("mousemove", e => {
+      if (!active) return;
+      tooltip.style.left = e.pageX + 20 + "px";
+      tooltip.style.top = e.pageY + 20 + "px";
+    });
 
-        // petit délai (1 frame) pour que la transition s'applique
-        requestAnimationFrame(() => {
-          tooltip.classList.add("visible");
-        });
-      });
-      el.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
+    el.addEventListener("mouseleave", () => {
+      tooltip.classList.remove("visible");
+      active = null;
     });
   });
+});
   </script>
 
   <!-- === Menu Script === -->
