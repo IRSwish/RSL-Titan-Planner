@@ -293,6 +293,8 @@
 
 /* === OCTOGONES PARFAITS, BORDURES VISIBLES === */
 
+/* === OCTOGONES PARFAITS, IMAGES DROITES === */
+
 /* Le wrapper crée la vraie forme octogonale */
 .mastery-wrap {
   width: 72px;
@@ -303,6 +305,7 @@
   margin: 0 auto;
 }
 
+/* L’octogone interne */
 .mastery {
   position: absolute;
   inset: 0;
@@ -310,33 +313,22 @@
   border: 3px solid #555;
   box-sizing: border-box;
   overflow: hidden;
+  background: none; /* ❌ désactivé ici, on va gérer le fond sur le ::after */
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  z-index: 1;
 }
 
-/* ✅ Pseudo-élément interne pour redresser l'image */
+/* ✅ Image redressée (ne tourne plus) */
 .mastery::after {
   content: "";
   position: absolute;
   inset: 0;
-  transform: rotate(45deg); /* redresse le fond */
+  transform: rotate(45deg); /* redresse le fond à plat */
+  background: var(--mastery-bg, linear-gradient(to bottom, #1a1a1a, #0e0e0e));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   transition: opacity 0.2s ease;
-  z-index: 0;
-}
-
-/* On copie le background sur le ::after au lieu du .mastery */
-.mastery {
-  background: none !important;
-}
-
-/* Bordure visible et non coupée */
-.mastery::before {
-  content: '';
-  position: absolute;
-  top: -3px; right: -3px; bottom: -3px; left: -3px;
-  transform: rotate(-45deg);
-  border: inherit;
   z-index: -1;
 }
 
@@ -346,37 +338,38 @@
   filter: none;
 }
 
+/* LOCKED */
 .mastery.locked {
-  background: linear-gradient(to bottom, #3b3b3b, #272727);
-  border-color: #444; /* 👈 gris foncé visible */
+  --mastery-bg: linear-gradient(to bottom, #3b3b3b, #272727);
+  border: 3px solid rgba(80, 80, 80, 0.6);
   box-shadow: inset 0 0 12px #5a5a5a;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 /* DISPONIBLE (neutre) */
 .mastery.available:not(.active):not(.locked) {
-  background: linear-gradient(to bottom, #262626, #171717);
-  border-color: #888; /* gris neutre */
+  --mastery-bg: linear-gradient(to bottom, #262626, #171717);
+  border-color: #888;
 }
 
 /* OFFENSE ACTIVE */
 [data-branch="offense"] .mastery.active {
+  --mastery-bg: linear-gradient(to bottom, #611b0f, #170600);
   border-image: linear-gradient(to bottom, #ced3bd, #f7db39) 1;
-  background: linear-gradient(to bottom, #611b0f, #170600);
   box-shadow: inset 0 0 20px #bd2e07;
 }
 
 /* DEFENSE ACTIVE */
 [data-branch="defense"] .mastery.active {
+  --mastery-bg: linear-gradient(to bottom, #2e680e, #041100);
   border-image: linear-gradient(to bottom, #c3d3bd, #b4f739) 1;
-  background: linear-gradient(to bottom, #2e680e, #041100);
   box-shadow: inset 0 0 20px #42ad18;
 }
 
 /* SUPPORT ACTIVE */
 [data-branch="support"] .mastery.active {
+  --mastery-bg: linear-gradient(to bottom, #124071, #020e1d);
   border-image: linear-gradient(to bottom, #bdc7d3, #39d4f7) 1;
-  background: linear-gradient(to bottom, #124071, #020e1d);
   box-shadow: inset 0 0 20px #1854ad;
 }
 
