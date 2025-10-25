@@ -441,6 +441,16 @@
   background: linear-gradient(to bottom, #3bb2f7, #187dc6);
 }
 
+/* === COULEUR DU FOND INTERNE (le gris sous l'image) === */
+.octogone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: var(--octagon-path);
+  background: var(--fill-gradient, linear-gradient(to bottom, #ff0000, #111));
+  z-index: 1; /* Sous le ::after glow (qui est à 2) */
+  transition: background 0.3s ease;
+}
   </style>
 </head>
 
