@@ -142,68 +142,57 @@
   z-index: 1;
 }
 
-/* IMAGE AU-DESSUS */
 .octogone-image {
   position: absolute;
   inset: 0;
-  clip-path: var(--octagon-path);
-  background-size: cover;
-  background-position: center;
   z-index: 5;
   pointer-events: none;
   transform: scale(var(--inner-border-scale));
   transition: all 0.3s ease;
-  image-rendering: high-quality;
-  -ms-interpolation-mode: bicubic;
-
-  /* On prépare un blend mode pour la teinte */
-  background-blend-mode: multiply;
-  opacity: 0.95;
+  background: none; /* plus de blend ici */
 }
 
-/* OFFENSE (rouge) */
+/* on crée un pseudo-élément pour la teinte */
+.octogone-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--mastery-gradient, linear-gradient(to bottom, #4b1a15, #4b1a15));
+  mask-image: var(--mastery-icon);
+  mask-repeat: no-repeat;
+  mask-size: cover;
+  mask-position: center;
+  -webkit-mask-image: var(--mastery-icon);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: cover;
+  -webkit-mask-position: center;
+}
+
+/* ÉTATS INACTIFS OU BLOQUÉS */
 [data-branch="offense"] .mastery.locked .octogone-image,
 [data-branch="offense"] .mastery:not(.active):not(.available) .octogone-image {
-  background-image:
-    linear-gradient(to bottom, #4b1a15, #4b1a15),
-    var(--mastery-icon);
+  --mastery-gradient: linear-gradient(to bottom, #4b1a15, #4b1a15);
 }
 
-/* DEFENSE (vert) */
 [data-branch="defense"] .mastery.locked .octogone-image,
 [data-branch="defense"] .mastery:not(.active):not(.available) .octogone-image {
-  background-image:
-    linear-gradient(to bottom, #24490c, #23350c),
-    var(--mastery-icon);
+  --mastery-gradient: linear-gradient(to bottom, #24490c, #23350c);
 }
 
-/* SUPPORT (bleu) */
 [data-branch="support"] .mastery.locked .octogone-image,
 [data-branch="support"] .mastery:not(.active):not(.available) .octogone-image {
-  background-image:
-    linear-gradient(to bottom, #092f50, #15333e),
-    var(--mastery-icon);
+  --mastery-gradient: linear-gradient(to bottom, #092f50, #15333e);
 }
 
-/* OFFENSE (rouge vif) */
+/* ÉTATS ACTIFS */
 [data-branch="offense"] .mastery.active .octogone-image {
-  background-image:
-    linear-gradient(to bottom, #d52317, #d52317),
-    var(--mastery-icon);
+  --mastery-gradient: linear-gradient(to bottom, #d52317, #d52317);
 }
-
-/* DEFENSE (vert vif) */
 [data-branch="defense"] .mastery.active .octogone-image {
-  background-image:
-    linear-gradient(to bottom, #6b9e08, #e4f230),
-    var(--mastery-icon);
+  --mastery-gradient: linear-gradient(to bottom, #6b9e08, #e4f230);
 }
-
-/* SUPPORT (bleu vif) */
 [data-branch="support"] .mastery.active .octogone-image {
-  background-image:
-    linear-gradient(to bottom, #187dc6, #84f7f7),
-    var(--mastery-icon);
+  --mastery-gradient: linear-gradient(to bottom, #187dc6, #84f7f7);
 }
 
 /* BORDURE INTERNE GLOW */
