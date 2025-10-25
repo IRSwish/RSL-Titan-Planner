@@ -505,16 +505,30 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="cost">Scroll cost: ${data.cost}</div>
       `;
       active = el;
-      tooltip.style.left = e.pageX + 20 + "px";
-      tooltip.style.top = e.pageY + 20 + "px";
+      const offset = 20;
+      let x = e.clientX + offset;
+      let y = e.clientY + offset;
+
+      if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+      if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
       tooltip.classList.remove("visible");
       requestAnimationFrame(() => tooltip.classList.add("visible"));
     });
 
     el.addEventListener("mousemove", e => {
       if (!active) return;
-      tooltip.style.left = e.pageX + 20 + "px";
-      tooltip.style.top = e.pageY + 20 + "px";
+      const offset = 20;
+      let x = e.clientX + offset;
+      let y = e.clientY + offset;
+
+      if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+      if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
     });
 
     el.addEventListener("mouseleave", () => {
