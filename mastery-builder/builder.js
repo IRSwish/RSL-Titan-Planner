@@ -249,7 +249,13 @@
           });
 
           if (m.icon) {
-            el.style.backgroundImage = `url('/style/img/masteries/${m.icon}.webp')`;
+            el.style.setProperty("--bg-image", `url('style/img/masteries/${m.icon}.webp')`);
+            el.style.setProperty("background-image", "none"); // désactive le fond direct
+            el.style.setProperty("background", "none");
+            el.style.setProperty("content", "none");
+            el.querySelector(".mastery::after"); // inutile, c’est géré via CSS variable
+            el.style.setProperty("--image", `url('style/img/masteries/${m.icon}.webp')`);
+            el.style.setProperty("--image-url", `url('style/img/masteries/${m.icon}.webp')`);
             el.style.backgroundSize = 'cover';
             el.style.backgroundPosition = 'center';
           } else el.textContent = m.name.split(' ')[0];

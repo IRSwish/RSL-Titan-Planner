@@ -303,16 +303,31 @@
   margin: 0 auto;
 }
 
-/* L’octogone interne est droit, pas de rotation visible */
 .mastery {
   position: absolute;
   inset: 0;
   transform: rotate(-45deg);
   border: 3px solid #555;
   box-sizing: border-box;
-  background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
-  transition: none;
-  z-index: 1;
+  overflow: hidden;
+}
+
+/* ✅ Pseudo-élément interne pour redresser l'image */
+.mastery::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: rotate(45deg); /* redresse le fond */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.2s ease;
+  z-index: 0;
+}
+
+/* On copie le background sur le ::after au lieu du .mastery */
+.mastery {
+  background: none !important;
 }
 
 /* Bordure visible et non coupée */
