@@ -311,7 +311,7 @@
   border: 3px solid #555;
   box-sizing: border-box;
   background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
-  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: none;
   z-index: 1;
 }
 
@@ -327,7 +327,7 @@
 
 /* AUCUNE rotation ni zoom au hover */
 .mastery:hover {
-  transform: inherit;
+  transform: rotate(-45deg);
   filter: none;
 }
 
@@ -430,41 +430,41 @@
 
   <!-- === Tooltip Logic === -->
   <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tooltip = document.createElement("div");
-  tooltip.className = "mastery-tooltip";
-  document.body.appendChild(tooltip);
+  document.addEventListener("DOMContentLoaded", () => {
+    let tooltip = document.createElement("div");
+    tooltip.className = "mastery-tooltip";
+    document.body.appendChild(tooltip);
 
-  let active = null;
+    document.querySelectorAll(".mastery").forEach(el => {
+      el.addEventListener("mousemove", e => {
+        const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
+        if (!data) return;
+        tooltip.innerHTML = `
+          <h4>${data.name}</h4>
+          <p>${data.description}</p>
+          <div class="cost">Scroll cost: ${data.cost}</div>
+        `;
+        const offset = 20;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
 
-  document.querySelectorAll(".mastery").forEach(el => {
-    el.addEventListener("mouseenter", e => {
-      const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
-      if (!data) return;
-      tooltip.innerHTML = `
-        <h4>${data.name}</h4>
-        <p>${data.description}</p>
-        <div class="cost">Scroll cost: ${data.cost}</div>
-      `;
-      active = el;
-      tooltip.style.left = e.pageX + 20 + "px";
-      tooltip.style.top = e.pageY + 20 + "px";
-      tooltip.classList.remove("visible");
-      requestAnimationFrame(() => tooltip.classList.add("visible"));
-    });
+        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
 
-    el.addEventListener("mousemove", e => {
-      if (!active) return;
-      tooltip.style.left = e.pageX + 20 + "px";
-      tooltip.style.top = e.pageY + 20 + "px";
-    });
+        tooltip.style.left = `${x}px`;
+        tooltip.style.top = `${y}px`;
+        // Forcer le navigateur à calculer la position avant d’animer
+        tooltip.style.left = e.clientX + 20 + "px";
+        tooltip.style.top = e.clientY + 20 + "px";
 
-    el.addEventListener("mouseleave", () => {
-      tooltip.classList.remove("visible");
-      active = null;
+        // petit délai (1 frame) pour que la transition s'applique
+        requestAnimationFrame(() => {
+          tooltip.classList.add("visible");
+        });
+      });
+      el.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
     });
   });
-});
   </script>
 
   <!-- === Menu Script === -->
