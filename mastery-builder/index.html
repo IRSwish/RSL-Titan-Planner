@@ -61,7 +61,6 @@
 .tree h2 {
   color: #d4af37;
   font-size: 26px;
-  font-weight:bold;
   margin-bottom: 10px;
   text-transform: uppercase;
   text-shadow: none; /* ✅ pas de glow */
@@ -174,7 +173,7 @@
   font-size: 22px;
   color: #d4af37;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   text-shadow: none; /* ✅ pas de glow */
 }
 
@@ -440,8 +439,15 @@
           <p>${data.description}</p>
           <div class="cost">Scroll cost: ${data.cost}</div>
         `;
-        tooltip.style.left = e.pageX + 20 + "px";
-        tooltip.style.top = e.pageY + 20 + "px";
+        const offset = 20;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
+
+        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+
+        tooltip.style.left = `${x}px`;
+        tooltip.style.top = `${y}px`;
         tooltip.classList.add("visible");
       });
       el.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
