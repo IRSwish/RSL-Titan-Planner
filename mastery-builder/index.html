@@ -330,14 +330,11 @@
   z-index: 1;
 }
 
-/* ✅ Image redressée (ne tourne plus) */
 .mastery::after {
   content: "";
   position: absolute;
   inset: 0;
-  /* ✅ on redresse complètement l'image */
-  transform: rotate(45deg) translateZ(0);
-  transform-origin: center center;
+  transform: none;
   background-image: var(--mastery-bg, linear-gradient(to bottom, #1a1a1a, #0e0e0e));
   background-size: cover;
   background-position: center;
@@ -345,6 +342,7 @@
   transition: none !important;
   z-index: -1;
   pointer-events: none;
+  backface-visibility: hidden;
 }
 
 .mastery,
