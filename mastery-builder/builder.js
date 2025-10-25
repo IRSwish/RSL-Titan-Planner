@@ -249,7 +249,7 @@
           });
 
           if (m.icon) {
-            el.style.setProperty("--mastery-bg", `url('style/img/masteries/${m.icon}.webp')`);
+            el.style.setProperty("--mastery-bg", `url('../style/img/masteries/${m.icon}.webp')`);
           } else el.textContent = m.name.split(' ')[0];
         });
       }
