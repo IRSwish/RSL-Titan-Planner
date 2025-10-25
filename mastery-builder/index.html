@@ -200,6 +200,26 @@
   --mastery-gradient: linear-gradient(to bottom, #187dc6, #84f7f7);
 }
 
+/* === OFFENSE - Sélectionnable === */
+.tree[data-branch="offense"] .mastery.available:not(.active) .octogone-image {
+  --mastery-gradient: linear-gradient(to bottom, #79251c, #4b1a15);
+  filter: brightness(1.1) saturate(0.8);
+  opacity: 0.9;
+}
+
+/* === DEFENSE - Sélectionnable === */
+.tree[data-branch="defense"] .mastery.available:not(.active) .octogone-image {
+  --mastery-gradient: linear-gradient(to bottom, #3d6b11, #23350c);
+  filter: brightness(1.1) saturate(0.8);
+  opacity: 0.9;
+}
+
+/* === SUPPORT - Sélectionnable === */
+.tree[data-branch="support"] .mastery.available:not(.active) .octogone-image {
+  --mastery-gradient: linear-gradient(to bottom, #14537d, #15333e);
+  filter: brightness(1.1) saturate(0.8);
+  opacity: 0.9;
+}
 
 /* BORDURE INTERNE GLOW */
 .octogone::after {
