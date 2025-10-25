@@ -249,7 +249,13 @@
           });
 
           if (m.icon) {
+            el.style.setProperty("--img", `url('style/img/masteries/${m.icon}.webp')`);
+            el.style.backgroundImage = "none"; // on désactive l'ancien fond
+            el.style.setProperty("background", "none");
             el.style.setProperty("--mastery-bg", `url('style/img/masteries/${m.icon}.webp')`);
+            el.style.setProperty("background-image", `url('style/img/masteries/${m.icon}.webp')`);
+            el.style.setProperty("background-size", "cover");
+            el.style.setProperty("background-position", "center");
           } else el.textContent = m.name.split(' ')[0];
         });
       }
