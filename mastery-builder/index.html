@@ -343,9 +343,11 @@
 /* --- OFFENSE --- */
 .tree[data-branch="offense"] .mastery:not(.active) .octogone {
   background: linear-gradient(to bottom, #4b1a15, #4b1a15);
+  --inner-border-gradient: linear-gradient(to bottom, #4b1a15, #2c0f0c);
 }
 .tree[data-branch="offense"] .mastery.available:not(.active) .octogone {
   background: linear-gradient(to bottom, #79251c, #4b1a15);
+  --inner-border-gradient: linear-gradient(to bottom, #79251c, #4b1a15);
 }
 .tree[data-branch="offense"] .mastery.active .octogone {
   background: linear-gradient(to bottom, #d52317, #d52317);
@@ -354,12 +356,15 @@
 /* --- DEFENSE --- */
 .tree[data-branch="defense"] .mastery:not(.active) .octogone {
   background: linear-gradient(to bottom, #24490c, #23350c);
+  --inner-border-gradient: linear-gradient(to bottom, #24490c, #23350c);
 }
 .tree[data-branch="defense"] .mastery.available:not(.active) .octogone {
   background: linear-gradient(to bottom, #3d6b11, #23350c);
+  --inner-border-gradient: linear-gradient(to bottom, #3d6b11, #23350c);
 }
 .tree[data-branch="defense"] .mastery.active .octogone {
   background: linear-gradient(to bottom, #6b9e08, #e4f230);
+
 }
 
 /* --- SUPPORT --- */
