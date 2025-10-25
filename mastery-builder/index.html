@@ -104,118 +104,120 @@
   justify-content: center;
 }
 
-/* ===== OCTOGONES SYSTEM (CodePen Style Adapted) ===== */
-
 :root {
-  --octagon-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  --octagon-path: polygon(
+    30% 0%, 70% 0%, 100% 30%, 100% 70%,
+    70% 100%, 30% 100%, 0% 70%, 0% 30%
+  );
+
   --border-width: 6px;
-  --inner-scale: 0.97;
-  --inner-blur: 10px;
+  --border-fix: 1px;
+
+  --border-gradient: linear-gradient(to bottom, #666, #333);
+  --fill-gradient: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
+
+  --inner-border-gradient: linear-gradient(to bottom, #444, #111);
+  --inner-border-blur: 15px;
+  --inner-border-scale: 0.97;
+  --inner-border-opacity: 1;
 }
 
-/* Base container */
-.mastery {
-  position: relative;
+/* ---------------------------------------------------- */
+/* CONTAINER (BORDURE EXTERNE)                          */
+/* ---------------------------------------------------- */
+.octogone-container {
   width: 72px;
   height: 72px;
+  position: relative;
+  background: var(--border-gradient);
   clip-path: var(--octagon-path);
-  overflow: hidden;
-  transition: all 0.25s ease;
-  background: #0e0e0e;
-  cursor: pointer;
-}
-
-/* Outer gradient border */
-.mastery::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  clip-path: var(--octagon-path);
-  background: var(--border-gradient, linear-gradient(to bottom, #777, #333));
   z-index: 0;
+  transition: all 0.25s ease;
 }
 
-/* Inner fill */
-.mastery .fill {
+/* ---------------------------------------------------- */
+/* OCTOGONE INTERNE (FOND)                              */
+/* ---------------------------------------------------- */
+.octogone {
   position: absolute;
-  top: var(--border-width);
-  left: var(--border-width);
-  right: var(--border-width);
-  bottom: var(--border-width);
+  top: calc(var(--border-width) - var(--border-fix));
+  left: calc(var(--border-width) - var(--border-fix));
+  right: calc(var(--border-width) - var(--border-fix));
+  bottom: calc(var(--border-width) - var(--border-fix));
+  background: var(--fill-gradient);
   clip-path: var(--octagon-path);
-  background: var(--fill-gradient, #000);
-  z-index: 1;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  transition: filter 0.25s ease;
+  z-index: 1;
 }
 
-/* Inner glow */
-.mastery::after {
+/* ---------------------------------------------------- */
+/* BORDURE INTERNE GLOW                                 */
+/* ---------------------------------------------------- */
+.octogone::after {
   content: "";
   position: absolute;
   inset: 0;
   clip-path: var(--octagon-path);
-  transform: scale(var(--inner-scale));
-  filter: blur(var(--inner-blur));
-  opacity: 0.8;
+  background: var(--inner-border-gradient);
+  opacity: var(--inner-border-opacity);
+  transform: scale(var(--inner-border-scale));
+  filter: blur(var(--inner-border-blur));
   z-index: 2;
-  background: var(--inner-glow, rgba(255,255,255,0.1));
   pointer-events: none;
 }
 
-/* ===== STATES ===== */
-
-/* Locked */
-.mastery.locked {
+/* ---------------------------------------------------- */
+/* ETATS                                                */
+/* ---------------------------------------------------- */
+.mastery.locked .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #3b3b3b, #272727);
+}
+.mastery.locked .octogone {
+  --fill-gradient: linear-gradient(to bottom, #3b3b3b, #272727);
+  --inner-border-gradient: linear-gradient(to bottom, #5a5a5a, #2f2f2f);
   filter: grayscale(0.8) brightness(0.7);
 }
-.mastery.locked::before {
-  background: linear-gradient(to bottom, #3b3b3b, #272727);
+
+.mastery.available:not(.active):not(.locked) .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #666, #333);
 }
-.mastery.locked .fill {
-  background: linear-gradient(to bottom, #3b3b3b, #272727);
-}
-.mastery.locked::after {
-  background: rgba(90, 90, 90, 0.6);
+.mastery.available:not(.active):not(.locked) .octogone {
+  --fill-gradient: linear-gradient(to bottom, #262626, #171717);
+  --inner-border-gradient: linear-gradient(to bottom, #888, #444);
 }
 
-/* Available (neutral) */
-.mastery.available:not(.active):not(.locked)::before {
-  background: linear-gradient(to bottom, #666, #333);
+/* === OFFENSE ACTIVE === */
+[data-branch="offense"] .mastery.active .octogone-container {
+  --border-gradient: linear-gradient(to bottom, #f7db39, #bd2e07);
 }
-.mastery.available:not(.active):not(.locked) .fill {
-  background: linear-gradient(to bottom, #262626, #171717);
-}
-.mastery.available:not(.active):not(.locked)::after {
-  opacity: 0.3;
-}
-
-/* Active - Offense */
-[data-branch="offense"] .mastery.active {
-  --border-gradient: linear-gradient(to bottom, #ced3bd, #f7db39);
+[data-branch="offense"] .mastery.active .octogone {
   --fill-gradient: linear-gradient(to bottom, #611b0f, #170600);
-  --inner-glow: linear-gradient(to bottom, #bd2e07, transparent);
+  --inner-border-gradient: linear-gradient(to bottom, #c22a00, #170600);
 }
 
-/* Active - Defense */
-[data-branch="defense"] .mastery.active {
+/* === DEFENSE ACTIVE === */
+[data-branch="defense"] .mastery.active .octogone-container {
   --border-gradient: linear-gradient(to bottom, #c3d3bd, #b4f739);
+}
+[data-branch="defense"] .mastery.active .octogone {
   --fill-gradient: linear-gradient(to bottom, #2e680e, #041100);
-  --inner-glow: linear-gradient(to bottom, #42ad18, transparent);
+  --inner-border-gradient: linear-gradient(to bottom, #42ad18, #041100);
 }
 
-/* Active - Support */
-[data-branch="support"] .mastery.active {
+/* === SUPPORT ACTIVE === */
+[data-branch="support"] .mastery.active .octogone-container {
   --border-gradient: linear-gradient(to bottom, #bdc7d3, #39d4f7);
+}
+[data-branch="support"] .mastery.active .octogone {
   --fill-gradient: linear-gradient(to bottom, #124071, #020e1d);
-  --inner-glow: linear-gradient(to bottom, #1854ad, transparent);
+  --inner-border-gradient: linear-gradient(to bottom, #1854ad, #020e1d);
 }
 
-/* Hover effect */
-.mastery.available:hover::after {
-  filter: blur(6px) brightness(1.3);
-  opacity: 1;
+/* Hover simple */
+.mastery:hover .octogone {
+  filter: brightness(1.15);
 }
 
 /* === ALIGNEMENT DU TIER 1 === */

@@ -21,20 +21,24 @@
       row.className = "row" + (tier === 1 ? " centered" : "");
       rows.appendChild(row);
 
-      ABS_COLS(tier).forEach(colAbs => {
-        const mastery = document.createElement("div");
-        mastery.className = "mastery";
-        mastery.dataset.id = `${branch}-${tier}-${colAbs}`;
-        mastery.dataset.tier = String(tier);
-        mastery.dataset.col = String(colAbs);
+      AABS_COLS(tier).forEach(colAbs => {
+      const mastery = document.createElement("div");
+      mastery.className = "mastery";
+      mastery.dataset.id = `${branch}-${tier}-${colAbs}`;
+      mastery.dataset.tier = String(tier);
+      mastery.dataset.col = String(colAbs);
 
-        // ✅ Ajout automatique de la div .fill pour l'image/fond
-        const fill = document.createElement("div");
-        fill.className = "fill";
-        mastery.appendChild(fill);
+      // === On reprend la structure exacte du CodePen ===
+      const container = document.createElement("div");
+      container.className = "octogone-container";
 
-        row.appendChild(mastery);
-      });
+      const octo = document.createElement("div");
+      octo.className = "octogone";
+      container.appendChild(octo);
+
+      mastery.appendChild(container);
+      row.appendChild(mastery);
+    });
     }
 
     // Bouton reset individuel
@@ -250,9 +254,11 @@
             cost: m.cost
           });
 
-          const fill = el.querySelector(".fill");
-          if (m.icon && fill) {
-            fill.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
+          const el = document.querySelector(`[data-id="${m.id}"]`);
+          if (!el) return;
+          const octo = el.querySelector(".octogone");
+          if (m.icon && octo) {
+            octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
           }
         });
       }
