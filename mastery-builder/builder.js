@@ -28,14 +28,20 @@
         mastery.dataset.tier = String(tier);
         mastery.dataset.col = String(colAbs);
 
-        // Structure CodePen
+        // Structure
         const container = document.createElement('div');
         container.className = 'octogone-container';
+
         const octo = document.createElement('div');
         octo.className = 'octogone';
         container.appendChild(octo);
-        mastery.appendChild(container);
 
+        // 🔹 Image séparée au-dessus de l'octogone
+        const img = document.createElement('div');
+        img.className = 'octogone-image';
+        container.appendChild(img);
+
+        mastery.appendChild(container);
         row.appendChild(mastery);
       });
     }
@@ -247,13 +253,12 @@
             cost: m.cost
           });
 
-          const octo = masteryEl.querySelector(".octogone");
-          if (m.icon && octo) {
-            octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
-            octo.style.backgroundSize = "cover";
-            octo.style.backgroundPosition = "center";
-          } else if (octo) {
-            octo.textContent = m.name.split(" ")[0];
+          // 🔹 Application de l’image sur le nouvel élément séparé
+          const imgEl = masteryEl.querySelector(".octogone-image");
+          if (m.icon && imgEl) {
+            imgEl.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
+          } else if (imgEl) {
+            imgEl.style.backgroundImage = 'none';
           }
         });
       }
@@ -261,57 +266,7 @@
       updateAll(true);
     });
 
-  // === Tooltips ===
-  document.addEventListener("DOMContentLoaded", () => {
-    const tooltip = document.createElement("div");
-    tooltip.className = "mastery-tooltip";
-    document.body.appendChild(tooltip);
-    let active = null;
-
-    document.querySelectorAll(".mastery").forEach(el => {
-      el.addEventListener("mouseenter", e => {
-        const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
-        if (!data) return;
-        tooltip.innerHTML = `
-          <h4>${data.name}</h4>
-          <p>${data.description}</p>
-          <div class="cost">Scroll cost: ${data.cost}</div>
-        `;
-        active = el;
-        const offset = 20;
-        let x = e.clientX + offset;
-        let y = e.clientY + offset;
-
-        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
-        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
-
-        tooltip.style.left = `${x}px`;
-        tooltip.style.top = `${y}px`;
-        tooltip.classList.remove("visible");
-        requestAnimationFrame(() => tooltip.classList.add("visible"));
-      });
-
-      el.addEventListener("mousemove", e => {
-        if (!active) return;
-        const offset = 20;
-        let x = e.clientX + offset;
-        let y = e.clientY + offset;
-
-        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
-        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
-
-        tooltip.style.left = `${x}px`;
-        tooltip.style.top = `${y}px`;
-      });
-
-      el.addEventListener("mouseleave", () => {
-        tooltip.classList.remove("visible");
-        active = null;
-      });
-    });
-  });
-
-  // === Lecture du lien partagé (param ?m=)
+  // === Lecture du lien partagé (?m=)
   const params = new URLSearchParams(location.search);
   if (params.has('m')) {
     const ids = atob(params.get('m')).split(',').filter(Boolean);

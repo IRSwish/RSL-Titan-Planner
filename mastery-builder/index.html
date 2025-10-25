@@ -103,27 +103,20 @@
   justify-content: center;
 }
 
+/* === OCTOGONES === */
 :root {
-  --octagon-path: polygon(
-    30% 0%, 70% 0%, 100% 30%, 100% 70%,
-    70% 100%, 30% 100%, 0% 70%, 0% 30%
-  );
-
+  --octagon-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
   --border-width: 2.5px;
   --border-fix: 1px;
-
   --border-gradient: linear-gradient(to bottom, #666, #333);
   --fill-gradient: linear-gradient(to bottom, #000, #000);
-
   --inner-border-gradient: linear-gradient(to bottom, #444, #111);
   --inner-border-blur: 10px;
   --inner-border-scale: 0.95;
   --inner-border-opacity: 1;
 }
 
-/* ---------------------------------------------------- */
-/* CONTAINER (BORDURE EXTERNE)                          */
-/* ---------------------------------------------------- */
+/* BORDURE EXTERNE */
 .octogone-container {
   width: 72px;
   height: 72px;
@@ -134,9 +127,7 @@
   transition: all 0.25s ease;
 }
 
-/* ---------------------------------------------------- */
-/* OCTOGONE INTERNE (FOND)                              */
-/* ---------------------------------------------------- */
+/* FOND INTERNE */
 .octogone {
   position: absolute;
   top: calc(var(--border-width) - var(--border-fix));
@@ -151,9 +142,19 @@
   z-index: 1;
 }
 
-/* ---------------------------------------------------- */
-/* BORDURE INTERNE GLOW                                 */
-/* ---------------------------------------------------- */
+/* IMAGE AU-DESSUS */
+.octogone-image {
+  position: absolute;
+  inset: 0;
+  clip-path: var(--octagon-path);
+  background-size: cover;
+  background-position: center;
+  z-index: 5; /* AU-DESSUS */
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* BORDURE INTERNE GLOW */
 .octogone::after {
   content: "";
   position: absolute;
@@ -167,9 +168,7 @@
   pointer-events: none;
 }
 
-/* ---------------------------------------------------- */
-/* ETATS                                                */
-/* ---------------------------------------------------- */
+/* === ETATS === */
 .mastery.locked .octogone-container {
   --border-gradient: linear-gradient(to bottom, #3b3b3b, #272727);
 }
@@ -177,6 +176,9 @@
   --fill-gradient: linear-gradient(to bottom, #3b3b3b, #272727);
   --inner-border-gradient: linear-gradient(to bottom, #5a5a5a, #2f2f2f);
   filter: grayscale(0.8) brightness(0.7);
+}
+.mastery.locked .octogone-image {
+  filter: grayscale(1) brightness(0.5);
 }
 
 .mastery.available:not(.active):not(.locked) .octogone-container {
@@ -219,7 +221,7 @@
   filter: brightness(1.15);
 }
 
-/* ===== TOOLTIP ===== */
+/* === TOOLTIP === */
 .mastery-tooltip {
   position: fixed;
   background: rgba(10, 10, 10, 0.95);
@@ -239,12 +241,7 @@
   box-shadow: 0 0 15px rgba(212,175,55,0.15);
   backdrop-filter: blur(4px);
 }
-
-.mastery-tooltip.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
+.mastery-tooltip.visible { opacity: 1; transform: translateY(0); }
 .mastery-tooltip h4 {
   margin: 0 0 6px;
   font-family: 'American Captain';
@@ -253,13 +250,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
 }
-
-.mastery-tooltip p {
-  margin: 0 0 6px;
-  font-family: 'Inter', sans-serif;
-  color: #fcf6ff;
-}
-
+.mastery-tooltip p { margin: 0 0 6px; }
 .mastery-tooltip .cost {
   font-size: 13px;
   color: #aaa;
@@ -270,18 +261,14 @@
   font-style: italic;
 }
 
-/* === ALIGNEMENT DU TIER 1 === */
+/* === ALIGNEMENT TIER 1 === */
 .row.centered {
   justify-content: center;
   gap: 0;
   position: relative;
 }
-.row.centered .mastery:first-child {
-  transform: translateX(-12px);
-}
-.row.centered .mastery:last-child {
-  transform: translateX(12px);
-}
+.row.centered .mastery:first-child { transform: translateX(-12px); }
+.row.centered .mastery:last-child { transform: translateX(12px); }
   </style>
 </head>
 
@@ -336,9 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tooltip = document.createElement("div");
   tooltip.className = "mastery-tooltip";
   document.body.appendChild(tooltip);
-
   let active = null;
-
   document.querySelectorAll(".mastery").forEach(el => {
     el.addEventListener("mouseenter", e => {
       const data = el.dataset.info ? JSON.parse(el.dataset.info) : null;
@@ -346,35 +331,26 @@ document.addEventListener("DOMContentLoaded", () => {
       tooltip.innerHTML = `
         <h4>${data.name}</h4>
         <p>${data.description}</p>
-        <div class="cost">Scroll cost: ${data.cost}</div>
-      `;
+        <div class="cost">Scroll cost: ${data.cost}</div>`;
       active = el;
       const offset = 20;
-      let x = e.clientX + offset;
-      let y = e.clientY + offset;
-
+      let x = e.clientX + offset, y = e.clientY + offset;
       if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
       if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
-
       tooltip.style.left = `${x}px`;
       tooltip.style.top  = `${y}px`;
       tooltip.classList.remove("visible");
       requestAnimationFrame(() => tooltip.classList.add("visible"));
     });
-
     el.addEventListener("mousemove", e => {
       if (!active) return;
       const offset = 20;
-      let x = e.clientX + offset;
-      let y = e.clientY + offset;
-
+      let x = e.clientX + offset, y = e.clientY + offset;
       if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
       if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
-
       tooltip.style.left = `${x}px`;
       tooltip.style.top  = `${y}px`;
     });
-
     el.addEventListener("mouseleave", () => {
       tooltip.classList.remove("visible");
       active = null;
