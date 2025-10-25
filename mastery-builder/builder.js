@@ -21,7 +21,7 @@
       row.className = "row" + (tier === 1 ? " centered" : "");
       rows.appendChild(row);
 
-      AABS_COLS(tier).forEach(colAbs => {
+      ABS_COLS(tier).forEach(colAbs => {
       const mastery = document.createElement("div");
       mastery.className = "mastery";
       mastery.dataset.id = `${branch}-${tier}-${colAbs}`;
@@ -239,31 +239,36 @@
   }
 
   // Chargement du JSON
-  fetch("masteries.json")
-    .then(res => res.json())
-    .then(data => {
-      for (const branch in data) {
-        data[branch].flat().forEach(m => {
-          const el = document.querySelector(`[data-id="${m.id}"]`);
-          if (!el) return;
+ fetch('masteries.json')
+  .then(res => res.json())
+  .then(data => {
+    for (const branch in data) {
+      data[branch].flat().forEach(m => {
+        const masteryEl = document.querySelector(`[data-id="${m.id}"]`);
+        if (!masteryEl) return;
 
-          MASTERY_COSTS[m.id] = m.cost || 0;
-          el.dataset.info = JSON.stringify({
-            name: m.name,
-            description: m.description,
-            cost: m.cost
-          });
+        MASTERY_COSTS[m.id] = m.cost || 0;
 
-          const el = document.querySelector(`[data-id="${m.id}"]`);
-          if (!el) return;
-          const octo = el.querySelector(".octogone");
-          if (m.icon && octo) {
-            octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
-          }
+        masteryEl.dataset.info = JSON.stringify({
+          name: m.name,
+          description: m.description,
+          cost: m.cost
         });
-      }
-      updateAll(true);
-    });
+
+        // Ajout de l’image à l’intérieur de .octogone
+        const octo = masteryEl.querySelector(".octogone");
+        if (m.icon && octo) {
+          octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
+          octo.style.backgroundSize = "cover";
+          octo.style.backgroundPosition = "center";
+        } else if (octo) {
+          octo.textContent = m.name.split(" ")[0];
+        }
+      });
+    }
+
+    updateAll(true);
+  });
 
   const params = new URLSearchParams(location.search);
   if (params.has("m")) {
