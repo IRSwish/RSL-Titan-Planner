@@ -339,35 +339,41 @@
 
 /* === ÉTAT SÉLECTIONNABLE — COULEUR ATTÉNUÉE (fidèle au jeu) === */
 
-/* OFFENSE */
-.tree[data-branch="offense"] .mastery.available:not(.active):not(.locked) .octogone-image {
-  --mastery-gradient: linear-gradient(to bottom, #79251c, #4b1a15) !important;
-  filter: brightness(1.15) saturate(0.85);
-  opacity: 0.95;
+/* === COLORATION DU FOND OCTOGONAL (même logique que l’image) === */
+
+/* --- OFFENSE --- */
+.tree[data-branch="offense"] .mastery:not(.active) .octogone {
+  background: linear-gradient(to bottom, #4b1a15, #4b1a15);
+}
+.tree[data-branch="offense"] .mastery.available:not(.active) .octogone {
+  background: linear-gradient(to bottom, #79251c, #4b1a15);
+}
+.tree[data-branch="offense"] .mastery.active .octogone {
+  background: linear-gradient(to bottom, #d52317, #d52317);
 }
 
-/* DEFENSE */
-.tree[data-branch="defense"] .mastery.available:not(.active):not(.locked) .octogone-image {
-  --mastery-gradient: linear-gradient(to bottom, #3d6b11, #23350c) !important;
-  filter: brightness(1.15) saturate(0.85);
-  opacity: 0.95;
+/* --- DEFENSE --- */
+.tree[data-branch="defense"] .mastery:not(.active) .octogone {
+  background: linear-gradient(to bottom, #24490c, #23350c);
+}
+.tree[data-branch="defense"] .mastery.available:not(.active) .octogone {
+  background: linear-gradient(to bottom, #3d6b11, #23350c);
+}
+.tree[data-branch="defense"] .mastery.active .octogone {
+  background: linear-gradient(to bottom, #6b9e08, #e4f230);
 }
 
-/* SUPPORT */
-.tree[data-branch="support"] .mastery.available:not(.active):not(.locked) .octogone-image {
-  --mastery-gradient: linear-gradient(to bottom, #14537d, #15333e) !important;
-  filter: brightness(1.15) saturate(0.85);
-  opacity: 0.95;
+/* --- SUPPORT --- */
+.tree[data-branch="support"] .mastery:not(.active) .octogone {
+  background: linear-gradient(to bottom, #092f50, #15333e);
+}
+.tree[data-branch="support"] .mastery.available:not(.active) .octogone {
+  background: linear-gradient(to bottom, #14537d, #15333e);
+}
+.tree[data-branch="support"] .mastery.active .octogone {
+  background: linear-gradient(to bottom, #187dc6, #84f7f7);
 }
 
-/* LÉGER HALO INTÉRIEUR COMME DANS LE JEU */
-.mastery.available:not(.active):not(.locked) .octogone::after {
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.12) inset;
-}
-
-.mastery.available:not(.active):not(.locked) .octogone-image::before {
-  background: linear-gradient(to bottom, red, yellow) !important;
-}
   </style>
 </head>
 
