@@ -363,6 +363,47 @@
   filter: none;
 }
 
+.mastery::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+
+  /* on suit exactement la forme */
+  clip-path: polygon(
+    30% 0%, 70% 0%, 100% 30%, 100% 70%,
+    70% 100%, 30% 100%, 0% 70%, 0% 30%
+  );
+
+  /* ✅ Bordure simulée via un dégradé */
+  background: 
+    linear-gradient(to bottom, #555, #333) padding-box,
+    linear-gradient(to bottom, #888, #555) border-box;
+  border: 2px solid transparent;
+  border-radius: 0; /* éviter tout arrondi */
+}
+
+/* Pour les états actifs, on change le dégradé */
+[data-branch="offense"] .mastery.active::before {
+  background:
+    linear-gradient(to bottom, #611b0f, #170600) padding-box,
+    linear-gradient(to bottom, #ced3bd, #f7db39) border-box;
+}
+
+[data-branch="defense"] .mastery.active::before {
+  background:
+    linear-gradient(to bottom, #2e680e, #041100) padding-box,
+    linear-gradient(to bottom, #c3d3bd, #b4f739) border-box;
+}
+
+[data-branch="support"] .mastery.active::before {
+  background:
+    linear-gradient(to bottom, #124071, #020e1d) padding-box,
+    linear-gradient(to bottom, #bdc7d3, #39d4f7) border-box;
+}
+
+
 /* LOCKED */
 .mastery.locked {
   --mastery-bg: linear-gradient(to bottom, #3b3b3b, #272727);
