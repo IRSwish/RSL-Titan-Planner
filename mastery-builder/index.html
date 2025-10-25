@@ -11,6 +11,7 @@
       src: url('../style/American Captain.otf') format('opentype');
     }
   </style>
+
   <style>
 /* ====== MASTERIES BUILDER CLEAN VERSION ====== */
 
@@ -63,7 +64,8 @@
   font-size: 26px;
   margin-bottom: 10px;
   text-transform: uppercase;
-  text-shadow: none; /* ✅ pas de glow */
+  font-family: 'American Captain';
+  text-shadow: none;
 }
 
 /* ===== RESET BUTTON ===== */
@@ -102,300 +104,119 @@
   justify-content: center;
 }
 
-/* ===== MASTERY ICONS ===== */
-.mastery {
-  width: 70px;
-  height: 70px;
-  border: 2px solid #555;
-  background: #0e0e0e;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  z-index: 2;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
-  background-size: cover;
-  background-position: center;
+/* ===== OCTOGONES SYSTEM (CodePen Style Adapted) ===== */
+
+:root {
+  --octagon-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  --border-width: 6px;
+  --inner-scale: 0.97;
+  --inner-blur: 10px;
 }
 
-/* ✅ pas de hover glow pour l’instant */
-.mastery:hover:not(.locked):not(.active) {
-  transform: none;
-  box-shadow: none;
-}
-
-/* ✅ active = neutre, pas de rose ni de glow */
-.mastery.active {
-  border-color: var(--line-color);
-  box-shadow: none;
-  background-color: rgba(212,175,55,0.1);
-}
-
-.mastery.locked {
-  opacity: 0.25;
-  cursor: not-allowed;
-  filter: grayscale(100%);
-}
-
-.mastery.available:not(.active):not(.locked) {
-  border-color: var(--line-color);
-  box-shadow: none;
-  animation: none;
-}
-
-/* ===== TOOLTIP ===== */
-.mastery-tooltip {
-  position: fixed;
-  background: rgba(10, 10, 10, 0.95);
-  border: 2px solid #d4af37;
-  color: #fcf6ff;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  line-height: 1.3;
-  padding: 12px 16px;
-  border-radius: 10px;
-  max-width: 280px;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0;
-  transform: translateY(8px); /* ↓ départ légèrement en dessous */
-  transition:
-    opacity 0.2s ease,
-    transform 0.25s ease; /* glissement fluide */
-  box-shadow: 0 0 15px rgba(212,175,55,0.15);
-  backdrop-filter: blur(4px);
-}
-
-/* Quand le tooltip devient visible */
-.mastery-tooltip.visible {
-  opacity: 1;
-  transform: translateY(0); /* ↑ remonte doucement en place */
-}
-
-.mastery-tooltip h4 {
-  margin: 0 0 6px;
-  font-family: 'American Captain';
-  font-size: 22px;
-  color: #d4af37;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: none; /* ✅ pas de glow */
-}
-
-.mastery-tooltip p {
-  margin: 0 0 6px;
-  font-family: 'Inter', sans-serif;
-  color: #fcf6ff;
-}
-
-.mastery-tooltip .cost {
-  font-size: 13px;
-  color: #aaa;
-  text-align: right;
-  border-top: 1px solid rgba(212,175,55,0.2);
-  padding-top: 4px;
-  margin-top: 4px;
-  font-style: italic;
-}
-
-/* ===== COULEURS PAR ARBRE (tons métalliques sobres et corrects) ===== */
-
-/* ---- OFFENSE (rouge métallisé) ---- */
-[data-branch="offense"] {
-  border-color: #a6404f;
-}
-
-[data-branch="offense"] .reset-tree {
-  border-color: #a6404f;
-}
-
-[data-branch="offense"] h2 {
-  color: #a6404f;
-}
-
-[data-branch="offense"] .mastery.active {
-  border-color: #a6404f;
-  background-color: rgba(166,64,79,0.15);
-}
-
-/* ===== COULEURS PAR ARBRE (contraste renforcé) ===== */
-
-/* ---- OFFENSE (rouge profond) ---- */
-[data-branch="offense"] {
-  border-color: #d42018;
-  background: linear-gradient(180deg, #211819 0%, #1a1212 100%);
-}
-
-[data-branch="offense"] .reset-tree {
-  border-color: #d42018;
-}
-
-[data-branch="offense"] h2 {
-  color: #d42018;
-}
-
-[data-branch="offense"] .mastery.active {
-  border-color: #d42018;
-  background-color: rgba(212,32,24,0.15);
-}
-
-/* ---- DEFENSE (vert foncé) ---- */
-[data-branch="defense"] {
-  border-color: #7bb608;
-  background: linear-gradient(180deg, #093928 0%, #072a1e 100%);
-}
-
-[data-branch="defense"] .reset-tree {
-  border-color: #7bb608;
-}
-
-[data-branch="defense"] h2 {
-  color: #7bb608;
-}
-
-[data-branch="defense"] .mastery.active {
-  border-color: #7bb608;
-  background-color: rgba(123,182,8,0.15);
-}
-
-/* ---- SUPPORT (bleu acier froid) ---- */
-[data-branch="support"] {
-  border-color: #187dbf;
-  background: linear-gradient(180deg, #082f3d 0%, #062430 100%);
-}
-
-[data-branch="support"] .reset-tree {
-  border-color: #187dbf;
-}
-
-[data-branch="support"] h2 {
-  color: #187dbf;
-}
-
-[data-branch="support"] .mastery.active {
-  border-color: #187dbf;
-  background-color: rgba(24,125,191,0.15);
-}
-
-/* ---- DÉTAILS GÉNÉRAUX ---- */
-.tree {
-  box-shadow: 0 0 15px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.03);
-}
-
-.mastery.active {
-  box-shadow: none;
-}
-
-.mastery.locked {
-  opacity: 0.25;
-  filter: grayscale(100%);
-}
-
-/* === OCTOGONES STYLE RSL — FINAL FIX === */
-
+/* Base container */
 .mastery {
   position: relative;
   width: 72px;
   height: 72px;
-  clip-path: polygon(
-    30% 0%, 70% 0%, 100% 30%, 100% 70%,
-    70% 100%, 30% 100%, 0% 70%, 0% 30%
-  );
-  background: linear-gradient(to bottom, #1a1a1a, #0e0e0e);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow:
-    inset 0 0 12px rgba(0,0,0,0.6),
-    0 0 6px rgba(0,0,0,0.5);
+  clip-path: var(--octagon-path);
   overflow: hidden;
+  transition: all 0.25s ease;
+  background: #0e0e0e;
+  cursor: pointer;
 }
 
-/* === Layer bordure brillante === */
+/* Outer gradient border */
 .mastery::before {
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: inherit;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(255,255,255,0));
-  box-shadow: 0 0 4px rgba(255,255,255,0.25), inset 0 0 4px rgba(255,255,255,0.15);
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.6;
+  clip-path: var(--octagon-path);
+  background: var(--border-gradient, linear-gradient(to bottom, #777, #333));
+  z-index: 0;
 }
 
-/* === Glow interne (invisible par défaut) === */
+/* Inner fill */
+.mastery .fill {
+  position: absolute;
+  top: var(--border-width);
+  left: var(--border-width);
+  right: var(--border-width);
+  bottom: var(--border-width);
+  clip-path: var(--octagon-path);
+  background: var(--fill-gradient, #000);
+  z-index: 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Inner glow */
 .mastery::after {
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: inherit;
-  background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255,255,255,0.05) 100%);
-  z-index: 1;
-  transition: all 0.3s ease;
+  clip-path: var(--octagon-path);
+  transform: scale(var(--inner-scale));
+  filter: blur(var(--inner-blur));
+  opacity: 0.8;
+  z-index: 2;
+  background: var(--inner-glow, rgba(255,255,255,0.1));
+  pointer-events: none;
 }
 
-/* === LOCKED === */
+/* ===== STATES ===== */
+
+/* Locked */
 .mastery.locked {
+  filter: grayscale(0.8) brightness(0.7);
+}
+.mastery.locked::before {
   background: linear-gradient(to bottom, #3b3b3b, #272727);
-  filter: brightness(0.8);
-  box-shadow:
-    inset 0 0 10px #5a5a5a,
-    0 0 3px #000;
+}
+.mastery.locked .fill {
+  background: linear-gradient(to bottom, #3b3b3b, #272727);
+}
+.mastery.locked::after {
+  background: rgba(90, 90, 90, 0.6);
 }
 
-/* === DISPONIBLE === */
-.mastery.available:not(.active):not(.locked) {
+/* Available (neutral) */
+.mastery.available:not(.active):not(.locked)::before {
+  background: linear-gradient(to bottom, #666, #333);
+}
+.mastery.available:not(.active):not(.locked) .fill {
   background: linear-gradient(to bottom, #262626, #171717);
-  box-shadow:
-    inset 0 0 10px rgba(255,255,255,0.08),
-    0 0 0 2px #777;
+}
+.mastery.available:not(.active):not(.locked)::after {
+  opacity: 0.3;
 }
 
-/* === OFFENSE ACTIVE === */
+/* Active - Offense */
 [data-branch="offense"] .mastery.active {
-  background: linear-gradient(to bottom, #611b0f, #170600);
-  box-shadow:
-    inset 0 0 20px #bd2e07,
-    0 0 8px #bd2e07;
-}
-[data-branch="offense"] .mastery.active::before {
-  background: linear-gradient(to bottom, #f7db39, #bd2e07);
-  opacity: 0.8;
+  --border-gradient: linear-gradient(to bottom, #ced3bd, #f7db39);
+  --fill-gradient: linear-gradient(to bottom, #611b0f, #170600);
+  --inner-glow: linear-gradient(to bottom, #bd2e07, transparent);
 }
 
-/* === DEFENSE ACTIVE === */
+/* Active - Defense */
 [data-branch="defense"] .mastery.active {
-  background: linear-gradient(to bottom, #2e680e, #041100);
-  box-shadow:
-    inset 0 0 20px #42ad18,
-    0 0 8px #42ad18;
-}
-[data-branch="defense"] .mastery.active::before {
-  background: linear-gradient(to bottom, #b4f739, #42ad18);
-  opacity: 0.8;
+  --border-gradient: linear-gradient(to bottom, #c3d3bd, #b4f739);
+  --fill-gradient: linear-gradient(to bottom, #2e680e, #041100);
+  --inner-glow: linear-gradient(to bottom, #42ad18, transparent);
 }
 
-/* === SUPPORT ACTIVE === */
+/* Active - Support */
 [data-branch="support"] .mastery.active {
-  background: linear-gradient(to bottom, #124071, #020e1d);
-  box-shadow:
-    inset 0 0 20px #1854ad,
-    0 0 8px #1854ad;
-}
-[data-branch="support"] .mastery.active::before {
-  background: linear-gradient(to bottom, #39d4f7, #1854ad);
-  opacity: 0.8;
+  --border-gradient: linear-gradient(to bottom, #bdc7d3, #39d4f7);
+  --fill-gradient: linear-gradient(to bottom, #124071, #020e1d);
+  --inner-glow: linear-gradient(to bottom, #1854ad, transparent);
 }
 
-/* === Hover subtil === */
+/* Hover effect */
 .mastery.available:hover::after {
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 70%);
+  filter: blur(6px) brightness(1.3);
   opacity: 1;
 }
-
 
 /* === ALIGNEMENT DU TIER 1 === */
 .row.centered {
@@ -403,14 +224,11 @@
   gap: 0;
   position: relative;
 }
-
-/* Ajustement horizontal précis */
-.row.centered .mastery-wrap:first-child {
-  transform: translateX(43px) rotate(45deg);
+.row.centered .mastery:first-child {
+  transform: translateX(43px);
 }
-
-.row.centered .mastery-wrap:last-child {
-  transform: translateX(-43px) rotate(45deg);
+.row.centered .mastery:last-child {
+  transform: translateX(-43px);
 }
   </style>
 </head>
@@ -487,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
 
       tooltip.style.left = `${x}px`;
-      tooltip.style.top = `${y}px`;
+      tooltip.style.top  = `${y}px`;
       tooltip.classList.remove("visible");
       requestAnimationFrame(() => tooltip.classList.add("visible"));
     });
@@ -502,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
 
       tooltip.style.left = `${x}px`;
-      tooltip.style.top = `${y}px`;
+      tooltip.style.top  = `${y}px`;
     });
 
     el.addEventListener("mouseleave", () => {
@@ -513,7 +331,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
   </script>
 
-  <!-- === Menu Script === -->
   <script src="../script.js"></script>
 </body>
 </html>
