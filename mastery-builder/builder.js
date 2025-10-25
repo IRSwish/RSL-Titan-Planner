@@ -252,8 +252,6 @@
             octo.style.backgroundImage = `url('../style/img/masteries/${m.icon}.webp')`;
             octo.style.backgroundSize = "cover";
             octo.style.backgroundPosition = "center";
-            octo.style.zIndex = "5"; // ✅ image toujours au-dessus
-            octo.style.position = "relative"; // ✅ s’assure que le z-index s’applique
           } else if (octo) {
             octo.textContent = m.name.split(" ")[0];
           }
