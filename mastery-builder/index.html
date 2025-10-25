@@ -136,8 +136,9 @@
   bottom: calc(var(--border-width) - var(--border-fix));
   clip-path: var(--octagon-path);
   z-index: 1;
-  overflow: hidden; /* important pour contenir ::before et ::after */
+  overflow: hidden; /* Permet aux pseudo-éléments de rester dans la forme */
   transition: filter 0.25s ease;
+  background: none; /* <-- on supprime le fond gris */
 }
 
 .octogone-image {
@@ -483,8 +484,8 @@
   position: absolute;
   inset: 0;
   clip-path: var(--octagon-path);
-  background: var(--fill-gradient, linear-gradient(to bottom, #111, #000));
-  z-index: 0; /* Derrière tout le reste */
+  background: var(--fill-gradient, linear-gradient(to bottom, #222, #111));
+  z-index: 1; /* Sous le ::after glow (qui est à 2) */
   transition: background 0.3s ease;
 }
   </style>
