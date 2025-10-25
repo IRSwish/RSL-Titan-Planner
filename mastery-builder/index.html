@@ -374,6 +374,75 @@
   background: linear-gradient(to bottom, #187dc6, #84f7f7);
 }
 
+/* === COLORATION TOTALE OCTOGONE (fond + bordure) === */
+
+/* 🟥 OFFENSE */
+.tree[data-branch="offense"] .mastery:not(.active) .octogone {
+  background: linear-gradient(to bottom, #4b1a15, #4b1a15);
+}
+.tree[data-branch="offense"] .mastery.available:not(.active) .octogone {
+  background: linear-gradient(to bottom, #79251c, #4b1a15);
+}
+.tree[data-branch="offense"] .mastery.active .octogone {
+  background: linear-gradient(to bottom, #d52317, #d52317);
+}
+
+/* Bordure OFFENSE */
+.tree[data-branch="offense"] .mastery:not(.active) .octogone-container {
+  background: linear-gradient(to bottom, #3b201c, #2b1511);
+}
+.tree[data-branch="offense"] .mastery.available:not(.active) .octogone-container {
+  background: linear-gradient(to bottom, #a83626, #601e17);
+}
+.tree[data-branch="offense"] .mastery.active .octogone-container {
+  background: linear-gradient(to bottom, #ff2a1f, #b10f0f);
+}
+
+
+/* 🟩 DEFENSE */
+.tree[data-branch="defense"] .mastery:not(.active) .octogone {
+  background: linear-gradient(to bottom, #24490c, #23350c);
+}
+.tree[data-branch="defense"] .mastery.available:not(.active) .octogone {
+  background: linear-gradient(to bottom, #3d6b11, #23350c);
+}
+.tree[data-branch="defense"] .mastery.active .octogone {
+  background: linear-gradient(to bottom, #6b9e08, #e4f230);
+}
+
+/* Bordure DEFENSE */
+.tree[data-branch="defense"] .mastery:not(.active) .octogone-container {
+  background: linear-gradient(to bottom, #223810, #192a0b);
+}
+.tree[data-branch="defense"] .mastery.available:not(.active) .octogone-container {
+  background: linear-gradient(to bottom, #4b7d1a, #2f4712);
+}
+.tree[data-branch="defense"] .mastery.active .octogone-container {
+  background: linear-gradient(to bottom, #a9f130, #6cc312);
+}
+
+
+/* 🟦 SUPPORT */
+.tree[data-branch="support"] .mastery:not(.active) .octogone {
+  background: linear-gradient(to bottom, #092f50, #15333e);
+}
+.tree[data-branch="support"] .mastery.available:not(.active) .octogone {
+  background: linear-gradient(to bottom, #14537d, #15333e);
+}
+.tree[data-branch="support"] .mastery.active .octogone {
+  background: linear-gradient(to bottom, #187dc6, #84f7f7);
+}
+
+/* Bordure SUPPORT */
+.tree[data-branch="support"] .mastery:not(.active) .octogone-container {
+  background: linear-gradient(to bottom, #0a243b, #091b2b);
+}
+.tree[data-branch="support"] .mastery.available:not(.active) .octogone-container {
+  background: linear-gradient(to bottom, #1a5588, #0c304f);
+}
+.tree[data-branch="support"] .mastery.active .octogone-container {
+  background: linear-gradient(to bottom, #3bb2f7, #187dc6);
+}
   </style>
 </head>
 
