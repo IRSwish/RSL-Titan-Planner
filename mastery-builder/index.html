@@ -288,110 +288,138 @@
   filter: grayscale(100%);
 }
 
-/* === OCTOGONES STYLISÉS (version corrigée) === */
+/* === OCTOGONES (MASK-BASED, GLOW & BORDER DANS LA FORME) === */
 
+/* Reset des styles conflictuels */
 .mastery {
-  width:72px;
-  height:72px;
-  background:linear-gradient(#611b0f,#170600);
-  -webkit-mask:url("/style/img/masks/octo.webp") center/contain no-repeat;
-          mask:url("/style/img/masks/octo.webp") center/contain no-repeat;
-}
-.mastery::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  -webkit-mask:inherit;
-          mask:inherit;
-  background:radial-gradient(circle at 50% 50%,rgba(189,46,7,.5),transparent 70%);
+  border: none !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+  filter: none !important;
+  opacity: 1 !important;
 }
 
-/* couche 2 : inner glow */
+/* Conteneur masqué par l'octogone */
+.mastery {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+
+  /* masque = forme octogone (tout ce qu'on dessine reste DANS la forme) */
+  -webkit-mask: url("/style/img/masks/octo.webp") center/100% 100% no-repeat;
+          mask: url("/style/img/masks/octo.webp") center/100% 100% no-repeat;
+
+  /* variables par défaut (état neutre) */
+  --fill: linear-gradient(to bottom, #262626, #171717);
+  --glow: transparent;
+  --glow-alpha: 0;
+  --ring: none;
+}
+
+/* Calque FOND (dans la forme) */
+.mastery::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--fill);
+  /* important : on applique le même masque au calque */
+  -webkit-mask: inherit;
+          mask: inherit;
+}
+
+/* Calque GLOW interne (dans la forme) */
 .mastery::after {
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: inherit;
   z-index: 2;
-  background: radial-gradient(circle at 50% 60%, transparent 40%, rgba(255,255,255,0.1) 100%);
-  mix-blend-mode: lighten;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  -webkit-mask: inherit;
+          mask: inherit;
+
+  /* inner glow simulé par radial multi-stop (100% interne) */
+  background:
+    radial-gradient(130% 130% at 50% 45%,
+      color-mix(in srgb, var(--glow) calc(var(--glow-alpha)*100%), transparent) 0%,
+      color-mix(in srgb, var(--glow) calc(var(--glow-alpha)*70%), transparent) 35%,
+      transparent 65%);
+  pointer-events: none;
 }
 
-/* ========== LOCKED ========== */
-.mastery.locked::before {
-  background: linear-gradient(to bottom, #3b3b3b, #272727);
-}
-.mastery.locked::after {
-  background: radial-gradient(circle at 50% 60%, transparent 40%, #5a5a5a 90%);
-  opacity: 0.5;
-}
+/* Calque ANNEAU de bordure dégradée (dans la forme, sans remplir le centre) */
+.mastery > i {
+  /* Élément généré en JS ci-dessous si absent (fallback CSS-only possible, mais JS = sûr) */
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  background: var(--ring);
 
-/* ========== OFFENSE ACTIVE ========== */
-[data-branch="offense"] .mastery.active::before {
-  background: linear-gradient(to bottom, #611b0f, #170600);
-  box-shadow: inset 0 0 12px #bd2e07;
-}
-[data-branch="offense"] .mastery.active {
-  --border-grad: linear-gradient(to bottom, #ced3bd, #f7db39);
-}
-[data-branch="offense"] .mastery.active::after {
-  background: radial-gradient(circle at 50% 60%, transparent 35%, rgba(189,46,7,0.6) 100%);
-  opacity: 1;
-}
+  /* TRUC: on creuse le centre via un masque XOR entre border-box et content-box */
+  padding: 2px; /* épaisseur de la bordure */
+  background-clip: content-box;
 
-/* ========== DEFENSE ACTIVE ========== */
-[data-branch="defense"] .mastery.active::before {
-  background: linear-gradient(to bottom, #2e680e, #041100);
-  box-shadow: inset 0 0 12px #42ad18;
-}
-[data-branch="defense"] .mastery.active {
-  --border-grad: linear-gradient(to bottom, #c3d3bd, #b4f739);
-}
-[data-branch="defense"] .mastery.active::after {
-  background: radial-gradient(circle at 50% 60%, transparent 35%, rgba(66,173,24,0.6) 100%);
-  opacity: 1;
-}
-
-/* ========== SUPPORT ACTIVE ========== */
-[data-branch="support"] .mastery.active::before {
-  background: linear-gradient(to bottom, #124071, #020e1d);
-  box-shadow: inset 0 0 12px #1854ad;
-}
-[data-branch="support"] .mastery.active {
-  --border-grad: linear-gradient(to bottom, #bdc7d3, #39d4f7);
-}
-[data-branch="support"] .mastery.active::after {
-  background: radial-gradient(circle at 50% 60%, transparent 35%, rgba(24,84,173,0.6) 100%);
-  opacity: 1;
-}
-
-/* ========== DISPONIBLE ========== */
-.mastery.available:not(.active):not(.locked)::before {
-  background: linear-gradient(to bottom, #262626, #171717);
-}
-.mastery.available:not(.active):not(.locked)::after {
-  background: radial-gradient(circle at 50% 60%, transparent 40%, rgba(255,255,255,0.08) 100%);
-  opacity: 0.6;
-}
-
-/* ========== BORDURE (vraiment dans la forme) ========== */
-.mastery::after,
-.mastery::before {
   -webkit-mask: 
-    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
+
+          mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   mask-composite: exclude;
-  padding: 2px;
-  background-clip: content-box;
+  -webkit-mask: inherit;
+          mask: inherit;
+  pointer-events: none;
 }
 
-/* ========== HOVER ========== */
-.mastery.available:hover {
-  transform: scale(1.05);
+/* ======= ÉTATS ======= */
+
+/* LOCKED (gris) — pas de bordure, juste inner glow gris et fond gris */
+.mastery.locked {
+  --fill: linear-gradient(to bottom, #3b3b3b, #272727);
+  --glow: #5a5a5a;
+  --glow-alpha: 0.55;
+  --ring: none;
 }
+
+/* DISPONIBLE (non active, neutre) */
+.mastery.available:not(.active):not(.locked) {
+  --fill: linear-gradient(to bottom, #262626, #171717);
+  --glow: rgba(255,255,255,0.08);
+  --glow-alpha: 0.35;
+  --ring: linear-gradient(to bottom, #d4af37, #7a682a);
+}
+
+/* ACTIVE — OFFENSE (rouge) */
+[data-branch="offense"] .mastery.active {
+  --fill: linear-gradient(to bottom, #611b0f, #170600);
+  --glow: #bd2e07;
+  --glow-alpha: 0.9;
+  --ring: linear-gradient(to bottom, #ced3bd, #f7db39);
+}
+
+/* ACTIVE — DEFENSE (vert) */
+[data-branch="defense"] .mastery.active {
+  --fill: linear-gradient(to bottom, #2e680e, #041100);
+  --glow: #42ad18;
+  --glow-alpha: 0.9;
+  --ring: linear-gradient(to bottom, #c3d3bd, #b4f739);
+}
+
+/* ACTIVE — SUPPORT (bleu) */
+[data-branch="support"] .mastery.active {
+  --fill: linear-gradient(to bottom, #124071, #020e1d);
+  --glow: #1854ad;
+  --glow-alpha: 0.9;
+  --ring: linear-gradient(to bottom, #bdc7d3, #39d4f7);
+}
+
+/* Hover léger seulement sur dispo */
+.mastery.available:hover { transform: scale(1.04); }
   </style>
 </head>
 
@@ -439,6 +467,17 @@
 
   <!-- === Builder Logic === -->
   <script src="builder.js"></script>
+
+    <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.mastery').forEach(el => {
+      if (!el.querySelector('i')) {
+        const ring = document.createElement('i');
+        el.appendChild(ring);
+      }
+    });
+  });
+  </script>
 
   <!-- === Tooltip Logic === -->
   <script>
