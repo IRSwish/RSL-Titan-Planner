@@ -234,29 +234,33 @@
     const container = document.querySelector(".pity-container");
 
     shards.forEach(shard => {
-      container.innerHTML += `
-      <div class="shard-card" data-type="${shard.type}" data-max="${shard.max}" data-base="${shard.base}" data-start="${shard.start}" data-inc="${shard.inc}">
-        <img class="shard-img" src="style/img/Misc/${shard.type}.webp" alt="${shard.type} Shard">
-        <div class="right-side">
-          <div class="circle-container">
-            <svg class="progress-ring" width="100" height="100">
-              <circle class="background" r="45" cx="50" cy="50"></circle>
-              <circle class="progress" r="45" cx="50" cy="50"></circle>
-            </svg>
-            <input type="number" class="circle-input" value="0" min="0">
-          </div>
-          <div class="buttons">
-            <button class="btn minus">−</button>
-            <button class="btn plus">+</button>
-            <button class="reset-btn">Reset</button>
-          </div>
-          <div class="progress-info">
-            <input type="number" class="count" value="0" min="0"> / <span class="max">${shard.max}</span>
-          </div>
-          <div class="chance">Legendary chance: <span class="percent">${shard.base}%</span></div>
+    const chanceLabel = (shard.type === "Remnant" || shard.type === "Primal") 
+      ? "Mythical chance" 
+      : "Legendary chance";
+  
+    container.innerHTML += `
+    <div class="shard-card" data-type="${shard.type}" data-max="${shard.max}" data-base="${shard.base}" data-start="${shard.start}" data-inc="${shard.inc}">
+      <img class="shard-img" src="style/img/Misc/${shard.type}.webp" alt="${shard.type} Shard">
+      <div class="right-side">
+        <div class="circle-container">
+          <svg class="progress-ring" width="100" height="100">
+            <circle class="background" r="45" cx="50" cy="50"></circle>
+            <circle class="progress" r="45" cx="50" cy="50"></circle>
+          </svg>
+          <input type="number" class="circle-input" value="0" min="0">
         </div>
-      </div>`;
-    });
+        <div class="buttons">
+          <button class="btn minus">−</button>
+          <button class="btn plus">+</button>
+          <button class="reset-btn">Reset</button>
+        </div>
+        <div class="progress-info">
+          <input type="number" class="count" value="0" min="0"> / <span class="max">${shard.max}</span>
+        </div>
+        <div class="chance">${chanceLabel}: <span class="percent">${shard.base}%</span></div>
+      </div>
+    </div>`;
+  });
 
     document.querySelectorAll('.shard-card').forEach(card => {
       const type = card.dataset.type;
