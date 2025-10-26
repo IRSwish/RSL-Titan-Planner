@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Swish - RSL Tools</title>
+  <link rel="stylesheet" href="/style/style.css">
+  <style>
+    @font-face {
+      font-family: 'American Captain';
+      src: url('/style/American Captain.otf') format('opentype');
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+<!-- BARRE DE MENU CENTRÉE -->
+<div id="menu-container"></div>
+  
+<div class="header-wrapper">
+  <header id="page-title">EFFICIENCY LAB</header>
+</div> 
+
+<div class="dropdown-container">
+  <select id="event-type">
+    <option value="">-- Event Type --</option>
+    <option value="tournament">Tournament</option>
+    <option value="gearhunters">Gear Hunters</option>
+    <option value="herospath">Hero's Path</option>
+    <option value="deckoffate">Deck of Fate</option>
+  </select>
+
+  <select id="zone">
+    <option value="">-- Zone --</option>
+    <option value="dungeons">Dungeons</option>
+    <option value="campaign">Campaign</option>
+  </select>
+
+  <!-- Majuscules pour correspondre au JSON -->
+  <select id="campaign-difficulty" class="hidden">
+    <option value="">-- Difficulty --</option>
+    <option value="Normal">Normal</option>
+    <option value="Hard">Hard</option>
+    <option value="Brutal">Brutal</option>
+    <option value="Nightmare">Nightmare</option>
+  </select>
+  <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
+
+  <select id="dungeon-difficulty" class="hidden">
+    <option value="">-- Difficulty --</option>
+    <option value="normal">Normal</option>
+    <option value="hard">Hard</option>
+  </select>
+  <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
+</div>
+
+<div class="points-inputs">
+  <label for="current-points">Current Points:</label>
+  <input type="number" id="current-points" min="0" value="0">
+  <label for="target-points">Target Points:</label>
+  <input type="number" id="target-points" min="0" value="0">
+  <span id="points-remaining">0 point(s) remaining</span>
+</div>
+  
+<div id="calculation-result"></div>
+  
+<div id="points-table-container" class="hidden">
+  <button id="toggle-btn" class="toggle-btn">Show Loot %</button>
+  <table id="points-table">
+    <thead>
+      <tr>
+        <th>Rarity</th>
+        <th>Rank 1 ⭐</th>
+        <th>Rank 2 ⭐</th>
+        <th>Rank 3 ⭐</th>
+        <th>Rank 4 ⭐</th>
+        <th>Rank 5 ⭐</th>
+        <th>Rank 6 ⭐</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Common</td></tr>
+      <tr><td>Uncommon</td></tr>
+      <tr><td>Rare</td></tr>
+      <tr><td>Epic</td></tr>
+      <tr><td>Legendary</td></tr>
+      <tr><td>Mythical</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
+const pointsTableContainer = document.getElementById('points-table-container');
+const pointsTableBody = document.getElementById('points-table').querySelector('tbody');
+
+const zoneSelect = document.getElementById('zone');
+const dungeonDifficultySelect = document.getElementById('dungeon-difficulty');
+const dungeonStageSelect = document.getElementById('dungeon-stage');
+const campaignDifficultySelect = document.getElementById('campaign-difficulty');
+const campaignStageSelect = document.getElementById('campaign-stage');
+const eventTypeSelect = document.getElementById('event-type');
+const toggleBtn = document.getElementById('toggle-btn');
+
+const currentPointsInput = document.getElementById('current-points');
+const targetPointsInput = document.getElementById('target-points');
+const pointsRemainingSpan = document.getElementById('points-remaining');
+const calculationResult = document.getElementById('calculation-result');
+
+let pointsData = {};
+let displayMode = 'points';
+
+// --- Chargement du JSON ---
+fetch('points-data.json')
+  .then(res => res.json())
+  .then(data => pointsData = data)
+  .catch(err => console.error('Erreur chargement points:', err));
+
+// --- Table ---
+function generateEmptyPointsTable() {
+  pointsTableBody.innerHTML = '';
+  rarities.forEach(rarity => {
+    const tr = document.createElement('tr');
+    const tdRarity = document.createElement('td');
+    tdRarity.textContent = rarity;
+    tr.appendChild(tdRarity);
+    for (let i = 1; i <= 6; i++) {
+      const td = document.createElement('td');
+      td.textContent = '0';
+      tr.appendChild(td);
+    }
+    pointsTableBody.appendChild(tr);
+  });
+}
+
+function fillPointsTable(eventType) {
+  if (!pointsData.points?.[eventType]) return;
+  rarities.forEach((rarity, rowIndex) => {
+    const tr = pointsTableBody.rows[rowIndex];
+    const values = pointsData.points[eventType][rarity];
+    for (let col = 1; col <= 6; col++) {
+      tr.cells[col].textContent = values[col-1] || 0;
+      tr.cells[col].style.backgroundColor = '';
+      tr.cells[col].style.color = '';
+    }
+  });
+}
+
+// --- Loot ---
+function getCampaignStageData(difficulty, stage) {
+  if (!difficulty || !stage) return null;
+
+  const campaignData = pointsData.loot.campaign?.[difficulty];
+  if (!campaignData) return null;
+
+  for (const key of Object.keys(campaignData)) {
+    if (key.includes('-')) {
+      const [start, end] = key.split('-').map(Number);
+      if (stage >= start && stage <= end) return campaignData[key];
+    } else if (parseInt(key) === stage) {
+      return campaignData[key];
+    }
+  }
+
+  return null;
+}
+
+function getLoot() {
+  const zone = zoneSelect.value;
+  if (!pointsData.loot) return null;
+  if (zone === 'campaign') {
+    const difficulty = campaignDifficultySelect.value;
+    const stage = Number(campaignStageSelect.value);
+    if (difficulty && stage) return getCampaignStageData(difficulty, stage);
+    return null;
+  } else if (zone === 'dungeons') {
+    const difficulty = dungeonDifficultySelect.value;
+    const stage = dungeonStageSelect.value;
+    if (difficulty && stage) return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
+    return null;
+  }
+  return null;
+}
+
+function getEnergy() {
+  const loot = getLoot();
+  return loot ? loot.Energy || 0 : 0;
+}
+
+function fillLootTable() {
+  const loot = getLoot();
+  if (!loot) return;
+
+  rarities.forEach((rarity, rowIndex) => {
+    const tr = pointsTableBody.rows[rowIndex];
+    const arr = loot[rarity] || [];
+    for (let i=0; i<6; i++){
+      const value = arr[i] || 0;
+      tr.cells[i+1].textContent = (value*100).toFixed(2)+'%';
+      if(value === 0){
+        tr.cells[i+1].style.color = '#444';
+        tr.cells[i+1].style.backgroundColor = 'transparent';
+      } else {
+        tr.cells[i+1].style.color = '#fff';
+        const alpha = 0.1 + 0.4 * value;
+        tr.cells[i+1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+      }
+    }
+  });
+}
+
+// --- Dropdowns ---
+function updateDropdowns() {
+  const zone = zoneSelect.value;
+  campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
+  campaignStageSelect.classList.toggle('hidden', zone !== 'campaign');
+  dungeonDifficultySelect.classList.toggle('hidden', zone !== 'dungeons');
+  dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
+}
+
+// --- Calculs ---
+function updateCalculation() {
+  const current = Number(currentPointsInput.value) || 0;
+  const target = Number(targetPointsInput.value) || 0;
+  const remaining = Math.max(target - current, 0);
+  pointsRemainingSpan.textContent = `${remaining} point(s) remaining`;
+
+  if (remaining <= 0) {
+    calculationResult.textContent = '';
+    return;
+  }
+
+  const energyPerRun = getEnergy();
+  const eventType = eventTypeSelect.value;
+  const zone = zoneSelect.value;
+  if (!energyPerRun || !pointsData.points?.[eventType]) return;
+
+  let totalAvgPoints = 0;
+  const pointValues = pointsData.points[eventType];
+  const loot = getLoot();
+
+  // --- calcul des points moyens ---
+  rarities.forEach(rarity => {
+    const pointsForRarity = pointValues[rarity];
+    const dropRates = loot[rarity] || [0,0,0,0,0,0];
+    for (let i=0; i<6; i++) totalAvgPoints += (dropRates[i]||0)*(pointsForRarity[i]||0);
+  });
+
+  // --- réduction selon la zone ---
+  let uselessLoot = 0;
+  if (zone === 'campaign') {
+    uselessLoot = (loot["Mystery Shard"] || 0) + (loot["Champions"] || 0);
+  } else if (zone === 'dungeons') {
+    uselessLoot = (loot["Mystery Shard"] || 0) + (loot["Ancient Shard"] || 0) + (loot["Brews"] || 0);
+  }
+
+  const gearFactor = 1 - uselessLoot;
+  totalAvgPoints *= gearFactor;
+
+  const runsNeeded = Math.ceil(remaining / totalAvgPoints);
+  const superrunsNeeded = Math.ceil(remaining / totalAvgPoints / 2);
+  const totalEnergy = runsNeeded * energyPerRun;
+  const gems = (totalEnergy / 3.25).toFixed(2);
+
+  calculationResult.innerHTML = `
+  <div style="display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:10px;">
+    <div style="text-align:center;">
+      <div style="font-weight:bold;font-size:18px;margin-bottom:5px;">${totalEnergy}</div>
+      <div style="width:64px;height:64px;background-image:url('/style/img/Misc/Energy.webp');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-weight:bold;font-size:18px;margin-bottom:5px;">${gems}</div>
+      <div style="width:64px;height:64px;background-image:url('/style/img/Misc/Gems.webp');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
+    </div>
+    <div style="text-align:center;max-width:300px;">
+      <div style="font-size:15px;">
+        ${runsNeeded} run(s) or ${superrunsNeeded} super raid(s)<br>
+        to reach ${remaining} remaining points
+      </div>
+    </div>
+  </div>`;
+}
+
+// --- Table update ---
+function updateTable() {
+  const eventType = eventTypeSelect.value;
+  if (!eventType) {
+    generateEmptyPointsTable();
+    pointsTableContainer.classList.add('hidden');
+    toggleBtn.style.display = 'none';
+    calculationResult.textContent = '';
+    return;
+  }
+  pointsTableContainer.classList.remove('hidden');
+  toggleBtn.style.display = 'inline-block';
+  generateEmptyPointsTable();
+  if(displayMode==='points') fillPointsTable(eventType);
+  else fillLootTable();
+  updateCalculation();
+}
+
+// --- Listeners ---
+[currentPointsInput, targetPointsInput].forEach(input => input.addEventListener('input', updateCalculation));
+[eventTypeSelect, zoneSelect, dungeonDifficultySelect, dungeonStageSelect, campaignDifficultySelect].forEach(el => {
+  el.addEventListener('change', ()=>{updateDropdowns();updateTable();});
+});
+campaignStageSelect.addEventListener('change', updateTable);
+
+dungeonDifficultySelect.addEventListener('change', () => {
+  const diff = dungeonDifficultySelect.value;
+  const maxStages = diff === 'normal' ? 25 : 10;
+  dungeonStageSelect.innerHTML = '<option value="">-- Stage --</option>';
+  for(let i=1;i<=maxStages;i++){
+    const opt = document.createElement('option');
+    opt.value=i;
+    opt.textContent=`Stage ${i}`;
+    dungeonStageSelect.appendChild(opt);
+  }
+  updateTable();
+});
+
+campaignDifficultySelect.addEventListener('change', () => {
+  const diff = campaignDifficultySelect.value;
+  if(!diff) return;
+  const maxStages = 7;
+  campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
+  for(let i=1;i<=maxStages;i++){
+    const opt = document.createElement('option');
+    opt.value=i;
+    opt.textContent=`Stage ${i}`;
+    campaignStageSelect.appendChild(opt);
+  }
+  updateTable();
+});
+
+toggleBtn.addEventListener('click', ()=>{
+  displayMode = displayMode==='points'?'percent':'points';
+  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
+  updateTable();
+});
+
+// --- Initial setup ---
+generateEmptyPointsTable();
+updateDropdowns();
+toggleBtn.style.display = 'none';
+</script>
+  <script src="/script.js"></script>
+</body>
+</html>
