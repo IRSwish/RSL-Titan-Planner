@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: 'American Captain';
-  src: url('style/American Captain.otf') format('opentype');
+  src: url('/style/American Captain.otf') format('opentype');
 }
 
 body {
@@ -37,6 +37,14 @@ body::before {
   background: rgba(0, 0, 0, 0.9);
   pointer-events: none;
   z-index: -1;
+}
+
+#page-title {
+  font-family: 'American Captain', Impact, sans-serif;
+  letter-spacing: 2px;
+  font-size: 42px;
+  color: var(--text-color);
+  text-shadow: 0 0 12px rgba(212,175,55,0.25);
 }
 
 header,
