@@ -617,3 +617,74 @@ input[type=number] {
   font-weight: bold;
   font-size: 16px;
 }
+
+.adsense-footer {
+  max-width: 1000px;      /* keeps it elegant on big screens */
+  margin: 40px auto 20px; /* breathes above the footer ad */
+  padding: 0 12px;
+}
+
+/* Optional: reserve some space to reduce CLS while the ad loads */
+.adsense-footer .adsbygoogle { min-height: 90px; }
+
+.adsense-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #0e0e0e;
+  border-top: 1px solid #d4af37;
+  box-shadow: 0 -2px 10px rgba(212, 175, 55, 0.25);
+  padding: 10px 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adsense-sticky .adsbygoogle {
+  display: block;
+  min-height: 60px; /* réserve pendant le chargement */
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* Empêche le contenu d'être caché sous le bandeau */
+body {
+  padding-bottom: 90px;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .adsense-sticky {
+    display: none; /* masque le bandeau sur mobile */
+  }
+  body {
+    padding-bottom: 0;
+  }
+}
+
+/* === Harmonisation du lien "Home" === */
+.menu-links > li > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0px 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.menu-links > li > a:hover {
+  background: #333;
+  border-radius: 5px;
+}
+
+/* Empêche les couleurs par défaut du navigateur */
+.menu-links > li > a:visited,
+.menu-links > li > a:active {
+  color: white;
+}
