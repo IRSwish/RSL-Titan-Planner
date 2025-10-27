@@ -1,0 +1,61 @@
+[
+  { "id": "start-1", "name": "", "image": "", "cost": 300 },
+  { "id": "start-2", "name": "", "image": "", "cost": 300 },
+  { "id": "start-3", "name": "", "image": "", "cost": 300 },
+  { "id": "start-4", "name": "", "image": "", "cost": 300 },
+  { "id": "start-5", "name": "", "image": "", "cost": 300 },
+
+  { "id": "t1-", "name": "", "image": "", "cost": 500, "requires": [] },
+  { "id": "t1-", "name": "", "image": "", "cost": 500, "requires": [] },
+  { "id": "t1-", "name": "", "image": "", "cost": 500, "requires": [] },
+  { "id": "t1-", "name": "", "image": "", "cost": 500, "requires": [] },
+  { "id": "t1-", "name": "", "image": "", "cost": 500, "requires": [] },
+
+  { "id": "t2-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t2-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t2-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t2-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t2-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t3-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t3-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t3-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t3-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t3-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t4-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t4-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t4-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t4-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t4-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t5-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t5-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t5-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t5-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t5-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t6-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t6-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t6-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t6-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t6-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t7-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t7-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t7-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t7-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t7-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t8-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t8-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t8-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t8-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t8-", "name": "", "image": "", "cost": 1000, "requires": [] },
+
+  { "id": "t9-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t9-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t9-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t9-", "name": "", "image": "", "cost": 1000, "requires": [] },
+  { "id": "t9-", "name": "", "image": "", "cost": 1000, "requires": [] }
+]

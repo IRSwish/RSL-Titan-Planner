@@ -7,5 +7,9 @@ window.fusions = {
   "doorkeeps-path": {
     name: "Doorkeep's Path",
     json: "doorkeeps-path.json"
+  },
+  "orcs-path": {
+    name: "Orc's Path",
+    json: "orcs-path.json"
   }
 };
