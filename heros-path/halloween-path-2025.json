@@ -27,9 +27,9 @@
   { "id": "t4-5", "name": "Immortal Soul Coin", "image": "immortal-soul-coin", "cost": 500, "requires": ["t3-4"] },
 
   { "id": "t5-1", "name": "Chaos Dust", "image": "chaos-dust", "cost": 6000, "requires": ["t4-1"] },
-  { "id": "t5-2", "name": "Key", "image": "path-key", "cost": 1000, "requires": ["t4-2"] },
+  { "id": "t5-2", "name": "Key x1", "image": "path-key", "cost": 1000, "requires": ["t4-2"] },
   { "id": "t5-3", "name": "Thorn", "image": "thorn", "cost": 4000, "requires": ["t4-3"] },
-  { "id": "t5-4", "name": "Key", "image": "path-key", "cost": 1000, "requires": ["t4-4"] },
+  { "id": "t5-4", "name": "Key x1", "image": "path-key", "cost": 1000, "requires": ["t4-4"] },
   { "id": "t5-5", "name": "Chaos Powder", "image": "chaos-powder", "cost": 6000, "requires": ["t4-5"] },
 
   { "id": "t6-1", "name": "Legendary Book", "image": "skill-tome-legendary", "cost": 10000, "requires": ["t5-1"] },

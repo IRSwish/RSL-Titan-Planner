@@ -195,10 +195,12 @@ function handleClick(reward, box) {
       setTimeout(() => (box.style.boxShadow = ""), 300);
       return;
     }
-    keys--; // use a key but don't add points
+    keys--; // chaque lock coûte toujours 1 clé
   } else if (isKey) {
-    keys++;
-    points += reward.cost; // count key cost
+    // certaines récompenses peuvent donner plusieurs clés
+    const keyCount = reward.keys && reward.keys > 0 ? reward.keys : 1;
+    keys += keyCount;
+    points += reward.cost; // on compte toujours le coût en points
   } else {
     points += reward.cost;
   }
@@ -347,3 +349,16 @@ function verifyKeyLockBalance() {
 }
 
 init();
+
+// --- Forcer le rechargement quand le hash change ---
+window.addEventListener("hashchange", () => {
+  // Efface le contenu existant avant de recharger
+  container.innerHTML = "";
+  svg.innerHTML = "";
+  unlocked.clear();
+  keys = 0;
+  points = 0;
+
+  // Relance l'initialisation
+  init();
+});

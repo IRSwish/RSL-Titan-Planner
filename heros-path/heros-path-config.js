@@ -4,8 +4,8 @@ window.fusions = {
     name: "Halloween Path",
     json: "halloween-path-2025.json"
   },
-  "newyear-path-2025": {
-    name: "New Year's Path",
-    json: "newyear-path-2025.json"
+  "doorkeeps-path": {
+    name: "Doorkeep's Path",
+    json: "doorkeeps-path.json"
   }
 };
