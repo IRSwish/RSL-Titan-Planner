@@ -10,6 +10,7 @@ const svg = document.getElementById("connections");
 const pointsSpan = document.getElementById("points");
 const keysSpan = document.getElementById("keys");
 const resetBtn = document.getElementById("reset");
+const titleEl = document.querySelector("h1");
 
 function updateStats() {
   pointsSpan.textContent = `Points spent: ${points.toLocaleString("en-US")}`;
@@ -32,9 +33,41 @@ function resetAll() {
 resetBtn.addEventListener("click", resetAll);
 
 async function init() {
-  const res = await fetch("rewards.json");
-  rewards = await res.json();
+  // 🧩 1. Identifier le tag dans l'URL (#halloween-path-2025)
+  const pathId = window.location.hash.replace("#", "").trim();
 
+  if (!pathId || !window.fusions || !window.fusions[pathId]) {
+    console.error("❌ Invalid or missing path ID in URL.");
+    document.body.innerHTML = "<h2 style='text-align:center;color:red'>Invalid Path Configuration</h2>";
+    return;
+  }
+
+  // 🧩 2. Charger la config associée
+  const fusion = window.fusions[pathId];
+  const jsonFile = fusion.json;
+  const displayName = fusion.name || "Hero's Path";
+
+  // 🧩 Met à jour le titre principal de la page
+    const pageTitleEl = document.getElementById("page-title");
+    if (pageTitleEl) pageTitleEl.textContent = displayName.toUpperCase();
+
+// 🧩 Met à jour aussi le titre de l’onglet navigateur
+document.title = `${displayName} - RSL Tools`;
+
+  // 🧩 3. Afficher le titre dynamique
+  if (titleEl) titleEl.textContent = displayName.toUpperCase();
+
+  // 🧩 4. Charger le JSON correspondant
+  try {
+    const res = await fetch(jsonFile);
+    rewards = await res.json();
+  } catch (e) {
+    console.error("❌ Failed to load JSON:", e);
+    document.body.innerHTML = `<h2 style='text-align:center;color:red'>Failed to load ${jsonFile}</h2>`;
+    return;
+  }
+
+  // 🧩 5. Construire la map des dépendances comme avant
   dependentsMap = {};
   for (const r of rewards) {
     (r.requires || []).forEach(req => {
@@ -43,6 +76,7 @@ async function init() {
     });
   }
 
+  // (puis le reste inchangé)
   const tiers = {};
   for (const r of rewards) {
     const match = r.id.match(/^t(\d+)/);
