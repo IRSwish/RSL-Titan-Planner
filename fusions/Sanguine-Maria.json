@@ -94,8 +94,8 @@
 	  "type": "Event",
       "start_date": "2025-10-27",
       "end_date": "2025-10-31",
-      "reward": "Fragments, Fragments",
-      "points": [25, 50]
+      "reward": "Fragments, Fragments, Fragments",
+      "points": [25, 25, 25]
     },
     {
       "name": "Gear Enhancement",
