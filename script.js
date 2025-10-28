@@ -30,7 +30,7 @@ function loadAdsterraSocialBar() {
   script.src = '//pl27941880.effectivegatecpm.com/d2/18/e1/d218e10073aebbd048301c683dbf1599.js';
   document.body.appendChild(script);
 }
-document.addEventListener('DOMContentLoaded', loadAdsterraSocialBar);
+// document.addEventListener('DOMContentLoaded', loadAdsterraSocialBar);
 
 
 // === Intégration automatique de la bannière Adsterra (bandeau bas de page) ===
