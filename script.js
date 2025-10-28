@@ -30,7 +30,7 @@ function loadAdsterraSocialBar() {
   script.src = '//pl27941880.effectivegatecpm.com/d2/18/e1/d218e10073aebbd048301c683dbf1599.js';
   document.body.appendChild(script);
 }
-// document.addEventListener('DOMContentLoaded', loadAdsterraSocialBar);
+document.addEventListener('DOMContentLoaded', loadAdsterraSocialBar);
 
 
 // === Intégration automatique de la bannière Adsterra (bandeau bas de page) ===
@@ -55,4 +55,64 @@ function loadAdsterraBanner() {
   invokeScript.src = '//www.highperformanceformat.com/598199983e93ba13e5325d01ffc8a9cc/invoke.js';
   bannerContainer.appendChild(invokeScript);
 }
-// document.addEventListener('DOMContentLoaded', loadAdsterraBanner);
+document.addEventListener('DOMContentLoaded', loadAdsterraBanner);
+
+// === Protection anti-redirections publicitaires ===
+(function() {
+  const originalLocation = window.location;
+  const blockList = ['adsterra', 'effectivegate', 'technorvia', 'format', 'co.in'];
+
+  // Intercepter les tentatives de redirection via window.top.location, window.location, etc.
+  const blockRedirection = (target) => {
+    try {
+      const url = target.toString();
+      if (blockList.some(keyword => url.includes(keyword))) {
+        console.warn('🚫 Redirection bloquée vers :', url);
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  };
+
+  // Bloquer les redirections forcées par scripts
+  Object.defineProperty(window, 'location', {
+    configurable: false,
+    enumerable: true,
+    get: function() {
+      return originalLocation;
+    },
+    set: function(value) {
+      if (!blockRedirection(value)) {
+        originalLocation.href = value;
+      }
+    }
+  });
+
+  // Bloquer aussi les redirections via top.location
+  if (window.top !== window.self) {
+    try {
+      Object.defineProperty(window.top, 'location', {
+        configurable: false,
+        enumerable: true,
+        get: function() {
+          return originalLocation;
+        },
+        set: function(value) {
+          if (!blockRedirection(value)) {
+            originalLocation.href = value;
+          }
+        }
+      });
+    } catch (e) {
+      // Certains navigateurs empêchent d'écrire dans top.location, c’est normal
+    }
+  }
+
+  // Optionnel : détecter les tentatives de replace()
+  const originalReplace = window.location.replace;
+  window.location.replace = function(url) {
+    if (!blockRedirection(url)) {
+      return originalReplace.call(window.location, url);
+    }
+  };
+})();
