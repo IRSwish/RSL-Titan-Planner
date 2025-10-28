@@ -46,4 +46,4 @@ function loadAdsterraBanner() {
   invokeScript.src = '//www.highperformanceformat.com/598199983e93ba13e5325d01ffc8a9cc/invoke.js';
   bannerContainer.appendChild(invokeScript);
 }
-document.addEventListener('DOMContentLoaded', loadAdsterraBanner);
+// document.addEventListener('DOMContentLoaded', loadAdsterraBanner);
