@@ -22,3 +22,35 @@ fetch('/menu.html')
     });
   })
   .catch(error => console.error('Erreur lors du chargement du menu:', error));
+
+// === Intégration automatique de la Social Bar Adsterra ===
+function loadAdsterraSocialBar() {
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = '//pl27941880.effectivegatecpm.com/d2/18/e1/d218e10073aebbd048301c683dbf1599.js';
+  document.body.appendChild(script);
+}
+document.addEventListener('DOMContentLoaded', loadAdsterraSocialBar);
+
+
+// === Intégration automatique de la bannière Adsterra (bandeau bas de page) ===
+function loadAdsterraBanner() {
+  const bannerContainer = document.createElement('div');
+  bannerContainer.className = 'adsense-footer';
+  bannerContainer.innerHTML = `
+    <div align="center">
+      <script type="text/javascript">
+        atOptions = {
+          'key' : '598199983e93ba13e5325d01ffc8a9cc',
+          'format' : 'iframe',
+          'height' : 60,
+          'width' : 468,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/598199983e93ba13e5325d01ffc8a9cc/invoke.js"></script>
+    </div>
+  `;
+  document.body.appendChild(bannerContainer);
+}
+document.addEventListener('DOMContentLoaded', loadAdsterraBanner);
