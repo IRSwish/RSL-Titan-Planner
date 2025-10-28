@@ -23,6 +23,15 @@ fetch('/menu.html')
   })
   .catch(error => console.error('Erreur lors du chargement du menu:', error));
 
+// === Intégration automatique de la Social Bar Adsterra ===
+function loadAdsterraSocialBar() {
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = '//pl27941880.effectivegatecpm.com/d2/18/e1/d218e10073aebbd048301c683dbf1599.js';
+  document.body.appendChild(script);
+}
+// document.addEventListener('DOMContentLoaded', loadAdsterraSocialBar);
+
 
 // === Intégration automatique de la bannière Adsterra (bandeau bas de page) ===
 function loadAdsterraBanner() {
