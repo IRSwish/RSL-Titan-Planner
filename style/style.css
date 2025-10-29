@@ -689,7 +689,7 @@ input[type=number] {
 
 /* le titre grisé */
 .event-block.event-ended .event-name {
-  color: rgba(180, 180, 180, 0.6);
+  color: rgb(163, 1, 1);
 }
 
 /* les points restent lumineux */
