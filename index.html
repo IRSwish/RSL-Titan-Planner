@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Swish - RSL Tools</title>
+  <script src="/config/site-config.js"></script>
+  <script>document.title =  "Home | " + window.siteConfig.title;</script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".site-title").forEach(el => {
+        el.textContent = window.siteConfig.title;
+      });
+    });
+  </script>
   <link rel="stylesheet" href="style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -55,10 +63,17 @@
     <header id="page-title"></header>
   </div> 
 
+<script>
+  // Vérifie que la config est bien chargée
+  if (window.siteConfig && window.siteConfig.title) {
+    document.getElementById("site-title").textContent = window.siteConfig.title;
+  }
+</script>
+
   <div class="presentation">
-    <h2>Welcome to RSL Tools</h2>
+    <h2>Welcome to <span class="site-title"></span></h2>
     <p>
-      <strong>Swish - RSL Tools</strong> is a collection of utilities built to help you track and optimize your journey in <strong>Raid: Shadow Legends</strong>.  
+      <strong><span class="site-title"></span></strong> is a collection of utilities built to help you track and optimize your journey in <strong>Raid: Shadow Legends</strong>.  
       Every feature is designed to make your experience smoother, clearer, and more rewarding — whether you’re preparing for events, checking fusions, or managing your in-game progress.
     </p>
     <p>

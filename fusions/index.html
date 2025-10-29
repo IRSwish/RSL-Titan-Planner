@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title id="document-title">Swish - Fusion</title>
+  <script src="/config/site-config.js"></script>
   <link rel="stylesheet" href="/style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -41,7 +41,7 @@
   
       if (fusion) {
         document.getElementById('page-title').textContent = fusion.name;
-        document.title = `Swish - ${fusion.name}`;
+        document.title = `${fusion.name}  -  ${window.siteConfig.title}`;
   
         const timelineContainer = document.getElementById('timeline-container');
         timelineContainer.setAttribute('data-json', fusion.json);
@@ -52,7 +52,7 @@
         }
       } else {
         document.getElementById('page-title').textContent = "Unlisted fusion yet";
-        document.title = "Swish - Unlisted fusion yet";
+        document.title = "Unlisted fusion - " + window.siteConfig.title;
       }
     }
   

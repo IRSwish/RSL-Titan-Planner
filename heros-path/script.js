@@ -52,7 +52,7 @@ async function init() {
     if (pageTitleEl) pageTitleEl.textContent = displayName.toUpperCase();
 
 // 🧩 Met à jour aussi le titre de l’onglet navigateur
-document.title = `${displayName} - RSL Tools`;
+document.title = `${displayName} - ${window.siteConfig.title}`;
 
   // 🧩 3. Afficher le titre dynamique
   if (titleEl) titleEl.textContent = displayName.toUpperCase();
