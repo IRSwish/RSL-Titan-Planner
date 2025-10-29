@@ -303,13 +303,75 @@
         updateButtons(v);
       }
 
-      plus.onclick = () => setProgress(++value);
-      minus.onclick = () => setProgress(--value);
+      function holdButton(btn, action) {
+        let interval, timeout;
+        const startHold = () => {
+          // première action immédiate
+          action();
+          // après 400 ms, on commence la répétition
+          timeout = setTimeout(() => {
+            interval = setInterval(action, 50); // vitesse
+          }, 400);
+        };
+        const stopHold = () => {
+          clearTimeout(timeout);
+          clearInterval(interval);
+        };
+
+        btn.addEventListener('mousedown', startHold);
+        btn.addEventListener('mouseup', stopHold);
+        btn.addEventListener('mouseleave', stopHold);
+
+        btn.addEventListener('touchstart', e => {
+          e.preventDefault();
+          startHold();
+        }, { passive: false });
+        btn.addEventListener('touchend', stopHold);
+        btn.addEventListener('touchcancel', stopHold);
+      }
+
+      // ✅ Utilisation
+      holdButton(plus, () => { if (value < max) setProgress(++value); });
+      holdButton(minus, () => { if (value > 0) setProgress(--value); });
+
       reset.onclick = () => setProgress(value = 0);
       inputCircle.oninput = () => setProgress(value = parseInt(inputCircle.value) || 0);
       inputCount.oninput = () => setProgress(value = parseInt(inputCount.value) || 0);
 
       setProgress(value);
+      // --- Slider circulaire ---
+      const circleContainer = card.querySelector('.circle-container');
+      let isDragging = false;
+
+      circleContainer.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        updateFromMouse(e);
+      });
+      window.addEventListener('mouseup', () => isDragging = false);
+      window.addEventListener('mousemove', (e) => { if (isDragging) updateFromMouse(e); });
+
+      // pour mobile
+      circleContainer.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        updateFromMouse(e.touches[0]);
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (isDragging) updateFromMouse(e.touches[0]);
+      }, { passive: true });
+      window.addEventListener('touchend', () => isDragging = false);
+
+      function updateFromMouse(e) {
+        const rect = circleContainer.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (angle < 0) angle += 360;
+        const percent = Math.min(1, Math.max(0, angle / 360));
+        const newValue = Math.round(percent * max);
+        setProgress(value = newValue);
+      }
     });
   </script>
 

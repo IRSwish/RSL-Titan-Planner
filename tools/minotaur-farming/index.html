@@ -379,7 +379,59 @@
       document.getElementById('gemsNeeded').textContent = Math.round(gems);
       document.getElementById('runsHint').textContent = `≈ ${totalRuns} runs total`;
     }
+    
+    // === Contrôle circulaire interactif instantané ===
+    document.querySelectorAll('.scroll-block').forEach(block => {
+      const type = block.dataset.type;
+      const circleContainer = block.querySelector('.circle-container');
+      const maxInput = block.querySelector('.max');
+      let isDragging = false;
 
+      const getMax = () => Math.min(parseFloat(maxInput.value) || scrollCaps[type], scrollCaps[type]);
+      const setVal = v => {
+        setValue(type, v);
+        applyInterlock(type, v);
+        calculate();
+      };
+
+      // --- Fonction de mise à jour depuis la souris / le doigt ---
+      function updateFromPointer(e) {
+        const rect = circleContainer.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (angle < 0) angle += 360;
+        const percent = Math.min(1, Math.max(0, angle / 360));
+        const newValue = Math.round(percent * getMax());
+        setVal(newValue);
+      }
+
+      // --- Souris ---
+      circleContainer.addEventListener('mousedown', e => {
+        isDragging = true;
+        updateFromPointer(e);
+      });
+      window.addEventListener('mousemove', e => {
+        if (isDragging) updateFromPointer(e);
+      });
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // --- Tactile ---
+      circleContainer.addEventListener('touchstart', e => {
+        isDragging = true;
+        updateFromPointer(e.touches[0]);
+      }, { passive: true });
+      window.addEventListener('touchmove', e => {
+        if (isDragging) updateFromPointer(e.touches[0]);
+      }, { passive: true });
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+    });
     calculate();
   </script>
 
