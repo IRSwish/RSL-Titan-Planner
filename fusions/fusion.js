@@ -194,9 +194,23 @@ highlightByDates();
     block.style.width = `${width}px`;
     block.style.top = `${top}px`;
 
-    // 🔴 Si l’event est déjà terminé (avant aujourd’hui)
     if (end.getTime() < today.getTime()) {
       block.classList.add('event-ended');
+
+      // Vérifie l'état initial des points (pour couleur du fond)
+      const allPoints = (event.points || []).length;
+      const allIds = Array.from({ length: allPoints }, (_, idx) => {
+        const safeName = event.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        return `${safeName}-${event.start_date}-${event.end_date}-${idx}`;
+      });
+
+      const validatedCount = allIds.filter(pid => savedStates[pid] === 'state-validated').length;
+
+      if (validatedCount === allPoints && allPoints > 0) {
+        block.classList.add('validated'); // tout vert
+      } else if (validatedCount > 0) {
+        block.classList.add('partial'); // partiel orange
+      }
     }
 
     const rewards = (event.reward || '').split(',').map(r => r.trim());
@@ -230,31 +244,62 @@ highlightByDates();
   });
   timeline.style.height = `${maxBottom + 20}px`;
 
-  // --- Gestion clic sur points ---
-  document.querySelectorAll('.point-box').forEach(box => {
-    box.addEventListener('click', (e) => {
-      const id = box.dataset.id;
-      const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
-      const nextIndex = (e.ctrlKey || e.metaKey)
-        ? (currentIndex - 1 + pointStates.length) % pointStates.length
-        : (currentIndex + 1) % pointStates.length;
+// Gestion clic sur points (avec distinction events terminés)
+document.querySelectorAll('.point-box').forEach(box => {
+  box.addEventListener('click', (e) => {
+    const parentEvent = box.closest('.event-block');
+    const id = box.dataset.id;
 
-      // supprime et applique le nouvel état
-      pointStates.forEach(s => box.classList.remove(s));
-      box.classList.add(pointStates[nextIndex]);
+    // --- Cas 1 : event terminé ---
+    if (parentEvent && parentEvent.classList.contains('event-ended')) {
+      // toggle rouge <-> vert uniquement
+      if (box.classList.contains('state-validated')) {
+        box.classList.remove('state-validated');
+        box.classList.add('state-passed'); // rouge
+      } else {
+        box.classList.remove('state-passed');
+        box.classList.add('state-validated'); // vert
+      }
 
-      // sauvegarde
-      savedStates[id] = pointStates[nextIndex];
+      // Sauvegarde de l’état du point
+      savedStates[id] = box.classList.contains('state-validated')
+        ? 'state-validated'
+        : 'state-passed';
       localStorage.setItem('pointStates', JSON.stringify(savedStates));
 
-      // maj du résumé
-      updateSummary();
+      // Vérifie la progression globale de l'event terminé
+      const allPoints = parentEvent.querySelectorAll('.point-box');
+      const validatedCount = Array.from(allPoints).filter(p => p.classList.contains('state-validated')).length;
 
-      // effet visuel optionnel
-      box.classList.add('spin');
-      setTimeout(() => box.classList.remove('spin'), 400);
-    });
+      parentEvent.classList.remove('validated', 'partial'); // reset visuel
+
+      if (validatedCount === 0) {
+        // Aucun point validé → rouge (par défaut, garde event-ended)
+      } else if (validatedCount === allPoints.length) {
+        // Tous validés → vert
+        parentEvent.classList.add('validated');
+      } else {
+        // Partiel → orange
+        parentEvent.classList.add('partial');
+      }
+
+      updateSummary();
+      return; // stop ici
+    }
+
+    // --- Cas 2 : event en cours / futur ---
+    const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
+    const nextIndex = (e.ctrlKey || e.metaKey)
+      ? (currentIndex - 1 + pointStates.length) % pointStates.length
+      : (currentIndex + 1) % pointStates.length;
+
+    pointStates.forEach(s => box.classList.remove(s));
+    box.classList.add(pointStates[nextIndex]);
+    savedStates[id] = pointStates[nextIndex];
+    localStorage.setItem('pointStates', JSON.stringify(savedStates));
+    updateSummary();
   });
+});
 
   // --- Applique le highlight sur les events du jour ---
   highlightByDates();
