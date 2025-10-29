@@ -339,28 +339,29 @@
       inputCount.oninput = () => setProgress(value = parseInt(inputCount.value) || 0);
 
       setProgress(value);
-      // --- Slider circulaire ---
+      
+      // --- Slider circulaire : interaction uniquement sur le trait ---
       const circleContainer = card.querySelector('.circle-container');
+      const centerInput = card.querySelector('.circle-input');
       let isDragging = false;
 
-      circleContainer.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateFromMouse(e);
-      });
-      window.addEventListener('mouseup', () => isDragging = false);
-      window.addEventListener('mousemove', (e) => { if (isDragging) updateFromMouse(e); });
+      // paramètres : doivent correspondre au SVG
+      const RADIUS = 45;        // <circle r="45">
+      const STROKE_WIDTH = 8;   // .progress-ring circle { stroke-width: 8; }
+      const INNER = RADIUS - STROKE_WIDTH * 0.75;
+      const OUTER = RADIUS + STROKE_WIDTH * 0.75;
 
-      // pour mobile
-      circleContainer.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        updateFromMouse(e.touches[0]);
-      }, { passive: true });
-      window.addEventListener('touchmove', (e) => {
-        if (isDragging) updateFromMouse(e.touches[0]);
-      }, { passive: true });
-      window.addEventListener('touchend', () => isDragging = false);
+      function isOnStroke(e) {
+        const rect = circleContainer.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        return dist >= INNER && dist <= OUTER;
+      }
 
-      function updateFromMouse(e) {
+      function updateFromPointer(e) {
         const rect = circleContainer.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
@@ -372,6 +373,41 @@
         const newValue = Math.round(percent * max);
         setProgress(value = newValue);
       }
+
+      // --- Souris ---
+      circleContainer.addEventListener('mousedown', e => {
+        if (e.target === centerInput) return; // ignore le clic sur l'input central
+        if (!isOnStroke(e)) return;           // doit être sur le trait
+        e.preventDefault();
+        isDragging = true;
+        updateFromPointer(e);
+      });
+
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        if (!isOnStroke(e)) return;
+        updateFromPointer(e);
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      // --- Tactile ---
+      circleContainer.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        if (e.target === centerInput) return;
+        if (!isOnStroke(t)) return;
+        isDragging = true;
+        updateFromPointer(t);
+      }, { passive: true });
+
+      window.addEventListener('touchmove', e => {
+        if (!isDragging) return;
+        const t = e.touches[0];
+        if (!isOnStroke(t)) return;
+        updateFromPointer(t);
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => { isDragging = false; });
     });
   </script>
 
