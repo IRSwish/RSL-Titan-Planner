@@ -1,3 +1,3 @@
 window.siteConfig = {
-  title: "RSLX"
+  title: "RSL-X"
 };
