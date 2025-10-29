@@ -49,31 +49,6 @@
     if (timelineData) renderTimeline(timelineData);
   });
 
-  // --- Chargement menu externe ---
-  function loadMenu() {
-    fetch('../menu.html')
-      .then(response => response.text())
-      .then(data => {
-        const menuContainer = document.getElementById('menu-container');
-        if (menuContainer) menuContainer.innerHTML = data;
-
-        const burgerIcon = document.getElementById('burger-icon');
-        const burgerLinks = document.getElementById('burger-links');
-        if (burgerIcon && burgerLinks) {
-          burgerIcon.addEventListener('click', () => {
-            burgerLinks.classList.toggle('active');
-          });
-        }
-
-        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-          toggle.addEventListener('click', () => {
-            toggle.parentElement.classList.toggle('open');
-          });
-        });
-      })
-      .catch(err => console.error('Erreur lors du chargement du menu :', err));
-  }
-
   // --- Rendu timeline ---
  function renderTimeline(data) {
   const timelineContainer = document.querySelector('.timeline-container');
@@ -246,7 +221,7 @@ highlightByDates();
     timeline.appendChild(block);
   });
 
-  // --- Ajuste la hauteur totale ---
+ // --- Ajuste la hauteur totale ---
   const blocks = document.querySelectorAll('.event-block');
   let maxBottom = 0;
   blocks.forEach(b => {
@@ -255,10 +230,35 @@ highlightByDates();
   });
   timeline.style.height = `${maxBottom + 20}px`;
 
+  // --- Gestion clic sur points ---
+  document.querySelectorAll('.point-box').forEach(box => {
+    box.addEventListener('click', (e) => {
+      const id = box.dataset.id;
+      const currentIndex = pointStates.findIndex(s => box.classList.contains(s));
+      const nextIndex = (e.ctrlKey || e.metaKey)
+        ? (currentIndex - 1 + pointStates.length) % pointStates.length
+        : (currentIndex + 1) % pointStates.length;
+
+      // supprime et applique le nouvel état
+      pointStates.forEach(s => box.classList.remove(s));
+      box.classList.add(pointStates[nextIndex]);
+
+      // sauvegarde
+      savedStates[id] = pointStates[nextIndex];
+      localStorage.setItem('pointStates', JSON.stringify(savedStates));
+
+      // maj du résumé
+      updateSummary();
+
+      // effet visuel optionnel
+      box.classList.add('spin');
+      setTimeout(() => box.classList.remove('spin'), 400);
+    });
+  });
+
   // --- Applique le highlight sur les events du jour ---
   highlightByDates();
 }
-
 
   function computeTracks(events, minDate, dayWidth) {
     const tracks = [];
