@@ -194,9 +194,9 @@ highlightByDates();
     block.style.width = `${width}px`;
     block.style.top = `${top}px`;
 
-    // 🔴 Si l’event est déjà terminé aujourd’hui → bordure rouge
-    if (end.getTime() <= today.getTime()) {
-      block.style.border = '2px solid #f52525ff';
+    // 🔴 Si l’event est déjà terminé (avant aujourd’hui)
+    if (end.getTime() < today.getTime()) {
+      block.classList.add('event-ended');
     }
 
     const rewards = (event.reward || '').split(',').map(r => r.trim());

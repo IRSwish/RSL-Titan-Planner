@@ -671,3 +671,29 @@ input[type=number] {
     display: none;
   }
 }
+
+/* --- Événements terminés (finie avant aujourd'hui) --- */
+.event-block.event-ended {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(245, 37, 37, 0.1) 0px,
+    rgba(245, 37, 37, 0.1) 4px,
+    rgba(75, 75, 75, 0.1) 4px,
+    rgba(75, 75, 75, 0.1) 8px
+  );
+  filter: grayscale(0);
+  opacity: 1;
+  border: 2px solid rgba(255, 9, 9, 0.25);
+  box-shadow: none;
+}
+
+/* le titre grisé */
+.event-block.event-ended .event-name {
+  color: rgba(180, 180, 180, 0.6);
+}
+
+/* les points restent lumineux */
+.event-block.event-ended .point-box img {
+  filter: none;
+  opacity: 1;
+}
