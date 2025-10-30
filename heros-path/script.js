@@ -1,73 +1,218 @@
 const ICON_PATH = "/style/img/Misc/";
 let rewards = [];
-let unlocked = new Set();
-let keys = 0;
+let unlocked = new Set(); // verts
+let planned = new Set();  // bleus
+let keys = 0;             // clés disponibles
+let activeLocks = 0;      // locks actifs
 let points = 0;
 let dependentsMap = {};
+let totalKeys = 0; 
 
 const container = document.getElementById("rewardContainer");
 const svg = document.getElementById("connections");
-const pointsSpan = document.getElementById("points");
-const keysSpan = document.getElementById("keys");
-const resetBtn = document.getElementById("reset");
 const titleEl = document.querySelector("h1");
 
-function updateStats() {
-  pointsSpan.textContent = `Points spent: ${points.toLocaleString("en-US")}`;
-  keysSpan.textContent = `Keys available: ${keys}`;
+/* === BOX FIXE À GAUCHE === */
+const statsBox = document.createElement("div");
+statsBox.style.position = "fixed";
+statsBox.style.left = "15px";
+statsBox.style.top = "50%";
+statsBox.style.transform = "translateY(-50%)";
+statsBox.style.background = "#1a1a1a";
+statsBox.style.border = "2px solid var(--event-border)";
+statsBox.style.padding = "15px";
+statsBox.style.borderRadius = "10px";
+statsBox.style.color = "#fcf6ff";
+statsBox.style.fontFamily = "Inter, sans-serif";
+statsBox.style.display = "flex";
+statsBox.style.flexDirection = "column";
+statsBox.style.gap = "8px";
+
+statsBox.innerHTML = `
+  <label style="display:flex;flex-direction:column;gap:3px;">
+    <span>Points available:</span>
+    <input id="pointsAvailable" type="number" value="0"
+      style="width:100px; padding:10px;background:#0e0e0e;color:#fcf6ff;border:none;border-radius:6px;">
+  </label>
+  <span id="pointsSpent">Spent: 0</span>
+  <span id="pointsNeeded">Needed: 0</span>
+  <span id="keysCount">Keys: 0</span>
+  <button id="reset" style="
+    margin-top:10px;
+    background:var(--event-border);
+    border:none;
+    font-weight:bold;
+    padding:5px 10px;
+    border-radius:6px;
+    cursor:pointer;
+  ">↺</button>
+`;
+document.body.appendChild(statsBox);
+
+/* === RÉFÉRENCES === */
+const pointsAvailableInput = document.getElementById("pointsAvailable");
+const pointsSpentSpan = document.getElementById("pointsSpent");
+const pointsNeededSpan = document.getElementById("pointsNeeded");
+const keysSpan = document.getElementById("keysCount");
+const resetBtn = document.getElementById("reset");
+
+/* === LOCAL STORAGE === */
+function saveState() {
+  const state = {
+    unlocked: [...unlocked],
+    planned: [...planned],
+    pointsAvailable: Number(pointsAvailableInput.value || 0),
+  };
+  localStorage.setItem("rewardState", JSON.stringify(state));
 }
 
+function loadState() {
+  const raw = localStorage.getItem("rewardState");
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    unlocked = new Set(s.unlocked || []);
+    planned = new Set(s.planned || []);
+    if (typeof s.pointsAvailable === "number")
+      pointsAvailableInput.value = s.pointsAvailable;
+  } catch (e) {
+    console.warn("⚠️ Failed to parse saved state:", e);
+  }
+}
+
+/* === STATS === */
+function updateStats() {
+  const available = Number(pointsAvailableInput.value || 0);
+
+  // 🟩 Points dépensés
+  let spentPoints = 0;
+  for (const id of unlocked) {
+    const r = rewards.find(x => x.id === id);
+    if (!r || r.name.toLowerCase().includes("lock")) continue;
+    spentPoints += r.cost || 0;
+  }
+
+  // 🟦 Points planifiés
+  let plannedPoints = 0;
+  for (const id of planned) {
+    const r = rewards.find(x => x.id === id);
+    if (!r || r.name.toLowerCase().includes("lock")) continue;
+    plannedPoints += r.cost || 0;
+  }
+
+  // Points nécessaires
+  const needed = Math.max(0, plannedPoints - available);
+
+  pointsSpentSpan.textContent = `Spent: ${spentPoints.toLocaleString("en-US")}`;
+  pointsNeededSpan.textContent = `Needed: ${needed.toLocaleString("en-US")}`;
+  keysSpan.textContent = `Keys: ${keys}`;
+  saveState();
+}
+
+/* === RECALCUL GÉNÉRAL === */
+function recalcKeysAndPoints() {
+  let newTotalKeys = 0;
+  let newLocks = 0;
+  let newPoints = 0;
+
+  for (const id of unlocked) {
+    const r = rewards.find(x => x.id === id);
+    if (!r) continue;
+    const name = r.name.toLowerCase();
+
+    if (name.includes("key")) {
+      newTotalKeys += r.keys && r.keys > 0 ? r.keys : 1;
+      newPoints += r.cost || 0;
+    } else if (name.includes("lock")) {
+      newLocks += 1;
+      newPoints += r.cost || 0;
+    } else {
+      newPoints += r.cost || 0;
+    }
+  }
+
+  totalKeys = newTotalKeys;                  // 🔢 total de clés possédées
+  activeLocks = newLocks;                    // 🔒 locks actifs
+  keys = Math.max(0, totalKeys - newLocks);  // ✅ clés disponibles (affichage)
+  points = newPoints;
+}
+
+/* === SÉCURITÉ CLÉS / LOCKS === */
+function enforceKeyLimit() {
+  // ❗ On vérifie contre le TOTAL de clés, pas "keys" (qui est déjà soustrait des locks)
+  if (activeLocks <= totalKeys) return;
+
+  const locksToRemove = activeLocks - totalKeys;
+  const activeLockRewards = Array.from(unlocked)
+    .map(id => rewards.find(r => r.id === id))
+    .filter(r => r && r.name.toLowerCase().includes("lock"));
+
+  for (let i = 0; i < locksToRemove; i++) {
+    const lockToRemove = activeLockRewards.pop();
+    if (!lockToRemove) break;
+
+    unlocked.delete(lockToRemove.id);
+    const box = document.querySelector(`.reward-box[data-id="${lockToRemove.id}"]`);
+    if (box) {
+      box.className = "reward-box locked";
+      box.dataset.state = "locked";
+    }
+    cascadeDeactivate(lockToRemove.id);
+  }
+
+  recalcKeysAndPoints();
+}
+
+/* === RESET === */
 function resetAll() {
   unlocked.clear();
+  planned.clear();
   keys = 0;
+  activeLocks = 0;
   points = 0;
+
   document.querySelectorAll(".reward-box").forEach(b => {
-    b.classList.remove("active", "available", "locked");
+    b.className = "reward-box locked";
     b.dataset.state = "locked";
   });
-  updateStats();
+
+  recalcKeysAndPoints();
+  enforceKeyLimit();
   updateAvailability();
   drawConnections();
+  updateStats();
+  saveState();
 }
 
 resetBtn.addEventListener("click", resetAll);
+pointsAvailableInput.addEventListener("input", updateStats);
 
+/* === INIT === */
 async function init() {
-  // 🧩 1. Identifier le tag dans l'URL (#halloween-path-2025)
   const pathId = window.location.hash.replace("#", "").trim();
 
   if (!pathId || !window.fusions || !window.fusions[pathId]) {
-    console.error("❌ Invalid or missing path ID in URL.");
     document.body.innerHTML = "<h2 style='text-align:center;color:red'>Invalid Path Configuration</h2>";
     return;
   }
 
-  // 🧩 2. Charger la config associée
   const fusion = window.fusions[pathId];
   const jsonFile = fusion.json;
   const displayName = fusion.name || "Hero's Path";
 
-  // 🧩 Met à jour le titre principal de la page
-    const pageTitleEl = document.getElementById("page-title");
-    if (pageTitleEl) pageTitleEl.textContent = displayName.toUpperCase();
-
-// 🧩 Met à jour aussi le titre de l’onglet navigateur
-document.title = `${displayName} - ${window.siteConfig.title}`;
-
-  // 🧩 3. Afficher le titre dynamique
+  const pageTitleEl = document.getElementById("page-title");
+  if (pageTitleEl) pageTitleEl.textContent = displayName.toUpperCase();
+  document.title = `${displayName} - ${window.siteConfig.title}`;
   if (titleEl) titleEl.textContent = displayName.toUpperCase();
 
-  // 🧩 4. Charger le JSON correspondant
   try {
     const res = await fetch(jsonFile);
     rewards = await res.json();
-  } catch (e) {
-    console.error("❌ Failed to load JSON:", e);
+  } catch {
     document.body.innerHTML = `<h2 style='text-align:center;color:red'>Failed to load ${jsonFile}</h2>`;
     return;
   }
 
-  // 🧩 5. Construire la map des dépendances comme avant
   dependentsMap = {};
   for (const r of rewards) {
     (r.requires || []).forEach(req => {
@@ -76,7 +221,6 @@ document.title = `${displayName} - ${window.siteConfig.title}`;
     });
   }
 
-  // (puis le reste inchangé)
   const tiers = {};
   for (const r of rewards) {
     const match = r.id.match(/^t(\d+)/);
@@ -116,105 +260,91 @@ document.title = `${displayName} - ${window.siteConfig.title}`;
     container.appendChild(row);
   });
 
-  updateStats();
+  loadState();
+  recalcKeysAndPoints();
+  enforceKeyLimit();
   updateAvailability();
   drawConnections();
+  updateStats();
+
   window.addEventListener("resize", () => requestAnimationFrame(drawConnections));
   window.addEventListener("scroll", () => requestAnimationFrame(drawConnections));
 }
 
-function cascadeDeactivate(id) {
-  const dependents = dependentsMap[id] || [];
-
-  for (const depId of dependents) {
-    const reward = rewards.find(r => r.id === depId);
-    if (!reward) continue;
-
-    // Vérifie si le dependent a AU MOINS un parent encore actif
-    const stillConnected = (reward.requires || []).some(req => unlocked.has(req));
-
-    if (stillConnected) continue; // on ne désactive pas si un parent reste actif
-
-    // Sinon, on désactive normalement
-    if (unlocked.has(depId)) {
-      const box = document.querySelector(`.reward-box[data-id="${depId}"]`);
-      if (!box) continue;
-
-      box.classList.remove("active");
-      box.classList.add("locked");
-      box.dataset.state = "locked";
-      unlocked.delete(depId);
-
-      if (reward.name.toLowerCase().includes("key")) keys--;
-      else if (reward.name.toLowerCase().includes("lock")) keys++;
-      else points -= reward.cost;
-
-      // Et on continue récursivement
-      cascadeDeactivate(depId);
-    }
-  }
-}
-
-
+/* === INTERACTIONS === */
 function handleClick(reward, box) {
   const state = box.dataset.state;
-  const isKey = reward.name.toLowerCase().includes("key");
-  const isLock = reward.name.toLowerCase().includes("lock");
-  if (state === "locked") return;
+  const name = reward.name.toLowerCase();
+  const isKey = name.includes("key");
+  const isLock = name.includes("lock");
 
-  const isActive = state === "active";
+  // LOCKED → PLANNED
+  if (state === "locked" || state === "available") {
+    const requires = reward.requires || [];
+    const canTake = requires.length === 0 || requires.some(req => unlocked.has(req) || planned.has(req));
+    if (!canTake) return;
 
-  // DEACTIVATE
-    if (isActive) {
-    box.classList.remove("active");
-    box.classList.add("available");
-    box.dataset.state = "available";
-    unlocked.delete(reward.id);
+    planned.add(reward.id);
+    box.className = "reward-box planned";
+    box.dataset.state = "planned";
 
-    if (isKey) {
-        keys--;
-        points -= reward.cost;
-        verifyKeyLockBalance(); // 🧩 vérifie si on a encore assez de clés
-    } else if (isLock) {
-        keys++;
-    } else {
-        points -= reward.cost;
-    }
-
-    cascadeDeactivate(reward.id);
-    updateStats();
     updateAvailability();
     drawConnections();
+    recalcKeysAndPoints();
+    enforceKeyLimit();
+    updateStats();
     return;
-    }
-
-  // ACTIVATE
-  if (isLock) {
-    if (keys <= 0) {
-      box.style.boxShadow = "0 0 15px red";
-      setTimeout(() => (box.style.boxShadow = ""), 300);
-      return;
-    }
-    keys--; // chaque lock coûte toujours 1 clé
-  } else if (isKey) {
-    // certaines récompenses peuvent donner plusieurs clés
-    const keyCount = reward.keys && reward.keys > 0 ? reward.keys : 1;
-    keys += keyCount;
-    points += reward.cost; // on compte toujours le coût en points
-  } else {
-    points += reward.cost;
   }
 
-  box.classList.remove("available");
-  box.classList.add("active");
-  box.dataset.state = "active";
-  unlocked.add(reward.id);
-  playActivationEffect(box);
-  updateStats();
-  updateAvailability();
-  drawConnections();
+  // PLANNED → ACTIVE
+  if (state === "planned") {
+    recalcKeysAndPoints(); // 🆕 recalcul avant vérif
+    const requires = reward.requires || [];
+    const canActivate = requires.length === 0 || requires.some(req => unlocked.has(req));
+    if (!canActivate) {
+      flashRed(box);
+      return;
+    }
+
+    if (isLock && keys <= 0) {
+      flashRed(box);
+      return;
+    }
+
+    planned.delete(reward.id);
+    unlocked.add(reward.id);
+
+    box.className = "reward-box active";
+    box.dataset.state = "active";
+
+    playActivationEffect(box);
+    recalcKeysAndPoints();
+    enforceKeyLimit();
+    updateAvailability();
+    drawConnections();
+    updateStats();
+    return;
+  }
+
+  // ACTIVE → LOCKED
+  if (state === "active") {
+    unlocked.delete(reward.id);
+    cascadeDeactivate(reward.id);
+    recalcKeysAndPoints();
+    enforceKeyLimit();
+    updateAvailability();
+    drawConnections();
+    updateStats();
+    return;
+  }
 }
 
+function flashRed(el) {
+  el.style.boxShadow = "0 0 10px red";
+  setTimeout(() => (el.style.boxShadow = ""), 300);
+}
+
+/* === DISPONIBILITÉ === */
 function updateAvailability() {
   document.querySelectorAll(".reward-box").forEach(box => {
     const id = box.dataset.id;
@@ -226,39 +356,59 @@ function updateAvailability() {
       box.dataset.state = "active";
       return;
     }
+    if (planned.has(id)) {
+      box.className = "reward-box planned";
+      box.dataset.state = "planned";
+      return;
+    }
 
     const requires = reward.requires || [];
-    const canTake = requires.length === 0 || requires.some(req => unlocked.has(req));
+    const canTake = requires.length === 0 ||
+                    requires.some(req => unlocked.has(req) || planned.has(req));
 
-    if (canTake) {
-      box.className = "reward-box available";
-      box.dataset.state = "available";
-    } else {
-      box.className = "reward-box locked";
-      box.dataset.state = "locked";
-    }
+    box.className = canTake ? "reward-box available" : "reward-box locked";
+    box.dataset.state = canTake ? "available" : "locked";
   });
+
   updateStats();
 }
 
+/* === CASCADE === */
+function cascadeDeactivate(id) {
+  const dependents = dependentsMap[id] || [];
+  for (const depId of dependents) {
+    const reward = rewards.find(r => r.id === depId);
+    if (!reward) continue;
+
+    const stillConnected = (reward.requires || []).some(req => unlocked.has(req) || planned.has(req));
+    if (stillConnected) continue;
+
+    const box = document.querySelector(`.reward-box[data-id="${depId}"]`);
+    if (!box) continue;
+
+    unlocked.delete(depId);
+    planned.delete(depId);
+    box.className = "reward-box locked";
+    box.dataset.state = "locked";
+
+    cascadeDeactivate(depId);
+  }
+}
+
+/* === CHEMINS === */
 function drawConnections() {
   svg.innerHTML = "";
   const boardRect = svg.getBoundingClientRect();
-
-  // Trois ensembles de chemins selon la couleur
-  const grayPaths = [];
-  const goldPaths = [];
-  const greenPaths = [];
+  const grayPaths = [], goldPaths = [], bluePaths = [], greenPaths = [];
 
   rewards.forEach(r => {
     (r.requires || []).forEach(req => {
-      const parentBox = document.querySelector(`.reward-box[data-id="${req}"]`);
-      const childBox = document.querySelector(`.reward-box[data-id="${r.id}"]`);
-      if (!parentBox || !childBox) return;
+      const pBox = document.querySelector(`.reward-box[data-id="${req}"]`);
+      const cBox = document.querySelector(`.reward-box[data-id="${r.id}"]`);
+      if (!pBox || !cBox) return;
 
-      const pRect = parentBox.getBoundingClientRect();
-      const cRect = childBox.getBoundingClientRect();
-
+      const pRect = pBox.getBoundingClientRect();
+      const cRect = cBox.getBoundingClientRect();
       const x1 = pRect.left + pRect.width / 2 - boardRect.left;
       const y1 = pRect.bottom - boardRect.top;
       const x2 = cRect.left + cRect.width / 2 - boardRect.left;
@@ -270,95 +420,49 @@ function drawConnections() {
       path.setAttribute("stroke-width", "3.5");
       path.setAttribute("fill", "none");
 
+      const parentPlanned = planned.has(req);
+      const childPlanned = planned.has(r.id);
       const parentActive = unlocked.has(req);
       const childActive = unlocked.has(r.id);
 
-      // Couleur selon état des nœuds
       if (parentActive && childActive) {
-        path.setAttribute("stroke", "#00ff66"); // vert
+        path.setAttribute("stroke", "#00ff66");
         greenPaths.push(path);
+      } else if ((parentPlanned && childPlanned) || (parentActive && childPlanned)) {
+        path.setAttribute("stroke", "#00c9ff");
+        bluePaths.push(path);
       } else if (parentActive && !childActive) {
-        path.setAttribute("stroke", "#d4af37"); // doré
+        path.setAttribute("stroke", "#d4af37");
         goldPaths.push(path);
       } else {
-        path.setAttribute("stroke", "#555"); // gris
+        path.setAttribute("stroke", "#555");
         grayPaths.push(path);
       }
     });
   });
 
-  // Ordre d’empilement : gris → doré → vert
   grayPaths.forEach(p => svg.appendChild(p));
   goldPaths.forEach(p => svg.appendChild(p));
+  bluePaths.forEach(p => svg.appendChild(p));
   greenPaths.forEach(p => svg.appendChild(p));
 }
 
-
-
 function playActivationEffect(box) {
-  const effect = document.createElement("div");
-  effect.className = "activation-flash";
-  box.appendChild(effect);
-  setTimeout(() => effect.remove(), 700);
+  const fx = document.createElement("div");
+  fx.className = "activation-flash";
+  box.appendChild(fx);
+  setTimeout(() => fx.remove(), 700);
 }
 
-function verifyKeyLockBalance() {
-  // Récupère toutes les clés et locks actifs
-  const activeKeys = rewards.filter(r =>
-    r.name.toLowerCase().includes("key") && unlocked.has(r.id)
-  );
-  const activeLocks = rewards.filter(r =>
-    r.name.toLowerCase().includes("lock") && unlocked.has(r.id)
-  );
-
-  const availableKeys = activeKeys.length;
-  const usedLocks = activeLocks.length;
-
-  // Si on a plus de locks actifs que de clés, on doit corriger
-  if (usedLocks > availableKeys) {
-    const excess = usedLocks - availableKeys;
-
-    // On trie les locks actifs par "profondeur" (le plus bas dans l’arbre d’abord)
-    const sortedLocks = activeLocks.sort((a, b) => {
-      const tierA = parseInt(a.id.match(/^t(\d+)/)?.[1] || 0);
-      const tierB = parseInt(b.id.match(/^t(\d+)/)?.[1] || 0);
-      return tierB - tierA; // du plus profond au plus haut
-    });
-
-    // Désactivation des locks excédentaires
-    for (let i = 0; i < excess; i++) {
-      const lock = sortedLocks[i];
-      if (!lock) continue;
-
-      const box = document.querySelector(`.reward-box[data-id="${lock.id}"]`);
-      if (!box) continue;
-
-      box.classList.remove("active");
-      box.classList.add("available");
-      box.dataset.state = "available";
-      unlocked.delete(lock.id);
-      keys++; // on récupère la clé utilisée
-
-      cascadeDeactivate(lock.id);
-    }
-
-    updateStats();
-    updateAvailability();
-    drawConnections();
-  }
-}
-
+/* === BOOT === */
 init();
-
-// --- Forcer le rechargement quand le hash change ---
 window.addEventListener("hashchange", () => {
-  // Efface le contenu existant avant de recharger
   container.innerHTML = "";
   svg.innerHTML = "";
   unlocked.clear();
+  planned.clear();
   keys = 0;
+  activeLocks = 0;
   points = 0;
-
-  // Relance l'initialisation
   init();
 });

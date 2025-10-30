@@ -154,6 +154,12 @@
       50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       100% { opacity: 0; transform: translate(-50%, -50%) scale(1.8); }
     }
+
+    .reward-box.planned {
+      border-color: #007bff;
+      filter: none;
+      box-shadow: 0 0 10px #00c9ff;
+    }
   </style>
 </head>
 <body>
@@ -161,16 +167,9 @@
 
     <div id="menu-container"></div>
 
-    <button class="btn-reset" id="reset">Reset</button>
-
   <div class="header-wrapper">
     <header id="page-title">HALLOWEEN PATH</header>
   </div> 
-
-  <div class="stats">
-    <span id="points">Points spent: 0</span>
-    <span id="keys">Keys available: 0</span>
-  </div>
 
   <div class="board">
     <svg class="connections" id="connections"></svg>
