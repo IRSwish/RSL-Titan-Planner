@@ -234,7 +234,7 @@
     document.querySelector('#divine-scrolls span').textContent = `${Math.min(div, 950)} / 950`;
   }
 
-  // === Base64 URL-safe ===
+  // === Encodage / Décodage ===
   function b64urlFromBytes(bytes) {
     let bin = '';
     bytes.forEach(b => bin += String.fromCharCode(b));
@@ -246,8 +246,6 @@
     const bin = atob(s);
     return Uint8Array.from(bin, c => c.charCodeAt(0));
   }
-
-  // === Encodage compact binaire ===
   function encodeMasteries(activeIds) {
     const bytes = new Uint8Array(activeIds.length);
     activeIds.forEach((id, i) => {
@@ -259,7 +257,6 @@
     });
     return b64urlFromBytes(bytes);
   }
-
   function decodeMasteries(encoded) {
     const arr = bytesFromB64url(encoded);
     const out = [];
@@ -273,121 +270,8 @@
     }
     return out;
   }
-  
-// === Lignes de liaison entre maîtrises actives ===
-// === Lignes de liaison entre maîtrises actives ===
-function drawConnections() {
-  document.querySelectorAll('.tree').forEach(tree => {
-    const svg = tree.querySelector('svg.connections');
-    if (!svg) return;
-    svg.innerHTML = '';
 
-    const actives = Array.from(tree.querySelectorAll('.mastery.active'));
-    if (actives.length < 2) return;
-
-    const treeRect = tree.getBoundingClientRect();
-
-    const computed = getComputedStyle(tree);
-    const offsetX = parseFloat(computed.paddingLeft || 0) + parseFloat(computed.borderLeftWidth || 0);
-    const offsetY = parseFloat(computed.paddingTop  || 0) + parseFloat(computed.borderTopWidth  || 0);
-
-    // Index par tier / col pour aller vite
-    const byTier = {};
-    actives.forEach(m => {
-      const t = +m.dataset.tier;
-      (byTier[t] ||= []).push(m);
-    });
-    Object.values(byTier).forEach(list => list.sort((a,b)=>+a.dataset.col-+b.dataset.col));
-
-    // 1) Pour chaque ENFANT (tier >= 2), on choisit UN parent (tier-1)
-    const chosenParent = new Map();        // childId -> parentEl
-    const parentCandidatesCount = new Map(); // childId -> nb de parents possibles
-
-    Object.keys(byTier).map(Number).sort((a,b)=>a-b).forEach(tier => {
-      const prevTier = tier - 1;
-      if (!byTier[tier] || !byTier[prevTier]) return;
-
-      byTier[tier].forEach(child => {
-        const c = +child.dataset.col;
-
-        // candidats au-dessus (col, col-1, col+1)
-        const same  = byTier[prevTier].find(p => +p.dataset.col === c);
-        const left  = byTier[prevTier].find(p => +p.dataset.col === c - 1);
-        const right = byTier[prevTier].find(p => +p.dataset.col === c + 1);
-
-        const candidates = [same, left, right].filter(Boolean);
-        parentCandidatesCount.set(child.dataset.id, candidates.length);
-
-        if (!candidates.length) return;
-
-        // priorité même colonne, sinon diagonal (gauche puis droite)
-        const parentEl = same || left || right;
-        chosenParent.set(child.dataset.id, parentEl);
-      });
-    });
-
-    // 2) Tracé des liens V/D (un parent → un enfant)
-    chosenParent.forEach((parentEl, childId) => {
-      const childEl = actives.find(m => m.dataset.id === childId);
-      if (!childEl) return;
-
-      const r1 = parentEl.getBoundingClientRect();
-      const r2 = childEl.getBoundingClientRect();
-
-      // centre → centre (tes diagonales originales)
-      const x1 = r1.left + r1.width / 2 - treeRect.left-2;
-      const x2 = r2.left + r2.width / 2 - treeRect.left-2;
-      const y1 = r1.top + r1.height / 2 - treeRect.top-2;
-      const y2 = r2.top + r2.height / 2 - treeRect.top-2;
-
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', x1);
-      line.setAttribute('y1', y1);
-      line.setAttribute('x2', x2);
-      line.setAttribute('y2', y2);
-      line.classList.add('glow-line');
-      svg.appendChild(line);
-    });
-
-    // 3) Tracé des HORIZONTALES : seulement si AU MOINS UNE des deux n'a AUCUN parent possible au-dessus
-    Object.keys(byTier).map(Number).forEach(tier => {
-      const row = byTier[tier];
-      if (!row) return;
-
-      for (let i = 0; i < row.length - 1; i++) {
-        const a = row[i], b = row[i+1];
-        if (+b.dataset.col !== +a.dataset.col + 1) continue;
-
-        const aHasCandidates = (parentCandidatesCount.get(a.dataset.id) || 0) > 0;
-        const bHasCandidates = (parentCandidatesCount.get(b.dataset.id) || 0) > 0;
-
-        // règle : relier seulement si l'une des deux ne peut PAS être connectée au-dessus
-        if (aHasCandidates || bHasCandidates) {
-          if (aHasCandidates && bHasCandidates) continue; // les deux peuvent avoir un parent → pas d'horizontale
-        }
-        // sinon (au moins une n'a aucun candidat) → on trace
-
-        const r1 = a.getBoundingClientRect();
-        const r2 = b.getBoundingClientRect();
-
-        const x1 = r1.right - treeRect.left - (r1.width * 0.25);
-        const y1 = r1.top + r1.height / 2 - treeRect.top-3;
-        const x2 = r2.left  - treeRect.left + (r2.width * 0.25);
-        const y2 = r2.top + r2.height / 2 - treeRect.top-3;
-
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x1);
-        line.setAttribute('y1', y1);
-        line.setAttribute('x2', x2);
-        line.setAttribute('y2', y2);
-        line.classList.add('glow-line');
-        svg.appendChild(line);
-      }
-    });
-  });
-}
-
-  // === Update global ===
+  // === Mise à jour globale + lien ===
   function updateAll(cascade = false) {
     updateLocksAndAvailable();
     updateScrolls();
@@ -396,41 +280,21 @@ function drawConnections() {
       updateScrolls();
     }
 
-    // Mise à jour du lien caché
+    // Génération du lien de build
     const activeIds = Array.from(document.querySelectorAll('.mastery.active')).map(m => m.dataset.id);
     const base = `${location.origin}${location.pathname}`;
     const encoded = encodeMasteries(activeIds);
     window.currentShareLink = `${base}?m=${encoded}`;
-
-    drawConnections();
   }
 
   // === Lecture du lien partagé ===
   const params = new URLSearchParams(location.search);
   let initialMasteries = [];
-
   if (params.has('m')) {
-    const raw = params.get('m');
-    try {
-      const probe = atob(raw.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(raw.length / 4) * 4, '='));
-      if (probe.includes('-') || probe.includes('|')) {
-        initialMasteries = probe.includes('-')
-          ? probe.split(',')
-          : probe.split('|').map(code => {
-              const branch = code[0] === 'o' ? 'offense'
-                           : code[0] === 'd' ? 'defense'
-                           : 'support';
-              return `${branch}-${code[1]}-${code[2]}`;
-            });
-      } else {
-        initialMasteries = decodeMasteries(raw);
-      }
-    } catch {
-      try { initialMasteries = decodeMasteries(raw); } catch { initialMasteries = []; }
-    }
+    try { initialMasteries = decodeMasteries(params.get('m')); } catch { initialMasteries = []; }
   }
 
-  // === Chargement JSON + application des maîtrises ===
+  // === Chargement JSON + application ===
   fetch('masteries.json')
     .then(res => res.json())
     .then(data => {
@@ -456,6 +320,18 @@ function drawConnections() {
           const el = document.querySelector(`[data-id="${id}"]`);
           if (el) el.classList.add('active');
         });
+
+        // backfill pour garder les arbres complets
+        const branches = ["offense", "defense", "support"];
+        branches.forEach(branch => {
+          const picks = initialMasteries.filter(id => id.startsWith(branch));
+          if (picks.length && !picks.some(id => id.startsWith(`${branch}-1-`))) {
+            const avgCol = picks.map(id => +id.split('-')[2]).reduce((a, b) => a + b, 0) / picks.length;
+            const targetCol = avgCol < 2.5 ? 2 : 3;
+            const t1 = document.querySelector(`[data-id="${branch}-1-${targetCol}"]`);
+            if (t1) t1.classList.add('active');
+          }
+        });
       }
 
       attachEvents();
@@ -470,7 +346,7 @@ function drawConnections() {
       const link = window.currentShareLink || `${location.origin}${location.pathname}`;
       navigator.clipboard.writeText(link).then(() => {
         const oldText = btn.textContent;
-        btn.textContent = 'Copied to clipboard';
+        btn.textContent = 'Lien copié !';
         btn.disabled = true;
         btn.style.opacity = '0.8';
         setTimeout(() => {
