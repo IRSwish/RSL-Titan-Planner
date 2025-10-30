@@ -738,3 +738,48 @@ input[type=number] {
   color: rgba(255, 180, 0, 0.8);
   text-shadow: 0 0 6px rgba(255, 180, 0, 0.3);
 }
+
+/* Bouton reset individuel (événement) */
+.event-reset {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: transparent;
+  color: #d4af37;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 5;
+}
+
+.event-reset:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Bouton reset global (summary box) */
+.global-reset {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  background: #1a1a1a;
+  border: 1px solid #d4af37;
+  color: #fcf6ff;
+  font-size: 13px;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.global-reset:hover {
+  background: #d4af37;
+  color: #1a1a1a;
+}
+
+/* Assure que la summary box soit en position relative */
+.summary-box {
+  position: relative;
+}
