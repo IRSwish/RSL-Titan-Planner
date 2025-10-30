@@ -303,6 +303,7 @@ document.querySelectorAll('.point-box').forEach(box => {
 
   // --- Applique le highlight sur les events du jour ---
   highlightByDates();
+  updateSummary(); // ✅ ajout pour compter au chargement
 }
 
   function computeTracks(events, minDate, dayWidth) {
