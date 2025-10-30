@@ -282,6 +282,7 @@
         // If current > new max, clamp it
         const cur = Math.min(parseFloat(circleInput.value || 0), parseFloat(maxInput.value || hardCap));
         setValue(type, cur);
+        applyInterlock(type + 'Max', parseFloat(maxInput.value) || 0);
         calculate();
       });
 
@@ -303,9 +304,16 @@
 
     // Reset
     document.getElementById('resetAll').addEventListener('click', () => {
+      // Remettre les valeurs à 0 via la logique existante
       setValue('Basic', 0);
       setValue('Advanced', 0);
       setValue('Divine', 0);
+
+      // Remettre les max à leurs caps respectifs
+      document.querySelector('.scroll-block[data-type="Basic"] .max').value = 100;
+      document.querySelector('.scroll-block[data-type="Advanced"] .max').value = 600;
+      document.querySelector('.scroll-block[data-type="Divine"] .max').value = 950;
+
       calculate();
     });
 
@@ -328,28 +336,97 @@
       countInput.value  = clamped;
     }
 
-    // Interlock logic between scroll types
-    function applyInterlock(changedType, value) {
-      const setTo = (t, val) => setValue(t, val);
+function applyInterlock(changedType, newValue) {
+  const setTo = (t, val) => setValue(t, val);
 
-      if (changedType === 'Basic') {
-        // If Basic < 100 => Advanced=0, Divine=0
-        const basicMax = Math.min(getMax('Basic'), scrollCaps.Basic);
-        if (value < basicMax) {
-          setTo('Advanced', 0);
-          setTo('Divine', 0);
-        }
-      } else if (changedType === 'Advanced') {
-        // If Advanced < 600 => Divine=0; Basic=100 (full)
-        const advMax = Math.min(getMax('Advanced'), scrollCaps.Advanced);
-        if (value < advMax) setTo('Divine', 0);
-        setTo('Basic', Math.min(getMax('Basic'), scrollCaps.Basic));
-      } else if (changedType === 'Divine') {
-        // Starting red implies green & grey are full
-        setTo('Basic', Math.min(getMax('Basic'), scrollCaps.Basic));
-        setTo('Advanced', Math.min(getMax('Advanced'), scrollCaps.Advanced));
-      }
+  const basic = document.querySelector('.scroll-block[data-type="Basic"]');
+  const adv   = document.querySelector('.scroll-block[data-type="Advanced"]');
+  const div   = document.querySelector('.scroll-block[data-type="Divine"]');
+
+  const BmaxInput = basic.querySelector('.max');
+  const AmaxInput = adv.querySelector('.max');
+  const DmaxInput = div.querySelector('.max');
+
+  const BvalInput = basic.querySelector('.count');
+  const AvalInput = adv.querySelector('.count');
+  const DvalInput = div.querySelector('.count');
+
+  const Bcap = 100, Acap = 600, Dcap = 950;
+
+  let Bmax = parseFloat(BmaxInput.value) || 0;
+  let Amax = parseFloat(AmaxInput.value) || 0;
+  let Dmax = parseFloat(DmaxInput.value) || 0;
+
+  let Bval = parseFloat(BvalInput.value) || 0;
+  let Aval = parseFloat(AvalInput.value) || 0;
+  let Dval = parseFloat(DvalInput.value) || 0;
+
+  // ======================
+  // 1️⃣ — MAX modifié
+  // ======================
+  if (changedType === "BasicMax") {
+    if (Bmax < 100) {
+      // gris incomplet → reset tout au-dessus
+      AmaxInput.value = 0;
+      DmaxInput.value = 0;
+      setTo('Advanced', 0);
+      setTo('Divine', 0);
     }
+  }
+
+  else if (changedType === "AdvancedMax") {
+    if (Bmax < 100) {
+      // gris pas complet → reset tout au-dessus
+      AmaxInput.value = 0;
+      DmaxInput.value = 0;
+      setTo('Advanced', 0);
+      setTo('Divine', 0);
+    } else if (Amax < 600) {
+      // vert incomplet → reset rouge
+      DmaxInput.value = 0;
+      setTo('Divine', 0);
+    }
+  }
+
+  else if (changedType === "DivineMax") {
+    // rouge max ne peut exister que si verts et gris complets
+    if (Bmax < 100 || Amax < 600) {
+      DmaxInput.value = 0;
+      setTo('Divine', 0);
+    }
+  }
+
+  // ======================
+  // 2️⃣ — VALEUR modifiée
+  // ======================
+
+  if (changedType === "Basic") {
+    // monter ou baisser du gris => reset verts et rouges
+    setTo('Advanced', 0);
+    setTo('Divine', 0);
+  }
+
+  else if (changedType === "Advanced") {
+    // Monter du vert → monte gris à 100 + reset rouges
+    if (newValue > 0) {
+      if (Bval < 100) setTo('Basic', 100);
+      setTo('Divine', 0);
+    }
+    // Baisser du vert → reset rouges
+    if (newValue === 0) setTo('Divine', 0);
+  }
+
+  else if (changedType === "Divine") {
+    // Monter du rouge → monte verts + gris
+    if (newValue > 0) {
+      if (Aval < 600) setTo('Advanced', 600);
+      if (Bval < 100) setTo('Basic', 100);
+    }
+  }
+
+  calculate();
+}
+
 
     function getMax(type) {
       const block = document.querySelector(`.scroll-block[data-type="${type}"]`);
@@ -357,16 +434,45 @@
     }
 
     function getMissing(type) {
-      const block = document.querySelector(`.scroll-block[data-type="${type}"]`);
-      const cur = parseFloat(block.querySelector('.count').value) || 0;
-      const max = Math.min(parseFloat(block.querySelector('.max').value) || scrollCaps[type], scrollCaps[type]);
-      return Math.max(0, max - cur);
-    }
+    const block = document.querySelector(`.scroll-block[data-type="${type}"]`);
+    const cur = parseFloat(block.querySelector('.count').value) || 0;
+    const max = parseFloat(block.querySelector('.max').value) || 0;
+
+    const bMax = parseFloat(document.querySelector('.scroll-block[data-type="Basic"] .max').value) || 0;
+    const aMax = parseFloat(document.querySelector('.scroll-block[data-type="Advanced"] .max').value) || 0;
+
+    // 🔹 Catégorie désactivée = ignorée totalement
+    if (max === 0) return 0;
+
+    // 🔹 Verts actifs seulement si gris complet
+    if (type === 'Advanced' && bMax < 100) return 0;
+
+    // 🔹 Rouges actifs seulement si gris = 100 et verts = 600
+    if (type === 'Divine' && (bMax < 100 || aMax < 600)) return 0;
+
+    // 🔹 Si valeur = 0 et max = 0 => ignoré
+    if (cur === 0 && max === 0) return 0;
+
+    return Math.max(0, max - cur);
+  }
+
 
     function calculate() {
       const b = getMissing('Basic');
-      const a = getMissing('Advanced');
-      const d = getMissing('Divine');
+
+      // Advanced ne compte que si les Basic sont complets
+      let a = 0;
+      const bMax = parseFloat(document.querySelector('.scroll-block[data-type="Basic"] .max').value) || 0;
+      if (bMax >= 100) {
+        a = getMissing('Advanced');
+      }
+
+      // Divine ne compte que si Basic & Advanced sont complets
+      let d = 0;
+      const aMax = parseFloat(document.querySelector('.scroll-block[data-type="Advanced"] .max').value) || 0;
+      if (bMax >= 100 && aMax >= 600) {
+        d = getMissing('Divine');
+      }
 
       const runsB = Math.ceil(b / AVG_BASIC);
       const runsA = Math.ceil(a / AVG_ADV);
@@ -379,6 +485,28 @@
       document.getElementById('energyNeeded').textContent = Math.round(energy);
       document.getElementById('gemsNeeded').textContent = Math.round(gems);
       document.getElementById('runsHint').textContent = `≈ ${totalRuns} runs total`;
+
+      // === Mise à jour visuelle des blocs actifs/inactifs ===
+      function updateBlockState() {
+        const blocks = document.querySelectorAll('.scroll-block');
+
+        const bMax = parseFloat(document.querySelector('.scroll-block[data-type="Basic"] .max').value) || 0;
+        const aMax = parseFloat(document.querySelector('.scroll-block[data-type="Advanced"] .max').value) || 0;
+
+        blocks.forEach(block => {
+          const type = block.dataset.type;
+          let active = true;
+
+          if (type === 'Advanced' && bMax < 100) active = false;
+          if (type === 'Divine' && (bMax < 100 || aMax < 600)) active = false;
+
+          block.style.opacity = active ? '1' : '0.4';
+          block.style.filter = active ? 'none' : 'grayscale(100%)';
+        });
+}
+
+// Appel à la fin du calcul
+updateBlockState();
     }
 
 // === Contrôle circulaire : interaction uniquement sur le stroke (pas au centre) ===
