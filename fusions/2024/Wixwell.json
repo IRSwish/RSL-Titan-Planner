@@ -1,0 +1,166 @@
+{
+  "title": "VAULT KEEPER WIXWELL • CLASSIC FUSION • 09/05/2024 - 24/05/2024",
+  "events": [
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-05-09",
+      "end_date": "2024-05-12",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2024-05-09",
+      "end_date": "2024-05-12",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2024-05-10",
+      "end_date": "2024-05-13",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2024-05-10",
+      "end_date": "2024-05-14",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-05-11",
+      "end_date": "2024-05-14",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-05-11",
+      "end_date": "2024-05-14",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2024-05-12",
+      "end_date": "2024-05-15",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-05-13",
+      "end_date": "2024-05-16",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-05-15",
+      "end_date": "2024-05-18",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2024-05-16",
+      "end_date": "2024-05-19",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2024-05-16",
+      "end_date": "2024-05-20",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2024-05-17",
+      "end_date": "2024-05-20",
+      "reward": "Teryx, Arwydd",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-05-17",
+      "end_date": "2024-05-20",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-05-18",
+      "end_date": "2024-05-21",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2024-05-19",
+      "end_date": "2024-05-22",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-05-19",
+      "end_date": "2024-05-22",
+      "reward": "Teryx",
+      "points": [
+        1
+      ]
+    }
+  ]
+}

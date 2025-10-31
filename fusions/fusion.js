@@ -210,7 +210,7 @@
         const saved = savedStates[id] || initialState;
         const reward = rewards[idx] || 'default';
         return `<div class="point-box ${saved}" data-id="${id}">
-                  <img src="/style/img/${reward}.webp" alt="${reward}"/>
+                  <img src="/tools/champions-index/img/champions/${reward}.webp" alt="${reward}"/>
                   <span>${p}</span>
                 </div>`;
       }).join('');

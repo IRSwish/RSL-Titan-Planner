@@ -1,0 +1,166 @@
+{
+  "title": "LADY NOELLE • CLASSIC FUSION • 16/12/2024 - 31/12/2024",
+  "events": [
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2024-12-16",
+      "end_date": "2024-12-19",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Upgrade",
+      "type": "Event",
+      "start_date": "2024-12-16",
+      "end_date": "2024-12-19",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2024-12-16",
+      "end_date": "2024-12-19",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-12-17",
+      "end_date": "2024-12-20",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2024-12-19",
+      "end_date": "2024-12-22",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2024-12-20",
+      "end_date": "2024-12-23",
+      "reward": "Taneko, Wysteri",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-12-20",
+      "end_date": "2024-12-23",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-12-21",
+      "end_date": "2024-12-24",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2024-12-21",
+      "end_date": "2024-12-24",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-12-21",
+      "end_date": "2024-12-24",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2024-12-22",
+      "end_date": "2024-12-25",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-12-24",
+      "end_date": "2024-12-27",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2024-12-25",
+      "end_date": "2024-12-28",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2024-12-26",
+      "end_date": "2024-12-30",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2024-12-27",
+      "end_date": "2024-12-30",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-12-27",
+      "end_date": "2024-12-30",
+      "reward": "Taneko",
+      "points": [
+        1
+      ]
+    }
+  ]
+}

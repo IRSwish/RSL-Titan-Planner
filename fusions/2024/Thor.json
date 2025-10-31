@@ -1,0 +1,176 @@
+{
+  "title": "THOR FAEHAMMER • HYBRID FUSION • 05/09/2024 - 19/09/2024",
+  "events": [
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2024-09-05",
+      "end_date": "2024-09-08",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-09-05",
+      "end_date": "2024-09-08",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2024-09-05",
+      "end_date": "2024-09-09",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2024-09-06",
+      "end_date": "2024-09-09",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-09-06",
+      "end_date": "2024-09-09",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-09-07",
+      "end_date": "2024-09-10",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2024-09-08",
+      "end_date": "2024-09-11",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-09-09",
+      "end_date": "2024-09-12",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-09-10",
+      "end_date": "2024-09-13",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2024-09-12",
+      "end_date": "2024-09-15",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2024-09-13",
+      "end_date": "2024-09-17",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-09-13",
+      "end_date": "2024-09-16",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2024-09-13",
+      "end_date": "2024-09-16",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-09-14",
+      "end_date": "2024-09-17",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-09-14",
+      "end_date": "2024-09-17",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2024-09-15",
+      "end_date": "2024-09-18",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2024-09-17",
+      "end_date": "2024-09-19",
+      "reward": "Fragments, Fragments",
+      "points": [
+        25,
+        25
+      ]
+    }
+  ]
+}

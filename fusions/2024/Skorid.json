@@ -1,0 +1,166 @@
+{
+  "title": "SKORID THE HALFSPAWN • CLASSIC FUSION • 01/08/2024 - 17/08/2024",
+  "events": [
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2024-08-01",
+      "end_date": "2024-08-04",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2024-08-01",
+      "end_date": "2024-08-05",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2024-08-02",
+      "end_date": "2024-08-05",
+      "reward": "Lasair, Bowf",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-08-02",
+      "end_date": "2024-08-05",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-08-03",
+      "end_date": "2024-08-06",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-08-03",
+      "end_date": "2024-08-06",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2024-08-04",
+      "end_date": "2024-08-07",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-08-06",
+      "end_date": "2024-08-09",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2024-08-08",
+      "end_date": "2024-08-11",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-08-08",
+      "end_date": "2024-08-11",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2024-08-09",
+      "end_date": "2024-08-12",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-08-10",
+      "end_date": "2024-08-13",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-08-10",
+      "end_date": "2024-08-13",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2024-08-11",
+      "end_date": "2024-08-14",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2024-08-12",
+      "end_date": "2024-08-16",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-08-13",
+      "end_date": "2024-08-16",
+      "reward": "Lasair",
+      "points": [
+        1
+      ]
+    }
+  ]
+}

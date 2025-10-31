@@ -1,0 +1,166 @@
+{
+  "title": "GRETEL HAGBANE • CLASSIC FUSION • 31/10/2024 - 14/11/2024",
+  "events": [
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-10-31",
+      "end_date": "2024-11-03",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2024-11-01",
+      "end_date": "2024-11-04",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2024-11-01",
+      "end_date": "2024-11-04",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2024-11-01",
+      "end_date": "2024-11-05",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-11-02",
+      "end_date": "2024-11-05",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-11-02",
+      "end_date": "2024-11-05",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-11-04",
+      "end_date": "2024-11-07",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2024-11-04",
+      "end_date": "2024-11-07",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-11-06",
+      "end_date": "2024-11-09",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2024-11-07",
+      "end_date": "2024-11-10",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2024-11-07",
+      "end_date": "2024-11-11",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2024-11-08",
+      "end_date": "2024-11-11",
+      "reward": "Denid, Signy",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2024-11-08",
+      "end_date": "2024-11-11",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2024-11-08",
+      "end_date": "2024-11-11",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2024-11-10",
+      "end_date": "2024-11-13",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2024-11-10",
+      "end_date": "2024-11-13",
+      "reward": "Denid",
+      "points": [
+        1
+      ]
+    }
+  ]
+}
