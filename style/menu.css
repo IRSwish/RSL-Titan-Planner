@@ -242,3 +242,90 @@ body.menu-opened::after {
   scrollbar-width: thin;
   scrollbar-color: #d4af37 #0e0e0e;
 }
+
+/* === 📱 Mode portrait : menu plein écran === */
+@media (max-width: 768px) and (orientation: portrait) {
+
+  /* --- Menu prend toute la largeur et la hauteur --- */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100vw;
+    width: 100vw;
+    height: 100vh;
+    background: #0e0e0e;
+    border: none;
+    box-shadow: none;
+    transition: left 0.3s ease;
+    z-index: 10000;
+    overflow-y: auto;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  /* --- Bouton burger visible au-dessus du menu --- */
+  .burger-btn {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 10001;
+    font-size: 38px;
+  }
+
+  /* --- Contenu centré, marges plus grandes --- */
+  .sidebar-content {
+    padding: 80px 28px 60px;
+  }
+
+  /* --- Liens plus lisibles et espacés --- */
+  .menu-links a,
+  .dropdown-toggle,
+  .dropdown-sub-toggle {
+    font-size: 18px;
+    padding: 12px 16px;
+  }
+
+  .dropdown-sub-content a {
+    font-size: 16px;
+    padding: 10px 14px;
+  }
+
+  .menu-links li {
+    margin: 8px 0;
+  }
+
+  /* --- Scrollbar large et adaptée au pouce --- */
+  .sidebar::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  /* --- Overlay supprimé : le menu est la page --- */
+  body.menu-opened::after {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* --- Supprimer la bordure de séparation gauche --- */
+  .dropdown-content,
+  .dropdown-sub-content {
+    border-left: none;
+  }
+
+  /* --- Animation légère de fondu à l’ouverture --- */
+  .sidebar.open {
+    animation: fadeInMenu 0.3s ease;
+  }
+
+  @keyframes fadeInMenu {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
