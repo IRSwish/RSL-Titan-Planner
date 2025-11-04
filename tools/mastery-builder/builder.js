@@ -204,6 +204,108 @@
     return changed;
   }
 
+function drawConnections() {
+  document.querySelectorAll('.tree').forEach(tree => {
+    const svg = tree.querySelector('svg.connections');
+    if (!svg) return;
+    svg.innerHTML = '';
+
+    const actives = Array.from(tree.querySelectorAll('.mastery.active'));
+    if (actives.length < 2) return;
+
+    const treeRect = tree.getBoundingClientRect();
+
+    // Indexation par tier
+    const byTier = {};
+    actives.forEach(m => {
+      const t = +m.dataset.tier;
+      (byTier[t] ||= []).push(m);
+    });
+    Object.values(byTier).forEach(list => list.sort((a,b)=>+a.dataset.col-+b.dataset.col));
+
+    const branch = tree.dataset.branch;
+    const chosenParent = new Map();
+    const parentCandidatesCount = new Map();
+
+    // === Connexions VERTICALES / DIAGONALES ===
+    Object.keys(byTier).map(Number).sort((a,b)=>a-b).forEach(tier => {
+      const prevTier = tier - 1;
+      if (!byTier[tier] || !byTier[prevTier]) return;
+
+      byTier[tier].forEach(child => {
+        const c = +child.dataset.col;
+        const same  = byTier[prevTier].find(p => +p.dataset.col === c);
+        const left  = byTier[prevTier].find(p => +p.dataset.col === c - 1);
+        const right = byTier[prevTier].find(p => +p.dataset.col === c + 1);
+
+        const candidates = [same, left, right].filter(Boolean);
+        parentCandidatesCount.set(child.dataset.id, candidates.length);
+
+        if (!candidates.length) return;
+
+        const parentEl = same || left || right;
+        chosenParent.set(child.dataset.id, parentEl);
+      });
+    });
+
+    // Tracé des liens verticaux/diagonaux
+    chosenParent.forEach((parentEl, childId) => {
+      const childEl = actives.find(m => m.dataset.id === childId);
+      if (!childEl) return;
+
+      const r1 = parentEl.getBoundingClientRect();
+      const r2 = childEl.getBoundingClientRect();
+
+      const x1 = r1.left + r1.width / 2 - treeRect.left;
+      const y1 = r1.top + r1.height / 2 - treeRect.top;
+      const x2 = r2.left + r2.width / 2 - treeRect.left;
+      const y2 = r2.top + r2.height / 2 - treeRect.top;
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.classList.add('glow-line');
+      svg.appendChild(line);
+    });
+
+    // === Connexions HORIZONTALES ===
+    Object.keys(byTier).map(Number).forEach(tier => {
+      const row = byTier[tier];
+      if (!row) return;
+
+      for (let i = 0; i < row.length - 1; i++) {
+        const a = row[i], b = row[i+1];
+        if (+b.dataset.col !== +a.dataset.col + 1) continue;
+
+        const aHasParents = (parentCandidatesCount.get(a.dataset.id) || 0) > 0;
+        const bHasParents = (parentCandidatesCount.get(b.dataset.id) || 0) > 0;
+
+        // règle : relier si au moins une des deux n’a pas de parent au-dessus
+        if (aHasParents && bHasParents) continue;
+
+        const r1 = a.getBoundingClientRect();
+        const r2 = b.getBoundingClientRect();
+
+        const x1 = r1.right - treeRect.left - (r1.width * 0.25);
+        const y1 = r1.top + r1.height / 2 - treeRect.top;
+        const x2 = r2.left - treeRect.left + (r2.width * 0.25);
+        const y2 = r2.top + r2.height / 2 - treeRect.top;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.classList.add('glow-line');
+        svg.appendChild(line);
+      }
+    });
+  });
+}
+
+
   function updateLocksAndAvailable() {
     const { activeTrees } = getState();
     document.querySelectorAll('.mastery').forEach(m => {
@@ -234,7 +336,7 @@
     document.querySelector('#divine-scrolls span').textContent = `${Math.min(div, 950)} / 950`;
   }
 
-  // === Encodage / Décodage ===
+  // === Encodage / Décodage compact ===
   function b64urlFromBytes(bytes) {
     let bin = '';
     bytes.forEach(b => bin += String.fromCharCode(b));
@@ -279,6 +381,8 @@
       updateLocksAndAvailable();
       updateScrolls();
     }
+
+    drawConnections();
 
     // Génération du lien de build
     const activeIds = Array.from(document.querySelectorAll('.mastery.active')).map(m => m.dataset.id);
