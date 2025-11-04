@@ -2,7 +2,7 @@
 window.fusions = {
   Maria: {
     name: "Sanguine Maria Fusion",
-    json: "Sanguine-Maria.json"
+    json: "2025/Sanguine-Maria.json"
   },
   Granyt: {
     name: "Granyt Doorkeep Fusion",

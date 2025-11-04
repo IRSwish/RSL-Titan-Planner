@@ -1,86 +1,91 @@
-<link rel="stylesheet" href="/style/style.css">
+<link rel="stylesheet" href="/style/menu.css">
 
-<nav class="menu-bar">
-  <ul class="menu-links">
-    <li class="dropdown"><a href="/">Home</a></li>
-    <li class="dropdown">
-      <div class="dropdown-toggle">Titan Events</div>
-      <ul class="dropdown-content">
+<!-- Bouton burger -->
+<button id="burger-btn" class="burger-btn" aria-label="Menu">
+  <i data-lucide="menu"></i>
+</button>
+
+<!-- Menu latéral gauche -->
+<nav id="sidebar" class="sidebar">
+  <div class="sidebar-content">
+    <ul class="menu-links">
+      <li class="dropdown"><a href="/">Home</a></li>
+      <li class="dropdown">
+        <div class="dropdown-toggle">Titan Events</div>
+        <ul class="dropdown-content">
+          <li class="dropdown-sub">
+            <div class="dropdown-sub-toggle">2025 </div>
+            <ul class="dropdown-sub-content">
+              <li><a href="/titan/#Ace-Reporter">Ace Reporter</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <div class="dropdown-toggle">Fusions</div>
+        <ul class="dropdown-content">
+          <!-- === 2025 === -->
+          <li class="dropdown-sub">
+            <div class="dropdown-sub-toggle">2025 </div>
+            <ul class="dropdown-sub-content">
+              <li><a href="/fusions/#Maria">Maria</a></li>
+              <li><a href="/fusions/#Granyt">Granyt</a></li>
+              <li><a href="/fusions/#Donatello">Donatello</a></li>
+              <li><a href="/fusions/#KroKhad">Kro'Khad</a></li>
+              <li><a href="/fusions/#Titus">Titus</a></li>
+              <li><a href="/fusions/#Tholin">Tholin</a></li>
+              <li><a href="/fusions/#Ishiyama">Ishiyama</a></li>
+              <li><a href="/fusions/#Lysanthir">Lysanthir</a></li>
+              <li><a href="/fusions/#Fabian">Fabian</a></li>
+              <li><a href="/fusions/#Esme">Esme</a></li>
+              <li><a href="/fusions/#MadHatter">Mad Hatter</a></li>
+            </ul>
+          </li>
+
+          <!-- === 2024 === -->
+          <li class="dropdown-sub">
+            <div class="dropdown-sub-toggle">2024 </div>
+            <ul class="dropdown-sub-content">
+              <li><a href="/fusions/#Noelle">Noelle</a></li>
+              <li><a href="/fusions/#Stokk">Stokk</a></li>
+              <li><a href="/fusions/#Gretel">Gretel</a></li>
+              <li><a href="/fusions/#Jeroboam">Jeroboam</a></li>
+              <li><a href="/fusions/#Thor">Thor</a></li>
+              <li><a href="/fusions/#Skorid">Skorid</a></li>
+              <li><a href="/fusions/#Shyek">Shy’ek</a></li>
+              <li><a href="/fusions/#Incarnate">Incarnate</a></li>
+              <li><a href="/fusions/#Wixwell">Wixwell</a></li>
+              <li><a href="/fusions/#Eostrid">Eostrid</a></li>
+              <li><a href="/fusions/#Armanz">Armanz</a></li>
+              <li><a href="/fusions/#Ankora">Ankora</a></li>
+              <li><a href="/fusions/#Zinogre">Zinogre</a></li>
+            </ul>
+          </li>
+
+          <!-- === 2023 === -->
+          <li class="dropdown-sub">
+            <div class="dropdown-sub-toggle">2023 </div>
+            <ul class="dropdown-sub-content">
+              <li><a href="/fusions/#Blizaar">Blizaar</a></li>
+              <li><a href="/fusions/#Ugir">Ugir</a></li>
+              <li><a href="/fusions/#Timit">Timit</a></li>
+              <li><a href="/fusions/#Bambus">Bambus</a></li>
+              <li><a href="/fusions/#Islin">Islin</a></li>
+              <li><a href="/fusions/#Emic">Emic</a></li>
+              <li><a href="/fusions/#Gnut">Gnut</a></li>
+              <li><a href="/fusions/#Loriaca">Loriaca</a></li>
+              <li><a href="/fusions/#Jetni">Jetni</a></li>
+              <li><a href="/fusions/#Razelvarg">Razelvarg</a></li>
+              <li><a href="/fusions/#Supreme-Elhain">Supreme Elhain</a></li>
+              <li><a href="/fusions/#Oella">Oella</a></li>
+              <li><a href="/fusions/#Opardin">Opardin</a></li>
+              <li><a href="/fusions/#Pythion">Pythion</a></li>
+            </ul>
+          </li>
         <li class="dropdown-sub">
           <div class="dropdown-sub-toggle">
-            2025 <span class="arrow">›</span>
-          </div>
-          <ul class="dropdown-sub-content">
-		        <li><a href="/titan/#Ace-Reporter">Ace Reporter</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li class="dropdown">
-      <div class="dropdown-toggle">Fusions</div>
-      <ul class="dropdown-content">
-        <li class="dropdown-sub">
-          <div class="dropdown-sub-toggle">
-            2025 <span class="arrow">›</span>
-          </div>
-          <ul class="dropdown-sub-content">
-		        <li><a href="/fusions/#Maria">Maria</a></li>
-            <li><a href="/fusions/#Granyt">Granyt</a></li>
-            <li><a href="/fusions/#Donatello">Donatello</a></li>
-            <li><a href="/fusions/#KroKhad">Kro'Khad</a></li>
-            <li><a href="/fusions/#Titus">Titus</a></li>
-            <li><a href="/fusions/#Tholin">Tholin</a></li>
-            <li><a href="/fusions/#Ishiyama">Ishiyama</a></li>
-            <li><a href="/fusions/#Lysanthir">Lysanthir</a></li>
-            <li><a href="/fusions/#Fabian">Fabian</a></li>
-            <li><a href="/fusions/#Esme">Esme</a></li>
-            <li><a href="/fusions/#MadHatter">Mad Hatter</a></li>
-          </ul>
-        </li>
-         <li class="dropdown-sub">
-          <div class="dropdown-sub-toggle">
-            2024 <span class="arrow">›</span>
-          </div>
-          <ul class="dropdown-sub-content">
-			<li><a href="/fusions/#Noelle">Noelle</a></li>
-			<li><a href="/fusions/#Stokk">Stokk</a></li>
-			<li><a href="/fusions/#Gretel">Gretel</a></li>
-			<li><a href="/fusions/#Jeroboam">Jeroboam</a></li>
-			<li><a href="/fusions/#Thor">Thor</a></li>
-			<li><a href="/fusions/#Skorid">Skorid</a></li>
-			<li><a href="/fusions/#Shyek">Shy’ek</a></li>
-			<li><a href="/fusions/#Incarnate">Incarnate</a></li>
-			<li><a href="/fusions/#Wixwell">Wixwell</a></li>
-			<li><a href="/fusions/#Eostrid">Eostrid</a></li>
-			<li><a href="/fusions/#Armanz">Armanz</a></li>
-			<li><a href="/fusions/#Ankora">Ankora</a></li>
-			<li><a href="/fusions/#Zinogre">Zinogre</a></li>
-          </ul>
-        </li>
-        <li class="dropdown-sub">
-          <div class="dropdown-sub-toggle">
-            2023 <span class="arrow">›</span>
-          </div>
-          <ul class="dropdown-sub-content">
-			<li><a href="/fusions/#Blizaar">Blizaar</a></li>
-			<li><a href="/fusions/#Ugir">Ugir</a></li>
-			<li><a href="/fusions/#Timit">Timit</a></li>
-			<li><a href="/fusions/#Bambus">Bambus</a></li>
-			<li><a href="/fusions/#Islin">Islin</a></li>
-			<li><a href="/fusions/#Emic">Emic</a></li>
-			<li><a href="/fusions/#Gnut">Gnut</a></li>
-			<li><a href="/fusions/#Loriaca">Loriaca</a></li>
-			<li><a href="/fusions/#Jetni">Jetni</a></li>
-			<li><a href="/fusions/#Razelvarg">Razelvarg</a></li>
-			<li><a href="/fusions/#Supreme-Elhain">Supreme Elhain</a></li>
-			<li><a href="/fusions/#Oella">Oella</a></li>
-			<li><a href="/fusions/#Opardin">Opardin</a></li>
-			<li><a href="/fusions/#Pythion">Pythion</a></li>
-          </ul>
-        </li>
-        <li class="dropdown-sub">
-          <div class="dropdown-sub-toggle">
-            2022 <span class="arrow">›</span>
+            2022 
           </div>
           <ul class="dropdown-sub-content">
 			<li><a href="/fusions/#Gnishak">Gnishak</a></li>
@@ -100,7 +105,7 @@
         </li>
         <li class="dropdown-sub">
           <div class="dropdown-sub-toggle">
-            2021 <span class="arrow">›</span>
+            2021 
           </div>
           <ul class="dropdown-sub-content">
 			<li><a href="/fusions/#Tatura">Tatura</a></li>
@@ -120,7 +125,7 @@
         </li>
         <li class="dropdown-sub">
           <div class="dropdown-sub-toggle">
-            2020 <span class="arrow">›</span>
+            2020 
           </div>
           <ul class="dropdown-sub-content">
 			<li><a href="/fusions/#Pyxniel">Pyxniel</a></li>
@@ -138,7 +143,7 @@
         </li>
         <li class="dropdown-sub">
           <div class="dropdown-sub-toggle">
-            2019 <span class="arrow">›</span>
+            2019 
           </div>
           <ul class="dropdown-sub-content">
 			<li><a href="/fusions/#Tormin">Tormin</a></li>
@@ -151,43 +156,82 @@
         </li>
       </ul>
     </li>
-    <li class="dropdown">
-      <div class="dropdown-toggle">Hero's Paths</div>
-      <ul class="dropdown-content">
-               <li class="dropdown-sub">
-          <div class="dropdown-sub-toggle">
-            2025 <span class="arrow">›</span>
-          </div>
-          <ul class="dropdown-sub-content">
-		        <li><a href="/heros-path/#halloween-path-2025">Halloween</a></li>
-            <li><a href="/heros-path/#doorkeeps-path">Doorkeep</a></li>
-            <li><a href="/heros-path/#orcs-path">Orc</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-	<li class="dropdown">
-      <div class="dropdown-toggle">Tools</div>
-      <ul class="dropdown-content">
-        <li><a href="/tools/champions-index/">Champions Index</a></li>
-        <li><a href="/tools/efficiency-lab/">Efficiency Lab</a></li>
-		    <li><a href="/tools/mercy-tracker/">Mercy Tracker</a></li>
-        <li><a href="/tools/minotaur-farming/">Minotaur Farming</a></li>
-        <li><a href="/tools/mastery-builder/">Mastery Builder</a></li>
-      </ul>
-    </li>
-    <li class="dropdown">
-      <div class="dropdown-toggle">Community</div>
-      <ul class="dropdown-content">
-        <li><a href="https://discord.gg/uejPcZj5cM">Discord</a></li>
-      </ul>
-    </li>
-	  <li class="dropdown">
-      <div class="dropdown-toggle">Changelogs</div>
-      <ul class="dropdown-content">
-        <li><a href="/changelogs/whatsnext/">What's next ?</a></li>
-		<li><a href="/changelogs/versions/">Versions</a></li>
-      </ul>
-    </li>
-  </ul>
+       <li class="dropdown">
+        <div class="dropdown-toggle">Hero's Paths</div>
+        <ul class="dropdown-content">
+          <li class="dropdown-sub">
+            <div class="dropdown-sub-toggle">2025 </div>
+            <ul class="dropdown-sub-content">
+              <li><a href="/heros-path/#halloween-path-2025">Halloween</a></li>
+              <li><a href="/heros-path/#doorkeeps-path">Doorkeep</a></li>
+              <li><a href="/heros-path/#orcs-path">Orc</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <div class="dropdown-toggle">Tools</div>
+        <ul class="dropdown-content">
+          <li><a href="/tools/champions-index/">Champions Index</a></li>
+          <li><a href="/tools/efficiency-lab/">Efficiency Lab</a></li>
+          <li><a href="/tools/mercy-tracker/">Mercy Tracker</a></li>
+          <li><a href="/tools/minotaur-farming/">Minotaur Farming</a></li>
+          <li><a href="/tools/mastery-builder/">Mastery Builder</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <div class="dropdown-toggle">Community</div>
+        <ul class="dropdown-content">
+          <li><a href="https://discord.gg/uejPcZj5cM">Discord</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown">
+        <div class="dropdown-toggle">Changelogs</div>
+        <ul class="dropdown-content">
+          <li><a href="/changelogs/whatsnext/">What's next ?</a></li>
+          <li><a href="/changelogs/versions/">Versions</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Important : re-rendre les icônes après l'injection du menu
+    lucide.createIcons();
+
+    const burgerBtn = document.getElementById("burger-btn");
+    const sidebar = document.getElementById("sidebar");
+    let open = false;
+
+    function toggleSidebar() {
+      open = !open;
+      sidebar.classList.toggle("open", open);
+      burgerBtn.innerHTML = open
+        ? '<i data-lucide="x"></i>'
+        : '<i data-lucide="menu"></i>';
+      lucide.createIcons(); // re-transforme l'icône en SVG
+    }
+
+    burgerBtn.addEventListener("click", toggleSidebar);
+
+    sidebar.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (open) toggleSidebar();
+      });
+    });
+
+    document.querySelectorAll(".dropdown-sub-toggle").forEach(t => {
+      t.addEventListener("click", e => {
+        e.stopPropagation();
+        const c = t.nextElementSibling;
+        c.classList.toggle("open");
+        t.classList.toggle("open");
+      });
+    });
+  });
+</script>

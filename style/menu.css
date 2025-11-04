@@ -1,0 +1,244 @@
+/* === Bouton Burger (en haut à gauche) === */
+.burger-btn {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  background: none;
+  border: none;
+  color: #fcf6ff;
+  font-size: 34px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10001;
+  padding: 6px;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.burger-btn:hover {
+  color: #d4af37; /* Doré au survol */
+  transform: scale(1.08);
+}
+
+/* Taille des icônes Lucide */
+.burger-btn svg {
+  width: 34px;
+  height: 34px;
+  stroke-width: 2;
+  vertical-align: middle;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -270px;
+  width: 250px;
+  height: 100%;
+  background: #0e0e0e;
+  border-right: 2px solid #d4af37;
+  box-shadow: 6px 0 18px rgba(0, 0, 0, 0.7);
+  transition: left 0.3s ease;
+  z-index: 10000; /* ✅ au-dessus de l’overlay */
+  overflow-y: auto;
+}
+
+.sidebar.open {
+  left: 0; /* ouverture fluide */
+}
+
+/* Contenu interne */
+.sidebar-content {
+  padding: 70px 16px 30px;
+}
+
+/* === Nettoyage global === */
+.menu-links,
+.dropdown-content,
+.dropdown-sub-content {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Liens et dropdowns principaux === */
+.menu-links li {
+  margin: 2px 0;
+}
+
+.menu-links a,
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fcf6ff;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* hover doré */
+.menu-links a:hover,
+.dropdown-toggle:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+}
+
+/* === Flèches uniquement sur dropdowns === */
+.dropdown-toggle::before,
+.dropdown-sub-toggle::before {
+  content: "▸";
+  font-size: 16px;
+  color: #d4af37;
+  opacity: 0.7;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* --- Alignement uniforme pour tous les éléments --- */
+.menu-links a,
+.dropdown-toggle,
+.dropdown-sub-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+/* Crée une "zone fantôme" de flèche sur les liens simples */
+.menu-links a::before {
+  content: "▸";
+  display: inline-block;
+  gap: 6px;
+  width: 12px; /* même largeur que la flèche réelle */
+  flex-shrink: 0;
+}
+
+
+/* Rotation flèche quand ouvert */
+.dropdown.open > .dropdown-toggle::before,
+.dropdown-sub-toggle.open::before {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
+/* === Supprime la flèche sur les liens simples === */
+.menu-links a::before {
+  content: none !important;
+}
+
+/* === Sous-listes === */
+.dropdown-content {
+  display: none;
+  margin-left: 10px;
+  border-left: 1px solid rgba(212, 175, 55, 0.2);
+  padding-left: 8px;
+  margin-top: 3px;
+}
+
+.dropdown.open > .dropdown-content {
+  display: block;
+}
+
+/* === Sous-dropdowns (ex: années) === */
+.dropdown-sub-toggle {
+  color: #d4af37;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-sub-toggle:hover {
+  background: rgba(212, 175, 55, 0.08);
+  color: #fcf6ff;
+}
+
+/* Sous-niveau des années */
+.dropdown-sub-content {
+  display: none;
+  margin-left: 12px;
+  padding-left: 6px;
+  border-left: 1px dashed rgba(212, 175, 55, 0.2);
+}
+
+.dropdown-sub-toggle.open + .dropdown-sub-content {
+  display: block;
+}
+
+/* Liens internes compacts */
+.dropdown-sub-content a {
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: block;
+}
+
+.dropdown-sub-content a:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+}
+
+
+/* === Overlay sombre / flou quand le menu est ouvert === */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 9998; /* 🔽 inférieur au menu (10000) */
+}
+
+/* Affiché quand le menu est ouvert */
+body.menu-opened::after {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Lien actif dans le menu */
+.active-link {
+  color: #d4af37 !important;
+  font-weight: 600;
+  background: rgba(212, 175, 55, 0.12);
+  border-radius: 4px;
+}
+
+/* === Scrollbar stylisée pour le menu latéral === */
+.sidebar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #0e0e0e;
+  border-left: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #d4af37 0%, #f52584 100%);
+  border-radius: 10px;
+  border: 2px solid #0e0e0e; /* garde un effet "rainuré" */
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #f52584 0%, #00c9ff 100%);
+  box-shadow: 0 0 12px rgba(0, 201, 255, 0.4);
+}
+
+/* Firefox */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #d4af37 #0e0e0e;
+}
