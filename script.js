@@ -69,17 +69,28 @@ fetch('/menu.html')
 
         if (parentList) {
           parentList
-            .querySelectorAll('.dropdown-sub-toggle.open')
-            .forEach(other => {
-              if (other !== subToggle) {
-                other.classList.remove('open');
-                const next = other.nextElementSibling;
-                if (next && next.classList.contains('dropdown-sub-content')) {
-                  next.classList.remove('open');
-                  next.style.display = 'none';
-                }
+            document.querySelectorAll(".dropdown-sub-toggle").forEach(t => {
+            t.addEventListener("click", e => {
+              e.stopPropagation();
+              const current = t.closest(".dropdown-sub");
+              const parentList = t.closest(".dropdown-content, .dropdown-sub-content");
+
+              // 🔄 Ferme toutes les autres années du même groupe
+              if (parentList) {
+                parentList.querySelectorAll(".dropdown-sub").forEach(sub => {
+                  if (sub !== current) {
+                    sub.querySelector(".dropdown-sub-toggle")?.classList.remove("open");
+                    sub.querySelector(".dropdown-sub-content")?.classList.remove("open");
+                  }
+                });
               }
+
+              // 🔽 Bascule celle cliquée
+              const c = t.nextElementSibling;
+              t.classList.toggle("open");
+              c.classList.toggle("open");
             });
+          });
         }
 
         content.classList.toggle('open');
