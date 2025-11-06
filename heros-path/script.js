@@ -27,6 +27,7 @@ statsBox.style.fontFamily = "Inter, sans-serif";
 statsBox.style.display = "flex";
 statsBox.style.flexDirection = "column";
 statsBox.style.gap = "8px";
+statsBox.style.zIndex = "9999";
 
 statsBox.innerHTML = `
   <label style="display:flex;flex-direction:column;gap:3px;">
