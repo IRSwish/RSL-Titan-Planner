@@ -35,11 +35,13 @@
 
   <select id="zone">
     <option value="">-- Zone --</option>
-    <option value="dungeons">Dungeons</option>
+    <option value="dungeons">Fire Knight / Ice Golem / Dragon</option>
+    <option value="spider">Spider</option>
+    <option value="eventdungeon">Event Dungeon</option>
     <option value="campaign">Campaign</option>
   </select>
 
-  <!-- Majuscules pour correspondre au JSON -->
+  <!-- Campagne -->
   <select id="campaign-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
     <option value="Normal">Normal</option>
@@ -49,6 +51,7 @@
   </select>
   <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
 
+  <!-- Donjons & Spider & Event Dungeon -->
   <select id="dungeon-difficulty" class="hidden">
     <option value="">-- Difficulty --</option>
     <option value="normal">Normal</option>
@@ -152,10 +155,8 @@ function fillPointsTable(eventType) {
 // --- Loot ---
 function getCampaignStageData(difficulty, stage) {
   if (!difficulty || !stage) return null;
-
   const campaignData = pointsData.loot.campaign?.[difficulty];
   if (!campaignData) return null;
-
   for (const key of Object.keys(campaignData)) {
     if (key.includes('-')) {
       const [start, end] = key.split('-').map(Number);
@@ -164,24 +165,37 @@ function getCampaignStageData(difficulty, stage) {
       return campaignData[key];
     }
   }
-
   return null;
 }
 
 function getLoot() {
   const zone = zoneSelect.value;
   if (!pointsData.loot) return null;
+
   if (zone === 'campaign') {
     const difficulty = campaignDifficultySelect.value;
     const stage = Number(campaignStageSelect.value);
     if (difficulty && stage) return getCampaignStageData(difficulty, stage);
     return null;
+
   } else if (zone === 'dungeons') {
     const difficulty = dungeonDifficultySelect.value;
     const stage = dungeonStageSelect.value;
     if (difficulty && stage) return pointsData.loot.dungeons?.[difficulty]?.[stage] || null;
     return null;
+
+  } else if (zone === 'spider') {
+    const difficulty = dungeonDifficultySelect.value;
+    const stage = dungeonStageSelect.value;
+    if (difficulty && stage) return pointsData.loot.spider?.[difficulty]?.[stage] || null;
+    return null;
+
+  } else if (zone === 'eventdungeon') {
+    const stage = dungeonStageSelect.value;
+    if (stage) return pointsData.loot.eventdungeon?.normal?.[stage] || null;
+    return null;
   }
+
   return null;
 }
 
@@ -193,7 +207,6 @@ function getEnergy() {
 function fillLootTable() {
   const loot = getLoot();
   if (!loot) return;
-
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
     const arr = loot[rarity] || [];
@@ -215,10 +228,17 @@ function fillLootTable() {
 // --- Dropdowns ---
 function updateDropdowns() {
   const zone = zoneSelect.value;
-  campaignDifficultySelect.classList.toggle('hidden', zone !== 'campaign');
-  campaignStageSelect.classList.toggle('hidden', zone !== 'campaign');
-  dungeonDifficultySelect.classList.toggle('hidden', zone !== 'dungeons');
-  dungeonStageSelect.classList.toggle('hidden', zone !== 'dungeons');
+
+  const isCampaign = zone === 'campaign';
+  const isDungeonOrSpider = ['dungeons','spider'].includes(zone);
+  const isEventDungeon = zone === 'eventdungeon';
+
+  campaignDifficultySelect.classList.toggle('hidden', !isCampaign);
+  campaignStageSelect.classList.toggle('hidden', !isCampaign);
+
+  // On affiche le sélecteur de difficulté uniquement pour Dungeons et Spider
+  dungeonDifficultySelect.classList.toggle('hidden', !isDungeonOrSpider);
+  dungeonStageSelect.classList.toggle('hidden', !(isDungeonOrSpider || isEventDungeon));
 }
 
 // --- Calculs ---
@@ -242,18 +262,16 @@ function updateCalculation() {
   const pointValues = pointsData.points[eventType];
   const loot = getLoot();
 
-  // --- calcul des points moyens ---
   rarities.forEach(rarity => {
     const pointsForRarity = pointValues[rarity];
     const dropRates = loot[rarity] || [0,0,0,0,0,0];
     for (let i=0; i<6; i++) totalAvgPoints += (dropRates[i]||0)*(pointsForRarity[i]||0);
   });
 
-  // --- réduction selon la zone ---
   let uselessLoot = 0;
   if (zone === 'campaign') {
     uselessLoot = (loot["Mystery Shard"] || 0) + (loot["Champions"] || 0);
-  } else if (zone === 'dungeons') {
+  } else {
     uselessLoot = (loot["Mystery Shard"] || 0) + (loot["Ancient Shard"] || 0) + (loot["Brews"] || 0);
   }
 
@@ -309,22 +327,34 @@ function updateTable() {
 });
 campaignStageSelect.addEventListener('change', updateTable);
 
-dungeonDifficultySelect.addEventListener('change', () => {
+function updateDungeonStages() {
+  const zone = zoneSelect.value;
   const diff = dungeonDifficultySelect.value;
-  const maxStages = diff === 'normal' ? 25 : 10;
+  let maxStages = 0;
+
+  if (zone === 'dungeons' || zone === 'spider')
+    maxStages = diff === 'normal' ? 25 : 10;
+  else if (zone === 'eventdungeon')
+    maxStages = 30;
+
   dungeonStageSelect.innerHTML = '<option value="">-- Stage --</option>';
-  for(let i=1;i<=maxStages;i++){
+  for (let i = 1; i <= maxStages; i++) {
     const opt = document.createElement('option');
-    opt.value=i;
-    opt.textContent=`Stage ${i}`;
+    opt.value = i;
+    opt.textContent = `Stage ${i}`;
     dungeonStageSelect.appendChild(opt);
   }
+  updateTable();
+}
+
+dungeonDifficultySelect.addEventListener('change', updateDungeonStages);
+zoneSelect.addEventListener('change', () => {
+  updateDropdowns();
+  updateDungeonStages(); // <== ajoute ceci pour Event Dungeon
   updateTable();
 });
 
 campaignDifficultySelect.addEventListener('change', () => {
-  const diff = campaignDifficultySelect.value;
-  if(!diff) return;
   const maxStages = 7;
   campaignStageSelect.innerHTML = '<option value="">-- Stage --</option>';
   for(let i=1;i<=maxStages;i++){
