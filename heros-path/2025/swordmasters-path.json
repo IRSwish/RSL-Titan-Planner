@@ -390,7 +390,7 @@
     "id": "t9-3",
     "name": "5* Perfect Soul",
     "image": "leonardo-5",
-    "cost": 0,
+    "cost": 50000,
     "requires": [
       "t8-5"
     ]
