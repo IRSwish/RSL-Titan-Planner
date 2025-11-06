@@ -57,17 +57,22 @@ const keysSpan = document.getElementById("keysCount");
 const resetBtn = document.getElementById("reset");
 
 /* === LOCAL STORAGE === */
+function getStorageKey() {
+  const pathId = window.location.hash.replace("#", "").trim() || "default";
+  return `rewardState_${pathId}`;
+}
+
 function saveState() {
   const state = {
     unlocked: [...unlocked],
     planned: [...planned],
     pointsAvailable: Number(pointsAvailableInput.value || 0),
   };
-  localStorage.setItem("rewardState", JSON.stringify(state));
+  localStorage.setItem(getStorageKey(), JSON.stringify(state));
 }
 
 function loadState() {
-  const raw = localStorage.getItem("rewardState");
+  const raw = localStorage.getItem(getStorageKey());
   if (!raw) return;
   try {
     const s = JSON.parse(raw);
@@ -302,6 +307,23 @@ function handleClick(reward, box) {
     const requires = reward.requires || [];
     const canActivate = requires.length === 0 || requires.some(req => unlocked.has(req));
     if (!canActivate) {
+      const requires = reward.requires || [];
+      const parentPlanned = requires.some(req => planned.has(req));
+      if (parentPlanned) {
+        // 🔁 Si le parent est aussi planned, on repasse l’enfant en locked
+        planned.delete(reward.id);
+        const boxEl = document.querySelector(`.reward-box[data-id="${reward.id}"]`);
+        if (boxEl) {
+          boxEl.className = "reward-box locked";
+          boxEl.dataset.state = "locked";
+        }
+        cascadeDeactivate(reward.id); // coupe les enfants
+        updateAvailability();
+        drawConnections();
+        updateStats();
+        return;
+      }
+
       flashRed(box);
       return;
     }
