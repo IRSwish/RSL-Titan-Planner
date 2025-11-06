@@ -137,8 +137,8 @@
   },
   {
     "id": "t5-3",
-    "name": "Precision Glyph",
-    "image": "precision-glyph-5",
+    "name": "5* Precision Glyph",
+    "image": "glyph-precision",
     "cost": 4000,
     "requires": [
       "t4-3",
@@ -157,8 +157,8 @@
   },
   {
     "id": "t6-1",
-    "name": "Speed Glyph",
-    "image": "speed-glyph-5",
+    "name": "5* Speed Glyph",
+    "image": "glyph-speed",
     "cost": 6000,
     "requires": [
       "t5-1",

@@ -16,8 +16,8 @@
   { "id": "t2-6", "name": "XP Brew", "image": "xp-brew-chest", "cost": 1000, "requires": ["t1-5"] },
 
   { "id": "t3-1", "name": "Radiant Sunlily", "image": "radiant-sunlily-epic", "cost": 3500, "requires": ["t2-1", "t2-2"] },
-  { "id": "t3-2", "name": "Precision Glyph", "image": "precision-glyph-5", "cost": 2500, "requires": ["t2-3"] },
-  { "id": "t3-3", "name": "Resistance Glyph", "image": "resistance-glyph-5", "cost": 2500, "requires": ["t2-4"] },
+  { "id": "t3-2", "name": "5* Precision Glyph", "image": "glyph-precision", "cost": 2500, "requires": ["t2-3"] },
+  { "id": "t3-3", "name": "5* Resistance Glyph", "image": "glyph-resistance", "cost": 2500, "requires": ["t2-4"] },
   { "id": "t3-4", "name": "Radiant Sunlily", "image": "radiant-sunlily-epic", "cost": 3500, "requires": ["t2-5", "t2-6"] },
 
   { "id": "t4-1", "name": "Rank 3 Basalt", "image": "rank-3-basalt", "cost": 3500, "requires": ["t3-1"] },
