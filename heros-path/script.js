@@ -12,43 +12,29 @@ const container = document.getElementById("rewardContainer");
 const svg = document.getElementById("connections");
 const titleEl = document.querySelector("h1");
 
-/* === BOX FIXE À GAUCHE === */
-const statsBox = document.createElement("div");
-statsBox.style.position = "fixed";
-statsBox.style.left = "15px";
-statsBox.style.top = "50%";
-statsBox.style.transform = "translateY(-50%)";
-statsBox.style.background = "#1a1a1a";
-statsBox.style.border = "2px solid var(--event-border)";
-statsBox.style.padding = "15px";
-statsBox.style.borderRadius = "10px";
-statsBox.style.color = "#fcf6ff";
-statsBox.style.fontFamily = "Inter, sans-serif";
-statsBox.style.display = "flex";
-statsBox.style.flexDirection = "column";
-statsBox.style.gap = "8px";
-statsBox.style.zIndex = "9999";
-
-statsBox.innerHTML = `
+/* === BANDEAU INFO LATÉRAL === */
+const infoSidebar = document.createElement("div");
+infoSidebar.id = "info-sidebar";
+infoSidebar.innerHTML = `
+<br /><br />
   <label style="display:flex;flex-direction:column;gap:3px;">
     <span>Points available:</span>
-    <input id="pointsAvailable" type="number" value="0"
-      style="width:100px; padding:10px;background:#0e0e0e;color:#fcf6ff;border:none;border-radius:6px;">
+    <input id="pointsAvailable" type="number" value="0">
   </label>
   <span id="pointsSpent">Spent: 0</span>
   <span id="pointsNeeded">Needed: 0</span>
   <span id="keysCount">Keys: 0</span>
-  <button id="reset" style="
-    margin-top:10px;
-    background:var(--event-border);
-    border:none;
-    font-weight:bold;
-    padding:5px 10px;
-    border-radius:6px;
-    cursor:pointer;
-  ">↺</button>
+  <button id="reset" class="reset-btn" aria-label="Reset">
+    <i data-lucide="rotate-cw"></i>
+  </button>
 `;
-document.body.appendChild(statsBox);
+document.body.appendChild(infoSidebar);
+
+// === Bouton Info (toggle du panneau) ===
+const infoBtn = document.getElementById("info-btn");
+infoBtn.addEventListener("click", () => {
+  infoSidebar.classList.toggle("closed");
+});
 
 /* === RÉFÉRENCES === */
 const pointsAvailableInput = document.getElementById("pointsAvailable");
@@ -239,11 +225,16 @@ async function init() {
   sortedTiers.forEach(tier => {
     const row = document.createElement("div");
     row.className = "reward-row";
-    tiers[tier].forEach(r => {
+    tiers[tier].forEach((r, __idx) => {
       const box = document.createElement("div");
       box.className = "reward-box locked";
       box.dataset.id = r.id;
       box.dataset.state = "locked";
+      if (r.hasOwnProperty("x")) {
+        box.setAttribute("data-x", String(r.x));
+      } else {
+        box.setAttribute("data-x", String(__idx + 1));
+      }
 
       const img = document.createElement("img");
       img.src = ICON_PATH + r.image + ".webp";
@@ -273,7 +264,13 @@ async function init() {
   drawConnections();
   updateStats();
 
-  window.addEventListener("resize", () => requestAnimationFrame(drawConnections));
+  window.addEventListener("resize", () => {
+  clearTimeout(window._resizeTimeout);
+  window._resizeTimeout = setTimeout(() => {
+    layoutByX();
+    drawConnections();
+  }, 150);
+});
   window.addEventListener("scroll", () => requestAnimationFrame(drawConnections));
 }
 
@@ -477,8 +474,82 @@ function playActivationEffect(box) {
   setTimeout(() => fx.remove(), 700);
 }
 
+/* === LAYOUT X (placement figé par colonne, supporte x décimal, 0-based) === */
+function layoutByX() {
+  const rows = Array.from(document.querySelectorAll(".reward-row"));
+  if (!rows.length) return;
+
+  // Vérifie si le JSON contient au moins un "x"
+  const hasX = rewards.some(r => typeof r.x === "number" && !isNaN(r.x));
+
+  // S'il n'y a aucun x -> on laisse le flex d'origine
+  if (!hasX) {
+    rows.forEach(row => {
+      row.style.display = "flex";
+      row.style.flexWrap = "wrap";
+      row.style.justifyContent = "center";
+      row.style.gap = "15px";
+      row.style.position = "";
+      row.querySelectorAll(".reward-box").forEach(box => {
+        box.style.position = "";
+        box.style.left = "";
+        box.style.transform = "";
+      });
+    });
+    return; // on sort, pas de layout figé
+  }
+
+  // --- sinon, on applique le placement absolu comme avant ---
+  const allBoxes = Array.from(document.querySelectorAll(".reward-box"));
+  let maxCols = 0;
+  allBoxes.forEach(b => {
+    const xAttr = b.getAttribute("data-x");
+    const x = parseFloat(xAttr);
+    if (isFinite(x)) {
+      const neededCols = Math.floor(x) + 1;
+      if (neededCols > maxCols) maxCols = neededCols;
+    }
+  });
+  if (maxCols <= 0) return;
+
+  const refBox = document.querySelector(".reward-box");
+  if (!refBox) return;
+  const refW = refBox.offsetWidth || 120;
+  const refH = refBox.offsetHeight || 140;
+  const gap = 15;
+  const cellW = refW + gap;
+
+  rows.forEach(row => {
+    row.style.display = "block";
+    row.style.position = "relative";
+    row.style.height = refH + "px";
+
+    const rowWidth = row.clientWidth || row.getBoundingClientRect().width;
+    const totalGridW = maxCols * cellW - gap;
+    const offsetLeft = Math.max(0, (rowWidth - totalGridW) / 2);
+
+    const boxes = Array.from(row.querySelectorAll(".reward-box"));
+    boxes.forEach((box, idx) => {
+      const xAttr = box.getAttribute("data-x");
+      let x = parseFloat(xAttr);
+      if (!isFinite(x)) x = idx;
+      const centerX = offsetLeft + (x + 0.5) * cellW;
+      box.style.position = "absolute";
+      box.style.left = centerX + "px";
+      box.style.top = "0px";
+      box.style.transform = "translateX(-50%)";
+    });
+  });
+
+  requestAnimationFrame(drawConnections);
+}
+
 /* === BOOT === */
 init();
+// Force layoutByX après init()
+window.addEventListener("load", () => {
+  setTimeout(() => layoutByX(), 500);
+});
 window.addEventListener("hashchange", () => {
   container.innerHTML = "";
   svg.innerHTML = "";
@@ -488,4 +559,21 @@ window.addEventListener("hashchange", () => {
   activeLocks = 0;
   points = 0;
   init();
+});
+
+// 🧠 Assure un layout correct une fois tout le contenu chargé
+window.addEventListener("load", () => {
+  // un petit délai pour que le DOM et les images soient rendus
+  setTimeout(() => {
+    layoutByX();
+    drawConnections(); // redessine les lignes une fois bien placées
+  }, 300);
+});
+
+// 🧭 et si le contenu change après (ex. hashchange)
+window.addEventListener("hashchange", () => {
+  setTimeout(() => {
+    layoutByX();
+    drawConnections();
+  }, 300);
 });
