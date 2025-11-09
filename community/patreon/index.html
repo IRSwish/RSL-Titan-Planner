@@ -46,12 +46,12 @@
     }
 
     .tier {
-      flex: 1 1 300px; /* largeur min 300px, s’adapte mais ne dépasse pas la grille */
+      flex: 1 1 300px;
       max-width: 320px;
       background: var(--bg2);
       border: 2px solid var(--gold);
       border-radius: 12px;
-      padding: 25px 20px 35px;
+      padding: 15px 20px 35px; /* réduit l’espace en haut */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -64,16 +64,18 @@
     }
 
     .tier h2 {
-      font-size:24px;
-      color:var(--text);
-      margin-bottom:10px;
+      font-size: 24px;
+      color: var(--text);
+      margin: 0 0 10px;
+      text-align: center;
     }
 
     .tier .price {
-      font-size:20px;
-      color:var(--gold);
-      margin-bottom:25px;
-      min-height:30px;
+      font-size: 20px;
+      color: var(--gold);
+      margin-bottom: 25px;
+      min-height: 30px;
+      text-align: center; /* prix centré */
     }
 
     .tier ul {
@@ -82,6 +84,10 @@
       margin:0 0 25px;
       line-height:1.6em;
       flex-grow:1;
+    }
+
+    .tier ul li {
+      margin-bottom: 25px; /* espace entre chaque ligne */
     }
 
     .tier ul li::before {
@@ -150,7 +156,7 @@
       <h2>Epic</h2>
       <p class="price">5 € / month (+ VAT)</p>
       <ul>
-        <li>Everything from the <b>Rare</b> tier</li>
+        <li><b>Everything from previous tier(s)</b></li>
         <li>⏰ Early access to new tools and features (1–2 days before public release)</li>
         <li>💫 Access to the Patreon-only Discord zone</li>
         <li>💡 Priority suggestions for upcoming tools and improvements</li>
@@ -165,7 +171,7 @@
       <h2>Legendary</h2>
       <p class="price">10 € / month (+ VAT)</p>
       <ul>
-        <li>Everything from the <b>Epic</b> tier</li>
+        <li><b>Everything from previous tier(s)</b></li>
         <li>✨ Special mention on the site (“Legendary Supporter” section with glowing gold effect ✨)</li>
         <li>🔒 Access to a private Discord channel to discuss upcoming features directly with the dev</li>
         <li>🎁 Extended early access (7 days before public release)</li>
@@ -179,7 +185,7 @@
       <h2>Mythical</h2>
       <p class="price">20 € / month (+ VAT)</p>
       <ul>
-        <li>Everything from the <b>Legendary</b> tier</li>
+        <li><b>Everything from previous tier(s)</b></li>
         <li>🤝 Direct collaboration on new tools or features</li>
         <li>🎨 Personalized partner spot (logo + link) on the website</li>
         <li>💬 Discord access 🕹️</li>
