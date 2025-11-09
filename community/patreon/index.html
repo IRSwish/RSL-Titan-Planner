@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <meta charset="UTF-8">
+  <script src="/config/site-config.js"></script>
+  <script>document.title =  "Patreon | " + window.siteConfig.title;</script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".site-title").forEach(el => {
+        el.textContent = window.siteConfig.title;
+      });
+    });
+  </script>
+  <link rel="stylesheet" href="/style/style.css">
+  <link rel="stylesheet" href="/style/menu.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold:#d4af37;
+      --blue:#00c9ff;
+      --text:#fcf6ff;
+      --bg:#0e0e0e;
+      --bg2:#1a1a1a;
+      --gray:#444;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;color:var(--text);font-family:"Inter",sans-serif;}
+
+    body {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    .tiers {
+      padding-top:4%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center; /* centre tous les éléments horizontalement */
+      gap: 30px;
+      max-width: 1400px;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .tier {
+      flex: 1 1 300px; /* largeur min 300px, s’adapte mais ne dépasse pas la grille */
+      max-width: 320px;
+      background: var(--bg2);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 25px 20px 35px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: none;
+      transition: transform .2s, box-shadow .3s;
+    }
+
+    .tier:hover {
+      box-shadow: 0 0 15px var(--gold);
+    }
+
+    .tier h2 {
+      font-size:24px;
+      color:var(--text);
+      margin-bottom:10px;
+    }
+
+    .tier .price {
+      font-size:20px;
+      color:var(--gold);
+      margin-bottom:25px;
+      min-height:30px;
+    }
+
+    .tier ul {
+      list-style:none;
+      padding:0;
+      margin:0 0 25px;
+      line-height:1.6em;
+      flex-grow:1;
+    }
+
+    .tier ul li::before {
+      content:"• ";
+      color:var(--gold);
+    }
+
+    /* === Buttons === */
+    .join {
+      background: var(--bg);
+      color: var(--gold);
+      text-align: center;
+      font-weight: 600;
+      border: 2px solid var(--gold);
+      border-radius: 6px;
+      padding: 10px 0;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .join:hover {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .gift {
+      margin-top:50px;
+      text-align:center;
+    }
+
+    .gift a {
+      color:var(--blue);
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    .gift a:hover {
+      color:var(--gold);
+    }
+  </style>
+</head>
+<body>
+    <div id="menu-container"></div>
+
+  <div class="header-wrapper">
+    <header id="page-title">SUPPORT RSL-X ON PATREON</header>
+  </div> 
+
+  <div class="tiers">
+    <!-- Rare -->
+    <div class="tier">
+      <h2>Rare</h2>
+      <p class="price">3 € / month (+ VAT)</p>
+      <ul>
+        <li>💖 Help keep <b>RSL-X</b> online and growing</li>
+        <li>🏷️ “Rare Supporter” Discord role</li>
+        <li>📜 Your name listed on the <b>Supporters</b> page of the site</li>
+        <li>💌 Access to Patreon updates and behind-the-scenes posts</li>
+        <li>💬 Discord access 🕹️</li>
+      </ul>
+      <a href="https://www.patreon.com/checkout/IRSwish?rid=27241218&vanity=15084718" class="join" target="_blank">Join</a>
+    </div>
+
+    <!-- Epic -->
+    <div class="tier">
+      <h2>Epic</h2>
+      <p class="price">5 € / month (+ VAT)</p>
+      <ul>
+        <li>Everything from the <b>Rare</b> tier</li>
+        <li>⏰ Early access to new tools and features (1–2 days before public release)</li>
+        <li>💫 Access to the Patreon-only Discord zone</li>
+        <li>💡 Priority suggestions for upcoming tools and improvements</li>
+        <li>🏷️ “Epic Supporter” Discord role</li>
+        <li>💬 Discord access 🕹️</li>
+      </ul>
+      <a href="https://www.patreon.com/checkout/IRSwish?rid=27241224&vanity=15084718" class="join" target="_blank">Join</a>
+    </div>
+
+    <!-- Legendary -->
+    <div class="tier">
+      <h2>Legendary</h2>
+      <p class="price">10 € / month (+ VAT)</p>
+      <ul>
+        <li>Everything from the <b>Epic</b> tier</li>
+        <li>✨ Special mention on the site (“Legendary Supporter” section with glowing gold effect ✨)</li>
+        <li>🔒 Access to a private Discord channel to discuss upcoming features directly with the dev</li>
+        <li>🎁 Extended early access (7 days before public release)</li>
+        <li>💬 Discord access 🕹️</li>
+      </ul>
+      <a href="https://www.patreon.com/checkout/IRSwish?rid=27241228&vanity=15084718" class="join" target="_blank">Join</a>
+    </div>
+
+    <!-- Mythical -->
+    <div class="tier">
+      <h2>Mythical</h2>
+      <p class="price">20 € / month (+ VAT)</p>
+      <ul>
+        <li>Everything from the <b>Legendary</b> tier</li>
+        <li>🤝 Direct collaboration on new tools or features</li>
+        <li>🎨 Personalized partner spot (logo + link) on the website</li>
+        <li>💬 Discord access 🕹️</li>
+      </ul>
+      <a href="https://www.patreon.com/checkout/IRSwish?rid=27241234&vanity=15084718" class="join" target="_blank">Join</a>
+    </div>
+  </div>
+
+  <div class="gift">
+    🎁 Want to offer a subscription?<br>
+    <a href="https://www.patreon.com/IRSwish/gift" target="_blank">Offer a Patreon Gift</a>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

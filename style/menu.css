@@ -250,15 +250,16 @@ body.menu-opened::after {
   .sidebar {
     position: fixed;
     top: 0;
-    left: -100vw;
-    width: 100vw;
-    height: 100vh;
+    left: -270px;
+    width: 250px;
+    height: 100%;
     background: #0e0e0e;
-    border: none;
-    box-shadow: none;
+    border-right: 2px solid #d4af37;
+    box-shadow: 6px 0 18px rgba(0, 0, 0, 0.7);
     transition: left 0.3s ease;
     z-index: 10000;
     overflow-y: auto;
+    isolation: isolate; /* ✅ empêche le flou du body::after d’affecter le menu */
   }
 
   .sidebar.open {
