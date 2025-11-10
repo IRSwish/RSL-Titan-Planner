@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://unpkg.com/lucide@latest" defer></script>
   <meta charset="UTF-8">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
   <script src="/config/site-config.js"></script>
-  <script>document.title =  "Mercy Tracker | " + window.siteConfig.title;</script>
+  <script>document.title = "Mercy Tracker | " + window.siteConfig.title;</script>
   <link rel="stylesheet" href="../../style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -29,12 +29,7 @@
       padding: 20px;
       box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
       width: 360px;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .shard-card:hover {
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-      transform: none;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
     .shard-img {
@@ -96,7 +91,6 @@
       color: var(--text-color);
     }
 
-    /* input du x / max */
     .progress-info {
       margin-top: 6px;
       text-align: center;
@@ -196,17 +190,101 @@
       font-family: 'Inter', sans-serif;
     }
 
-    @media (max-width: 1000px) {
-      .pity-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* === Boost styles === */
+    .boosted-box {
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #fcf6ff;
+      text-align: center;
+      text-shadow: none;
     }
 
-    @media (max-width: 700px) {
-      .pity-container {
-        grid-template-columns: 1fr;
-      }
+    .boosted-ancient {
+      border-color: #00c9ff !important;
+      box-shadow: 0 0 25px #00c9ff;
     }
+    .boosted-ancient .boosted-box {
+      background: rgba(0, 201, 255, 0.2);
+      border: 1px solid #00c9ff;
+    }
+
+    .boosted-void {
+      border-color: #b000ff !important;
+      box-shadow: 0 0 25px #b000ff;
+    }
+    .boosted-void .boosted-box {
+      background: rgba(176, 0, 255, 0.2);
+      border: 1px solid #b000ff;
+    }
+
+    .boosted-primal {
+      border-color: #ff0040 !important;
+      box-shadow: 0 0 25px #ff0040;
+    }
+    .boosted-primal .boosted-box {
+      background: rgba(255, 0, 64, 0.2);
+      border: 1px solid #ff0040;
+    }
+
+    .boosted-sacred {
+      border-color: #ffae00 !important;
+      box-shadow: 0 0 25px #ffae00;
+    }
+    .boosted-sacred .boosted-box {
+      background: rgba(255, 174, 0, 0.2);
+      border: 1px solid #ffae00;
+    }
+
+    @media (max-width: 1000px) {
+      .pity-container { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .pity-container { grid-template-columns: 1fr; }
+    }
+
+    @keyframes pulseGlowBlue {
+  0% { box-shadow: 0 0 10px #00c9ff; }
+  100% { box-shadow: 0 0 25px #00c9ff; }
+}
+
+@keyframes pulseGlowViolet {
+  0% { box-shadow: 0 0 10px #b000ff; }
+  100% { box-shadow: 0 0 25px #b000ff; }
+}
+
+@keyframes pulseGlowRed {
+  0% { box-shadow: 0 0 10px #ff0040; }
+  100% { box-shadow: 0 0 25px #ff0040; }
+}
+
+@keyframes pulseGlowGold {
+  0% { box-shadow: 0 0 10px #ffae00; }
+  100% { box-shadow: 0 0 25px #ffae00; }
+}
+
+/* Ajout animation par type */
+.boosted-ancient {
+  border-color: #00c9ff !important;
+  animation: pulseGlowBlue 2s infinite alternate;
+}
+
+.boosted-void {
+  border-color: #b000ff !important;
+  animation: pulseGlowViolet 2s infinite alternate;
+}
+
+.boosted-primal {
+  border-color: #ff0040 !important;
+  animation: pulseGlowRed 2s infinite alternate;
+}
+
+.boosted-sacred {
+  border-color: #ffae00 !important;
+  animation: pulseGlowGold 2s infinite alternate;
+}
   </style>
 </head>
 <body>
@@ -219,9 +297,7 @@
     </p>
   </div>
 
-  <div class="pity-container">
-    <!-- Généré dynamiquement via JS -->
-  </div>
+  <div class="pity-container"></div>
 
   <script src="../../script.js"></script>
   <script>
@@ -234,185 +310,153 @@
       { type: "Remnant", max: 121, base: 2.5, start: 24, inc: 1 }
     ];
 
-    const container = document.querySelector(".pity-container");
+    let boostedRates = [];
 
-       shards.forEach(shard => {
-      const chanceLabel = (shard.type === "Remnant" || shard.type === "Primal") 
-        ? "Mythical chance" 
-        : "Legendary chance";
-    
-      container.innerHTML += `
-      <div class="shard-card" data-type="${shard.type}" data-max="${shard.max}" data-base="${shard.base}" data-start="${shard.start}" data-inc="${shard.inc}">
-        <img class="shard-img" src="/style/img/Misc/${shard.type}.webp" alt="${shard.type} Shard">
-        <div class="right-side">
-          <div class="circle-container">
-            <svg class="progress-ring" width="100" height="100">
-              <circle class="background" r="45" cx="50" cy="50"></circle>
-              <circle class="progress" r="45" cx="50" cy="50"></circle>
-            </svg>
-            <input type="number" class="circle-input" value="0" min="0">
-          </div>
-          <div class="buttons">
-            <button class="btn minus">−</button>
-            <button class="btn plus">+</button>
-            <button class="reset-btn">Reset</button>
-          </div>
-          <div class="progress-info">
-            <input type="number" class="count" value="0" min="0"> / <span class="max">${shard.max}</span>
-          </div>
-          <div class="chance">${chanceLabel}: <span class="percent">${shard.base}%</span></div>
-        </div>
-      </div>`;
-    });
-
-    document.querySelectorAll('.shard-card').forEach(card => {
-      const type = card.dataset.type;
-      const max = parseInt(card.dataset.max);
-      const base = parseFloat(card.dataset.base);
-      const start = parseInt(card.dataset.start);
-      const inc = parseFloat(card.dataset.inc);
-      const inputCircle = card.querySelector('.circle-input');
-      const inputCount = card.querySelector('.count');
-      const plus = card.querySelector('.plus');
-      const minus = card.querySelector('.minus');
-      const reset = card.querySelector('.reset-btn');
-      const percent = card.querySelector('.percent');
-      const circle = card.querySelector('.progress');
-      const radius = 45;
-      const circumference = 2 * Math.PI * radius;
-      circle.style.strokeDasharray = circumference;
-
-      let value = parseInt(localStorage.getItem("pity_" + type)) || 0;
-
-      function calcChance(v) {
-        if (v < start) return base;
-        const extra = (v - start + 1) * inc;
-        return Math.min(base + extra, 100);
+    async function loadBoostedRates() {
+      try {
+        const response = await fetch("boosted_rates.json");
+        const data = await response.json();
+        boostedRates = data.boostedRates.map(b => ({
+          ...b,
+          start: new Date(b.start),
+          end: new Date(b.end)
+        }));
+      } catch (err) {
+        console.error("Erreur de chargement du fichier boosted_rates.json :", err);
       }
+    }
 
-      function updateButtons(v) {
-        minus.disabled = v <= 0;
-        plus.disabled = v >= max;
-      }
+    function getBoostedRate(type) {
+      const now = new Date();
+      return boostedRates.find(b => b.type === type && now >= b.start && now <= b.end) || null;
+    }
 
-      function setProgress(v) {
-        v = Math.max(0, Math.min(max, v));
-        const offset = circumference - (v / max) * circumference;
-        circle.style.strokeDashoffset = offset;
-        inputCircle.value = v;
-        inputCount.value = v;
-        percent.textContent = calcChance(v).toFixed(2) + "%";
-        localStorage.setItem("pity_" + type, v);
-        updateButtons(v);
-      }
+    (async () => {
+      await loadBoostedRates();
+      const container = document.querySelector(".pity-container");
 
-      function holdButton(btn, action) {
-        let interval, timeout;
-        const startHold = () => {
-          // première action immédiate
-          action();
-          // après 400 ms, on commence la répétition
-          timeout = setTimeout(() => {
-            interval = setInterval(action, 50); // vitesse
-          }, 400);
-        };
-        const stopHold = () => {
-          clearTimeout(timeout);
-          clearInterval(interval);
-        };
+      shards.forEach(shard => {
+        const chanceLabel = (shard.type === "Remnant" || shard.type === "Primal")
+          ? "Mythical chance"
+          : "Legendary chance";
 
-        btn.addEventListener('mousedown', startHold);
-        btn.addEventListener('mouseup', stopHold);
-        btn.addEventListener('mouseleave', stopHold);
-
-        btn.addEventListener('touchstart', e => {
-          e.preventDefault();
-          startHold();
-        }, { passive: false });
-        btn.addEventListener('touchend', stopHold);
-        btn.addEventListener('touchcancel', stopHold);
-      }
-
-      // ✅ Utilisation
-      holdButton(plus, () => { if (value < max) setProgress(++value); });
-      holdButton(minus, () => { if (value > 0) setProgress(--value); });
-
-      reset.onclick = () => setProgress(value = 0);
-      inputCircle.oninput = () => setProgress(value = parseInt(inputCircle.value) || 0);
-      inputCount.oninput = () => setProgress(value = parseInt(inputCount.value) || 0);
-
-      setProgress(value);
-      
-      // --- Slider circulaire : interaction uniquement sur le trait ---
-      const circleContainer = card.querySelector('.circle-container');
-      const centerInput = card.querySelector('.circle-input');
-      let isDragging = false;
-
-      // paramètres : doivent correspondre au SVG
-      const RADIUS = 45;        // <circle r="45">
-      const STROKE_WIDTH = 8;   // .progress-ring circle { stroke-width: 8; }
-      const INNER = RADIUS - STROKE_WIDTH * 0.75;
-      const OUTER = RADIUS + STROKE_WIDTH * 0.75;
-
-      function isOnStroke(e) {
-        const rect = circleContainer.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = e.clientX - cx;
-        const dy = e.clientY - cy;
-        const dist = Math.hypot(dx, dy);
-        return dist >= INNER && dist <= OUTER;
-      }
-
-      function updateFromPointer(e) {
-        const rect = circleContainer.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = e.clientX - cx;
-        const dy = e.clientY - cy;
-        let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-        if (angle < 0) angle += 360;
-        const percent = Math.min(1, Math.max(0, angle / 360));
-        const newValue = Math.round(percent * max);
-        setProgress(value = newValue);
-      }
-
-      // --- Souris ---
-      circleContainer.addEventListener('mousedown', e => {
-        if (e.target === centerInput) return; // ignore le clic sur l'input central
-        if (!isOnStroke(e)) return;           // doit être sur le trait
-        e.preventDefault();
-        isDragging = true;
-        updateFromPointer(e);
+        container.innerHTML += `
+          <div class="shard-card" data-type="${shard.type}" data-max="${shard.max}" data-base="${shard.base}" data-start="${shard.start}" data-inc="${shard.inc}">
+            <img class="shard-img" src="/style/img/Misc/${shard.type}.webp" alt="${shard.type} Shard">
+            <div class="right-side">
+              <div class="circle-container">
+                <svg class="progress-ring" width="100" height="100">
+                  <circle class="background" r="45" cx="50" cy="50"></circle>
+                  <circle class="progress" r="45" cx="50" cy="50"></circle>
+                </svg>
+                <input type="number" class="circle-input" value="0" min="0">
+              </div>
+              <div class="buttons">
+                <button class="btn minus">−</button>
+                <button class="btn plus">+</button>
+                <button class="reset-btn">Reset</button>
+              </div>
+              <div class="progress-info">
+                <input type="number" class="count" value="0" min="0"> / <span class="max">${shard.max}</span>
+              </div>
+              <div class="chance">${chanceLabel}: <span class="percent">${shard.base}%</span></div>
+            </div>
+          </div>`;
       });
 
-      window.addEventListener('mousemove', e => {
-        if (!isDragging) return;
-        if (!isOnStroke(e)) return;
-        updateFromPointer(e);
+      document.querySelectorAll('.shard-card').forEach(card => {
+        const type = card.dataset.type;
+        const base = parseFloat(card.dataset.base);
+        const start = parseInt(card.dataset.start);
+        const inc = parseFloat(card.dataset.inc);
+
+        // Vérifie si un boost est actif
+        const boost = getBoostedRate(type);
+
+        // Valeur max de base
+        let max = parseInt(card.dataset.max);
+
+        // Si boost actif → recalcul du max (atteinte 100% plus tôt)
+        if (boost) {
+          const boostedMax = Math.ceil((100 - base) / (inc * boost.boost)) + (start - 1);
+          max = Math.min(max, boostedMax);
+          card.querySelector('.max').textContent = max;
+        }
+
+        const inputCircle = card.querySelector('.circle-input');
+        const inputCount = card.querySelector('.count');
+        const plus = card.querySelector('.plus');
+        const minus = card.querySelector('.minus');
+        const reset = card.querySelector('.reset-btn');
+        const percent = card.querySelector('.percent');
+        const circle = card.querySelector('.progress');
+        const radius = 45;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.strokeDasharray = circumference;
+
+        let value = parseInt(localStorage.getItem("pity_" + type)) || 0;
+
+        // --- Boost visuel et badge ---
+        if (boost) {
+          const boostBox = document.createElement("div");
+          boostBox.className = "boosted-box";
+          boostBox.textContent = `Boosted Rate Active ×${boost.boost}`;
+          card.querySelector(".right-side").appendChild(boostBox);
+
+          switch (type) {
+            case "Ancient": card.classList.add("boosted-ancient"); break;
+            case "Void": card.classList.add("boosted-void"); break;
+            case "Primal": card.classList.add("boosted-primal"); break;
+            case "Sacred": card.classList.add("boosted-sacred"); break;
+          }
+        }
+
+        function calcChance(v) {
+          let rate = v < start ? base : Math.min(base + (v - start + 1) * inc, 100);
+          if (boost) rate = Math.min(rate * boost.boost, 100);
+          return rate;
+        }
+
+        function updateButtons(v) {
+          minus.disabled = v <= 0;
+          plus.disabled = v >= max;
+        }
+
+        function setProgress(v) {
+          v = Math.max(0, Math.min(max, v));
+          const offset = circumference - (v / max) * circumference;
+          circle.style.strokeDashoffset = offset;
+          inputCircle.value = v;
+          inputCount.value = v;
+          percent.textContent = calcChance(v).toFixed(2) + "%";
+          localStorage.setItem("pity_" + type, v);
+          updateButtons(v);
+        }
+
+        function holdButton(btn, action) {
+          let interval, timeout;
+          const startHold = () => {
+            action();
+            timeout = setTimeout(() => { interval = setInterval(action, 50); }, 400);
+          };
+          const stopHold = () => { clearTimeout(timeout); clearInterval(interval); };
+          btn.addEventListener('mousedown', startHold);
+          btn.addEventListener('mouseup', stopHold);
+          btn.addEventListener('mouseleave', stopHold);
+          btn.addEventListener('touchstart', e => { e.preventDefault(); startHold(); }, { passive: false });
+          btn.addEventListener('touchend', stopHold);
+          btn.addEventListener('touchcancel', stopHold);
+        }
+
+        holdButton(plus, () => { if (value < max) setProgress(++value); });
+        holdButton(minus, () => { if (value > 0) setProgress(--value); });
+        reset.onclick = () => setProgress(value = 0);
+        inputCircle.oninput = () => setProgress(value = parseInt(inputCircle.value) || 0);
+        inputCount.oninput = () => setProgress(value = parseInt(inputCount.value) || 0);
+
+        setProgress(value);
       });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      // --- Tactile ---
-      circleContainer.addEventListener('touchstart', e => {
-        const t = e.touches[0];
-        if (e.target === centerInput) return;
-        if (!isOnStroke(t)) return;
-        isDragging = true;
-        updateFromPointer(t);
-      }, { passive: true });
-
-      window.addEventListener('touchmove', e => {
-        if (!isDragging) return;
-        const t = e.touches[0];
-        if (!isOnStroke(t)) return;
-        updateFromPointer(t);
-      }, { passive: true });
-
-      window.addEventListener('touchend', () => { isDragging = false; });
-    });
+    })();
   </script>
-
 </body>
 </html>
