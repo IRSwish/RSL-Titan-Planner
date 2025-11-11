@@ -1,0 +1,166 @@
+{
+  "title": "BAMBUS FOURLEAF •  CLASSIC FUSION • 28/09/2023 - 13/10/2023",
+  "events": [
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-09-28",
+      "end_date": "2023-10-01",
+      "reward": "Petrifya",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-10-03",
+      "end_date": "2023-10-06",
+      "reward": "Petrifya",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-10-07",
+      "end_date": "2023-10-10",
+      "reward": "Petrifya",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-10-08",
+      "end_date": "2023-10-11",
+      "reward": "Petrifya",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2023-09-28",
+      "end_date": "2023-10-02",
+      "reward": "Selinia",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-09-29",
+      "end_date": "2023-10-02",
+      "reward": "Selinia, Malkith",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-10-05",
+      "end_date": "2023-10-10",
+      "reward": "Selinia",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2023-10-06",
+      "end_date": "2023-10-09",
+      "reward": "Selinia",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-09-29",
+      "end_date": "2023-10-02",
+      "reward": "Tolog",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-09-30",
+      "end_date": "2023-10-03",
+      "reward": "Tolog",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-10-01",
+      "end_date": "2023-10-04",
+      "reward": "Tolog",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-10-04",
+      "end_date": "2023-10-07",
+      "reward": "Tolog",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-09-30",
+      "end_date": "2023-10-03",
+      "reward": "Torrux",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-10-04",
+      "end_date": "2023-10-07",
+      "reward": "Torrux",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-10-06",
+      "end_date": "2023-10-09",
+      "reward": "Torrux",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-10-07",
+      "end_date": "2023-10-10",
+      "reward": "Torrux",
+      "points": [
+        1
+      ]
+    }
+  ]
+}

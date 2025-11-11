@@ -1,0 +1,166 @@
+{
+  "title": "GNUT • CLASSIC FUSION • 03/07/2023 - 19/07/2023",
+  "events": [
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-07-03",
+      "end_date": "2023-07-06",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-07-03",
+      "end_date": "2023-07-06",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-07-03",
+      "end_date": "2023-07-08",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-07-04",
+      "end_date": "2023-07-07",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-07-06",
+      "end_date": "2023-07-09",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-07-06",
+      "end_date": "2023-07-09",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-07-07",
+      "end_date": "2023-07-10",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-07-07",
+      "end_date": "2023-07-10",
+      "reward": "Riab, Lethelin",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-07-08",
+      "end_date": "2023-07-11",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2023-07-09",
+      "end_date": "2023-07-13",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-07-10",
+      "end_date": "2023-07-13",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-07-11",
+      "end_date": "2023-07-14",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-07-12",
+      "end_date": "2023-07-15",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-07-12",
+      "end_date": "2023-07-15",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-07-13",
+      "end_date": "2023-07-16",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2023-07-14",
+      "end_date": "2023-07-17",
+      "reward": "Riab",
+      "points": [
+        1
+      ]
+    }
+  ]
+}

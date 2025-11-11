@@ -1,0 +1,166 @@
+{
+  "title": "RAZELVARG • CLASSIC FUSION • 13/04/2023 - 01/05/2023",
+  "events": [
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-04-13",
+      "end_date": "2023-04-16",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2023-04-13",
+      "end_date": "2023-04-17",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-04-14",
+      "end_date": "2023-04-17",
+      "reward": "Margrave, Delaaja",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-04-14",
+      "end_date": "2023-04-17",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-04-15",
+      "end_date": "2023-04-18",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-04-15",
+      "end_date": "2023-04-18",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-04-16",
+      "end_date": "2023-04-19",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-04-20",
+      "end_date": "2023-04-25",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-04-20",
+      "end_date": "2023-04-23",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-04-20",
+      "end_date": "2023-04-23",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2023-04-21",
+      "end_date": "2023-04-24",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-04-21",
+      "end_date": "2023-04-24",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-04-22",
+      "end_date": "2023-04-25",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-04-22",
+      "end_date": "2023-04-25",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-04-25",
+      "end_date": "2023-04-29",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-04-26",
+      "end_date": "2023-04-29",
+      "reward": "Margrave",
+      "points": [
+        1
+      ]
+    }
+  ]
+}

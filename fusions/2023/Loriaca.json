@@ -1,0 +1,162 @@
+{
+  "title": "GREATHOOF LORIACA • FRAGMENT FUSION • 08/06/2023 - 26/06/2023",
+  "events": [
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-06-08",
+      "end_date": "2023-06-11",
+      "reward": "Fragments, Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2023-06-08",
+      "end_date": "2023-06-11",
+      "reward": "Fragments, Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-06-09",
+      "end_date": "2023-06-12",
+      "reward": "Fragments",
+      "points": [
+        20
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-06-10",
+      "end_date": "2023-06-13",
+      "reward": "Fragments, Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-06-10",
+      "end_date": "2023-06-15",
+      "reward": "Fragments",
+      "points": [
+        10
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-06-12",
+      "end_date": "2023-06-15",
+      "reward": "Fragments, Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-06-12",
+      "end_date": "2023-06-15",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-06-13",
+      "end_date": "2023-06-17",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-06-16",
+      "end_date": "2023-06-19",
+      "reward": "Fragments, Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-06-17",
+      "end_date": "2023-06-20",
+      "reward": "Fragments, Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-06-17",
+      "end_date": "2023-06-20",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-06-18",
+      "end_date": "2023-06-23",
+      "reward": "Fragments",
+      "points": [
+        10
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-06-20",
+      "end_date": "2023-06-23",
+      "reward": "Fragments",
+      "points": [
+        5,
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-06-22",
+      "end_date": "2023-06-26",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-06-23",
+      "end_date": "2023-06-26",
+      "reward": "Fragments",
+      "points": [
+        20
+      ]
+    }
+  ]
+}

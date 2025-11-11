@@ -1,0 +1,176 @@
+{
+  "title": "BLIZAAR THE HOWLER • HYBRID FUSION • 14/12/2023 - 31/12/2023",
+  "events": [
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-12-14",
+      "end_date": "2023-12-17",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2023-12-14",
+      "end_date": "2023-12-18",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-12-15",
+      "end_date": "2023-12-18",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-12-16",
+      "end_date": "2023-12-19",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-12-16",
+      "end_date": "2023-12-20",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-12-17",
+      "end_date": "2023-12-20",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-12-17",
+      "end_date": "2023-12-20",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-12-20",
+      "end_date": "2023-12-24",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-12-21",
+      "end_date": "2023-12-24",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-12-21",
+      "end_date": "2023-12-24",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2023-12-22",
+      "end_date": "2023-12-25",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-12-22",
+      "end_date": "2023-12-25",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-12-23",
+      "end_date": "2023-12-26",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-12-24",
+      "end_date": "2023-12-27",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-12-25",
+      "end_date": "2023-12-28",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    },
+    {
+      "name": "Hero's Path",
+      "type": "Event",
+      "start_date": "2023-12-25",
+      "end_date": "2023-12-29",
+      "reward": "Fragments, Fragments",
+      "points": [
+        25,
+        25
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-12-26",
+      "end_date": "2023-12-29",
+      "reward": "Fragments",
+      "points": [
+        25
+      ]
+    }
+  ]
+}

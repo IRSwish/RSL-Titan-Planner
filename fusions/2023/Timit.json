@@ -1,0 +1,157 @@
+{
+  "title": "TIMIT THE FOOL • FRAGMENT FUSION • 26/10/2023 - 08/11/2023",
+  "events": [
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-10-26",
+      "end_date": "2023-10-29",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-10-26",
+      "end_date": "2023-10-30",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-10-27",
+      "end_date": "2023-10-30",
+      "reward": "Fragments",
+      "points": [
+        15
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-10-27",
+      "end_date": "2023-10-31",
+      "reward": "Fragments",
+      "points": [
+        15
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-10-28",
+      "end_date": "2023-10-31",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-10-28",
+      "end_date": "2023-10-31",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-10-29",
+      "end_date": "2023-11-01",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-11-01",
+      "end_date": "2023-11-04",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-11-01",
+      "end_date": "2023-11-04",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2023-11-02",
+      "end_date": "2023-11-06",
+      "reward": "Fragments, Fragments",
+      "points": [
+        10,
+        10
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2023-11-03",
+      "end_date": "2023-11-06",
+      "reward": "Fragments, Fragments",
+      "points": [
+        15,
+        10
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-11-04",
+      "end_date": "2023-11-07",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-11-04",
+      "end_date": "2023-11-07",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-11-05",
+      "end_date": "2023-11-08",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-11-05",
+      "end_date": "2023-11-08",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    }
+  ]
+}

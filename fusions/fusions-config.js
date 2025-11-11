@@ -95,6 +95,62 @@ window.fusions = {
   Zinogre: {
     name: "Zinogre Blademaster Fusion",
     json: "2024/Zinogre.json"
+  },
+  Blizaar: {
+    name: "Blizaar The Howler Fusion",
+    json: "2023/Blizaar.json"
+  },
+  Ugir: {
+    name: "Ugir the Wyrmeater Fusion",
+    json: "2023/Ugir.json"
+  },
+  Timit: {
+    name: "Timit the Fool Fusion",
+    json: "2023/Timit.json"
+  },
+  Bambus: {
+    name: "Bambus Fourleaf Fusion",
+    json: "2023/Bambus.json"
+  },
+  Islin: {
+    name: "Strategos Islin Fusion",
+    json: "2023/Islin.json"
+  },
+  Emic: {
+    name: "Emic Trunkheart Fusion",
+    json: "2023/Emic.json"
+  },
+  Gnut: {
+    name: "Gnut Fusion",
+    json: "2023/Gnut.json"
+  },
+  Loriaca: {
+    name: "Greathoof Loriaca Fusion",
+    json: "2023/Loriaca.json"
+  },
+  Jetni: {
+    name: "Jetni The Giant Fusion",
+    json: "2023/Jetni.json"
+  },
+  Razelvarg: {
+    name: "Razelvarg Fusion",
+    json: "2023/Razelvarg.json"
+  },
+  "Supreme-Elhain": {
+    name: "Supreme Elhain Fusion",
+    json: "2023/Supreme-Elhain.json"
+  },
+  Oella: {
+    name: "Oella Fusion",
+    json: "2023/Oella.json"
+  },
+  Pythion: {
+    name: "Pythion Fusion",
+    json: "2023/Pythion.json"
+  },
+  Opardin: {
+    name: "Opardin Clanfather Fusion",
+    json: "2022/Opardin.json"
   }
 };
 

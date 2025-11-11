@@ -1,0 +1,147 @@
+{
+  "title": "OELLA • CLASSIC FUSION • 09/02/2023 - 26/02/2023",
+  "events": [
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2023-02-09",
+      "end_date": "2023-02-12",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-02-09",
+      "end_date": "2023-02-13",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-02-10",
+      "end_date": "2023-02-13",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2023-02-10",
+      "end_date": "2023-02-13",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-02-11",
+      "end_date": "2023-02-14",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2023-02-12",
+      "end_date": "2023-02-15",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2023-02-15",
+      "end_date": "2023-02-18",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-02-16",
+      "end_date": "2023-02-19",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2023-02-17",
+      "end_date": "2023-02-20",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2023-02-17",
+      "end_date": "2023-02-20",
+      "reward": "Tirlac, Tirlac",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2023-02-19",
+      "end_date": "2023-02-22",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2023-02-19",
+      "end_date": "2023-02-24",
+      "reward": "Tirlac, Tirlac",
+      "points": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2023-02-19",
+      "end_date": "2023-02-22",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2023-02-21",
+      "end_date": "2023-02-24",
+      "reward": "Tirlac",
+      "points": [
+        1
+      ]
+    }
+  ]
+}
