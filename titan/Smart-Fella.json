@@ -1,0 +1,181 @@
+{
+  "title": "SMART FELLA TITAN EVENT",
+  "points":"pizza",
+  "events": [
+    {
+      "name": "Event Dungeon",
+      "type": "Tournament",
+      "start_date": "2025-09-03",
+      "end_date": "2025-09-06",
+      "points": [50]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-04",
+      "end_date": "2025-09-06",
+      "points": [40]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2025-09-04",
+      "end_date": "2025-09-08",
+      "points": [10,20,50]
+    },
+    {
+      "name": "Champion Chase",
+      "type": "Tournament",
+      "start_date": "2025-09-05",
+      "end_date": "2025-09-08",
+      "points": [50,150]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-09-05",
+      "end_date": "2025-09-08",
+      "points": [60]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-06",
+      "end_date": "2025-09-09",
+      "points": [40]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2025-09-07",
+      "end_date": "2025-09-10",
+      "points": [20]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Event",
+      "start_date": "2025-09-08",
+      "end_date": "2025-09-11",
+      "points": [20,50]
+    },
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-09",
+      "end_date": "2025-09-11",
+      "points": [40]
+    },
+    {
+      "name": "Event Dungeon",
+      "type": "Tournament",
+      "start_date": "2025-09-10",
+      "end_date": "2025-09-13",
+      "points": [50]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-11",
+      "end_date": "2025-09-14",
+      "points": [40]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-11",
+      "end_date": "2025-09-14",
+      "points": [10,20,50]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-09-11",
+      "end_date": "2025-09-14",
+      "points": [60]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2025-09-12",
+      "end_date": "2025-09-15",
+      "points": [50,150]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2025-09-13",
+      "end_date": "2025-09-16",
+      "points": [20]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Event",
+      "start_date": "2025-09-13",
+      "end_date": "2025-09-16",
+      "points": [20,50]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-14",
+      "end_date": "2025-09-16",
+      "points": [40]
+    },
+    {
+      "name": "Deck of Fate",
+      "type": "Event",
+      "start_date": "2025-09-15",
+      "end_date": "2025-09-19",
+      "points": [100]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-16",
+      "end_date": "2025-09-19",
+      "points": [40]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-09-16",
+      "end_date": "2025-09-19",
+      "points": [60]
+    },
+    {
+      "name": "Event Dungeon",
+      "type": "Tournament",
+      "start_date": "2025-09-17",
+      "end_date": "2025-09-20",
+      "points": [50]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Event",
+      "start_date": "2025-09-18",
+      "end_date": "2025-09-21",
+      "points": [20,50]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2025-09-19",
+      "end_date": "2025-09-21",
+      "points": [40]
+    },
+    {
+      "name": "Fusion Warmup",
+      "type": "Event",
+      "start_date": "2025-09-19",
+      "end_date": "2025-09-21",
+      "points": [30]
+    },
+    {
+      "name": "Champion Chase",
+      "type": "Tournament",
+      "start_date": "2025-09-19",
+      "end_date": "2025-09-22",
+      "points": [50,150]
+    }
+  ]
+}
