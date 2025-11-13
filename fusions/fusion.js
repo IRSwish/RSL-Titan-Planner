@@ -455,8 +455,14 @@
       if (elS) elS.textContent = fragsSkipped;
 
       let statusClass = '';
-      if (fragsSkipped > 0) statusClass = 'status-red';
-      else if (fragsValidated >= target) statusClass = 'status-green';
+
+      // 💚 Priorité au vert : si tu as assez de fragments, on s'en fout des skips
+      if (fragsValidated >= target) {
+        statusClass = 'status-green';
+      } else if (fragsSkipped > 0) {
+        // 🔴 Rouge uniquement si tu n'as PAS encore le total nécessaire
+        statusClass = 'status-red';
+      }
 
       panel.innerHTML = `
         <div class="stat ${statusClass}">
