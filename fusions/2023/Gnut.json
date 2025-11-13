@@ -4,6 +4,8 @@
   "datespan": "03/07/2023 - 19/07/2023",
   "Rare": "Riab",
   "Epic": "Lethelin",
+  "RareAff":"Force",
+  "EpicAff":"Force",
   "events": [
     {
       "name": "Gear Enhancement",

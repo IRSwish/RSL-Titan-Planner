@@ -605,8 +605,10 @@ function collectTimelineCounts() {
     const name = b.dataset.reward || '';
     if (!name) return;
     const rec = map.get(name) || { validated:0, planned:0 };
-    if (b.classList.contains('state-validated')) rec.validated += 1;
-    else if (b.classList.contains('state-ongoing')) rec.planned += 1;
+    const val = parseInt(b.querySelector("span")?.textContent || "0", 10);
+
+    if (b.classList.contains('state-validated')) rec.validated += val;
+    else if (b.classList.contains('state-ongoing')) rec.planned += val;
     map.set(name, rec);
   });
   return map;
@@ -697,9 +699,15 @@ if (data.Epic) {
     if (totalEpics > 0) pushCopies(data.Epic, 'EPIC', epicAff, 5, totalEpics);
   }
 
-  if (entries.length === 0) {
-    wrap.style.display = 'none';
-    return;
+  // 🟦 HYBRID : toujours afficher le panneau, même si tu n'as pas encore 100 fragments
+  if (type === 'HYBRID') {
+    wrap.style.display = ''; // panneau visible
+  } else {
+    // CLASSIC et FRAGMENT : comportement normal
+    if (entries.length === 0) {
+      wrap.style.display = 'none';
+      return;
+    }
   }
 
   // helpers icônes

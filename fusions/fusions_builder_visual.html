@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fusions Builder Visual — v2 (Ankora Format)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#d4af37; --pink:#f52584; --blue:#00c9ff; --text:#fcf6ff;
+      --bg:#0e0e0e; --bg2:#1a1a1a; --grid:#2a2a2a; --muted:#9aa0a6;
+      --lane-h:52px;         /* hauteur d'une ligne d'événements */
+      --header-h:41px;       /* hauteur de l'entête sticky */
+      --days:7;              /* nb de jours visibles (JS met à jour) */
+      --colpx:120px;         /* largeur px d'une colonne (JS met à jour) */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;overflow:hidden}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;display:flex;flex-direction:column;min-height:100vh}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:30;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:rgba(14,14,14,.92);backdrop-filter:saturate(140%) blur(4px);border-bottom:1px solid #1d1d1d}
+    .title{font-weight:700;color:var(--pink);margin-right:auto}
+    label{opacity:.85}
+    input,select{background:#141414;border:1px solid var(--gold);color:var(--text);border-radius:8px;padding:8px 10px}
+    input[type="date"]{color-scheme:dark}
+    .btn{background:var(--gold);color:#0e0e0e;border:none;border-radius:8px;padding:8px 12px;cursor:pointer}
+    .btn.secondary{background:#1a1a1a;color:var(--text);border:1px solid #343434}
+    .btn.ghost{background:transparent;border:1px dashed #444;color:#ddd}
+
+    /* Board */
+    .board{flex:1;display:flex;flex-direction:column;padding:10px 18px 12px}
+    .toolbar{display:flex;gap:10px;align-items:center;margin:6px 0 10px}
+    .sum{margin-left:auto;font-weight:700;color:var(--gold)}
+
+    /* Timeline */
+    .timeline{position:relative;flex:1;border:1px solid var(--gold);border-radius:14px;background:var(--bg2);overflow:auto}
+
+    /* Grid responsive: chaque jour = 1fr, pas d'overflow-x */
+    .grid{position:relative;min-width:100%;padding:0 calc(var(--colpx)/2) 8px; /* demi-jour à gauche/droite pour repères midi */}
+    .day-head{position:sticky;top:0;display:grid;grid-template-columns:repeat(var(--days), 1fr);gap:0;background:#121212;border-bottom:1px solid #1f1f1f;z-index:4}
+    .day-cell{padding:8px 6px;text-align:center;font-weight:600;border-left:1px solid #1f1f1f;white-space:nowrap}
+    .day-cell:first-child{border-left:none}
+
+    .days{position:relative;display:grid;grid-template-columns:repeat(var(--days), 1fr);gap:0}
+    .slot{height:var(--slots-h, 560px);border-left:1px solid var(--grid);position:relative;background:repeating-linear-gradient(to bottom, transparent, transparent 24px, rgba(255,255,255,.03) 24px, rgba(255,255,255,.03) 25px)}
+    .slot:first-child{border-left:none}
+
+    /* Lanes visuelles (10 fixes) */
+    .lanes{position:absolute;left:0;right:0;top:var(--header-h);bottom:0;z-index:1;pointer-events:none}
+    .lane-bg{position:absolute;left:0;right:0;height:var(--lane-h)}
+    .lane-bg:nth-child(odd){background:rgba(255,255,255,0.02)}
+    .lane-bg:nth-child(even){background:rgba(0,0,0,0.10)}
+    .lane-bg::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:rgba(255,255,255,0.35)}
+
+    /* Lignes verticales "midi" (au milieu de chaque jour) */
+    .noon-lines{position:absolute;left:0;right:0;top:var(--header-h);bottom:0;z-index:2;pointer-events:none;display:grid;grid-template-columns:repeat(var(--days), 1fr)}
+    .noon-lines>div{position:relative}
+    .noon-lines>div::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.25)}
+
+    /* Selection band */
+    .rubber{position:absolute;top:var(--header-h);height:calc(var(--slots-h,560px) - 8px);border:2px dashed var(--pink);background:rgba(245,37,132,.08);pointer-events:none;z-index:5}
+
+    /* Events layer */
+    .events-layer{position:absolute;left:0;right:0;top:var(--header-h);bottom:0;pointer-events:none;z-index:6}
+    .event{position:absolute;height:46px;border:2px solid var(--blue);border-radius:10px;color:var(--text);background:#0c0f12;box-shadow:0 6px 16px rgba(0,0,0,.35);padding:6px 10px;display:flex;align-items:center;gap:8px;pointer-events:auto;cursor:grab}
+    .event .name{font-weight:600}
+    .event .type{font-size:.85rem;opacity:.8}
+    .event .resize{position:absolute;top:0;right:-6px;width:10px;height:100%;cursor:ew-resize}
+
+    .event.training{border-color:#7bd88f}
+    .event.summon{border-color:#ffd166}
+    .event.dungeon{border-color:#80b1ff}
+    .event.upgrade{border-color:#f497d6}
+
+    /* JSON */
+    textarea#json{width:100%;height:220px;background:#0f0f0f;color:#00c9ff;border:1px solid var(--gold);border-radius:10px;padding:10px;margin:12px 0 0}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:50}
+    .modal{width:min(720px,92vw);background:#121212;border:1px solid var(--gold);border-radius:14px;padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+    .modal h3{margin:8px 0 10px;color:var(--gold)}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .rewards{margin-top:8px;border-top:1px dashed #333;padding-top:8px}
+    .reward-row{display:grid;grid-template-columns:1fr 120px 36px;gap:8px;margin-bottom:6px}
+    .remove-reward{background:#2b1111;border:1px solid #8a2a2a;color:#ffd1d1;border-radius:8px;cursor:pointer}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+    .btn.del{background:#2b1111;color:#ffd1d1;border:1px solid #8a2a2a}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Fusions Builder Visual — Timeline</div>
+    <label>Titre</label>
+    <input id="title" placeholder="Nom de la fusion…">
+    <label>Format</label>
+    <select id="fusionFormat">
+      <option>Fragment</option>
+      <option>Classic</option>
+      <option>Hybrid</option>
+    </select>
+    <label>Début</label>
+    <input type="date" id="start">
+    <label>Fin</label>
+    <input type="date" id="end">
+    <button class="btn" id="btnBuild">Construire</button>
+    <button class="btn secondary" id="btnImport">Importer</button>
+    <button class="btn secondary" id="btnCopy">Copier JSON</button>
+    <button class="btn" id="btnExport">Exporter</button>
+    <button class="btn ghost" id="btnClear">Tout effacer</button>
+  </header>
+
+  <div class="board">
+    <div class="toolbar">
+      <div class="hint">Astuce : clique-&-glisse sur la grille pour créer un événement · Clique sur un bloc pour éditer</div>
+      <div class="sum">Total points : <span id="sumPoints">0</span></div>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="grid" id="grid">
+        <div class="day-head" id="dayHead"></div>
+        <div class="days" id="days"></div>
+        <!-- Décors fixes -->
+        <div class="lanes" id="lanes"></div>
+        <div class="noon-lines" id="noonLines"></div>
+        <!-- Layers dynamiques -->
+        <div class="events-layer" id="eventsLayer"></div>
+        <div class="rubber" id="rubber" style="display:none"></div>
+      </div>
+    </div>
+
+    <textarea id="json" readonly></textarea>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3>Éditer l’événement</h3>
+      <div class="fields">
+        <div class="field">
+          <label>Nom</label>
+          <input id="mName" list="eventNames" placeholder="Champion Training, Summon Rush, …">
+          <datalist id="eventNames"></datalist>
+        </div>
+        <div class="field">
+          <label>Type</label>
+          <input id="mType" placeholder="Auto" readonly>
+        </div>
+        <div class="field">
+          <label>Début</label>
+          <input type="date" id="mStart">
+        </div>
+        <div class="field">
+          <label>Fin</label>
+          <input type="date" id="mEnd">
+        </div>
+      </div>
+
+      <div class="rewards">
+        <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+          <div style="font-weight:600;color:var(--pink)">Rewards</div>
+          <button class="btn" id="btnAddReward" type="button">+ Ajouter</button>
+        </div>
+        <div id="rewardList"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn del" id="mDelete" type="button">Supprimer</button>
+        <button class="btn secondary" id="mCancel" type="button">Annuler</button>
+        <button class="btn" id="mSave" type="button">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== State =====
+    let events = []; // {id, name, type, start, end, rewards:[{name,points}]}
+    const dayMs = 24*60*60*1000;
+    let lastReward = null; // {name, points}
+    let eventCatalog = [];
+
+    // ===== DOM =====
+    const titleEl = document.getElementById('title');
+    const formatEl = document.getElementById('fusionFormat');
+    const startEl = document.getElementById('start');
+    const endEl   = document.getElementById('end');
+
+    const headEl  = document.getElementById('dayHead');
+    const daysEl  = document.getElementById('days');
+    const lanesEl = document.getElementById('lanes');
+    const noonEl  = document.getElementById('noonLines');
+    const layerEl = document.getElementById('eventsLayer');
+    const rubber  = document.getElementById('rubber');
+    const jsonEl  = document.getElementById('json');
+    const sumEl   = document.getElementById('sumPoints');
+    const gridEl  = document.getElementById('grid');
+
+    // Modal refs
+    const backdrop = document.getElementById('backdrop');
+    const mName = document.getElementById('mName');
+    const mType = document.getElementById('mType');
+    const mStart = document.getElementById('mStart');
+    const mEnd   = document.getElementById('mEnd');
+    const rewardList = document.getElementById('rewardList');
+    const btnAddReward = document.getElementById('btnAddReward');
+    const mSave = document.getElementById('mSave');
+    const mCancel = document.getElementById('mCancel');
+    const mDelete = document.getElementById('mDelete');
+
+    let editingId = null;
+
+    // ===== Utils (dates locales, pas d'UTC) =====
+    const parseDate = (s) => s ? new Date(s+'T00:00:00') : null;
+    const fmt = (d) => { const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; };
+    const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+
+    function daysBetween(d1, d2){
+      return Math.floor((parseDate(d2) - parseDate(d1)) / dayMs) + 1; // inclusif, pas d'arrondi
+    }
+    function dateAdd(d, n){ const x = new Date(parseDate(d)); x.setDate(x.getDate()+n); return fmt(x); }
+    function colIndexForDate(d){ const s = startEl.value; if(!s) return 0; return Math.floor((parseDate(d) - parseDate(s))/dayMs); }
+    function dateForCol(idx){ return dateAdd(startEl.value, idx); }
+
+    function calcTotalPoints(){
+      return events.reduce((t,e)=> t + (e.rewards||[]).reduce((s,r)=> s + (parseInt(r.points)||0), 0), 0);
+    }
+    function nextId(){ let i = 1; while(events.find(e=>e.id===`ev-${i}`)) i++; return `ev-${i}`; }
+    function typeClass(t){ const k=(t||'').toLowerCase(); if(k.includes('train')) return 'training'; if(k.includes('summon')) return 'summon'; if(k.includes('dungeon')) return 'dungeon'; if(k.includes('upgrade')||k.includes('enhance')) return 'upgrade'; return ''; }
+
+    function setGridHeights(){
+      const laneH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lane-h')) || 52;
+      const slotsH = 10 * laneH + 8; // 10 lanes fixes
+      gridEl.style.setProperty('--slots-h', slotsH + 'px');
+      lanesEl.innerHTML = '';
+      for(let i=0;i<10;i++){
+        const l = document.createElement('div'); l.className = 'lane-bg'; l.style.top = (i*laneH) + 'px'; lanesEl.appendChild(l);
+      }
+    }
+
+    // ===== Build grid (responsive columns) =====
+    function buildGrid(){
+      const s = startEl.value, e = endEl.value; if(!s||!e){ alert('Renseigne Début et Fin'); return; }
+      const cols = daysBetween(s,e);
+      document.documentElement.style.setProperty('--days', cols);
+
+      headEl.innerHTML = ''; daysEl.innerHTML = ''; layerEl.innerHTML = ''; noonEl.innerHTML = '';
+
+      for(let i=0;i<cols;i++){
+        const d = dateForCol(i);
+        const dt = new Date(d);
+        const label = dt.toLocaleDateString('fr-FR', { weekday:'short', day:'2-digit', month:'2-digit' });
+        const h = document.createElement('div'); h.className = 'day-cell'; h.textContent = label; headEl.appendChild(h);
+        const slot = document.createElement('div'); slot.className = 'slot'; slot.dataset.col = i; daysEl.appendChild(slot);
+        const noon = document.createElement('div'); noonEl.appendChild(noon);
+      }
+
+      const colw = daysEl.clientWidth / cols; // largeur responsive
+      document.documentElement.style.setProperty('--colpx', colw + 'px');
+
+      // listeners (éviter doublons)
+      daysEl.onmousedown = null; document.onmousemove = null; document.onmouseup = null;
+      daysEl.addEventListener('mousedown', onDown);
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+
+      setGridHeights();
+      renderEvents();
+    }
+
+    // ===== Mouse selection to create events (click-drag) — ancrage sur bords de jour (pas de +0.5) =====
+    let startColSel = null, isDown = false;
+
+    function colFromClientX(x){
+      const rect = daysEl.getBoundingClientRect();
+      const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--days'));
+      const colw = rect.width / cols;
+      const rel = clamp(x - rect.left, 0, rect.width);
+      let col = Math.floor(rel / colw);
+      return clamp(col, 0, cols-1);
+    }
+
+    function onDown(e){
+      if(e.button!==0) return;
+      isDown = true;
+      startColSel = colFromClientX(e.clientX);
+      const rect = daysEl.getBoundingClientRect(); const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--days')); const colw = rect.width / cols;
+      rubber.style.display='block';
+      rubber.style.left = (startColSel*colw) + 'px'; // bord gauche du jour
+      rubber.style.width = (colw) + 'px';
+    }
+    function onMove(e){
+      if(!isDown) return;
+      const rect = daysEl.getBoundingClientRect(); const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--days')); const colw = rect.width / cols;
+      const c = colFromClientX(e.clientX); const c1 = Math.min(startColSel, c), c2 = Math.max(startColSel, c);
+      rubber.style.display='block';
+      rubber.style.left = (c1*colw) + 'px';
+      rubber.style.width = ((c2-c1+1)*colw) + 'px';
+    }
+    function onUp(e){
+      if(!isDown) return; isDown=false; rubber.style.display='none';
+      const c = colFromClientX(e.clientX); const c1 = Math.min(startColSel, c), c2 = Math.max(startColSel, c);
+      const ev = { id: nextId(), name: '', type: '', start: dateForCol(c1), end: dateForCol(c2), rewards: [] };
+      if(lastReward) ev.rewards = [ { name: lastReward.name, points: lastReward.points } ];
+      events.push(ev);
+      renderEvents();
+      openModal(ev.id);
+    }
+
+    // ===== Layout events (lane packing, max 10) =====
+    function renderEvents(){
+      layerEl.innerHTML='';
+      const s = startEl.value, e = endEl.value; if(!s||!e) return;
+      const lanes = new Array(10).fill(-Infinity); // dernière colonne occupée par lane
+
+      const inRange = (ev)=> parseDate(ev.end) >= parseDate(s) && parseDate(ev.start) <= parseDate(e);
+      const ordered = events.filter(inRange).sort((a,b)=>{
+        const da = colIndexForDate(a.start), db = colIndexForDate(b.start);
+        if(da!==db) return da-db; return (colIndexForDate(a.end)-da) - (colIndexForDate(b.end)-db);
+      });
+
+      const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--days'));
+      const rect = daysEl.getBoundingClientRect();
+      const colw = rect.width / cols;
+      document.documentElement.style.setProperty('--colpx', colw + 'px');
+
+      for(const ev of ordered){
+        const c1 = clamp(colIndexForDate(ev.start), 0, cols-1);
+        const c2 = clamp(colIndexForDate(ev.end),   0, cols-1);
+        let lane = 0; while(lane < 10 && lanes[lane] >= c1) lane++;
+        if(lane >= 10) { console.warn('Plus de 10 lanes, event masqué visuellement'); continue; }
+        lanes[lane] = c2;
+
+        const left = (c1*colw) + 4;                 // bord gauche du jour
+        const width = Math.max(60, (c2-c1+1)*colw - 8);
+        const top = lane * (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lane-h'))||52) + 6;
+
+        const div = document.createElement('div');
+        div.className = `event ${typeClass(ev.type)}`;
+        div.style.left = left + 'px';
+        div.style.top  = top + 'px';
+        div.style.width = width + 'px';
+        div.dataset.id = ev.id;
+        div.innerHTML = `<div class="name">${ev.name||'Sans titre'}</div><div class="type">${ev.type||''}</div><div class="resize" data-resize="1"></div>`;
+
+        // open modal on click
+        div.addEventListener('click', (e)=>{ e.stopPropagation(); openModal(ev.id); });
+
+        // resize handle (droite, ancrée sur bords de jour)
+        div.addEventListener('mousedown', (e)=>{
+          if(!(e.target && e.target.dataset && e.target.dataset.resize)) return;
+          e.preventDefault();
+          const onMoveR = (me)=>{
+            const rect2 = daysEl.getBoundingClientRect(); const col = clamp(Math.floor(clamp(me.clientX - rect2.left, 0, rect2.width) / colw), 0, cols-1);
+            const startCol = c1; const endCol = Math.max(col,startCol);
+            ev.end = dateForCol(endCol); renderEvents();
+          };
+          const onUpR = ()=>{ document.removeEventListener('mousemove',onMoveR); document.removeEventListener('mouseup',onUpR); updateJSON(); };
+          document.addEventListener('mousemove',onMoveR);
+          document.addEventListener('mouseup',onUpR);
+        });
+
+        layerEl.appendChild(div);
+      }
+
+      updateJSON();
+    }
+
+    // ===== Modal helpers =====
+    function openModal(id){
+      const ev = events.find(e=>e.id===id); if(!ev) return;
+      editingId = id;
+      mName.value = ev.name||''; 
+      mType.value = ev.type||autotypeForName(ev.name)||'';
+      mStart.value = ev.start; mEnd.value = ev.end;
+      rewardList.innerHTML='';
+      (ev.rewards||[]).forEach((r)=> addRewardRow(r.name,r.points));
+      backdrop.style.display='flex';
+      setTimeout(()=>mName.focus(),0);
+    }
+    function closeModal(){ backdrop.style.display='none'; editingId=null; }
+    function addRewardRow(name='', points=''){
+      const row = document.createElement('div'); row.className='reward-row';
+      row.innerHTML = `<input placeholder="Reward (Fragments, etc.)" value="${name}"/><input type="number" placeholder="Points" value="${points}"/><button class="remove-reward">×</button>`;
+      row.querySelector('.remove-reward').onclick = ()=>{ row.remove(); };
+      rewardList.appendChild(row);
+    }
+    btnAddReward.addEventListener('click', ()=> addRewardRow(lastReward?.name||'', lastReward?.points||''));
+    mCancel.addEventListener('click', closeModal);
+    mDelete.addEventListener('click', ()=>{ if(!editingId) return; events = events.filter(e=>e.id!==editingId); closeModal(); renderEvents(); });
+
+    mSave.addEventListener('click', ()=>{
+      if(!editingId) return; const ev = events.find(e=>e.id===editingId); if(!ev) return;
+      ev.name = mName.value.trim(); ev.type = autotypeForName(ev.name) || mType.value.trim() || '';
+      // clamp dates dans la plage globale
+      const s = startEl.value, e = endEl.value;
+      const sNew = mStart.value; const eNew = mEnd.value;
+      ev.start = fmt(parseDate(clampDate(sNew, s, e))); ev.end = fmt(parseDate(clampDate(eNew, s, e)));
+      if(parseDate(ev.end) < parseDate(ev.start)) ev.end = ev.start;
+      // rewards
+      ev.rewards = Array.from(rewardList.children).map(row=>{ const [n,p] = row.querySelectorAll('input'); return { name:n.value.trim(), points: parseInt(p.value)||0 }; }).filter(r=>r.name);
+      if(ev.rewards.length){ lastReward = { name: ev.rewards[0].name, points: ev.rewards[0].points }; }
+      closeModal(); renderEvents();
+    });
+
+    function autotypeForName(name){ if(!name) return ''; const m = eventCatalog.find(x => (x.name||'').toLowerCase() === name.toLowerCase()); return m ? (m.type||'') : ''; }
+    mName.addEventListener('input', ()=>{ mType.value = autotypeForName(mName.value) || ''; });
+
+    function clampDate(d, min, max){ const v = parseDate(d).getTime(); return fmt(new Date(clamp(v, parseDate(min).getTime(), parseDate(max).getTime()))); }
+
+    // ===== JSON + Export / Import =====
+    function slug(str){ const s=(str||'').toLowerCase(); let out=''; for(let i=0;i<s.length;i++){ const ch=s[i]; if((ch>='a'&&ch<='z')||(ch>='0'&&ch<='9')||ch==='-'||ch==='_') out+=ch; else if(ch===' ') out+='-'; } return out.replace(/--+/g,'-')||'fusion'; }
+
+    function ddmmyyyy(s){ const d=parseDate(s); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); }
+
+    function exportShape(){
+      const titleRaw = (titleEl.value||'').trim()||'UNTITLED FUSION';
+      const fmtUpper = (formatEl.value||'Fragment').toUpperCase()+ ' FUSION';
+      const titleOut = `${titleRaw} • ${fmtUpper} • ${ddmmyyyy(startEl.value)} - ${ddmmyyyy(endEl.value)}`;
+      const mapped = events.map(ev=>{
+        const rewardNames = (ev.rewards||[]).map(r=>r.name).filter(Boolean);
+        const points = (ev.rewards||[]).map(r=>parseInt(r.points)||0);
+        return {
+          name: ev.name||'',
+          type: ev.type||'',
+          start_date: ev.start,
+          end_date: ev.end,
+          reward: rewardNames.join(' + ') || '',
+          points: points
+        };
+      });
+      return { title: titleOut, events: mapped };
+    }
+
+    function updateJSON(){ const obj = exportShape(); jsonEl.value = JSON.stringify(obj, null, 2); sumEl.textContent = calcTotalPoints(); }
+
+    document.getElementById('btnBuild').addEventListener('click', buildGrid);
+    document.getElementById('btnCopy').addEventListener('click', ()=>{ if(!jsonEl.value.trim()) return; navigator.clipboard.writeText(jsonEl.value).then(()=>alert('✅ JSON copié')); });
+    document.getElementById('btnExport').addEventListener('click', ()=>{ const blob = new Blob([jsonEl.value||'{}'], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); const name = slug(titleEl.value||'fusion'); a.download = name + '.json'; a.click(); });
+
+    document.getElementById('btnImport').addEventListener('click', ()=>{
+      const txt = prompt('Colle le JSON de ta fusion (format interne ou Ankora) :'); if(!txt) return;
+      try{
+        const data = JSON.parse(txt);
+        if(Array.isArray(data.events) && data.events.length && 'start_date' in data.events[0]){
+          // Import format Ankora
+          titleEl.value = (data.title||'').split('•')[0].trim();
+          events = data.events.map((ev,i)=>({
+            id: `ev-${i+1}`,
+            name: ev.name||'',
+            type: ev.type||'',
+            start: ev.start_date,
+            end: ev.end_date,
+            rewards: Array.isArray(ev.points) ? (ev.points.map((p,idx)=>({name:(ev.reward||'').split('+')[idx]?.trim()||'Fragments', points:parseInt(p)||0}))) : []
+          }));
+        } else {
+          // Import format interne précédent
+          titleEl.value = data.title || '';
+          events = Array.isArray(data.events) ? data.events.map(ev=>({ id: ev.id||nextId(), name: ev.name||'', type: ev.type||autotypeForName(ev.name)||'', start: ev.start, end: ev.end, rewards: Array.isArray(ev.rewards)? ev.rewards.map(r=>({name:r.name,points:parseInt(r.points)||0})) : [] })) : [];
+        }
+        if(events.length){ const min = events.reduce((m,e)=> parseDate(e.start) < parseDate(m)? e.start : m, events[0].start); const max = events.reduce((m,e)=> parseDate(e.end) > parseDate(m)? e.end : m, events[0].end); startEl.value = min; endEl.value = max; }
+        buildGrid(); renderEvents();
+      }catch(e){ alert('JSON invalide: '+e.message); }
+    });
+
+    document.getElementById('btnClear').addEventListener('click', ()=>{ if(!confirm('Tout effacer ?')) return; events = []; jsonEl.value=''; sumEl.textContent='0'; headEl.innerHTML=''; daysEl.innerHTML=''; layerEl.innerHTML=''; lanesEl.innerHTML=''; noonEl.innerHTML=''; });
+
+    // Charger events.json pour la datalist
+    async function loadEventCatalog(){
+      try{ const res = await fetch('events.json'); const data = await res.json(); eventCatalog = data.events || []; const dl = document.getElementById('eventNames'); dl.innerHTML = ''; eventCatalog.forEach(e => { const o = document.createElement('option'); o.value = e.name; dl.appendChild(o); }); }catch(e){ console.warn('events.json introuvable', e); }
+    }
+
+    // Re-render on resize to keep columns responsive
+    window.addEventListener('resize', ()=>{ if(startEl.value && endEl.value){ buildGrid(); } });
+
+    // Boot
+    (function boot(){
+      const today = new Date(); const s = new Date(today.getFullYear(), today.getMonth(), today.getDate()); const e = new Date(s); e.setDate(e.getDate()+6);
+      startEl.value = fmt(s); endEl.value = fmt(e);
+      loadEventCatalog().then(buildGrid);
+    })();
+  </script>
+</body>
+</html>

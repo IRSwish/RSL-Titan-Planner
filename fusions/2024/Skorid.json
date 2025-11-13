@@ -4,6 +4,8 @@
   "datespan": "01/08/2024 - 17/08/2024",
   "Rare": "Lasair",
   "Epic": "Bowf",
+  "RareAff":"Void",
+  "EpicAff":"Spirit",
   "events": [
     {
       "name": "Dragon Tournament",

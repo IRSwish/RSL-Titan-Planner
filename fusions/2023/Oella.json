@@ -2,7 +2,10 @@
   "title": "OELLA",
   "type": "CLASSIC",
   "datespan": "09/02/2023 - 26/02/2023",
-  "Rare": "Riab",
+  "Rare": "Tirlac",
+  "Epic": "Merouka",
+  "RareAff":"Spirit",
+  "EpicAff":"Magic",
   "events": [
     {
       "name": "Ice Golem Tournament",

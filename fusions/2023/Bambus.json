@@ -6,7 +6,14 @@
   "Rare2": "Selinia",
   "Rare3": "Tolog",
   "Rare4": "Torrux",
-  "Epic": "Malkith",
+  "Epic1": "Malkith",
+  "Epic2": "Pann",
+  "Rare1Aff":"Magic",
+  "Rare2Aff":"Void",
+  "Rare3Aff":"Force",
+  "Rare4Aff":"Spirit",
+  "Epic1Aff":"Spirit",
+  "Epic2Aff":"Force",
   "events": [
     {
       "name": "Dragon Tournament",

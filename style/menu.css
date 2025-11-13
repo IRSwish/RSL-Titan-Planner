@@ -330,3 +330,10 @@ body.menu-opened::after {
     }
   }
 }
+
+/* === Désactive le flou du menu sur la page d'accueil === */
+body.no-menu-blur::after {
+  opacity: 0 !important;
+  backdrop-filter: none !important;
+  pointer-events: none !important;
+}

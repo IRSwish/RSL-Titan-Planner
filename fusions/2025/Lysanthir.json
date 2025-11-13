@@ -1,7 +1,9 @@
 {
   "title": "LYSANTHIR BEASTBANE",
-  "type":"HYBRID",
-  "datespan":"07/04/2025 - 23/04/2025",
+  "type": "HYBRID",
+  "datespan": "07/04/2025 - 23/04/2025",
+  "Epic": "Yuzan",
+  "EpicAff":"Void",
   "events": [
     {
       "name": "Spider Tournament",

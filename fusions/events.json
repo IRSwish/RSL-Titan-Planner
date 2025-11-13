@@ -1,0 +1,18 @@
+{
+  "events": [
+    { "name": "Dragon Tournament", "type": "Tournament" },
+    { "name": "Ice Golem Tournament", "type": "Tournament" },
+    { "name": "Fire Knight Tournament", "type": "Tournament" },
+    { "name": "Spider Tournament", "type": "Tournament" },
+    { "name": "Classic Arena", "type": "Tournament" },
+    { "name": "Champion Training Tournament", "type": "Tournament" },
+    { "name": "Champion Chase Tournament", "type": "Tournament" },
+    { "name": "Gear Hunters", "type": "Tournament" },
+
+    { "name": "Champion Training Event", "type": "Event" },
+    { "name": "Gear Enhancement", "type": "Event" },
+    { "name": "Gear Upgrade", "type": "Event" },
+    { "name": "Summon Rush", "type": "Event" },
+    { "name": "Hero's Path", "type": "Event" }
+  ]
+}

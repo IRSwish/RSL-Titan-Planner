@@ -4,6 +4,8 @@
   "datespan":"31/10/2024 - 14/11/2024",
   "Rare": "Denid",
   "Epic": "Signy",
+  "RareAff":"Void",
+  "EpicAff":"Magic",
   "events": [
     {
       "name": "Gear Hunters",

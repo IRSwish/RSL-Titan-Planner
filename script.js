@@ -174,6 +174,16 @@ fetch('/menu.html')
     // ✅ Premier appel après injection du menu
     activateCurrentLink();
 
+    // === AUTO-OPEN MENU UNIQUEMENT SUR LA PAGE D'ACCUEIL ===
+    const path = window.location.pathname;
+
+    // Cas 1 : site.com/
+    // Cas 2 : site.com/index.html
+    if (path === "/" || path === "/index.html") {
+        setOpen(true);                 // ouvre le menu
+        document.body.classList.add("no-menu-blur"); // désactive le flou
+    }
+
     // ✅ Mise à jour automatique quand le hash change
     window.addEventListener('hashchange', () => {
       activateCurrentLink();

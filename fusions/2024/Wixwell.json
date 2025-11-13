@@ -4,6 +4,8 @@
   "datespan": "09/05/2024 - 24/05/2024",
   "Rare": "Teryx",
   "Epic": "Arwydd",
+  "RareAff":"Void",
+  "EpicAff":"Force",
   "events": [
     {
       "name": "Gear Hunters",

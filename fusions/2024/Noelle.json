@@ -4,6 +4,8 @@
   "datespan": "16/12/2024 - 31/12/2024",
   "Rare": "Taneko",
   "Epic": "Wysteri",
+  "RareAff":"Magic",
+  "EpicAff":"Void",
   "events": [
     {
       "name": "Champion Training Event",
