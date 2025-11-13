@@ -28,7 +28,6 @@
 #info-sidebar {
   position: fixed;
   top: 0;
-  right: 0;
   width: 400px;
   height: 100vh;
   background: var(--bg2);
@@ -45,13 +44,14 @@
   -webkit-overflow-scrolling: touch;
   direction: rtl;           /* Scrollbar à gauche */
   scrollbar-gutter: stable both-edges;
+  right: -400px;
 }
 
 #info-sidebar * {
   direction: ltr;
 }
 
-#info-sidebar.open { right: -400px; }
+#info-sidebar.open { right: 0; }
 
 /* === Scrollbar stylisée pour le menu latéral === */
 #info-sidebar::-webkit-scrollbar {
