@@ -1,6 +1,7 @@
 {
-  "title": "SUPREME ELHAIN • FRAGMENT FUSION • 10/03/2023 - 28/03/2023",
-  "events": [
+  "title": "SUPREME ELHAIN",
+  "type": "FRAGMENT",
+  "datespan": "10/03/2023 - 28/03/2023",  "events": [
     {
       "name": "Champion Chase Tournament",
       "type": "Tournament",

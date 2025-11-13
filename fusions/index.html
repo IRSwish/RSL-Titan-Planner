@@ -7,64 +7,407 @@
   <script src="/config/site-config.js"></script>
   <link rel="stylesheet" href="/style/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ——— Bouton Info ——— */
+.info-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #fcf6ff;
+  font-size: 34px;
+  cursor: pointer;
+  z-index: 10001;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+.info-btn:hover { color: #d4af37; transform: scale(1.08); }
+.info-btn svg { width: 34px; height: 34px; stroke-width: 2; vertical-align: middle; }
+
+/* === SIDEBAR === */
+#info-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background: var(--bg2);
+  border-left: 2px solid var(--gold);
+  color: var(--text);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  transition: right 0.4s ease;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 80px 25px 40px 25px;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  direction: rtl;           /* Scrollbar à gauche */
+  scrollbar-gutter: stable both-edges;
+}
+#info-sidebar.open { right: -400px; }
+
+/* === Scrollbar stylisée pour le menu latéral === */
+#info-sidebar::-webkit-scrollbar {
+  width: 10px;
+}
+
+#info-sidebar::-webkit-scrollbar-track {
+  background: #0e0e0e;
+  border-left: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+#info-sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #d4af37 0%, #f52584 100%);
+  border-radius: 10px;
+  border: 2px solid #0e0e0e; /* garde un effet "rainuré" */
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#info-sidebar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #f52584 0%, #00c9ff 100%);
+  box-shadow: 0 0 12px rgba(0, 201, 255, 0.4);
+}
+
+/* Firefox */
+#info-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #d4af37 #0e0e0e;
+}
+
+
+@media (max-width: 700px) {
+  #info-sidebar {
+    width: 100%;
+    right: calc(-100% - 2px);
+    padding: 16px;
+  }
+  #info-sidebar.open { right: 0; }
+}
+
+/* ——— Panneaux décorés ——— */
+.panel {
+  background: rgba(0,0,0,0.35);
+  border: 2px solid var(--gold, #d4af37);
+  border-radius: 10px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(212,175,55,0.25);
+}
+.panel-header {
+  background: var(--gold, #d4af37);
+  color: #1a1a1a;
+  text-align: center;
+  font-weight: 700;
+  padding: 10px 0;
+  font-size: 16px;
+  border-bottom: 2px solid #000;
+}
+.panel-body {
+  padding: 12px 15px;
+  background: rgba(10,10,10,0.7);
+  border-radius: 0 0 8px 8px;
+  font-size: 15px;
+  color: var(--text, #fcf6ff);
+}
+
+/* ——— Legend ——— */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+}
+.legend div { display: flex; align-items: center; gap: 6px; }
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.legend-dot.skipped { background-color: #ff3333; }
+.legend-dot.in-progress { background-color: #ffa500; }
+.legend-dot.done { background-color: #4caf50; }
+.legend-dot.not-started { background-color: #e0e0e0; }
+
+/* ——— Progress / Stat cards ——— */
+.progress-panel { display: flex; flex-direction: column; gap: 10px; }
+.stat {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(212,175,55,0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: transform .2s ease, background .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.stat:hover {
+  background: rgba(212,175,55,0.15);
+  transform: scale(1.02);
+  box-shadow: 0 0 12px rgba(212,175,55,0.25);
+}
+.stat .label { font-size:13px; opacity:.85; }
+.stat .value { font-size:18px; font-weight:700; color: var(--text); }
+.stat img.stat-icon {
+  width: 48px; height: 48px;
+  border-radius: 6px; object-fit: contain;
+}
+.stat.status-green {
+  border-color: #00ff66;
+  box-shadow: 0 0 10px rgba(0,255,100,.35);
+}
+
+/* ——— Progress Grid ——— */
+.progress-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 700px) {
+  .progress-grid { grid-template-columns: 1fr; }
+}
+
+/* ——— Barre de progression fragments ——— */
+.frag-bar {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.1);
+  margin: 6px 0 4px;
+  overflow: hidden;
+}
+.frag-fill {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #f8e16c);
+  box-shadow: 0 0 8px rgba(212,175,55,0.6);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+/* ——— Resources ——— */
+#resources-panel-wrapper {
+  flex: 1;
+  min-height: 0;
+}
+
+#resources-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+  padding: 10px;
+}
+
+.res-card {
+  background: rgba(255,255,255,0.05);
+  border: 2px solid var(--gold);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.res-card img.champ {
+  width: 64px; height: 64px;
+  border-radius: 8px; object-fit: cover;
+}
+
+.res-stars { display:flex; gap:4px; }
+.star-btn {
+  border:none; background:transparent; padding:0; cursor:pointer;
+  width:20px; height:20px; display:grid; place-items:center;
+  transition:transform .12s ease, opacity .12s ease;
+}
+
+.rank-star svg { color: gold; fill: none;}
+.rank-star.active svg { color: gold; fill: gold;}
+.asc-star  svg { color: #f52584; fill: none; }
+.asc-star.active  svg { color: #f52584; fill: #f52584;}
+
+.res-reset {
+  background: transparent;
+  border: 1px solid #f52584;
+  color: #f52584;
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.res-reset:hover { opacity: .9; }
+
+.mini-line { font-weight:600; color: var(--gold); }
+
+/* --- CHAMPIONS BUILT --- */
+
+.res-card.compact {
+  background: linear-gradient(90deg, rgba(0, 180, 50, 0.4), rgba(0, 255, 100, 0.25)); 
+  border: 2px solid #00c95c; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 10px;
+  padding: 5px 10px;
+  height: 40px;
+}
+
+.res-card.compact .mini-line { display: none; }
+.res-card.compact img.champ {
+  width: 90px;
+  height: 30px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: none;
+}
+.res-card.compact .res-reset {
+  border: none;
+  background: transparent;
+  color: #fcf6ff;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.res-card.compact .res-reset:hover {
+  transform: rotate(-20deg) scale(1.2);
+  opacity: 0.9;
+}
+.res-card.compact .res-reset svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Résumé global Resources --- */
+#resources-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 12px;
+}
+#resources-global {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 10px 0;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(212,175,55,0.3);
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(212,175,55,0.25);
+}
+#resources-global .global-line {
+  font-weight: 700;
+  font-size: 16px;
+  color: #fcf6ff;
+  text-align: center;
+}
+#resources-global .total-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 16px;
+  margin-top: 6px;
+}
+#resources-global .total-icons .ico {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fcf6ff;
+}
+.global { grid-column: 1 / -1; align-items:center; }
+.total-icons { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; } 
+.total-icons .ico { display:flex; align-items:center; gap:4px; font-size:13px; } 
+.total-icons img { width:48px; height:48px;}
+#resources-global .total-icons img {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+</style>
 </head>
 <body>
-  
-  <!-- BARRE DE MENU CENTRÉE -->
+  <!-- MENU -->
   <div id="menu-container"></div>
 
-  <div class="header-wrapper">
-    <header id="page-title"></header>
-  </div> 
+  <!-- Bouton Info -->
+  <button id="info-btn" class="info-btn" aria-label="Infos"><i data-lucide="info"></i></button>
 
+  <!-- Titre -->
+  <div class="header-wrapper"><header id="page-title"></header></div>
+
+  <!-- Timeline -->
   <div class="timeline-container" id="timeline-container">
     <div class="timeline"></div>
   </div>
 
-  <!-- Summary box -->
-  <div class="summary-box">
-    <div class="legend">
-      <div><span class="legend-dot skipped"></span> Skipped</div>
-      <div><span class="legend-dot in-progress"></span> In progress</div>
-      <div><span class="legend-dot done"></span> Done</div>
-      <div><span class="legend-dot not-started"></span> Not started</div>
+  <!-- Slider droit -->
+  <div id="info-sidebar" class="">
+    <!-- LEGEND -->
+    <div class="panel">
+      <div class="panel-header">Legend</div>
+      <div class="panel-body">
+        <div class="legend">
+          <div><span class="legend-dot skipped"></span> Skipped</div>
+          <div><span class="legend-dot in-progress"></span> In progress</div>
+          <div><span class="legend-dot done"></span> Done</div>
+          <div><span class="legend-dot not-started"></span> Not started</div>
+        </div>
+      </div>
     </div>
-    <div>Acquired : <span id="points-acquired">0</span></div>
-    <div>Virtual total : <span id="points-virtual">0</span></div>
-    <div>Skipped : <span id="points-passed">0</span></div>
-  </div>
 
-  <!-- ⚡ Charger la config AVANT le script -->
+    <!-- PROGRESS -->
+    <div class="panel">
+      <div class="panel-header">Progress</div>
+      <div class="panel-body progress-panel" id="progress-panel">
+      </div>
+    </div>
+
+    <!-- 🔵 RESOURCES -->
+    <div class="panel" id="resources-panel-wrapper" style="display:none">
+      <div class="panel-header">Resources</div>
+      <div class="panel-body" id="resources-panel">
+        <!-- Rempli dynamiquement -->
+      </div>
+    </div>
+
+  <!-- Config fusions puis scripts -->
   <script src="fusions-config.js"></script>
   <script>
     function loadFusionFromHash() {
       const fusionKey = window.location.hash.replace('#', '');
       const fusion = window.fusions[fusionKey];
-  
       if (fusion) {
         document.getElementById('page-title').textContent = fusion.name;
         document.title = `${fusion.name}  -  ${window.siteConfig.title}`;
-  
         const timelineContainer = document.getElementById('timeline-container');
         timelineContainer.setAttribute('data-json', fusion.json);
-  
-        // 🔁 Recharger le JSON et la timeline
-        if (typeof window.reloadTimeline === 'function') {
-          window.reloadTimeline();
-        }
+        if (typeof window.reloadTimeline === 'function') window.reloadTimeline();
       } else {
         document.getElementById('page-title').textContent = "Unlisted fusion yet";
         document.title = "Unlisted fusion - " + window.siteConfig.title;
       }
     }
-  
-    // Au chargement initial
     loadFusionFromHash();
-  
-    // 👂 On écoute les changements de hash
     window.addEventListener('hashchange', loadFusionFromHash);
   </script>
   <script src="fusion.js"></script>
   <script src="/script.js"></script>
+  <script>
+    // Toggle du slider info
+    document.getElementById("info-btn").addEventListener("click", () => {
+      document.getElementById("info-sidebar").classList.toggle("open");
+    });
+  </script>
 </body>
 </html>

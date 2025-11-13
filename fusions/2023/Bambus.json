@@ -1,12 +1,19 @@
 {
-  "title": "BAMBUS FOURLEAF •  CLASSIC FUSION • 28/09/2023 - 13/10/2023",
+  "title": "BAMBUS FOURLEAF",
+  "type": "CLASSIC",
+  "datespan": "28/09/2023 - 13/10/2023",
+  "Rare1": "Petrifya",
+  "Rare2": "Selinia",
+  "Rare3": "Tolog",
+  "Rare4": "Torrux",
+  "Epic": "Malkith",
   "events": [
     {
       "name": "Dragon Tournament",
       "type": "Tournament",
       "start_date": "2023-09-28",
       "end_date": "2023-10-01",
-      "reward": "Petrifya",
+      "reward": "Rare1",
       "points": [
         1
       ]
@@ -16,7 +23,7 @@
       "type": "Tournament",
       "start_date": "2023-10-03",
       "end_date": "2023-10-06",
-      "reward": "Petrifya",
+      "reward": "Rare1",
       "points": [
         1
       ]
@@ -26,7 +33,7 @@
       "type": "Tournament",
       "start_date": "2023-10-07",
       "end_date": "2023-10-10",
-      "reward": "Petrifya",
+      "reward": "Rare1",
       "points": [
         1
       ]
@@ -36,7 +43,7 @@
       "type": "Event",
       "start_date": "2023-10-08",
       "end_date": "2023-10-11",
-      "reward": "Petrifya",
+      "reward": "Rare1",
       "points": [
         1
       ]
@@ -46,7 +53,7 @@
       "type": "Tournament",
       "start_date": "2023-09-28",
       "end_date": "2023-10-02",
-      "reward": "Selinia",
+      "reward": "Rare2",
       "points": [
         1
       ]
@@ -56,7 +63,7 @@
       "type": "Event",
       "start_date": "2023-09-29",
       "end_date": "2023-10-02",
-      "reward": "Selinia, Malkith",
+      "reward": "Rare2, Epic",
       "points": [
         1,
         1
@@ -67,7 +74,7 @@
       "type": "Event",
       "start_date": "2023-10-05",
       "end_date": "2023-10-10",
-      "reward": "Selinia",
+      "reward": "Rare2",
       "points": [
         1
       ]
@@ -77,7 +84,7 @@
       "type": "Tournament",
       "start_date": "2023-10-06",
       "end_date": "2023-10-09",
-      "reward": "Selinia",
+      "reward": "Rare2",
       "points": [
         1
       ]
@@ -87,7 +94,7 @@
       "type": "Tournament",
       "start_date": "2023-09-29",
       "end_date": "2023-10-02",
-      "reward": "Tolog",
+      "reward": "Rare3",
       "points": [
         1
       ]
@@ -97,7 +104,7 @@
       "type": "Tournament",
       "start_date": "2023-09-30",
       "end_date": "2023-10-03",
-      "reward": "Tolog",
+      "reward": "Rare3",
       "points": [
         1
       ]
@@ -107,7 +114,7 @@
       "type": "Tournament",
       "start_date": "2023-10-01",
       "end_date": "2023-10-04",
-      "reward": "Tolog",
+      "reward": "Rare3",
       "points": [
         1
       ]
@@ -117,7 +124,7 @@
       "type": "Event",
       "start_date": "2023-10-04",
       "end_date": "2023-10-07",
-      "reward": "Tolog",
+      "reward": "Rare3",
       "points": [
         1
       ]
@@ -127,7 +134,7 @@
       "type": "Event",
       "start_date": "2023-09-30",
       "end_date": "2023-10-03",
-      "reward": "Torrux",
+      "reward": "Rare4",
       "points": [
         1
       ]
@@ -137,7 +144,7 @@
       "type": "Tournament",
       "start_date": "2023-10-04",
       "end_date": "2023-10-07",
-      "reward": "Torrux",
+      "reward": "Rare4",
       "points": [
         1
       ]
@@ -147,7 +154,7 @@
       "type": "Tournament",
       "start_date": "2023-10-06",
       "end_date": "2023-10-09",
-      "reward": "Torrux",
+      "reward": "Rare4",
       "points": [
         1
       ]
@@ -157,7 +164,7 @@
       "type": "Tournament",
       "start_date": "2023-10-07",
       "end_date": "2023-10-10",
-      "reward": "Torrux",
+      "reward": "Rare4",
       "points": [
         1
       ]

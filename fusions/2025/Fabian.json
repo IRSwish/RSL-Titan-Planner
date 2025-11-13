@@ -1,12 +1,18 @@
 {
-  "title": "LORD ENTERTAINER FABIAN - CLASSIC FUSION • 10/03/2025 - 26/03/2025",
+  "title": "LORD ENTERTAINER FABIAN",
+  "type": "CLASSIC",
+  "datespan": "10/03/2025 - 26/03/2025",
+  "Rare": "Boorn",
+  "Epic": "Siendra",
+  "RareAff":"Magic",
+  "EpicAff":"Void",
   "events": [
     {
       "name": "Dragon Tournament",
 	  "type": "Tournament",
       "start_date": "2025-03-10",
       "end_date": "2025-03-13",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -14,7 +20,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-13",
       "end_date": "2025-03-16",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -22,7 +28,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-15",
       "end_date": "2025-03-18",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -30,7 +36,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-16",
       "end_date": "2025-03-20",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -38,7 +44,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-17",
       "end_date": "2025-03-20",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -46,7 +52,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-20",
       "end_date": "2025-03-23",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -54,7 +60,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-21",
       "end_date": "2025-03-24",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -62,7 +68,7 @@
 	  "type": "Tournament",
       "start_date": "2025-03-21",
       "end_date": "2025-03-24",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -70,7 +76,7 @@
 	  "type": "Event",
       "start_date": "2025-03-10",
       "end_date": "2025-03-13",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },
 	{
@@ -78,49 +84,49 @@
 	  "type": "Event",
       "start_date": "2025-03-10",
       "end_date": "2025-03-14",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },{
       "name": "Gear Enhancement",
 	  "type": "Event",
       "start_date": "2025-03-12",
       "end_date": "2025-03-15",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },{
       "name": "Summon Rush",
 	  "type": "Event",
       "start_date": "2025-03-14",
       "end_date": "2025-03-17",
-      "reward": "Boorn, Siendra",
+      "reward": "Rare, Epic",
       "points": [1, 1]
     },{
       "name": "Dungeon Divers",
 	  "type": "Event",
       "start_date": "2025-03-14",
       "end_date": "2025-03-17",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },{
       "name": "Gear Enhancement",
 	  "type": "Event",
       "start_date": "2025-03-17",
       "end_date": "2025-03-20",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },{
       "name": "Dungeon Divers",
 	  "type": "Event",
       "start_date": "2025-03-21",
       "end_date": "2025-03-24",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     },{
       "name": "Gear Enhancement",
 	  "type": "Event",
       "start_date": "2025-03-22",
       "end_date": "2025-03-25",
-      "reward": "Boorn",
+      "reward": "Rare",
       "points": [1]
     }
   ]

@@ -1,12 +1,16 @@
 {
-  "title": "SKORID THE HALFSPAWN • CLASSIC FUSION • 01/08/2024 - 17/08/2024",
+  "title": "SKORID THE HALFSPAWN",
+  "type": "CLASSIC",
+  "datespan": "01/08/2024 - 17/08/2024",
+  "Rare": "Lasair",
+  "Epic": "Bowf",
   "events": [
     {
       "name": "Dragon Tournament",
       "type": "Tournament",
       "start_date": "2024-08-01",
       "end_date": "2024-08-04",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -16,7 +20,7 @@
       "type": "Tournament",
       "start_date": "2024-08-01",
       "end_date": "2024-08-05",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -26,7 +30,7 @@
       "type": "Event",
       "start_date": "2024-08-02",
       "end_date": "2024-08-05",
-      "reward": "Lasair, Bowf",
+      "reward": "Rare, Epic",
       "points": [
         1,
         1
@@ -37,7 +41,7 @@
       "type": "Tournament",
       "start_date": "2024-08-02",
       "end_date": "2024-08-05",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -47,7 +51,7 @@
       "type": "Tournament",
       "start_date": "2024-08-03",
       "end_date": "2024-08-06",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -57,7 +61,7 @@
       "type": "Event",
       "start_date": "2024-08-03",
       "end_date": "2024-08-06",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -67,7 +71,7 @@
       "type": "Tournament",
       "start_date": "2024-08-04",
       "end_date": "2024-08-07",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -77,7 +81,7 @@
       "type": "Tournament",
       "start_date": "2024-08-06",
       "end_date": "2024-08-09",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -87,7 +91,7 @@
       "type": "Tournament",
       "start_date": "2024-08-08",
       "end_date": "2024-08-11",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -97,7 +101,7 @@
       "type": "Event",
       "start_date": "2024-08-08",
       "end_date": "2024-08-11",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -107,7 +111,7 @@
       "type": "Tournament",
       "start_date": "2024-08-09",
       "end_date": "2024-08-12",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -117,7 +121,7 @@
       "type": "Tournament",
       "start_date": "2024-08-10",
       "end_date": "2024-08-13",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -127,7 +131,7 @@
       "type": "Tournament",
       "start_date": "2024-08-10",
       "end_date": "2024-08-13",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -137,7 +141,7 @@
       "type": "Tournament",
       "start_date": "2024-08-11",
       "end_date": "2024-08-14",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -147,7 +151,7 @@
       "type": "Event",
       "start_date": "2024-08-12",
       "end_date": "2024-08-16",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -157,7 +161,7 @@
       "type": "Event",
       "start_date": "2024-08-13",
       "end_date": "2024-08-16",
-      "reward": "Lasair",
+      "reward": "Rare",
       "points": [
         1
       ]

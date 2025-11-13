@@ -1,12 +1,16 @@
 {
-  "title": "GRETEL HAGBANE • CLASSIC FUSION • 31/10/2024 - 14/11/2024",
+  "title": "GRETEL HAGBANE",
+  "type":"CLASSIC",
+  "datespan":"31/10/2024 - 14/11/2024",
+  "Rare": "Denid",
+  "Epic": "Signy",
   "events": [
     {
       "name": "Gear Hunters",
       "type": "Tournament",
       "start_date": "2024-10-31",
       "end_date": "2024-11-03",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -16,7 +20,7 @@
       "type": "Tournament",
       "start_date": "2024-11-01",
       "end_date": "2024-11-04",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -26,7 +30,7 @@
       "type": "Tournament",
       "start_date": "2024-11-01",
       "end_date": "2024-11-04",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -36,7 +40,7 @@
       "type": "Event",
       "start_date": "2024-11-01",
       "end_date": "2024-11-05",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -46,7 +50,7 @@
       "type": "Event",
       "start_date": "2024-11-02",
       "end_date": "2024-11-05",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -56,7 +60,7 @@
       "type": "Tournament",
       "start_date": "2024-11-02",
       "end_date": "2024-11-05",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -66,7 +70,7 @@
       "type": "Tournament",
       "start_date": "2024-11-04",
       "end_date": "2024-11-07",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -76,7 +80,7 @@
       "type": "Tournament",
       "start_date": "2024-11-04",
       "end_date": "2024-11-07",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -86,7 +90,7 @@
       "type": "Event",
       "start_date": "2024-11-06",
       "end_date": "2024-11-09",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -96,7 +100,7 @@
       "type": "Tournament",
       "start_date": "2024-11-07",
       "end_date": "2024-11-10",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -106,7 +110,7 @@
       "type": "Tournament",
       "start_date": "2024-11-07",
       "end_date": "2024-11-11",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -116,7 +120,7 @@
       "type": "Event",
       "start_date": "2024-11-08",
       "end_date": "2024-11-11",
-      "reward": "Denid, Signy",
+      "reward": "Rare, Epic",
       "points": [
         1,
         1
@@ -127,7 +131,7 @@
       "type": "Tournament",
       "start_date": "2024-11-08",
       "end_date": "2024-11-11",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -137,7 +141,7 @@
       "type": "Tournament",
       "start_date": "2024-11-08",
       "end_date": "2024-11-11",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -147,7 +151,7 @@
       "type": "Event",
       "start_date": "2024-11-10",
       "end_date": "2024-11-13",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
@@ -157,7 +161,7 @@
       "type": "Tournament",
       "start_date": "2024-11-10",
       "end_date": "2024-11-13",
-      "reward": "Denid",
+      "reward": "Rare",
       "points": [
         1
       ]
