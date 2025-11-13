@@ -7,6 +7,13 @@
   --point-bg: #0e0e0e;
   --timeline-padding: 50px;
   --site-title: "RSLX";
+  --gold:#d4af37;
+  --blue:#00c9ff;
+  --text:#fcf6ff;
+  --bg:#0e0e0e;
+  --bg2:#1a1a1a;
+  --green:#00ff66;
+  --gray:#555;
 }
 
 @font-face {
@@ -47,13 +54,6 @@ body::before {
   font-size: 42px;
   color: var(--text-color);
   text-shadow: 0 0 12px rgba(212,175,55,0.25);
-}
-
-header,
-.timeline-container,
-.summary-box {
-  position: relative;
-  z-index: 1;
 }
 
 header {
@@ -278,26 +278,6 @@ header {
   filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(500%) brightness(80%);
 }
 
-/* Summary box */
-.summary-box {
-  position: relative;
-  margin: 0 auto;
-  max-width: 280px;
-  text-align: center;
-  background: #1a1a1a;
-  border: 2px solid #d4af37;
-  padding: 8px;
-  border-radius: 14px;
-  color: var(--text-color);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  display: block;
-}
-
-.summary-box div {
-  margin-bottom: 6px;
-}
-
 /* Colonne du jour actuel */
 .date-column.today {
   background: linear-gradient(
@@ -308,35 +288,6 @@ header {
     rgba(212,175,55,0) 100%
   );
 }
-
-/* Légende */
-.legend {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-  font-size: 12px;
-  opacity: 0.85;
-}
-
-.legend div {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.legend-dot.skipped { background-color: red; }
-.legend-dot.in-progress { background-color: orange; }
-.legend-dot.done { background-color: #4caf50; }
-.legend-dot.not-started { background-color: #e0e0e0; }
 
 /* Calculator */
 .dropdown-container {
@@ -599,7 +550,6 @@ input[type=number] {
   transform: scale(1.15);
 }
 
-/* Bouton reset global (summary box) */
 .global-reset {
   position: absolute;
   bottom: 6px;
@@ -617,9 +567,4 @@ input[type=number] {
 .global-reset:hover {
   background: #d4af37;
   color: #1a1a1a;
-}
-
-/* Assure que la summary box soit en position relative */
-.summary-box {
-  position: relative;
 }
