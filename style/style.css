@@ -568,3 +568,39 @@ input[type=number] {
   background: #d4af37;
   color: #1a1a1a;
 }
+
+.adsense-container {
+  background: #181818;
+  border: 1px solid #333;
+  padding: 12px 16px;
+  margin: 40px auto 20px;
+  border-radius: 10px;
+  max-width: 1200px; /* optionnel pour éviter que la pub soit full-width */
+}
+
+.ad-label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+  text-align: center;
+  width: 100%;
+  position: relative;
+}
+
+.ad-label::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: #d4af37;
+  margin: 6px auto 0;
+  opacity: 0.6;
+}
+
+.adsense-container ins {
+  min-height: 120px;   /* Ajuste 80–150 selon ton goût */
+}
