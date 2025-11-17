@@ -576,6 +576,7 @@ input[type=number] {
   margin: 40px auto 20px;
   border-radius: 10px;
   max-width: 1200px; /* optionnel pour éviter que la pub soit full-width */
+  visibility: hidden;
 }
 
 .ad-label {
@@ -589,7 +590,7 @@ input[type=number] {
   text-align: center;
   width: 100%;
   position: relative;
-  visibility: hidden;
+  
 }
 
 .ad-label::after {
