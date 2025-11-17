@@ -576,7 +576,7 @@ input[type=number] {
   margin: 40px auto 20px;
   border-radius: 10px;
   max-width: 1200px; /* optionnel pour éviter que la pub soit full-width */
-  opacity: 0;
+  opacity: 0 !important;
 }
 
 .ad-label {
