@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <meta charset="UTF-8">
@@ -361,6 +362,7 @@
 </div>
 
 <script>
+
 let champions = [];
 let factions = [];
 
@@ -378,32 +380,65 @@ let selectedRarities = [];
 let selectedAffinities = [];
 let selectedTypes = [];
 
-fetch('champions.json')
-  .then(res => res.json())
-  .then(data => {
-    champions = data.champions;
-    factions = data.factions;
-    renderFactions();
-    displayChampions();
-  })
-  .catch(err => console.error("JSON load error:", err));
+document.addEventListener("DOMContentLoaded", () => {
+
+  initSqlJs({
+    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+  }).then(SQL => {
+    
+    fetch("champions.db") // 🔥 Ajuste le chemin selon ton site !
+      .then(res => res.arrayBuffer())
+      .then(buffer => {
+        const db = new SQL.Database(new Uint8Array(buffer));
+        
+        const result = db.exec("SELECT * FROM champions;");
+        
+        if (!result.length) {
+          console.error("La table champions semble vide ou introuvable");
+          return;
+        }
+
+        champions = result[0].values.map(r => ({
+          id: r[0],
+          name: r[1],
+          faction: r[2],
+          rarity: r[3],
+          affinity: r[4],
+          type: r[5],
+          image: r[6],
+          invocable: r[7] === 1
+        }));
+
+        factions = [...new Set(champions.map(c => c.faction))].sort();
+
+        renderFactions();
+        displayChampions();
+      })
+      .catch(err => console.error("Erreur chargement champions.db :", err));
+
+  });
+
+});
 
 function renderFactions() {
   factions.forEach(f => {
     const img = document.createElement('img');
-    img.src = `img/factions/${f.icon}.webp`;
-    img.alt = f.name;
+    const icon = f.toLowerCase().replace(/ /g, "");
+    img.src = `img/factions/${icon}.webp`;
+    img.alt = f;
     img.classList.add('faction-icon');
-    img.dataset.faction = f.name;
+    img.dataset.faction = f;
+
     img.addEventListener('click', () => {
       document.querySelectorAll('.faction-icon').forEach(i => i.classList.remove('active'));
-      if (selectedFaction === f.name) selectedFaction = null;
+      if (selectedFaction === f) selectedFaction = null;
       else {
-        selectedFaction = f.name;
+        selectedFaction = f;
         img.classList.add('active');
       }
       displayChampions();
     });
+
     factionBar.appendChild(img);
   });
 }
