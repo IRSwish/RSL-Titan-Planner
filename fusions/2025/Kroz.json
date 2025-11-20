@@ -1,5 +1,5 @@
 {
-  "title": "KROZ WALLBREAKER",
+  "title": "KROZ WALLBREAKER • FRAGMENT FUSION • 20/11/2025 - 04/12/2025",
   "type": "Fragment",
   "datespan": "20/11/2025 - 04/12/2025",
   "events": [
@@ -57,11 +57,14 @@
       "name": "Champion Chase Tournament",
       "type": "Tournament",
       "start_date": "2025-11-28",
-      "end_date": "2025-12-02",
-      "reward": "Fragments, Fragments",
+      "end_date": "2025-12-01",
+      "reward": "Fragments",
       "points": [
-        15,
-        10
+        15
+      ],
+      "extra_choices": [
+        { "label": "1st Place", "fragments": 10 },
+        { "label": "2nd Place", "fragments": 5 }
       ]
     },
     {
@@ -161,8 +164,11 @@
       "end_date": "2025-11-24",
       "reward": "Fragments, Fragments",
       "points": [
-        10,
         10
+      ],
+      "extra_choices": [
+        { "label": "1st Place", "fragments": 10 },
+        { "label": "2nd Place", "fragments": 5 }
       ]
     }
   ]
