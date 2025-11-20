@@ -340,6 +340,114 @@
   border-radius: 6px;
   object-fit: contain;
 }
+
+/* --- Extra Rewards (classement 1st / 2nd place) --- */
+
+.extra-choices {
+  margin-top: 6px;
+  padding: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(245, 37, 132, 0.5);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.extra-choices .extra-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fcf6ff;
+  opacity: 0.9;
+}
+
+.extra-choice {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #f52584;
+  color: #fcf6ff;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  text-align: left;
+}
+
+.extra-choice:hover {
+  transform: translateY(-1px);
+  border-color: #d4af37;
+}
+
+.extra-choice.active {
+  background: linear-gradient(90deg, #f52584, #00c9ff);
+  border-color: #d4af37;
+  box-shadow: 0 0 8px rgba(245, 37, 132, 0.5);
+}
+/* === Reset bouton repositionné === */
+.event-reset {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 6;
+
+  transition: 0.2s ease;
+}
+
+.event-reset svg {
+  color:#fff;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2;
+}
+
+/* === Extra rewards corner (🥇 🥈 compact) === */
+
+.extra-corner {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 5;
+}
+
+.extra-corner-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid rgba(255,255,255,0.15);
+  padding: 2px 5px;
+  font-size: 11px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.extra-corner-btn:hover {
+  border-color: #d4af37;
+}
+
+.extra-corner-btn.active {
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(94, 255, 0, 0.35);
+}
+
+.extra-corner-btn .medal {
+  font-size: 14px;
+}
+
+.extra-corner-btn .frag-mini {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+.extra-corner-btn .frag-val {
+  font-size: 11px;
+  color: #fcf6ff;
+}
 </style>
 </head>
 <body>

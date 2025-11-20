@@ -8,6 +8,12 @@
     return new Date(y, m - 1, d, 0, 0, 0, 0);
   };
 
+    // clé unique pour stocker le choix d'extra fragments d'un event
+  const makeExtraKey = (event) => {
+    const safeName = (event.name || '').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+    return `extra_${safeName}_${event.start_date}_${event.end_date}`;
+  };
+
   // mappe "Rare"/"Epic"/"Fragments" -> vrais noms/images selon le JSON + type
   function resolveRewardName(raw, dataType, data) {
     const r = (raw || '').trim();
@@ -246,11 +252,98 @@
                 </div>`;
       }).join('');
 
-      block.innerHTML = `
+            block.innerHTML = `
         <div class="event-name">${event.name}</div>
-        <button class="event-reset" title="Réinitialiser cet événement">↺</button>
+        <button class="event-reset" title="Reset"><i data-lucide="rotate-cw"></i></button>
         <div class="points-container">${pointsHTML}</div>
       `;
+
+      // --- Extra rewards (classement 1st/2nd place) uniquement pour les fusions Fragment ---
+      const fusionType = (data.type || '').toUpperCase();
+      if (fusionType === 'FRAGMENT' && Array.isArray(event.extra_choices) && event.extra_choices.length > 0) {
+        const extraKey = makeExtraKey(event);
+        const savedValue = parseInt(localStorage.getItem(extraKey) || '0', 10);
+
+        const extraDiv = document.createElement('div');
+        extraDiv.className = 'extra-choices';
+
+        const title = document.createElement('div');
+        title.className = 'extra-title';
+        title.textContent = 'Extra reward (choose one)';
+        extraDiv.appendChild(title);
+
+        event.extra_choices.forEach(choice => {
+          const val = parseInt(choice.fragments || 0, 10);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'extra-choice';
+          btn.dataset.value = String(val);
+          btn.textContent = `${choice.label} (+${val})`;
+
+          if (savedValue === val && val > 0) {
+            btn.classList.add('active');
+          }
+
+          btn.addEventListener('click', () => {
+            const current = parseInt(localStorage.getItem(extraKey) || '0', 10);
+            const newValue = (current === val ? 0 : val);
+
+            localStorage.setItem(extraKey, String(newValue));
+
+            // visuel : un seul choix actif
+            extraDiv.querySelectorAll('.extra-choice').forEach(el => el.classList.remove('active'));
+            if (newValue > 0) btn.classList.add('active');
+
+            // met à jour uniquement les panneaux qui utilisent les fragments
+            updateProgressPanelFromData(timelineData);
+          });
+
+          extraDiv.appendChild(btn);
+        });
+
+        // --- Extra rewards (classement 1st/2nd) version compact corner ---
+        if (fusionType === 'FRAGMENT' && Array.isArray(event.extra_choices) && event.extra_choices.length > 0) {
+            const extraKey = makeExtraKey(event);
+            const savedValue = parseInt(localStorage.getItem(extraKey) || '0', 10);
+
+            const corner = document.createElement('div');
+            corner.className = 'extra-corner';
+
+            event.extra_choices.forEach((choice, index) => {
+              const val = parseInt(choice.fragments || 0, 10);
+              const btn = document.createElement('div');
+              btn.className = 'extra-corner-btn';
+              btn.dataset.value = String(val);
+
+              // Emoji 🥇 / 🥈
+              btn.innerHTML = `
+                <span class="medal">${index === 0 ? '🥇' : '🥈'}</span>
+                <img class="frag-mini" src="/tools/champions-index/img/champions/Fragments.webp" />
+                <span class="frag-val">+${val}</span>
+              `;
+
+              if (savedValue === val && val > 0) {
+                btn.classList.add('active');
+              }
+
+              btn.addEventListener('click', () => {
+                const current = parseInt(localStorage.getItem(extraKey) || '0', 10);
+                const newValue = (current === val ? 0 : val);
+                localStorage.setItem(extraKey, String(newValue));
+
+                corner.querySelectorAll('.extra-corner-btn').forEach(el => el.classList.remove('active'));
+                if (newValue > 0) btn.classList.add('active');
+
+                updateProgressPanelFromData(timelineData);
+              });
+
+              corner.appendChild(btn);
+            });
+
+            block.appendChild(corner);
+        }
+
+      }
 
       timeline.appendChild(block);
     });
@@ -369,6 +462,11 @@
     updateSummary();
     updateProgressPanelFromData(timelineData);
     buildResourcesPanel(timelineData);
+
+    // (Re)dessine les icônes Lucide pour les éléments créés dynamiquement
+    if (window.lucide && lucide.createIcons) {
+      lucide.createIcons();
+    }
   }
 
   function computeTracks(events, minDate, dayWidth) {
@@ -432,11 +530,12 @@
     const epicAff = (data.EpicAff || 'magic').toLowerCase();
 
     // === FRAGMENT / HYBRID ===
-    if (type === 'FRAGMENT' || type === 'HYBRID') {
+       if (type === 'FRAGMENT' || type === 'HYBRID') {
       let fragsValidated = 0;
       let fragsOngoing = 0;
       let fragsSkipped = 0;
 
+      // fragments provenant des events classiques (points)
       boxes.forEach(b => {
         if ((b.dataset.reward || '').toLowerCase().includes('fragment')) {
           const val = parseInt(b.querySelector('span')?.textContent || '0', 10);
@@ -446,13 +545,22 @@
         }
       });
 
+      // fragments EXTRA provenant du classement (1st / 2nd place)
+      if (type === 'FRAGMENT' && Array.isArray(data.events)) {
+        data.events.forEach(ev => {
+          if (!Array.isArray(ev.extra_choices) || ev.extra_choices.length === 0) return;
+          const extraKey = makeExtraKey(ev);
+          const val = parseInt(localStorage.getItem(extraKey) || '0', 10);
+          if (val > 0) {
+            // on les considère comme des fragments validés (obtenus)
+            fragsValidated += val;
+          }
+        });
+      }
+
       const totalVirtual = fragsValidated + fragsOngoing;
       const target = type === 'HYBRID' ? 400 : 100;
       const percent = Math.min((fragsValidated / target) * 100, 100);
-
-      if (elA) elA.textContent = fragsValidated;
-      if (elV) elV.textContent = totalVirtual;
-      if (elS) elS.textContent = fragsSkipped;
 
       let statusClass = '';
 
