@@ -1,5 +1,169 @@
 {
-  "title": "KROZ WALLBREAKER",
-  "type":"FRAGMENT",
-  "datespan":"20/11/2025 - 04/12/2025"
+  "title": "KROZ WALLBREAKER • FRAGMENT FUSION • 20/11/2025 - 04/12/2025",
+  "type": "Fragment",
+  "datespan": "20/11/2025 - 04/12/2025",
+  "events": [
+    {
+      "name": "Fire Knight Tournament",
+      "type": "Tournament",
+      "start_date": "2025-11-20",
+      "end_date": "2025-11-23",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2025-11-23",
+      "end_date": "2025-11-26",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2025-11-27",
+      "end_date": "2025-11-30",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Event",
+      "start_date": "2025-11-30",
+      "end_date": "2025-12-03",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Summon Rush",
+      "type": "Event",
+      "start_date": "2025-11-21",
+      "end_date": "2025-11-24",
+      "reward": "Fragments",
+      "points": [
+        15
+      ]
+    },
+    {
+      "name": "Champion Chase Tournament",
+      "type": "Tournament",
+      "start_date": "2025-11-28",
+      "end_date": "2025-12-01",
+      "reward": "Fragments, Fragments",
+      "points": [
+        15,
+        10
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2025-11-22",
+      "end_date": "2025-11-25",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2025-11-29",
+      "end_date": "2025-12-02",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-11-21",
+      "end_date": "2025-11-24",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-11-25",
+      "end_date": "2025-11-28",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-11-29",
+      "end_date": "2025-12-02",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2025-11-20",
+      "end_date": "2025-11-23",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2025-11-24",
+      "end_date": "2025-11-27",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Tournament",
+      "start_date": "2025-11-28",
+      "end_date": "2025-12-01",
+      "reward": "Fragments",
+      "points": [
+        5
+      ]
+    },
+    {
+      "name": "Champion Training Event",
+      "type": "Event",
+      "start_date": "2025-11-26",
+      "end_date": "2025-11-30",
+      "reward": "Fragments",
+      "points": [
+        10
+      ]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2025-11-20",
+      "end_date": "2025-11-24",
+      "reward": "Fragments, Fragments",
+      "points": [
+        10,
+        10
+      ]
+    }
+  ]
 }
