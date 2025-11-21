@@ -48,9 +48,9 @@
       "type": "Event",
       "start_date": "2025-11-21",
       "end_date": "2025-11-24",
-      "reward": "Fragments",
+      "reward": "Fragments, Fragments",
       "points": [
-        15
+        5, 10
       ]
     },
     {
