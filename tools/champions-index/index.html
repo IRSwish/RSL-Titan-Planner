@@ -293,6 +293,385 @@
     .champion-card { max-width: 100px; }
     .faction-icon { width: 40px; height: 40px; }
   }
+
+  .sort-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sort-btn {
+  background: #1a1a1a;
+  border: 2px solid #555;
+  color: #fcf6ff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  transition: border-color .2s, background .2s;
+}
+
+.sort-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sort-btn.active {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.15);
+}
+
+.sort-btn .sort-icon {
+  opacity: .8;
+}
+
+/* === MODAL === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #1a1a1a;
+  border: 2px solid #d4af37;
+  border-radius: 12px;
+  padding: 20px;
+  width: 500px;
+  display: flex;
+  gap: 25px;
+  position: relative;
+  box-shadow: 0 0 25px rgba(212,175,55,0.4);
+}
+
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fcf6ff;
+}
+
+.modal-close svg {
+  width: 26px;
+  height: 26px;
+}
+
+.modal-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-img-wrapper {
+  position: relative;
+  width: 140px;
+  height: 182px;
+}
+
+.modal-champion-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-frame-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.modal-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* ⬅ centre verticalement */
+}
+
+.modal-header-block {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.modal-icon {
+  height: 32px;
+  object-fit: contain;
+}
+
+.modal-name {
+  text-align: center;
+  font-family: 'American Captain', sans-serif;
+  font-size: 36px;
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.modal-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.stat-row svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* === 3 COLONNES === */
+.modal-content {
+  background: #1a1a1a;
+  border: 2px solid #d4af37;
+  padding: 20px;
+  width: 900px;
+  display: flex;
+  gap: 20px;
+  position: relative;
+  box-shadow: 0 0 25px rgba(212,175,55,0.4);
+}
+
+.modal-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 33%;
+  gap: 15px;
+}
+
+/* Diviseur vertical */
+.modal-divider {
+  width: 2px;
+  background: rgba(212,175,55,0.4);
+  border-radius: 2px;
+}
+
+/* Bannière faction */
+.modal-faction-banner {
+  height: 240px;
+  object-fit: contain;
+}
+
+/* Image du champion */
+.modal-img-wrapper {
+  position: relative;
+  width: 140px;
+  height: 182px;
+}
+
+.modal-champion-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-frame-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.modal-affinity-big {
+  position: absolute;
+  bottom: 15px;
+  left: 12px;
+  width: 32px;
+  height:32px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Nom */
+.modal-name {
+  text-align: center;
+  font-family: 'American Captain', sans-serif;
+  font-size: 32px;
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Stats */
+.stats-col {
+  justify-content: center;
+}
+
+.modal-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stat-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-left span {
+  font-size: 16px;
+}
+
+.stat-row svg {
+  width: 22px;
+  height: 22px;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: right;
+  min-width: 60px;
+}
+
+.modal-col-title {
+  font-family: 'American Captain', sans-serif;
+  font-size: 32px;
+  text-align: center;
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+/* Zone comparatif */
+.compare-header {
+  font-size: 13px;
+  margin-bottom: 6px;
+  opacity: 0.85;
+}
+.compare-header span {
+  font-weight: 600;
+}
+
+/* Input + suggestions */
+.compare-input-wrapper {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.compare-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #0e0e0e;
+  color: #fcf6ff;
+  font-size: 13px;
+  outline: none;
+}
+
+.compare-input:focus {
+  border-color: #d4af37;
+}
+
+.compare-suggestions {
+  margin-top: 4px;
+  background: #111;
+  border-radius: 6px;
+  border: 1px solid #333;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.compare-suggestion {
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.compare-suggestion:hover {
+  background: #222;
+}
+
+/* Bouton Compare en bas à droite du modal */
+.compare-toggle {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  background: none;
+  padding: 6px 8px;
+  border:none;
+  color: #fcf6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compare-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Affichage des valeurs + pourcentages */
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: right;
+  min-width: 60px;
+}
+
+.stat-main-line {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.stat-number {
+  min-width: 40px;
+  text-align: right;
+}
+
+.stat-percent {
+  min-width: 44px;
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.stat-percent.positive {
+  color: #00c86b;
+}
+
+.stat-percent.negative {
+  color: #f52584;
+}
+
+
   </style>
 </head>
 
@@ -349,6 +728,28 @@
     </div>
   </div>
 
+  <div class="sort-bar">
+    <button class="sort-btn" data-stat="hp">
+      <i data-lucide="heart"></i>
+      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+    </button>
+
+    <button class="sort-btn" data-stat="atk">
+      <i data-lucide="swords"></i>
+      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+    </button>
+
+    <button class="sort-btn" data-stat="def">
+      <i data-lucide="shield"></i>
+      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+    </button>
+
+    <button class="sort-btn" data-stat="spd">
+      <i data-lucide="chevrons-up"></i>
+      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+    </button>
+  </div>
+
   <div class="checkbox-container">
     <label for="invocableOnly">Hide Non-Summonable Champions</label>
     <label class="switch">
@@ -360,6 +761,107 @@
   <div class="counter" id="championCount"></div>
   <div id="championGrid" class="champion-grid"></div>
 </div>
+
+<!-- === MODAL CHAMPION === -->
+<div id="championModal" class="modal-overlay">
+  <div class="modal-content">
+
+    <button class="modal-close">
+      <i data-lucide="x"></i>
+    </button>
+
+    <div class="modal-col faction-col">
+      <div id="modalFactionTitle" class="modal-col-title"></div>
+      <img id="modalFactionBanner" class="modal-faction-banner" src="">
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-col champion-col">
+      <div id="modalChampionTitle" class="modal-col-title"></div>
+
+      <div class="modal-img-wrapper">
+        <img id="modalChampionImg" class="modal-champion-img" src="">
+        <img id="modalFrameImg" class="modal-frame-img" src="">
+        <img id="modalAffinityBig" class="modal-affinity-big" src="">
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-col stats-col">
+  <div id="modalStatsTitle" class="modal-col-title">STATS</div>
+
+  <!-- Header comparatif -->
+  <div class="compare-header" id="compareHeader" style="display:none;">
+    Comparing with <span id="compareTargetName"></span>
+  </div>
+
+  <!-- Input de recherche pour le comparatif -->
+  <div class="compare-input-wrapper" id="compareInputWrapper" style="display:none;">
+    <input type="text" id="compareInput" class="compare-input" placeholder="Type a champion name..." autocomplete="off">
+    <div class="compare-suggestions" id="compareSuggestions"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="modal-stats">
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="heart"></i><span>HP</span></div>
+      <div class="stat-value" id="statHP"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="swords"></i><span>ATK</span></div>
+      <div class="stat-value" id="statATK"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="shield"></i><span>DEF</span></div>
+      <div class="stat-value" id="statDEF"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="chevrons-up"></i><span>SPD</span></div>
+      <div class="stat-value" id="statSPD"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="circle-divide"></i><span>C.RATE</span></div>
+      <div class="stat-value" id="statCRATE"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="circle-percent"></i><span>C.DMG</span></div>
+      <div class="stat-value" id="statCDMG"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="shield-plus"></i><span>RES</span></div>
+      <div class="stat-value" id="statRES"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-left"><i data-lucide="locate-fixed"></i><span>ACC</span></div>
+      <div class="stat-value" id="statACC"></div>
+    </div>
+
+  </div>
+
+  <!-- Bouton Compare / Close compare -->
+  <button class="compare-toggle" id="compareToggle">
+    <i data-lucide="arrow-right-left"></i>
+  </button>
+
+</div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 
 <script>
 
@@ -379,6 +881,7 @@ let selectedFaction = null;
 let selectedRarities = [];
 let selectedAffinities = [];
 let selectedTypes = [];
+let currentSort = { stat: null, order: "asc" }; 
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -406,7 +909,15 @@ document.addEventListener("DOMContentLoaded", () => {
           affinity: r[4],
           type: r[5],
           image: r[6],
-          invocable: r[7] === 1
+          invocable: r[7] === 1,
+          hp: Number(r[8]) || 0,
+          atk: Number(r[9]) || 0,
+          def: Number(r[10]) || 0,
+          spd: Number(r[11]) || 0,
+          crate: Number(r[12]) || 0,
+          cdmg: Number(r[13]) || 0,
+          res: Number(r[14]) || 0,
+          acc: Number(r[15]) || 0
         }));
 
         factions = [...new Set(champions.map(c => c.faction))].sort();
@@ -474,6 +985,55 @@ typeButtons.forEach(btn => {
   });
 });
 
+document.querySelectorAll(".sort-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const stat = btn.dataset.stat;
+
+    // ---- Gestion des 3 clics ----
+    if (currentSort.stat !== stat) {
+      // 1er clic → DESC
+      currentSort.stat = stat;
+      currentSort.order = "desc";
+    } else if (currentSort.order === "desc") {
+      // 2e clic → ASC
+      currentSort.order = "asc";
+    } else {
+      // 3e clic → Reset complet
+      currentSort.stat = null;
+      currentSort.order = "asc";
+
+      // RESET VISUEL COMPLET
+      document.querySelectorAll(".sort-btn").forEach(b => {
+        b.classList.remove("active");
+
+        // remet l’icône en "down" par défaut
+        const icon = b.querySelector(".sort-icon");
+        icon.setAttribute("data-lucide", "arrow-down-wide-narrow");
+      });
+
+      lucide.createIcons();
+      displayChampions();
+      return;
+    }
+
+    // ---- Mise à jour visuelle ----
+    document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    // icône up/down selon ordre
+    const icon = btn.querySelector(".sort-icon");
+    icon.setAttribute("data-lucide",
+      currentSort.order === "desc"
+        ? "arrow-down-wide-narrow"
+        : "arrow-up-wide-narrow"
+    );
+
+    lucide.createIcons();
+    displayChampions();
+  });
+});
+
+
 function displayChampions() {
   const searchTerm = searchInput.value.toLowerCase();
   const invocableOnly = invocableCheckbox.checked;
@@ -489,9 +1049,36 @@ function displayChampions() {
   });
 
   grid.innerHTML = "";
-  countDisplay.textContent = `${filtered.length} champion${filtered.length !== 1 ? 's' : ''} found`;
+
+  // ==== UNIQUE MYTHICAL HANDLING ====
+  const unique = [];
+  const seen = new Set();
 
   filtered.forEach(c => {
+    if (!seen.has(c.name)) {
+      unique.push(c);
+      seen.add(c.name);
+    }
+  });
+
+  // ==== COUNTER ====
+  countDisplay.textContent =
+    `${unique.length} champion${unique.length !== 1 ? 's' : ''} found`;
+
+
+  // === TRI ===
+  if (currentSort.stat) {
+    unique.sort((a, b) => {
+      const valA = Number(a[currentSort.stat]) || 0;
+      const valB = Number(b[currentSort.stat]) || 0;
+
+      return currentSort.order === "asc"
+        ? valA - valB
+        : valB - valA;
+    });
+  }
+
+  unique.forEach(c => {
     const card = document.createElement('div');
     card.classList.add('champion-card');
 
@@ -523,13 +1110,209 @@ function displayChampions() {
     imgWrapper.appendChild(affinity);
     card.appendChild(imgWrapper);
     card.appendChild(name);
+
+    if (currentSort.stat) {
+      const statValue = document.createElement("div");
+      statValue.style.fontSize = "12px";
+      statValue.style.opacity = "0.8";
+      statValue.style.marginTop = "2px";
+      statValue.textContent = c[currentSort.stat];
+      card.appendChild(statValue);
+    }
+
+    card.addEventListener("click", () => openChampionModal(c));
     grid.appendChild(card);
   });
 
-  if (filtered.length === 0) {
+  if (unique.length === 0) {
     grid.innerHTML = '<p style="grid-column: 1 / -1; text-align:center;">No champions found.</p>';
   }
 }
+
+const modal = document.getElementById("championModal");
+
+let primaryChampion = null;
+let compareChampion = null;
+
+const compareToggle = document.getElementById("compareToggle");
+const compareHeader = document.getElementById("compareHeader");
+const compareTargetName = document.getElementById("compareTargetName");
+const compareInputWrapper = document.getElementById("compareInputWrapper");
+const compareInput = document.getElementById("compareInput");
+const compareSuggestions = document.getElementById("compareSuggestions");
+
+const STAT_CONFIG = [
+  { key: "hp",   id: "statHP",   isPercent: false },
+  { key: "atk",  id: "statATK",  isPercent: false },
+  { key: "def",  id: "statDEF",  isPercent: false },
+  { key: "spd",  id: "statSPD",  isPercent: false },
+  { key: "crate",id: "statCRATE",isPercent: true  },
+  { key: "cdmg", id: "statCDMG", isPercent: true  },
+  { key: "res",  id: "statRES",  isPercent: false },
+  { key: "acc",  id: "statACC",  isPercent: false }
+];
+
+function formatValue(val, isPercent) {
+  if (isNaN(val)) return "—";
+  return isPercent ? `${val}%` : val;
+}
+
+function formatPercent(p) {
+  if (!isFinite(p)) return "0%";
+  const rounded = Math.round(p);
+  const sign = rounded > 0 ? "+" : "";
+  return `${sign}${rounded}%`;
+}
+
+function updateStatsDisplay(primary, secondary = null) {
+  STAT_CONFIG.forEach(cfg => {
+    const el = document.getElementById(cfg.id);
+    if (!el) return;
+
+    const p = primary[cfg.key] ?? 0;
+
+    // mode normal (pas de comparatif)
+    if (!secondary) {
+      el.textContent = formatValue(p, cfg.isPercent);
+      return;
+    }
+
+    const s = secondary[cfg.key] ?? 0;
+
+    // Calcul du pourcentage par rapport au second champion
+    const pct = s ? ((p - s) / s) * 100 : 0;
+    const pctClass = pct >= 0 ? "positive" : "negative";
+
+    // Affichage : une seule ligne
+    el.innerHTML = `
+      <div class="stat-main-line">
+        <span class="stat-number">${formatValue(p, cfg.isPercent)}</span>
+        <span class="stat-percent ${pctClass}">${formatPercent(pct)}</span>
+      </div>
+    `;
+  });
+}
+
+function resetCompareUI() {
+  compareChampion = null;
+  compareHeader.style.display = "none";
+  compareTargetName.textContent = "";
+  compareInputWrapper.style.display = "none";
+  compareSuggestions.innerHTML = "";
+  compareToggle.dataset.mode = "off";
+  compareToggle.innerHTML = `<i data-lucide="arrow-right-left"></i>`;
+  lucide.createIcons();
+}
+
+
+function openChampionModal(champ) {
+  primaryChampion = champ;
+  resetCompareUI();
+
+  document.getElementById("modalChampionImg").src = `img/champions/${champ.image}.webp`;
+  document.getElementById("modalFrameImg").src = `img/rarity/${champ.rarity}.webp`;
+
+  document.getElementById("modalFactionBanner").src =
+    `img/factions/${champ.faction.toLowerCase().replace(/ /g,'')}.webp`;
+  document.getElementById("modalAffinityBig").src =
+    `img/affinity/${champ.affinity}.webp`;
+
+  document.getElementById("modalFactionTitle").textContent = champ.faction;
+  document.getElementById("modalChampionTitle").textContent = champ.name;
+  document.getElementById("modalStatsTitle").textContent = champ.type;
+
+  // stats de base (sans comparatif)
+  updateStatsDisplay(primaryChampion, null);
+
+  modal.classList.add("active");
+  lucide.createIcons();
+}
+
+compareToggle.addEventListener("click", () => {
+  const mode = compareToggle.dataset.mode || "off";
+
+  // OFF -> passage en sélection (affiche input)
+  if (mode === "off") {
+    compareToggle.dataset.mode = "select";
+    compareToggle.innerHTML = `<i data-lucide="x"></i>`;
+    compareInputWrapper.style.display = "block";
+    compareHeader.style.display = "none";
+    compareInput.value = "";
+    compareSuggestions.innerHTML = "";
+    compareInput.focus();
+    updateStatsDisplay(primaryChampion, null);
+    lucide.createIcons();
+    return;
+  }
+
+  // SELECT ou ON -> reset (fermer le comparatif)
+  resetCompareUI();
+  updateStatsDisplay(primaryChampion, null);
+});
+
+function selectCompareChampion(champ) {
+  compareChampion = champ;
+  compareToggle.dataset.mode = "on";
+
+  compareHeader.style.display = "block";
+  compareTargetName.textContent = champ.name;
+
+  compareInputWrapper.style.display = "none";
+  compareSuggestions.innerHTML = "";
+
+  updateStatsDisplay(primaryChampion, compareChampion);
+}
+
+compareInput.addEventListener("input", () => {
+  const query = compareInput.value.toLowerCase();
+  compareSuggestions.innerHTML = "";
+  if (!query) return;
+
+  const matches = champions
+    .filter(c =>
+      primaryChampion &&
+      c.id !== primaryChampion.id &&
+      c.name.toLowerCase().includes(query)
+    )
+    .slice(0, 8);
+
+  matches.forEach(c => {
+    const item = document.createElement("div");
+    item.className = "compare-suggestion";
+    item.textContent = c.name;
+    item.addEventListener("click", () => selectCompareChampion(c));
+    compareSuggestions.appendChild(item);
+  });
+});
+
+compareInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const query = compareInput.value.toLowerCase();
+    let match = champions.find(c =>
+      primaryChampion &&
+      c.id !== primaryChampion.id &&
+      c.name.toLowerCase() === query
+    );
+
+    if (!match && compareSuggestions.firstElementChild) {
+      const name = compareSuggestions.firstElementChild.textContent;
+      match = champions.find(c => c.name === name);
+    }
+
+    if (match) {
+      selectCompareChampion(match);
+    }
+  }
+});
+
+
+document.querySelector(".modal-close").addEventListener("click", () => {
+  modal.classList.remove("active");
+});
+
+modal.addEventListener("click", e => {
+  if (e.target === modal) modal.classList.remove("active");
+});
 </script>
 
   <div class="adsense-container">
