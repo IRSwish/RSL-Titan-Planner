@@ -12,665 +12,349 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
   <style>
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #0e0e0e;
-    color: #fcf6ff;
-    margin: 0;
-    padding: 0;
-  }
+  /* === BASE === */
+body { font-family:'Inter',sans-serif; color:#fcf6ff; margin:0; padding:0; }
+.container { width:95%; max-width:1400px; margin:20px auto; }
 
-  .container {
-    width: 95%;
-    max-width: 1400px;
-    margin: 20px auto;
-  }
+/* === SEARCH === */
+.search-bar { text-align:center; margin-bottom:15px; }
+#searchInput { width:60%; padding:12px 16px; font-size:16px; border-radius:10px; border:2px solid #d4af37; background:#1a1a1a; color:#fcf6ff; outline:none; }
+#searchInput:focus { border-color:#fce47e; }
 
-  /* === Recherche === */
-  .search-bar {
-    text-align: center;
-    margin-bottom: 15px;
-  }
+/* === FACTIONS === */
+.faction-bar { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:25px 0; }
+.faction-icon { width:50px; height:50px; border:2px solid transparent; border-radius:5px; background:#1a1a1a; padding:4px; cursor:pointer; transition:.2s; object-fit:contain; }
+.faction-icon:hover { transform:scale(1.1); border-color:#d4af37; }
+.faction-icon.active { transform:scale(1.1); border-color:#d4af37; background:rgba(212,175,55,.15); box-shadow:0 0 6px rgba(212,175,55,.4);}
 
-  #searchInput {
-    width: 60%;
-    padding: 12px 16px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: 2px solid #d4af37;
-    background: #1a1a1a;
-    color: #fcf6ff;
-    outline: none;
-  }
+/* === FILTERS === */
+.filters-wrapper { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin-bottom:25px; }
+.filter-section { text-align:center; width:250px; }
+.section-label { font-weight:600; color:#bbb; margin-bottom:8px; }
+.filter-buttons { display:grid; justify-items:center; gap:8px; }
+.rarity-grid { grid-template-columns:repeat(3,1fr); }
+.affinity-grid { grid-template-columns:repeat(2,1fr); }
+.type-grid { grid-template-columns:repeat(2,1fr); }
+.rarity-btn,.affinity-btn,.type-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; border-radius:8px; padding:4px 8px; cursor:pointer; width:60px; height:40px; display:flex; justify-content:center; align-items:center; }
+.rarity-btn img,.affinity-btn img { width:24px; height:24px; object-fit:contain; }
+.rarity-btn:hover,.affinity-btn:hover,.type-btn:hover { border-color:#d4af37; box-shadow:0 0 6px rgba(212,175,55,.4); }
+.rarity-btn.active,.affinity-btn.active,.type-btn.active { border-color:#d4af37; background:rgba(212,175,55,.15); box-shadow:0 0 6px rgba(212,175,55,.4); }
 
-  #searchInput:focus {
-    border-color: #fce47e;
-  }
+/* === SWITCH === */
+.checkbox-container { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:15px; }
+.switch { position:relative; display:inline-block; width:50px; height:26px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; inset:0; background:#444; border:2px solid #d4af37; border-radius:34px; cursor:pointer; }
+.slider:before { content:""; position:absolute; height:18px; width:18px; left:3px; bottom:2px; background:#d4af37; border-radius:50%; box-shadow:0 0 6px rgba(212,175,55,.5); transition:.3s; }
+.switch input:checked + .slider { background:#d4af37; }
+.switch input:checked + .slider:before { transform:translateX(24px); background:#0e0e0e; }
+.checkbox-container label { font-weight:600; font-size:14px; }
 
-  /* === Factions === */
-  .faction-bar {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 25px 0;
-  }
+/* === GRID OF CHAMPIONS === */
+.champion-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:15px; justify-items:center; }
+.champion-card { width:100%; max-width:140px; text-align:center; cursor:pointer; }
+.card-image { position:relative; width:100%; aspect-ratio:140/182; overflow:hidden; }
+.card-image::before { content:""; position:absolute; inset:0; z-index:1; box-shadow:inset 0 0 22px rgba(0,0,0,.8); pointer-events:none; }
+.card-image.mythical::before { box-shadow:inset 0 -2px 2px 12px rgba(0,0,0,.8); }
+.card-image.legendary::before { box-shadow:inset 0 -2px 2px 11px rgba(0,0,0,.8); }
+.card-image.epic::before { box-shadow:inset 0 -1px 2px 9px rgba(0,0,0,.8); }
+.card-image.rare::before,.card-image.uncommon::before { box-shadow:inset 0 -1px 2px 8px rgba(0,0,0,.8); }
+.card-image.common::before { box-shadow:inset 0 0 3px 6px rgba(0,0,0,.8); }
+.champion-img { width:100%; height:100%; object-fit:cover; display:block; position:relative; z-index:0; }
+.rarity-frame { position:absolute; inset:0; pointer-events:none; z-index:2; object-fit:contain; }
+.affinity-icon { position:absolute; bottom:14px; left:12px; width:28px; height:28px; z-index:3; pointer-events:none; }
+.champion-name { font-size:13px; font-weight:600; margin-top:6px; }
+.counter { text-align:center; margin-bottom:15px; font-size:15px; opacity:.8; }
 
-  .faction-icon {
-    width: 50px;
-    height: 50px;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
-    object-fit: contain;
-    background-color: #1a1a1a;
-    padding: 4px;
-  }
+/* === SORT BAR === */
+.sort-bar { display:flex; justify-content:center; gap:12px; margin-bottom:20px; }
+.sort-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; padding:6px 10px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:14px; transition:.2s; }
+.sort-btn:hover {border-color:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.4);}
+.sort-btn svg { width:18px; height:18px; }
+.sort-btn.active { border-color:#d4af37; background:rgba(212,175,55,.15); }
+.sort-btn .sort-icon { opacity:.8; }
 
-  .faction-icon:hover {
-    transform: scale(1.1);
-    border-color: #d4af37;
-  }
+/* === EFFECTS BAR === */
 
-  .faction-icon.active {
-    border-color: #d4af37;
-    transform: scale(1.1);
-  }
-
-  /* === Filtres === */
-  .filters-wrapper {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
-  }
-
-  .filter-section {
-    text-align: center;
-    width: 250px;
-  }
-
-  .section-label {
-    font-weight: 600;
-    color: #bbbbbb;
-    margin-bottom: 8px;
-  }
-
-  .filter-buttons {
-    display: grid;
-    justify-items: center;
-    gap: 8px;
-  }
-
-  .rarity-grid { grid-template-columns: repeat(3, 1fr); }
-  .affinity-grid { grid-template-columns: repeat(2, 1fr); }
-  .type-grid { grid-template-columns: repeat(2, 1fr); }
-
-  .rarity-btn,
-  .affinity-btn,
-  .type-btn {
-    background: none;
-    border: 2px solid #555;
-    color: #fcf6ff;
-    border-radius: 8px;
-    padding: 4px 8px;
-    cursor: pointer;
-    width: 60px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .rarity-btn img,
-  .affinity-btn img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-  }
-
-  .rarity-btn.active,
-  .affinity-btn.active,
-  .type-btn.active {
-    border-color: #d4af37;
-    box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
-  }
-
-  .rarity-btn:hover,
-  .affinity-btn:hover,
-  .type-btn:hover {
-    border-color: #d4af37;
-  }
-
-  /* === Switch === */
-  .checkbox-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 15px;
-  }
-
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 26px;
-  }
-
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #444;
-    border: 2px solid #d4af37;
-    border-radius: 34px;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 18px; width: 18px;
-    left: 3px; bottom: 2px;
-    background-color: #d4af37;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(212, 175, 55, 0.5);
-    transition: 0.3s;
-  }
-
-  .switch input:checked + .slider {
-    background-color: #d4af37;
-  }
-
-  .switch input:checked + .slider:before {
-    transform: translateX(24px);
-    background-color: #0e0e0e;
-  }
-
-  .checkbox-container label {
-    font-weight: 600;
-    font-size: 14px;
-    color: #fcf6ff;
-  }
-
-  /* === Grille des champions === */
-  .champion-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
-    justify-items: center;
-  }
-
-  .champion-card {
-    width: 100%;
-    max-width: 140px;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .card-image {
-    position: relative;
-    aspect-ratio: 140 / 182;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  /* Glow interne selon rareté */
-  .card-image::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.8);
-  }
-
-  .card-image.mythical::before   { box-shadow: inset 0 -2px 2px 12px rgba(0, 0, 0, 0.8); }
-  .card-image.legendary::before  { box-shadow: inset 0 -2px 2px 11px rgba(0, 0, 0, 0.8); }
-  .card-image.epic::before       { box-shadow: inset 0 -1px 2px 9px rgba(0, 0, 0, 0.8); }
-  .card-image.rare::before       { box-shadow: inset 0 -1px 2px 8px rgba(0, 0, 0, 0.8); }
-  .card-image.uncommon::before   { box-shadow: inset 0 -1px 2px 8px rgba(0, 0, 0, 0.8); }
-  .card-image.common::before     { box-shadow: inset 0 0px 3px 6px rgba(0, 0, 0, 0.8); }
-
-  .champion-img {
-    position: relative;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .rarity-frame {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-  }
-
-  .affinity-icon {
-    position: absolute;
-    bottom: 14px;
-    left: 12px;
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    pointer-events: none;
-    z-index: 3;
-  }
-
-  .champion-name {
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 6px;
-  }
-
-  .counter {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 15px;
-    opacity: 0.8;
-  }
-
-  @media (max-width: 900px) {
-    .filter-buttons { grid-template-columns: repeat(2, 1fr); }
-    .filters-wrapper { flex-direction: column; align-items: center; }
-  }
-
-  @media (max-width: 700px) {
-    #searchInput { width: 90%; }
-    .champion-card { max-width: 100px; }
-    .faction-icon { width: 40px; height: 40px; }
-  }
-
-  .sort-bar {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.sort-btn {
-  background: #1a1a1a;
-  border: 2px solid #555;
-  color: #fcf6ff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  transition: border-color .2s, background .2s;
-}
-
-.sort-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
-.sort-btn.active {
-  border-color: #d4af37;
-  background: rgba(212, 175, 55, 0.15);
-}
-
-.sort-btn .sort-icon {
-  opacity: .8;
-}
-
-/* === MODAL === */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(4px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-}
-
-.modal-overlay.active {
-  display: flex;
-}
-
-.modal-content {
-  background: #1a1a1a;
+.effects-container {
   border: 2px solid #d4af37;
   border-radius: 12px;
-  padding: 20px;
-  width: 500px;
-  display: flex;
-  gap: 25px;
-  position: relative;
-  box-shadow: 0 0 25px rgba(212,175,55,0.4);
+  background: #0f0f0f;
+  overflow: hidden;
+  margin-top: 30px;
+  margin-bottom:30px;
+  padding: 0; /* 👈 IMPORTANT : aucun padding */
 }
 
-.modal-close {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  background: none;
-  border: none;
+.effects-container.collapsed {
+  padding-bottom: 0;   /* 👈 évite le vide sous le toggle */
+  border-bottom-width: 2px;
+}
+
+.effects-toggle {
+  padding: 14px 18px;
+  background: #141414;
   cursor: pointer;
-  color: #fcf6ff;
-}
-
-.modal-close svg {
-  width: 26px;
-  height: 26px;
-}
-
-.modal-left {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.modal-img-wrapper {
-  position: relative;
-  width: 140px;
-  height: 182px;
-}
-
-.modal-champion-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.modal-frame-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.modal-right {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* ⬅ centre verticalement */
-}
-
-.modal-header-block {
   display: flex;
   align-items: center;
-  gap: 15px;
-}
-
-.modal-icon {
-  height: 32px;
-  object-fit: contain;
-}
-
-.modal-name {
-  text-align: center;
-  font-family: 'American Captain', sans-serif;
-  font-size: 36px;
-  background: linear-gradient(to bottom, #feeec1, #e09f40);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
-
-.modal-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.stat-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-}
-
-.stat-row svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* === 3 COLONNES === */
-.modal-content {
-  background: #1a1a1a;
-  border: 2px solid #d4af37;
-  padding: 20px;
-  width: 900px;
-  display: flex;
-  gap: 20px;
-  position: relative;
-  box-shadow: 0 0 25px rgba(212,175,55,0.4);
-}
-
-.modal-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 33%;
-  gap: 15px;
-}
-
-/* Diviseur vertical */
-.modal-divider {
-  width: 2px;
-  background: rgba(212,175,55,0.4);
-  border-radius: 2px;
-}
-
-/* Bannière faction */
-.modal-faction-banner {
-  height: 240px;
-  object-fit: contain;
-}
-
-/* Image du champion */
-.modal-img-wrapper {
-  position: relative;
-  width: 140px;
-  height: 182px;
-}
-
-.modal-champion-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.modal-frame-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  pointer-events: none;
-}
-
-.modal-affinity-big {
-  position: absolute;
-  bottom: 15px;
-  left: 12px;
-  width: 32px;
-  height:32px;
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* Nom */
-.modal-name {
-  text-align: center;
-  font-family: 'American Captain', sans-serif;
-  font-size: 32px;
-  background: linear-gradient(to bottom, #feeec1, #e09f40);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Stats */
-.stats-col {
-  justify-content: center;
-}
-
-.modal-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.stat-row {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
+  user-select: none;
+}
+
+.effects-toggle:hover {
+  background: #1c1c1c;
+}
+
+.effects-toggle.open {
+  background: #1c1c1c;
+}
+
+.effects-toggle i {
+  transition: transform .25s ease;
+}
+
+.effects-toggle.open i {
+  transform: rotate(180deg);
+}
+
+/* Panneau cachable */
+/* Fermé → zéro espace */
+.effects-filters {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
+}
+
+/* Déplié → padding visible */
+.effects-filters.open {
+  max-height: 2000px;
+  opacity: 1;
+  padding: 20px 0 20px 0 !important;   /* 👈 C’EST ICI QUE TU GÈRES LE PADDING */
+}
+
+
+/* COLONNES DES 4 SECTIONS */
+.effects-filters {
+  margin-top: 25px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 380px 380px 240px 240px;
+  gap: 40px;
+  justify-content: center;
   width: 100%;
 }
 
-.stat-left {
+/* TITRES */
+.effect-title {
+  font-family: 'American Captain', sans-serif;
+  font-size: 22px;
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: 1px;
+  background: linear-gradient(to bottom, #feeec1, #e09f40);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* BUFFS + DEBUFFS = COLONNES LARGES */
+.effect-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 48px);  /* ⬅️ icônes plus espacées */
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ICÔNES BUFF/DEBUFF */
+.effect-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  border: 2px solid #444;
+  background: #1a1a1a;
   display: flex;
+  justify-content: center;
   align-items: center;
+  cursor: pointer;
+  transition: border-color .25s, box-shadow .25s, transform .15s;
+}
+
+.effect-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.effect-icon:hover {
+  transform: scale(1.12);
+  border-color: #d4af37;
+}
+
+.effect-icon.active {
+  transform: scale(1.08);
+  border-color: #d4af37;
+  box-shadow: 0 0 10px rgba(212,175,55,0.6);
+}
+
+/* POSITIVE / NEGATIVE EFFECTS = COLONNES NARROW */
+.effect-checklist {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-.stat-left span {
-  font-size: 16px;
-}
-
-.stat-row svg {
-  width: 22px;
-  height: 22px;
-}
-
-.stat-value {
-  font-size: 16px;
-  font-weight: 600;
-  text-align: right;
-  min-width: 60px;
-}
-
-.modal-col-title {
-  font-family: 'American Captain', sans-serif;
-  font-size: 32px;
-  text-align: center;
-  background: linear-gradient(to bottom, #feeec1, #e09f40);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-}
-/* Zone comparatif */
-.compare-header {
-  font-size: 13px;
-  margin-bottom: 6px;
-  opacity: 0.85;
-}
-.compare-header span {
-  font-weight: 600;
-}
-
-/* Input + suggestions */
-.compare-input-wrapper {
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.compare-input {
-  width: 100%;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid #555;
-  background: #0e0e0e;
-  color: #fcf6ff;
-  font-size: 13px;
-  outline: none;
-}
-
-.compare-input:focus {
-  border-color: #d4af37;
-}
-
-.compare-suggestions {
-  margin-top: 4px;
-  background: #111;
-  border-radius: 6px;
-  border: 1px solid #333;
-  max-height: 140px;
-  overflow-y: auto;
-}
-
-.compare-suggestion {
-  padding: 4px 8px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.compare-suggestion:hover {
-  background: #222;
-}
-
-/* Bouton Compare en bas à droite du modal */
-.compare-toggle {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  background: none;
-  padding: 6px 8px;
-  border:none;
-  color: #fcf6ff;
+.effect-checklist label {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 15px;
 }
 
-.compare-toggle svg {
-  width: 18px;
-  height: 18px;
+.effect-checklist input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #d4af37;
 }
 
-/* Affichage des valeurs + pourcentages */
-.stat-value {
-  font-size: 16px;
-  font-weight: 600;
-  text-align: right;
-  min-width: 60px;
+.effect-icon img {
+  filter: grayscale(92%) contrast(1.6);
+  opacity: 0.75;
+  transition: filter .5s ease, opacity .5s ease, transform .5s ease;
 }
 
-.stat-main-line {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  font-size: 14px;
+.effect-icon.active img {
+  filter: none;
+  opacity: 1;
 }
 
-.stat-number {
-  min-width: 40px;
-  text-align: right;
-}
+.reset-wrapper { display:flex; justify-content:center; margin-bottom:20px; }
+.reset-btn{ background:#1a1a1a; border:2px solid #555; color:#fff; padding:6px 14px; border-radius:8px; cursor:pointer;font-size:14px; transition:.2s;}
+.reset-btn:hover{border:2px solid #d4af37;}
 
-.stat-percent {
-  min-width: 44px;
-  text-align: right;
-  font-size: 12px;
-  opacity: 0.9;
-}
+/* === MODAL === */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); display:none; justify-content:center; align-items:center; z-index:99999; }
+.modal-overlay.active { display:flex; }
+.modal-content { background:#1a1a1a; border:2px solid #d4af37; border-radius:12px; padding:20px; padding-left:8px; width:900px; display:flex; flex-direction:column; gap:16px; max-height:88vh; overflow:hidden; position:relative; box-shadow:0 0 25px rgba(212,175,55,.4); }
+.modal-top-row { display:flex; gap:20px; align-items:stretch; }
+.modal-close { position:absolute; right:10px; top:10px; background:none; border:none; color:#fcf6ff; cursor:pointer; z-index:5}
+.modal-close svg { width:26px; height:26px; }
+.modal-left,.modal-right { flex:1; display:flex; justify-content:center; }
+.modal-right { align-items:center; }
+.modal-col { display:flex; flex-direction:column; align-items:center; width:33%; gap:15px; }
+.modal-divider { width:2px; background:rgba(212,175,55,.4); border-radius:2px; }
 
-.stat-percent.positive {
-  color: #00c86b;
-}
+.modal-scroll { overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column;scrollbar-width:thin; scrollbar-color:#d4af37 #0e0e0e;direction: rtl; padding-left:12px;position: relative; z-index: 1;}
+.modal-scroll > * { direction: ltr;}
+.modal-top-row { display:flex; gap:20px; align-items:stretch; flex-shrink:0; }
 
-.stat-percent.negative {
-  color: #f52584;
-}
+/* Scrollbar stylée du modal */
+.modal-scroll::-webkit-scrollbar { width:10px; }
+.modal-scroll::-webkit-scrollbar-track { background:#0e0e0e; border-right:1px solid rgba(212,175,55,0.2); }
+.modal-scroll::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#d4af37 0%,#f52584 100%); border-radius:10px; border:2px solid #0e0e0e; box-shadow:0 0 8px rgba(212,175,55,0.3); }
+.modal-scroll::-webkit-scrollbar-thumb:hover { background:linear-gradient(180deg,#f52584 0%,#00c9ff 100%); box-shadow:0 0 12px rgba(0,201,255,0.4); }
 
+/* Firefox support */
+.modal-content { scrollbar-width:thin; scrollbar-color:#d4af37 #0e0e0e; }
+
+/* === MODAL IMAGES === */
+.modal-img-wrapper { position:relative; width:140px; height:182px;margin-top: auto;margin-bottom: auto;}
+.modal-champion-img { width:100%; height:100%; object-fit:cover; }
+.modal-frame-img { position:absolute; inset:0; width:100%; pointer-events:none; }
+.modal-faction-banner { height:240px; object-fit:contain; }
+.modal-affinity-big { position:absolute; bottom:15px; left:12px; width:32px; height:32px; z-index:3; pointer-events:none; }
+.modal-faction-banner {margin-top: auto;margin-bottom: auto;}
+.faction-col, .champion-col {gap:0;}
+
+/* === MODAL TITLES === */
+.modal-name,.modal-col-title { font-family:'American Captain',sans-serif; font-size:32px; text-align:center; background:linear-gradient(to bottom,#feeec1,#e09f40); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+/* === STATS === */
+.stats-col { justify-content:center; padding: 0 50px 0px 50px; }
+.modal-stats { display:flex; flex-direction:column; gap:10px; width:100%; }
+.stat-row { display:flex; align-items:center; justify-content:space-between; width:100%; }
+.stat-left { display:flex; align-items:center; gap:8px; }
+.stat-left span { font-size:16px; }
+.stat-row svg { width:22px; height:22px; }
+
+/* === MYTHICAL FORM === */
+.form-slider {display: flex;align-items: center;gap: 8px;margin-bottom: 12px;}
+.slider-label {font-size: 14px;color: #d4af37;font-weight: 600;}
+.slider-track {position: relative;width: 70px;height: 28px;background: #0e0e0e;border: 2px solid #d4af37;border-radius: 20px;cursor: pointer;}
+.slider-thumb {position: absolute;top: 2px;left: 2px;width: 23px;height: 23px;background: #d4af37;border-radius: 50%;transition: left .25s ease;}
+.slider-thumb.alt {left: calc(100% - 25px);}
+
+
+/* STAT VALUES (COMPARISON MODE INCLUDED) */
+.stat-value { display:flex; justify-content:flex-end; gap:10px;}
+.stat-number { min-width:40px; text-align:right; font-size:16px; font-weight:600; }
+.stat-number.positive { color:#00c86b; }
+.stat-number.negative { color:#f52525; }
+.stat-percent { min-width:45px; text-align:center; font-size:14px; }
+.stat-percent.positive { color:#00c86b; }
+.stat-percent.negative { color:#f52525; }
+.stat-percent.equal { color:#fff; }
+.stat-number.primary   { width:50px; text-align:right; }
+.stat-percent          { width:50px; text-align:center; }
+.stat-number.secondary { width:50px; text-align:left; }
+
+/* === COMPARE MODE === */
+.compare-header { font-size:13px; margin-bottom:6px; opacity:.85; }
+.compare-header span { font-weight:600; }
+.compare-input-wrapper { width:100%; }
+.compare-input { width: 92.5%; padding:6px 8px; border-radius:6px; border:1px solid #555; background:#0e0e0e; color:#fcf6ff; outline:none; }
+.compare-input:focus { border-color:#d4af37; }
+.compare-suggestions { margin-top:4px; background:#111; max-height:140px; overflow-y:auto; }
+.compare-suggestion { padding:4px 8px; font-size:13px; cursor:pointer; }
+.compare-suggestion:hover { background:#222; }
+.compare-toggle { position:absolute; background:none; border:none; color:#fcf6ff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.compare-toggle svg { width:28px; height:28px; }
+.compare-bottom { display:flex; justify-content:center; }
+.compare-toggle { position:static; background:none; border:none; padding:8px 12px; color:#fcf6ff; cursor:pointer; }
+
+/* === SKILLS === */
+
+.skills-block{width:100%;display:flex;flex-direction:column;gap:10px;padding-right:4px;margin-top:20px;}
+.skills-block:empty{margin-top:0;}
+
+.skill-entry{position:relative;display:flex;gap:50px;align-items:flex-start;padding:12px 50px;background:#111;border:1px solid #333;border-radius:8px;align-items:center;}
+.skill-info{display:flex;flex-direction:column;gap:4px;}
+.skill-title{font-family:'American Captain',sans-serif;font-size:24px;background:linear-gradient(to bottom,#feeec1,#e09f40);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.skill-desc{font-size:14px;line-height:1.35;opacity:.9;}
+.skill-bracket{color:#00c821;font-weight:600;}
+.multiplier-label{color:#d4af37;font-weight:700;}
+
+/* ==== ICÔNES PREMIUM ==== */
+.skill-icon-wrapper{position:relative;width:96px;height:96px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;}
+.skill-icon{position:relative;z-index:1;width:90px;height:90px;object-fit:cover;border-radius:50%;}
+.skill-icon-wrapper::before{content:"";position:absolute;inset:0px;border-radius:50%;background:radial-gradient(circle,rgba(0,0,0,0)60%,rgba(0,0,0,1)67%);z-index:2;}
+.skill-icon-wrapper::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(to bottom,#e6ce52,#9c731e);z-index:3;-webkit-mask:radial-gradient(circle,transparent 65%,#000 66%);mask:radial-gradient(circle,transparent 65%,#000 66%);}
+
+.skill-icon-wrapper.passive{position:relative;}
+
+/* stroke blanc annulaire */
+.skill-icon-wrapper.passive .passive-stroke{position:absolute;inset:1px;border-radius:100%;z-index:5;background:conic-gradient(transparent 0deg 0deg,#fff 240deg 360deg);-webkit-mask:radial-gradient(circle,transparent 68%,#000 68%);mask:radial-gradient(circle,transparent 68%,#000 68%);animation:spin 1s linear infinite;pointer-events:none;}
+
+/* glow externe bleu */
+.skill-icon-wrapper.passive .passive-glow{position:absolute;inset:-1px;border-radius:100%;z-index:4;background:conic-gradient(transparent 0deg 0deg, rgb(0 139 255) 120deg 360deg);-webkit-mask:radial-gradient(circle,transparent 53%,#000 78%);mask: radial-gradient(circle, transparent 53%, #000 78%);filter:blur(5px);animation:spin 1s linear infinite;pointer-events:none;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* Aura */
+.aura-entry { display:flex; gap:50px; align-items:center; padding:12px 50px; background:#141414; border:1px solid #444; border-radius:8px; margin-bottom:40px; }
+.aura-icon { width:96px; height:96px; object-fit:contain; flex-shrink:0;position:relative;}
+.aura-text { display:flex; flex-direction:column; gap:2px; }
+.aura-title { font-family:'American Captain',sans-serif; font-size:24px; color:#d4af37; }
+.aura-desc { font-size:14px; opacity:.85; }
+.aura-icon-wrapper{position:relative;width:96px;height:96px;flex-shrink:0;}
+.aura-icon-wrapper .aura-icon{width:100%;height:100%;object-fit:contain;}
+.aura-icon-wrapper::after{content:"";position:absolute;inset:0;background:url("img/aura/BORDER.webp") center/contain no-repeat;z-index:10;pointer-events:none;}
+
+
+/* === MEDIA QUERIES === */
+@media(max-width:900px){ .filter-buttons{grid-template-columns:repeat(2,1fr);} .filters-wrapper{flex-direction:column; align-items:center;} }
+@media(max-width:700px){ #searchInput{width:90%;} .champion-card{max-width:100px;} .faction-icon{width:40px; height:40px;} }
 
   </style>
 </head>
@@ -727,6 +411,41 @@
       </div>
     </div>
   </div>
+<div class="effects-container">
+  <div id="effectsToggle" class="effects-toggle">
+    <span>Effects</span>
+    <i data-lucide="chevron-down"></i>
+  </div>
+
+  <!-- === FILTERS : EFFECTS === -->
+<div class="effects-filters">
+
+    <!-- Buffs -->
+    <div class="effect-section">
+      <div class="effect-title">BUFFS</div>
+      <div id="buffFilterGrid" class="effect-grid"></div>
+    </div>
+
+    <!-- Debuffs -->
+    <div class="effect-section">
+      <div class="effect-title">DEBUFFS</div>
+      <div id="debuffFilterGrid" class="effect-grid"></div>
+    </div>
+
+    <!-- Positive Effects -->
+    <div class="effect-section">
+      <div class="effect-title">POSITIVE EFFECTS</div>
+      <div id="positiveFilterList" class="effect-checklist"></div>
+    </div>
+
+    <!-- Negative Effects -->
+    <div class="effect-section">
+      <div class="effect-title">NEGATIVE EFFECTS</div>
+      <div id="negativeFilterList" class="effect-checklist"></div>
+    </div>
+
+  </div>
+</div>
 
   <div class="sort-bar">
     <button class="sort-btn" data-stat="hp">
@@ -758,105 +477,123 @@
     </label>
   </div>
 
+  <div class="reset-wrapper">
+    <button id="resetFilters" class="reset-btn">⟳ Reset Filters</button>
+  </div>
+
   <div class="counter" id="championCount"></div>
   <div id="championGrid" class="champion-grid"></div>
 </div>
 
 <!-- === MODAL CHAMPION === -->
 <div id="championModal" class="modal-overlay">
-  <div class="modal-content">
+    <div class="modal-content">
 
     <button class="modal-close">
       <i data-lucide="x"></i>
     </button>
 
-    <div class="modal-col faction-col">
-      <div id="modalFactionTitle" class="modal-col-title"></div>
-      <img id="modalFactionBanner" class="modal-faction-banner" src="">
-    </div>
+    <div class="modal-scroll">
 
-    <div class="modal-divider"></div>
+    <!-- Partie haute : FACTION | CHAMPION | STATS -->
+    <div class="modal-top-row">
 
-    <div class="modal-col champion-col">
-      <div id="modalChampionTitle" class="modal-col-title"></div>
-
-      <div class="modal-img-wrapper">
-        <img id="modalChampionImg" class="modal-champion-img" src="">
-        <img id="modalFrameImg" class="modal-frame-img" src="">
-        <img id="modalAffinityBig" class="modal-affinity-big" src="">
+      <div class="modal-col faction-col">
+        <div id="modalFactionTitle" class="modal-col-title"></div>
+        <img id="modalFactionBanner" class="modal-faction-banner" src="">
       </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-col champion-col">
+        <div id="modalChampionTitle" class="modal-col-title"></div>
+
+        <div class="modal-img-wrapper">
+          <img id="modalChampionImg" class="modal-champion-img" src="">
+          <img id="modalFrameImg" class="modal-frame-img" src="">
+          <img id="modalAffinityBig" class="modal-affinity-big" src="">
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-col stats-col">
+        <div id="modalStatsTitle" class="modal-col-title"></div>
+
+        <div id="formSwitch" class="form-slider" style="display:none;">
+          <span class="slider-label">Base</span>
+          <div class="slider-track">
+            <div class="slider-thumb"></div>
+          </div>
+          <span class="slider-label">Alt</span>
+        </div>
+
+
+        <div class="compare-header" id="compareHeader" style="display:none;">
+          Comparing with <span id="compareTargetName"></span>
+        </div>
+
+        <div class="compare-input-wrapper" id="compareInputWrapper" style="display:none;">
+          <input type="text" id="compareInput" class="compare-input" placeholder="Type a champion name..." autocomplete="off">
+          <div class="compare-suggestions" id="compareSuggestions"></div>
+        </div>
+
+        <div class="modal-stats">
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="heart"></i><span>HP</span></div>
+            <div class="stat-value" id="statHP"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="swords"></i><span>ATK</span></div>
+            <div class="stat-value" id="statATK"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="shield"></i><span>DEF</span></div>
+            <div class="stat-value" id="statDEF"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="chevrons-up"></i><span>SPD</span></div>
+            <div class="stat-value" id="statSPD"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="circle-divide"></i><span>C.RATE</span></div>
+            <div class="stat-value" id="statCRATE"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="circle-percent"></i><span>C.DMG</span></div>
+            <div class="stat-value" id="statCDMG"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="shield-plus"></i><span>RES</span></div>
+            <div class="stat-value" id="statRES"></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-left"><i data-lucide="locate-fixed"></i><span>ACC</span></div>
+            <div class="stat-value" id="statACC"></div>
+          </div>
+          <div class="compare-bottom">
+            <button class="compare-toggle" id="compareToggle">
+              <i data-lucide="arrow-right-left"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /.modal-top-row -->
+
+    <!-- Séparateur horizontal -->
+    <div class="modal-horizontal-separator"></div>
+
+    <!-- Partie basse : SKILLS & AURA -->
+    <div id="modalSkills" class="skills-block"></div>
+
     </div>
 
-    <div class="modal-divider"></div>
-
-    <div class="modal-col stats-col">
-  <div id="modalStatsTitle" class="modal-col-title">STATS</div>
-
-  <!-- Header comparatif -->
-  <div class="compare-header" id="compareHeader" style="display:none;">
-    Comparing with <span id="compareTargetName"></span>
   </div>
 
-  <!-- Input de recherche pour le comparatif -->
-  <div class="compare-input-wrapper" id="compareInputWrapper" style="display:none;">
-    <input type="text" id="compareInput" class="compare-input" placeholder="Type a champion name..." autocomplete="off">
-    <div class="compare-suggestions" id="compareSuggestions"></div>
   </div>
-
-  <!-- Stats -->
-  <div class="modal-stats">
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="heart"></i><span>HP</span></div>
-      <div class="stat-value" id="statHP"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="swords"></i><span>ATK</span></div>
-      <div class="stat-value" id="statATK"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="shield"></i><span>DEF</span></div>
-      <div class="stat-value" id="statDEF"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="chevrons-up"></i><span>SPD</span></div>
-      <div class="stat-value" id="statSPD"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="circle-divide"></i><span>C.RATE</span></div>
-      <div class="stat-value" id="statCRATE"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="circle-percent"></i><span>C.DMG</span></div>
-      <div class="stat-value" id="statCDMG"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="shield-plus"></i><span>RES</span></div>
-      <div class="stat-value" id="statRES"></div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-left"><i data-lucide="locate-fixed"></i><span>ACC</span></div>
-      <div class="stat-value" id="statACC"></div>
-    </div>
-
-  </div>
-
-  <!-- Bouton Compare / Close compare -->
-  <button class="compare-toggle" id="compareToggle">
-    <i data-lucide="arrow-right-left"></i>
-  </button>
-
 </div>
-
-      </div>
-    </div>
 
   </div>
 </div>
@@ -867,6 +604,25 @@
 
 let champions = [];
 let factions = [];
+let championForms = {};
+let currentForms = null;
+let currentFormIndex = 0;
+
+// Effets sélectionnés par l’utilisateur
+let activeEffects = {
+  Buff: [],
+  Debuff: [],
+  Positive: [],
+  Negative: []
+};
+
+// Effets (buffs / debuffs / effets positifs / négatifs)
+const EFFECTS = {
+  Buff: [],
+  Debuff: [],
+  Positive: [],
+  Negative: []
+};
 
 const grid = document.getElementById('championGrid');
 const factionBar = document.getElementById('factionBar');
@@ -901,7 +657,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        champions = result[0].values.map(r => ({
+          champions = result[0].values.map(r => ({
           id: r[0],
           name: r[1],
           faction: r[2],
@@ -910,6 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
           type: r[5],
           image: r[6],
           invocable: r[7] === 1,
+
           hp: Number(r[8]) || 0,
           atk: Number(r[9]) || 0,
           def: Number(r[10]) || 0,
@@ -917,8 +674,142 @@ document.addEventListener("DOMContentLoaded", () => {
           crate: Number(r[12]) || 0,
           cdmg: Number(r[13]) || 0,
           res: Number(r[14]) || 0,
-          acc: Number(r[15]) || 0
+          acc: Number(r[15]) || 0,
+
+          aurastat: r[16] || null,
+          aura: r[17] || null,
+
+          s1: r[18] || null,
+          s2: r[19] || null,
+          s3: r[20] || null,
+          s4: r[21] || null,
+          s5: r[22] || null,
+          s6: r[23] || null,
+          p1: r[24] || null,
+          p2: r[25] || null,
+          IGid: r[27] || null,
+          effects: (r[26] || "").split("\n").map(e => e.trim()).filter(e => e.length > 0)
         }));
+
+        // === Charger la table effects ===
+        const effectsResult = db.exec("SELECT * FROM effects;");
+        if (effectsResult.length) {
+          const rows = effectsResult[0].values;
+          rows.forEach(r => {
+            const [id, name, type, description] = r;
+            if (!EFFECTS[type]) EFFECTS[type] = [];
+            EFFECTS[type].push({ id, name, type, description });
+          });
+        } else {
+          console.warn("Table 'effects' introuvable ou vide");
+        }
+
+        // === Regrouper les formes mythiques par nom ===
+        champions.forEach(c => {
+          if (!championForms[c.name]) championForms[c.name] = [];
+          championForms[c.name].push(c);
+        });
+
+        // === Générer les filtres Buffs ===
+        const buffGrid = document.getElementById("buffFilterGrid");
+        EFFECTS.Buff.forEach(e => {
+          const div = document.createElement("div");
+          div.className = "effect-icon";
+          div.dataset.id = e.id;
+          div.dataset.type = "Buff";
+          div.title = e.name;
+          div.innerHTML = `<img src="img/buffs/${e.id}.webp" alt="${e.name}">`;
+          buffGrid.appendChild(div);
+        });
+
+        // === Générer les filtres Debuffs ===
+        const debuffGrid = document.getElementById("debuffFilterGrid");
+        EFFECTS.Debuff.forEach(e => {
+          const div = document.createElement("div");
+          div.className = "effect-icon";
+          div.dataset.id = e.id;
+          div.dataset.type = "Debuff";
+          div.title = e.name;
+          div.innerHTML = `<img src="img/debuffs/${e.id}.webp" alt="${e.name}">`;
+          debuffGrid.appendChild(div);
+        });
+
+        // === Générer les filtres Positive Effects ===
+        const posList = document.getElementById("positiveFilterList");
+        EFFECTS.Positive.forEach(e => {
+          const row = document.createElement("label");
+          row.innerHTML = `
+            <input type="checkbox" data-type="Positive" data-id="${e.name}">
+            <span>${e.name}</span>
+          `;
+          posList.appendChild(row);
+        });
+
+        // === Générer les filtres Negative Effects ===
+        const negList = document.getElementById("negativeFilterList");
+        EFFECTS.Negative.forEach(e => {
+          const row = document.createElement("label");
+          row.innerHTML = `
+            <input type="checkbox" data-type="Negative" data-id="${e.name}">
+            <span>${e.name}</span>
+          `;
+          negList.appendChild(row);
+        });
+
+        // === Listeners BUFF / DEBUFF (icônes cliquables) ===
+        document.querySelectorAll(".effect-icon").forEach(icon => {
+          icon.addEventListener("click", () => {
+            icon.classList.toggle("active");
+
+            const type = icon.dataset.type; // Buff / Debuff
+            const id   = icon.dataset.id;   // ID (ex: "increase_atk")
+
+            if (icon.classList.contains("active")) {
+              activeEffects[type].push(id);
+            } else {
+              activeEffects[type] = activeEffects[type].filter(x => x !== id);
+            }
+
+            displayChampions();
+          });
+        });
+
+        // === Listeners POSITIVE / NEGATIVE (checkboxes) ===
+        document.querySelectorAll(".effect-checklist input").forEach(input => {
+          input.addEventListener("change", () => {
+            const type = input.dataset.type; // Positive / Negative
+            const id   = input.dataset.id;   // Label exact (ex: "Unkillable")
+
+            if (input.checked) {
+              activeEffects[type].push(id);
+            } else {
+              activeEffects[type] = activeEffects[type].filter(x => x !== id);
+            }
+
+            displayChampions();
+          });
+        });
+
+        // === Collapse Effects ===
+        const effectsContainer = document.querySelector(".effects-container");
+        const effectsToggle = document.getElementById("effectsToggle");
+        const effectsPanel  = document.querySelector(".effects-filters");
+
+        effectsToggle.addEventListener("click", () => {
+          const isOpen = effectsPanel.classList.contains("open");
+
+          if (isOpen) {
+            effectsPanel.classList.remove("open");
+            effectsToggle.classList.remove("open");
+            effectsContainer.classList.add("collapsed");
+          } else {
+            effectsPanel.classList.add("open");
+            effectsToggle.classList.add("open");
+            effectsContainer.classList.remove("collapsed");
+          }
+
+          lucide.createIcons();
+        });
 
         factions = [...new Set(champions.map(c => c.faction))].sort();
 
@@ -985,6 +876,8 @@ typeButtons.forEach(btn => {
   });
 });
 
+document.getElementById("resetFilters").addEventListener("click", resetAllFilters);
+
 document.querySelectorAll(".sort-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const stat = btn.dataset.stat;
@@ -1033,6 +926,23 @@ document.querySelectorAll(".sort-btn").forEach(btn => {
   });
 });
 
+const sliderTrack = document.querySelector(".slider-track");
+const sliderThumb = document.querySelector(".slider-thumb");
+
+sliderTrack.addEventListener("click", () => {
+  const newIndex = currentFormIndex === 0 ? 1 : 0;
+
+  // slider animation
+  if (newIndex === 1) {
+    sliderThumb.classList.add("alt");
+  } else {
+    sliderThumb.classList.remove("alt");
+  }
+
+  // charger la forme
+  loadForm(newIndex);
+});
+
 
 function displayChampions() {
   const searchTerm = searchInput.value.toLowerCase();
@@ -1048,12 +958,50 @@ function displayChampions() {
     return matchesName && matchesFaction && matchesRarity && matchesAffinity && matchesType && matchesInvocable;
   });
 
+  // === FILTER BY EFFECTS ===
+  const hasActiveEffects =
+    activeEffects.Buff.length ||
+    activeEffects.Debuff.length ||
+    activeEffects.Positive.length ||
+    activeEffects.Negative.length;
+
+  let finalFiltered = filtered;
+
+  if (hasActiveEffects) {
+    finalFiltered = filtered.filter(c => {
+      if (!c.effects || c.effects.length === 0) return false;
+
+      // buffs = ids → doivent être présents dans c.effects
+      for (const eff of activeEffects.Buff) {
+        if (!c.effects.includes(eff)) return false;
+      }
+
+      // debuffs
+      for (const eff of activeEffects.Debuff) {
+        if (!c.effects.includes(eff)) return false;
+      }
+
+      // positive
+      for (const eff of activeEffects.Positive) {
+        if (!c.effects.includes(eff)) return false;
+      }
+
+      // negative
+      for (const eff of activeEffects.Negative) {
+        if (!c.effects.includes(eff)) return false;
+      }
+
+      return true;
+    });
+  } else {
+    finalFiltered = filtered;
+  }
+
   grid.innerHTML = "";
-  countDisplay.textContent = `${filtered.length} champion${filtered.length !== 1 ? 's' : ''} found`;
 
   // === TRI ===
   if (currentSort.stat) {
-    filtered.sort((a, b) => {
+    finalFiltered.sort((a, b) => {
       const valA = Number(a[currentSort.stat]) || 0;
       const valB = Number(b[currentSort.stat]) || 0;
 
@@ -1063,7 +1011,22 @@ function displayChampions() {
     });
   }
 
-  filtered.forEach(c => {
+  // === Eliminations des doublons mythiques ===
+  const unique = [];
+  const seen = new Set();
+
+  finalFiltered.forEach(c => {
+    if (!seen.has(c.name)) {
+      unique.push(c);
+      seen.add(c.name);
+    }
+  });
+
+  // === COMPTEUR CORRECT ===
+  countDisplay.textContent =
+  `${unique.length} champion${unique.length !== 1 ? 's' : ''} found`;
+
+  unique.forEach(c => {
     const card = document.createElement('div');
     card.classList.add('champion-card');
 
@@ -1109,10 +1072,44 @@ function displayChampions() {
     grid.appendChild(card);
   });
 
-  if (filtered.length === 0) {
+  if (finalFiltered.length === 0) {
     grid.innerHTML = '<p style="grid-column: 1 / -1; text-align:center;">No champions found.</p>';
   }
 }
+
+function resetAllFilters() {
+  // Recherche
+  searchInput.value = "";
+
+  // Faction
+  selectedFaction = null;
+  document.querySelectorAll(".faction-icon").forEach(el => el.classList.remove("active"));
+
+  // Rarete / Affinité / Type
+  selectedRarities = [];
+  selectedAffinities = [];
+  selectedTypes = [];
+
+  document.querySelectorAll(".rarity-btn").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".affinity-btn").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".type-btn").forEach(el => el.classList.remove("active"));
+
+  // Invocable only
+  invocableCheckbox.checked = false;
+
+  // Reset tri
+  currentSort.stat = null;
+  currentSort.order = "asc";
+  document.querySelectorAll(".sort-btn").forEach(btn => {
+    btn.classList.remove("active");
+    const icon = btn.querySelector(".sort-icon");
+    icon.setAttribute("data-lucide", "arrow-down-wide-narrow");
+  });
+
+  lucide.createIcons();
+  displayChampions();
+}
+
 
 const modal = document.getElementById("championModal");
 
@@ -1155,27 +1152,118 @@ function updateStatsDisplay(primary, secondary = null) {
     if (!el) return;
 
     const p = primary[cfg.key] ?? 0;
+    const s = secondary ? secondary[cfg.key] ?? 0 : null;
 
-    // mode normal (pas de comparatif)
+    // MODE NORMAL (pas de comparatif)
     if (!secondary) {
       el.textContent = formatValue(p, cfg.isPercent);
       return;
     }
 
-    const s = secondary[cfg.key] ?? 0;
-
-    // Calcul du pourcentage par rapport au second champion
+    // MODE COMPARATIF
+    const equal = p === s;
     const pct = s ? ((p - s) / s) * 100 : 0;
-    const pctClass = pct >= 0 ? "positive" : "negative";
 
-    // Affichage : une seule ligne
+    // couleurs
+    const leftClass  = equal ? "positive" : (p > s ? "positive" : "negative");
+    const rightClass = equal ? "positive" : (p > s ? "negative" : "positive");
+    const pctClass   = equal ? "equal" : (pct >= 0 ? "positive" : "negative");
+
     el.innerHTML = `
-      <div class="stat-main-line">
-        <span class="stat-number">${formatValue(p, cfg.isPercent)}</span>
-        <span class="stat-percent ${pctClass}">${formatPercent(pct)}</span>
-      </div>
+      <span class="stat-number primary ${leftClass}">${formatValue(p, cfg.isPercent)}</span>
+      <span class="stat-percent ${pctClass}">${formatPercent(pct)}</span>
+      <span class="stat-number secondary ${rightClass}">${formatValue(s, cfg.isPercent)}</span>
     `;
   });
+}
+
+function renderSkills(champ) {
+  const container = document.getElementById("modalSkills");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const gid = champ.IGid || champ.image || champ.id;
+
+  // ===== AURA =====
+  if (champ.aurastat && champ.aura) {
+    const auraHTML = `
+      <div class="aura-entry">
+        <div class="aura-icon-wrapper">
+          <img class="aura-icon" src="img/aura/${champ.aurastat}.webp" alt="Aura">
+        </div>
+        <div class="aura-text">
+          <div class="aura-title">AURA</div>
+          <div class="aura-desc">${champ.aura}</div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", auraHTML);
+  }
+
+  // ===== SKILLS ACTIFS s1..s6 =====
+  let activeCount = 0;
+  for (let i = 1; i <= 6; i++) {
+    const raw = champ[`s${i}`];
+    if (!raw) continue;
+
+    const [title, ...descLines] = raw.split("\n");
+    const desc = descLines.join("\n");
+
+    const img = `img/skills/${gid}_s${i}.webp`;
+    activeCount++;
+    const formattedDesc = (desc || "")
+      .replace(/\[(.*?)\]/g, '<span class="skill-bracket">[$1]</span>')
+      .replace(/^.*?Multiplier:/gm, '<span class="multiplier-label">$&</span>')
+      .replace(/\n/g, "<br>");
+
+    const skillHTML = `
+      <div class="skill-entry">
+        <div class="skill-icon-wrapper">
+            <img class="skill-icon" src="${img}">
+        </div>
+        <div class="skill-info">
+          <div class="skill-title">${title}</div>
+          <div class="skill-desc">
+            ${formattedDesc}
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", skillHTML);
+  }
+
+  // ===== PASSIFS p1, p2 =====
+  for (let p = 1; p <= 2; p++) {
+    const raw = champ[`p${p}`];
+    if (!raw) continue;
+
+    const [title, ...descLines] = raw.split("\n");
+    const desc = descLines.join("\n");
+
+    const imgIndex = activeCount + p; // ex: 3 skills actifs -> p1 = _s4.webp
+    const img = `img/skills/${gid}_s${imgIndex}.webp`;
+    const formattedDesc = (desc || "")
+      .replace(/\[(.*?)\]/g, '<span class="skill-bracket">[$1]</span>')
+      .replace(/^.*?Multiplier:/gm, '<span class="multiplier-label">$&</span>')
+      .replace(/\n/g, "<br>");
+      
+    const passiveHTML = `
+      <div class="skill-entry">
+        <div class="skill-icon-wrapper passive">
+          <div class="passive-stroke"></div>
+          <div class="passive-glow"></div>
+            <img class="skill-icon" src="${img}">
+        </div>
+        <div class="skill-info">
+          <div class="skill-title">${title}</div>
+          <div class="skill-desc">
+            ${formattedDesc}
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", passiveHTML);
+  }
 }
 
 function resetCompareUI() {
@@ -1189,29 +1277,56 @@ function resetCompareUI() {
   lucide.createIcons();
 }
 
+function loadForm(index) {
+  currentFormIndex = index;
+  const champ = currentForms[index];
 
-function openChampionModal(champ) {
   primaryChampion = champ;
   resetCompareUI();
 
+  // images
   document.getElementById("modalChampionImg").src = `img/champions/${champ.image}.webp`;
   document.getElementById("modalFrameImg").src = `img/rarity/${champ.rarity}.webp`;
+  document.getElementById("modalFactionBanner").src = `img/factions/${champ.faction.replace(/ /g,'')}.webp`;
+  document.getElementById("modalAffinityBig").src = `img/affinity/${champ.affinity}.webp`;
 
-  document.getElementById("modalFactionBanner").src =
-    `img/factions/${champ.faction.toLowerCase().replace(/ /g,'')}.webp`;
-  document.getElementById("modalAffinityBig").src =
-    `img/affinity/${champ.affinity}.webp`;
-
+  // titres
   document.getElementById("modalFactionTitle").textContent = champ.faction;
   document.getElementById("modalChampionTitle").textContent = champ.name;
   document.getElementById("modalStatsTitle").textContent = champ.type;
 
-  // stats de base (sans comparatif)
-  updateStatsDisplay(primaryChampion, null);
+  // stats
+  updateStatsDisplay(champ, null);
 
-  modal.classList.add("active");
+  // skills
+  renderSkills(champ);
+
+  // icônes
   lucide.createIcons();
+
+  // maj du switch
+  document.querySelectorAll(".form-option").forEach(opt => opt.classList.remove("active"));
+  const activeBtn = document.querySelector(`.form-option[data-form="${index}"]`);
+  if (activeBtn) activeBtn.classList.add("active");
 }
+
+function openChampionModal(champ) {
+
+  // récupérer toutes les formes de ce champion
+  currentForms = championForms[champ.name] || [champ];
+  currentFormIndex = 0;
+
+  // afficher ou masquer le switch
+  const fs = document.getElementById("formSwitch");
+  fs.style.display = currentForms.length > 1 ? "flex" : "none";
+
+  document.querySelector(".slider-thumb").classList.remove("alt");
+
+  // charger la forme 0 (Base)
+  loadForm(0);
+
+    modal.classList.add("active");
+  }
 
 compareToggle.addEventListener("click", () => {
   const mode = compareToggle.dataset.mode || "off";
