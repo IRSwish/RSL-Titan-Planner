@@ -76,28 +76,39 @@ body { font-family:'Inter',sans-serif; color:#fcf6ff; margin:0; padding:0; }
 
 /* === EFFECTS BAR === */
 
+
 .effects-container {
-  border: 2px solid #d4af37;
+  border: 2px solid #555;
   border-radius: 12px;
   background: #0f0f0f;
+  margin: 30px auto;
   overflow: hidden;
-  margin-top: 30px;
-  margin-bottom:30px;
-  padding: 0; /* 👈 IMPORTANT : aucun padding */
+  width: 100%;
+  max-width: 1400px;
+  max-height:1000px;
+  transition: width .35s ease;
+}
+
+.effects-container.open {
+  width: 100%;
+  max-width: 1400px;
 }
 
 .effects-container.collapsed {
-  padding-bottom: 0;   /* 👈 évite le vide sous le toggle */
-  border-bottom-width: 2px;
+  width: auto !important;
+  max-width: 240px !important;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 !important;
 }
 
 .effects-toggle {
-  padding: 14px 18px;
+  padding: 10px 20px;
   background: #141414;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   user-select: none;
 }
 
@@ -105,46 +116,60 @@ body { font-family:'Inter',sans-serif; color:#fcf6ff; margin:0; padding:0; }
   background: #1c1c1c;
 }
 
-.effects-toggle.open {
-  background: #1c1c1c;
+.effects-toggle svg {
+  transform: rotate(0deg);
+  transition: transform .5s ease;
 }
 
-.effects-toggle i {
-  transition: transform .25s ease;
+.effects-container.open .effects-toggle svg {
+  transform: rotate(90deg);
 }
-
-.effects-toggle.open i {
-  transform: rotate(180deg);
-}
-
-/* Panneau cachable */
-/* Fermé → zéro espace */
-.effects-filters {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  padding: 0 !important;
-  margin: 0 !important;
-  transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
-}
-
-/* Déplié → padding visible */
-.effects-filters.open {
-  max-height: 2000px;
-  opacity: 1;
-  padding: 20px 0 20px 0 !important;   /* 👈 C’EST ICI QUE TU GÈRES LE PADDING */
-}
-
 
 /* COLONNES DES 4 SECTIONS */
 .effects-filters {
-  margin-top: 25px;
-  padding: 20px;
   display: grid;
   grid-template-columns: 380px 380px 240px 240px;
   gap: 40px;
   justify-content: center;
   width: 100%;
+  padding:20px 0 20px 0;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  transition: max-height .45s ease, opacity .35s ease, padding .35s ease;
+}
+
+.effects-filters.open {
+    display: grid;
+    grid-template-columns: 380px 380px 240px 240px;
+    gap: 40px;
+    justify-content: center;
+    width: 100%;
+}
+
+.effects-container.open .effects-filters {
+  opacity: 1;
+  max-height: 2000px;
+  padding: 20px;
+}
+
+/* Transition fluide au collapse */
+.effects-container.collapsed {
+  transition: width .35s ease, max-width .35s ease, padding .3s ease;
+}
+
+.effects-container:not(.collapsed) {
+  transition: width .35s ease, max-width .35s ease, padding .3s ease;
+}
+
+.effects-filters {
+  transition: max-height .45s ease, opacity .35s ease, padding .35s ease;
+}
+.effects-container.collapsed .effects-filters {
+  opacity: 0;
+  max-height: 0 !important;
+  padding: 0 !important;
 }
 
 /* TITRES */
@@ -411,7 +436,7 @@ body { font-family:'Inter',sans-serif; color:#fcf6ff; margin:0; padding:0; }
       </div>
     </div>
   </div>
-<div class="effects-container">
+<div class="effects-container collapsed">
   <div id="effectsToggle" class="effects-toggle">
     <span>Effects</span>
     <i data-lucide="chevron-down"></i>
@@ -796,18 +821,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const effectsPanel  = document.querySelector(".effects-filters");
 
         effectsToggle.addEventListener("click", () => {
-          const isOpen = effectsPanel.classList.contains("open");
-
-          if (isOpen) {
-            effectsPanel.classList.remove("open");
-            effectsToggle.classList.remove("open");
-            effectsContainer.classList.add("collapsed");
-          } else {
-            effectsPanel.classList.add("open");
-            effectsToggle.classList.add("open");
-            effectsContainer.classList.remove("collapsed");
-          }
-
+          effectsContainer.classList.toggle("open");
+          effectsPanel.classList.toggle("open");
+          effectsContainer.classList.toggle("collapsed");
           lucide.createIcons();
         });
 
