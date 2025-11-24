@@ -1287,7 +1287,7 @@ function loadForm(index) {
   // images
   document.getElementById("modalChampionImg").src = `img/champions/${champ.image}.webp`;
   document.getElementById("modalFrameImg").src = `img/rarity/${champ.rarity}.webp`;
-  document.getElementById("modalFactionBanner").src = `img/factions/${champ.faction.replace(/ /g,'')}.webp`;
+  document.getElementById("modalFactionBanner").src = `img/factions/${champ.faction.toLowerCase().replace(/ /g,"")}.webp`;
   document.getElementById("modalAffinityBig").src = `img/affinity/${champ.affinity}.webp`;
 
   // titres
