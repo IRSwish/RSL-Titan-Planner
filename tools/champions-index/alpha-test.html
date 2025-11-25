@@ -14,7 +14,9 @@
 
   /* === BASE === */
 body { font-family:'Inter',sans-serif; color:#fcf6ff; margin:0; padding:0; }
+body.modal-open {overflow: hidden;}
 .container { width:95%; max-width:1400px; margin:20px auto; }
+
 
 /* === SEARCH === */
 .search-bar { text-align:center; margin-bottom:15px; }
@@ -367,14 +369,176 @@ body { font-family:'Inter',sans-serif; color:#fcf6ff; margin:0; padding:0; }
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 /* Aura */
-.aura-entry { display:flex; gap:50px; align-items:center; padding:12px 50px; background:#141414; border:1px solid #444; border-radius:8px; margin-bottom:40px; }
+.aura-entry { display:flex; gap:20px; align-items:center; padding:12px 12px; background:#141414; border:1px solid #444; border-radius:8px; margin-bottom:10px; }
 .aura-icon { width:96px; height:96px; object-fit:contain; flex-shrink:0;position:relative;}
 .aura-text { display:flex; flex-direction:column; gap:2px; }
-.aura-title { font-family:'American Captain',sans-serif; font-size:24px; color:#d4af37; }
+.aura-title { font-family:'American Captain',sans-serif; font-size:24px;background:linear-gradient(to bottom,#feeec1,#e09f40);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .aura-desc { font-size:14px; opacity:.85; }
 .aura-icon-wrapper{position:relative;width:96px;height:96px;flex-shrink:0;}
 .aura-icon-wrapper .aura-icon{width:100%;height:100%;object-fit:contain;}
 .aura-icon-wrapper::after{content:"";position:absolute;inset:0;background:url("img/aura/BORDER.webp") center/contain no-repeat;z-index:10;pointer-events:none;}
+
+/* Surrounding wrapper */
+.aura-tomes-row {display: flex; justify-content: space-between; gap: 20px;}
+
+/* Tomes block */
+.tomes-entry {display:flex;align-items:center;gap:20px;padding:12px 20px;background:#141414;border:1px solid #444;border-radius:8px;}
+
+.aura-tomes-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.tomes-icon-wrapper {
+  flex-shrink:0;
+  width:96px;
+  height:96px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.tomes-icon, 
+.tomes-icon-wrapper > img {
+  width:96px;
+  height:96px;
+  object-fit:contain;
+}
+
+.tomes-text {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.tomes-title {
+  font-family:'American Captain', sans-serif;
+  font-size:24px;
+  background:linear-gradient(to bottom,#feeec1,#e09f40);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.tomes-list {
+  margin:0;
+  padding-left:22px;
+  list-style-type:"• ";
+}
+
+.tomes-list li {
+  font-size:14px;
+  opacity:.85;
+  margin:2px 0;
+}
+
+
+.copy-icon-wrapper {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+.copy-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.copy-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* === FIX AURA + TOMES ALIGNMENT PERFECT === */
+
+.aura-tomes-row {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+/* 50/50 strict */
+.aura-block,
+.tomes-block {
+  width: 50%;
+  display: flex;
+    height:100%;
+}
+
+/* Force each inner card to stretch fully */
+.aura-entry,
+.tomes-entry {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  background: #141414;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+
+/* Make text areas expand equally */
+.aura-text,
+.tomes-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Row container */
+.aura-tomes-row {
+  display: flex;
+  justify-content: center;   /* centrer par défaut */
+  gap: 20px;
+  width: 100%;
+  margin-bottom:5px;
+}
+
+/* Default: blocks are 50% width */
+.aura-block,
+.tomes-block {
+  width: 50%;
+  display: flex;
+  align-items: stretch;
+}
+
+/* Inner cards */
+.aura-entry,
+.tomes-entry {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  background: #141414;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+
+/* Text sections grow properly */
+.aura-text,
+.tomes-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* SPECIAL: only 1 block present → keep 50% but center it */
+.aura-tomes-row.single .aura-block,
+.aura-tomes-row.single .tomes-block {
+  margin: 0 auto;
+}
 
 
 /* === MEDIA QUERIES === */
@@ -1122,10 +1286,25 @@ function resetAllFilters() {
     icon.setAttribute("data-lucide", "arrow-down-wide-narrow");
   });
 
+  // === Reset EFFECTS ===
+  document.querySelectorAll(".effect-icon").forEach(icon => {
+      icon.classList.remove("active");
+  });
+
+  document
+    .querySelectorAll('input[data-type="Positive"], input[data-type="Negative"]')
+    .forEach(cb => { cb.checked = false; });
+
+  activeEffects = {
+      Buff: [],
+      Debuff: [],
+      Positive: [],
+      Negative: []
+  };
+
   lucide.createIcons();
   displayChampions();
 }
-
 
 const modal = document.getElementById("championModal");
 
@@ -1194,27 +1373,161 @@ function updateStatsDisplay(primary, secondary = null) {
 }
 
 function renderSkills(champ) {
-  const container = document.getElementById("modalSkills");
-  if (!container) return;
-  container.innerHTML = "";
+   const container = document.getElementById("modalSkills");
+    if (!container) return;
+    container.innerHTML = "";
 
-  const gid = champ.IGid || champ.image || champ.id;
+    const gid = champ.IGid || champ.image || champ.id;
 
-  // ===== AURA =====
-  if (champ.aurastat && champ.aura) {
-    const auraHTML = `
-      <div class="aura-entry">
-        <div class="aura-icon-wrapper">
-          <img class="aura-icon" src="img/aura/${champ.aurastat}.webp" alt="Aura">
+    // === CREATE MAIN ROW CONTAINER ===
+    container.insertAdjacentHTML("beforeend", `
+      <div class="aura-tomes-row"></div>
+    `);
+
+    const row = container.querySelector(".aura-tomes-row");
+
+    // FLAGS
+    let hasAura = champ.aurastat && champ.aura;
+    let hasTomes = false;
+
+   // === CREATE AURA + TOMES WRAPPER ===
+    if (hasAura) {
+      row.insertAdjacentHTML("beforeend", `
+        <div class="aura-block aura-entry-wrapper">
+          <div class="aura-entry">
+            <div class="aura-icon-wrapper">
+              <img class="aura-icon" src="img/aura/${champ.aurastat}.webp" alt="Aura">
+            </div>
+            <div class="aura-text">
+              <div class="aura-title">AURA</div>
+              <div class="aura-desc">${champ.aura}</div>
+            </div>
+          </div>
         </div>
-        <div class="aura-text">
-          <div class="aura-title">AURA</div>
-          <div class="aura-desc">${champ.aura}</div>
-        </div>
+      `);
+    }
+
+    // ===== TOMES / COPIES BLOCK (separate right column) =====
+    (function() {
+      const rarity = champ.rarity.toLowerCase();
+      // singular/plural helper
+      const plural = (n, singular, plural) => n === 1 ? singular : plural;
+      const countTomes = raw =>
+        raw ? (raw.match(/^Level\s+\d+:/gm) || []).length : 0;
+
+      let tomeDetails = [];
+      let totalTomes = 0;
+
+      // Skills A1-A6
+      for (let i = 1; i <= 6; i++) {
+        const raw = champ[`s${i}`];
+        if (!raw) continue;
+
+        const tomes = countTomes(raw);
+        if (tomes > 0) {
+          tomeDetails.push({ label: `A${i}`, tomes });
+          totalTomes += tomes;
+        }
+      }
+
+      // Passives P1-P2
+      let pIndex = 1;
+      for (let p = 1; p <= 2; p++) {
+        const raw = champ[`p${p}`];
+        if (!raw) continue;
+
+        const tomes = countTomes(raw);
+        if (tomes > 0) {
+          tomeDetails.push({ label: `Passive ${pIndex}`, tomes });
+          totalTomes += tomes;
+        }
+        pIndex++;
+      }
+
+      if (totalTomes > 0) hasTomes = true;
+
+      // If no tomes → skip block
+      if (totalTomes === 0) return;
+
+      // Determine tome icon
+      let iconHTML = "";
+      if (["rare","epic","legendary","mythical"].includes(rarity)) {
+        iconHTML = `
+          <img src="/style/img/Misc/skill-tome-${rarity}.webp" class="tome-icon">
+        `;
+      } else {
+        iconHTML = `
+          <div class="copy-icon-wrapper">
+            <img src="img/champions/${champ.image}.webp" class="copy-icon">
+            <img src="img/rarity/${champ.rarity}.webp" class="copy-frame">
+          </div>
+        `;
+      }
+
+      let detailsHTML = "";
+      tomeDetails.forEach(d => {
+        detailsHTML += `<div class="tome-line">${d.label}: ${d.tomes} tomes</div>`;
+      });
+
+      const tomesHTML = `
+      <div class="tomes-entry">
+          <div class="tomes-icon-wrapper">
+              ${iconHTML}
+          </div>
+
+          <div class="tomes-text">
+              <div class="tomes-title">
+                  ${totalTomes} ${
+                      ["common","uncommon"].includes(rarity)
+                      ? `${champ.rarity} ${plural(totalTomes, "Copy", "Copies")}`
+                      : `${champ.rarity} Skill ${plural(totalTomes, "Tome", "Tomes")}`
+                  }
+              </div>
+
+              <ul class="tomes-list">
+                  ${tomeDetails.map(t => `
+                      <li>${t.label}: ${t.tomes} ${
+                          ["common","uncommon"].includes(rarity)
+                          ? plural(t.tomes, "copy", "copies")
+                          : plural(t.tomes, "tome", "tomes")
+                      }</li>
+                  `).join("")}
+              </ul>
+          </div>
       </div>
     `;
-    container.insertAdjacentHTML("beforeend", auraHTML);
-  }
+
+      // Insert SEPARATE block
+      document.querySelector(".aura-tomes-row")
+      if (hasTomes) {
+        row.insertAdjacentHTML("beforeend", `
+          <div class="tomes-block tomes-entry-wrapper">
+            ${tomesHTML}
+          </div>
+        `);
+      }
+
+    })();
+
+    // === Final layout adjustment for 50/50 or centered ===
+    const auraBlock = row.querySelector(".aura-entry-wrapper");
+    const tomeBlock = row.querySelector(".tomes-entry-wrapper");
+
+    if ((hasAura && !hasTomes) || (!hasAura && hasTomes)) {
+      row.classList.add("single");
+    }
+    else if (hasAura && !hasTomes) {
+      // Only aura → full width centered
+      auraBlock.style.width = "100%";
+      auraBlock.style.justifyContent = "center";
+    } 
+    else if (!hasAura && hasTomes) {
+      // Only tomes → full width centered
+      tomeBlock.style.width = "100%";
+      tomeBlock.style.display = "flex";
+      tomeBlock.style.justifyContent = "center";
+    }
+
 
   // ===== SKILLS ACTIFS s1..s6 =====
   let activeCount = 0;
@@ -1340,7 +1653,7 @@ function openChampionModal(champ) {
 
   // charger la forme 0 (Base)
   loadForm(0);
-
+    document.body.classList.add("modal-open");
     modal.classList.add("active");
   }
 
@@ -1421,14 +1734,18 @@ compareInput.addEventListener("keydown", (e) => {
   }
 });
 
-
 document.querySelector(".modal-close").addEventListener("click", () => {
   modal.classList.remove("active");
+  document.body.classList.remove("modal-open");
 });
 
 modal.addEventListener("click", e => {
-  if (e.target === modal) modal.classList.remove("active");
+  if (e.target === modal) {
+    modal.classList.remove("active");
+    document.body.classList.remove("modal-open");
+  }
 });
+
 </script>
 
   <div class="adsense-container">
