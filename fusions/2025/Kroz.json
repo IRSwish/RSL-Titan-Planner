@@ -58,9 +58,9 @@
       "type": "Tournament",
       "start_date": "2025-11-28",
       "end_date": "2025-12-02",
-      "reward": "Fragments",
+      "reward": "Fragments, Fragments",
       "points": [
-        15
+        5,10
       ],
       "extra_choices": [
         { "label": "1st Place", "fragments": 10 },
