@@ -544,6 +544,33 @@ body.modal-open {overflow: hidden;}
 @media(max-width:900px){ .filter-buttons{grid-template-columns:repeat(2,1fr);} .filters-wrapper{flex-direction:column; align-items:center;} }
 @media(max-width:700px){ #searchInput{width:90%;} .champion-card{max-width:100px;} .faction-icon{width:40px; height:40px;} }
 
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #d4af37;
+  opacity: 0.6;
+  transition: opacity .2s, transform .2s;
+  z-index: 9999;
+}
+
+.modal-nav:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.modal-nav.prev { left: -55px; }
+.modal-nav.next { right: -55px; }
+
+.modal-nav svg {
+  width: 34px;
+  height: 34px;
+}
   </style>
 </head>
 
@@ -676,6 +703,8 @@ body.modal-open {overflow: hidden;}
 <!-- === MODAL CHAMPION === -->
 <div id="championModal" class="modal-overlay">
     <div class="modal-content">
+    <button class="modal-nav prev"><i data-lucide="chevron-left"></i></button>
+    <button class="modal-nav next"><i data-lucide="chevron-right"></i></button>
 
     <button class="modal-close">
       <i data-lucide="x"></i>
@@ -790,8 +819,12 @@ body.modal-open {overflow: hidden;}
 
 <script>
 
+let currentModalIndex = null;
+
+
 let champions = [];
 let factions = [];
+let filteredChampions = [];
 let championForms = {};
 let currentForms = null;
 let currentFormIndex = 0;
@@ -1127,7 +1160,7 @@ function displayChampions() {
   const searchTerm = searchInput.value.toLowerCase();
   const invocableOnly = invocableCheckbox.checked;
 
-  const filtered = champions.filter(c => {
+  filteredChampions = champions.filter(c => {
     const matchesName = c.name.toLowerCase().includes(searchTerm);
     const matchesFaction = !selectedFaction || c.faction === selectedFaction;
     const matchesRarity = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
@@ -1144,10 +1177,10 @@ function displayChampions() {
     activeEffects.Positive.length ||
     activeEffects.Negative.length;
 
-  let finalFiltered = filtered;
+  let finalFiltered = filteredChampions;
 
   if (hasActiveEffects) {
-    finalFiltered = filtered.filter(c => {
+    finalFiltered = filteredChampions.filter(c => {
       if (!c.effects || c.effects.length === 0) return false;
 
       // buffs = ids → doivent être présents dans c.effects
@@ -1173,7 +1206,7 @@ function displayChampions() {
       return true;
     });
   } else {
-    finalFiltered = filtered;
+    finalFiltered = filteredChampions;
   }
 
   grid.innerHTML = "";
@@ -1640,6 +1673,10 @@ function loadForm(index) {
 
 function openChampionModal(champ) {
 
+  // position dans la liste filtrée
+  currentModalIndex = filteredChampions.findIndex(c => c.id === champ.id);
+
+
   // récupérer toutes les formes de ce champion
   currentForms = championForms[champ.name] || [champ];
   currentFormIndex = 0;
@@ -1744,6 +1781,46 @@ modal.addEventListener("click", e => {
     document.body.classList.remove("modal-open");
   }
 });
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const modal = document.getElementById("championModal");
+    if (modal.classList.contains("active")) {
+      modal.classList.remove("active");
+      document.body.classList.remove("modal-open");
+      comparing = false;
+      resetCompareUI();
+    }
+  }
+});
+
+function openNextChampion() {
+  if (currentModalIndex === null) return;
+  if (currentModalIndex < filteredChampions.length - 1) {
+    currentModalIndex++;
+    openChampionModal(filteredChampions[currentModalIndex], true);
+  }
+}
+
+function openPrevChampion() {
+  if (currentModalIndex === null) return;
+  if (currentModalIndex > 0) {
+    currentModalIndex--;
+    openChampionModal(filteredChampions[currentModalIndex], true);
+  }
+}
+
+document.querySelector(".modal-nav.prev").addEventListener("click", openPrevChampion);
+document.querySelector(".modal-nav.next").addEventListener("click", openNextChampion);
+
+document.addEventListener("keydown", e => {
+  const modalIsOpen = modal.classList.contains("active");
+  if (!modalIsOpen) return;
+
+  if (e.key === "ArrowRight") openNextChampion();
+  if (e.key === "ArrowLeft")  openPrevChampion();
+});
+
 
 </script>
 
