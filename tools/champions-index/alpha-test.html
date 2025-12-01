@@ -539,6 +539,34 @@ body.modal-open {overflow: hidden;}
   margin: 0 auto;
 }
 
+#championModal {
+  position: fixed;
+}
+
+.modal-overlay {
+  position: fixed;
+}
+
+.modal-content {
+  position: relative; /* IMPORTANT */
+}
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #d4af37;
+  opacity: 0.7;
+  transition: opacity .2s, transform .2s;
+  z-index: 999999; /* PLUS haut */
+}
+
+.modal-nav.prev { left: 20px; }
+.modal-nav.next { right: 20px; }
 
 /* === MEDIA QUERIES === */
 @media(max-width:900px){ .filter-buttons{grid-template-columns:repeat(2,1fr);} .filters-wrapper{flex-direction:column; align-items:center;} }
@@ -564,12 +592,10 @@ body.modal-open {overflow: hidden;}
   transform: translateY(-50%) scale(1.15);
 }
 
-.modal-nav.prev { left: -55px; }
-.modal-nav.next { right: -55px; }
 
 .modal-nav svg {
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
 }
   </style>
 </head>
@@ -701,10 +727,10 @@ body.modal-open {overflow: hidden;}
 </div>
 
 <!-- === MODAL CHAMPION === -->
+
 <div id="championModal" class="modal-overlay">
+  <button class="modal-nav prev"><i data-lucide="chevron-left"></i></button>
     <div class="modal-content">
-    <button class="modal-nav prev"><i data-lucide="chevron-left"></i></button>
-    <button class="modal-nav next"><i data-lucide="chevron-right"></i></button>
 
     <button class="modal-close">
       <i data-lucide="x"></i>
@@ -808,6 +834,7 @@ body.modal-open {overflow: hidden;}
     </div>
 
   </div>
+  <button class="modal-nav next"><i data-lucide="chevron-right"></i></button>
 
   </div>
 </div>
@@ -904,12 +931,10 @@ document.addEventListener("DOMContentLoaded", () => {
           s2: r[19] || null,
           s3: r[20] || null,
           s4: r[21] || null,
-          s5: r[22] || null,
-          s6: r[23] || null,
-          p1: r[24] || null,
-          p2: r[25] || null,
-          IGid: r[27] || null,
-          effects: (r[26] || "").split("\n").map(e => e.trim()).filter(e => e.length > 0)
+          p1: r[22] || null,
+          p2: r[23] || null,
+          IGid: r[25] || null,
+          effects: (r[24] || "").split("\n").map(e => e.trim()).filter(e => e.length > 0)
         }));
 
         // === Charger la table effects ===
