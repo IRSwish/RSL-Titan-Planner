@@ -847,7 +847,7 @@ body.modal-open {overflow: hidden;}
 <script>
 
 let currentModalIndex = null;
-
+let modalNavigationList = [];
 
 let champions = [];
 let factions = [];
@@ -1698,8 +1698,11 @@ function loadForm(index) {
 
 function openChampionModal(champ) {
 
+  // snapshot de la liste filtrée pour naviguer
+  modalNavigationList = [...filteredChampions];
+
   // position dans la liste filtrée
-  currentModalIndex = filteredChampions.findIndex(c => c.id === champ.id);
+  currentModalIndex = modalNavigationList.findIndex(c => c.id === champ.id);
 
 
   // récupérer toutes les formes de ce champion
@@ -1821,9 +1824,9 @@ document.addEventListener("keydown", (e) => {
 
 function openNextChampion() {
   if (currentModalIndex === null) return;
-  if (currentModalIndex < filteredChampions.length - 1) {
+  if (currentModalIndex < modalNavigationList.length - 1) {
     currentModalIndex++;
-    openChampionModal(filteredChampions[currentModalIndex], true);
+    openChampionModal(modalNavigationList[currentModalIndex], true);
   }
 }
 
@@ -1831,7 +1834,7 @@ function openPrevChampion() {
   if (currentModalIndex === null) return;
   if (currentModalIndex > 0) {
     currentModalIndex--;
-    openChampionModal(filteredChampions[currentModalIndex], true);
+    openChampionModal(modalNavigationList[currentModalIndex], true);
   }
 }
 
