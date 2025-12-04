@@ -2,22 +2,22 @@
 window.fusions = {
   "Ace-Reporter": {
     name: "Ace Reporter Titan Event",
-    json: "Ace-Reporter.json"
+    json: "/titan/2025/Ace-Reporter.json"
   },
   "Smart-Fella": {
     name: "Smart Fella Titan Event",
-    json: "Smart-Fella.json"
+    json: "/titan/2025/Smart-Fella.json"
   },
   "Demonslayer": {
     name: "Demonslayer Titan Event",
-    json: "Demonslayer.json"
+    json: "/titan/2025/Demonslayer.json"
   },
   "Community-Weeks": {
     name: "Community Weeks Titan Event",
-    json: "Community-Weeks.json"
+    json: "/titan/2025/Community-Weeks.json"
   },
   "Tea-Party": {
     name: "Tea Party Titan Event",
-    json: "Tea-Party.json"
+    json: "/titan/2025/Tea-Party.json"
   }
 };
