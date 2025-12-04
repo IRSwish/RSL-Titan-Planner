@@ -629,12 +629,12 @@ body.modal-open {overflow: hidden;}
     <div class="filter-section">
       <div class="section-label">Rarity</div>
       <div class="filter-buttons rarity-grid">
-        <button class="rarity-btn" data-rarity="Mythical"><img src="img/rarity/Mythical_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Legendary"><img src="img/rarity/Legendary_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Epic"><img src="img/rarity/Epic_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Rare"><img src="img/rarity/Rare_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Uncommon"><img src="img/rarity/Uncommon_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Common"><img src="img/rarity/Common_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Mythical"><img src="/tools/champions-index/img/rarity/Mythical_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Legendary"><img src="/tools/champions-index/img/rarity/Legendary_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Epic"><img src="/tools/champions-index/img/rarity/Epic_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Rare"><img src="/tools/champions-index/img/rarity/Rare_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Uncommon"><img src="/tools/champions-index/img/rarity/Uncommon_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Common"><img src="/tools/champions-index/img/rarity/Common_Icon.webp"></button>
       </div>
     </div>
 
@@ -642,10 +642,10 @@ body.modal-open {overflow: hidden;}
     <div class="filter-section">
       <div class="section-label">Affinity</div>
       <div class="filter-buttons affinity-grid">
-        <button class="affinity-btn" data-affinity="Force"><img src="img/affinity/Force.webp"></button>
-        <button class="affinity-btn" data-affinity="Magic"><img src="img/affinity/Magic.webp"></button>
-        <button class="affinity-btn" data-affinity="Spirit"><img src="img/affinity/Spirit.webp"></button>
-        <button class="affinity-btn" data-affinity="Void"><img src="img/affinity/Void.webp"></button>
+        <button class="affinity-btn" data-affinity="Force"><img src="/tools/champions-index/img/affinity/Force.webp"></button>
+        <button class="affinity-btn" data-affinity="Magic"><img src="/tools/champions-index/img/affinity/Magic.webp"></button>
+        <button class="affinity-btn" data-affinity="Spirit"><img src="/tools/champions-index/img/affinity/Spirit.webp"></button>
+        <button class="affinity-btn" data-affinity="Void"><img src="/tools/champions-index/img/affinity/Void.webp"></button>
       </div>
     </div>
 
@@ -900,7 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
     locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
   }).then(SQL => {
     
-    fetch("champions.db") // 🔥 Ajuste le chemin selon ton site !
+    fetch("/tools/champions-index/champions.db") // 🔥 Ajuste le chemin selon ton site !
       .then(res => res.arrayBuffer())
       .then(buffer => {
         const db = new SQL.Database(new Uint8Array(buffer));
@@ -971,7 +971,7 @@ document.addEventListener("DOMContentLoaded", () => {
           div.dataset.id = e.id;
           div.dataset.type = "Buff";
           div.title = e.name;
-          div.innerHTML = `<img src="img/buffs/${e.id}.webp" alt="${e.name}">`;
+          div.innerHTML = `<img src="/tools/champions-index/img/buffs/${e.id}.webp" alt="${e.name}">`;
           buffGrid.appendChild(div);
         });
 
@@ -983,7 +983,7 @@ document.addEventListener("DOMContentLoaded", () => {
           div.dataset.id = e.id;
           div.dataset.type = "Debuff";
           div.title = e.name;
-          div.innerHTML = `<img src="img/debuffs/${e.id}.webp" alt="${e.name}">`;
+          div.innerHTML = `<img src="/tools/champions-index/img/debuffs/${e.id}.webp" alt="${e.name}">`;
           debuffGrid.appendChild(div);
         });
 
@@ -1070,7 +1070,7 @@ function renderFactions() {
   factions.forEach(f => {
     const img = document.createElement('img');
     const icon = f.toLowerCase().replace(/ /g, "");
-    img.src = `img/factions/${icon}.webp`;
+    img.src = `/tools/champions-index/img/factions/${icon}.webp`;
     img.alt = f;
     img.classList.add('faction-icon');
     img.dataset.faction = f;
@@ -1281,18 +1281,18 @@ function displayChampions() {
     imgWrapper.classList.add('card-image', c.rarity.toLowerCase());
 
     const img = document.createElement('img');
-    img.src = `img/champions/${c.image}.webp`;
+    img.src = `/tools/champions-index/img/champions/${c.image}.webp`;
     img.alt = c.name;
     img.loading = "lazy";
     img.classList.add('champion-img');
 
     const frame = document.createElement('img');
-    frame.src = `img/rarity/${c.rarity}.webp`;
+    frame.src = `/tools/champions-index/img/rarity/${c.rarity}.webp`;
     frame.alt = `${c.rarity} frame`;
     frame.classList.add('rarity-frame');
 
     const affinity = document.createElement('img');
-    affinity.src = `img/affinity/${c.affinity}.webp`;
+    affinity.src = `/tools/champions-index/img/affinity/${c.affinity}.webp`;
     affinity.alt = `${c.affinity} affinity`;
     affinity.classList.add('affinity-icon');
 
@@ -1463,7 +1463,7 @@ function renderSkills(champ) {
         <div class="aura-block aura-entry-wrapper">
           <div class="aura-entry">
             <div class="aura-icon-wrapper">
-              <img class="aura-icon" src="img/aura/${champ.aurastat}.webp" alt="Aura">
+              <img class="aura-icon" src="/tools/champions-index/img/aura/${champ.aurastat}.webp" alt="Aura">
             </div>
             <div class="aura-text">
               <div class="aura-title">AURA</div>
@@ -1525,8 +1525,8 @@ function renderSkills(champ) {
       } else {
         iconHTML = `
           <div class="copy-icon-wrapper">
-            <img src="img/champions/${champ.image}.webp" class="copy-icon">
-            <img src="img/rarity/${champ.rarity}.webp" class="copy-frame">
+            <img src="/tools/champions-index/img/champions/${champ.image}.webp" class="copy-icon">
+            <img src="/tools/champions-index/img/rarity/${champ.rarity}.webp" class="copy-frame">
           </div>
         `;
       }
@@ -1605,7 +1605,7 @@ function renderSkills(champ) {
     const [title, ...descLines] = raw.split("\n");
     const desc = descLines.join("\n");
 
-    const img = `img/skills/${gid}_s${i}.webp`;
+    const img = `/tools/champions-index/img/skills/${gid}_s${i}.webp`;
     activeCount++;
     const formattedDesc = (desc || "")
       .replace(/\[(.*?)\]/g, '<span class="skill-bracket">[$1]</span>')
@@ -1637,7 +1637,7 @@ function renderSkills(champ) {
     const desc = descLines.join("\n");
 
     const imgIndex = activeCount + p; // ex: 3 skills actifs -> p1 = _s4.webp
-    const img = `img/skills/${gid}_s${imgIndex}.webp`;
+    const img = `/tools/champions-index/img/skills/${gid}_s${imgIndex}.webp`;
     const formattedDesc = (desc || "")
       .replace(/\[(.*?)\]/g, '<span class="skill-bracket">[$1]</span>')
       .replace(/^.*?Multiplier:/gm, '<span class="multiplier-label">$&</span>')
@@ -1681,10 +1681,10 @@ function loadForm(index) {
   resetCompareUI();
 
   // images
-  document.getElementById("modalChampionImg").src = `img/champions/${champ.image}.webp`;
-  document.getElementById("modalFrameImg").src = `img/rarity/${champ.rarity}.webp`;
-  document.getElementById("modalFactionBanner").src = `img/factions/${champ.faction.toLowerCase().replace(/ /g,"")}.webp`;
-  document.getElementById("modalAffinityBig").src = `img/affinity/${champ.affinity}.webp`;
+  document.getElementById("modalChampionImg").src = `/tools/champions-index/img/champions/${champ.image}.webp`;
+  document.getElementById("modalFrameImg").src = `/tools/champions-index/img/rarity/${champ.rarity}.webp`;
+  document.getElementById("modalFactionBanner").src = `/tools/champions-index/img/factions/${champ.faction.toLowerCase().replace(/ /g,"")}.webp`;
+  document.getElementById("modalAffinityBig").src = `/tools/champions-index/img/affinity/${champ.affinity}.webp`;
 
   // titres
   document.getElementById("modalFactionTitle").textContent = champ.faction;
