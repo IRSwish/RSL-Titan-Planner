@@ -141,7 +141,7 @@ let pointsData = {};
 let displayMode = 'points';
 
 // --- Chargement du JSON ---
-fetch('points-data.json')
+fetch('/tools/efficiency-lab/points-data.json')
   .then(res => res.json())
   .then(data => pointsData = data)
   .catch(err => console.error('Erreur chargement points:', err));
