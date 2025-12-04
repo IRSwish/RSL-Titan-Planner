@@ -40,7 +40,10 @@
     const timelineContainer = document.querySelector('.timeline-container');
     if (!timelineContainer) return;
 
-    const hash = window.location.hash.replace('#', '');
+    let hashRaw = window.location.hash.replace('#', '');
+    // supporte #/xxx
+    if (hashRaw.startsWith('/')) hashRaw = hashRaw.slice(1);
+    const hash = hashRaw;
     const fusionConfig = window.fusions[hash];
     if (!fusionConfig) {
       console.error('Aucune fusion trouvée pour le hash :', hash);
