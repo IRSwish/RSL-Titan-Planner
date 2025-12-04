@@ -704,12 +704,12 @@
     <div class="filter-section">
       <div class="section-label">Rarity</div>
       <div class="filter-buttons rarity-grid">
-        <button class="rarity-btn" data-rarity="Mythical"><img src="img/rarity/Mythical_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Legendary"><img src="img/rarity/Legendary_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Epic"><img src="img/rarity/Epic_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Rare"><img src="img/rarity/Rare_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Uncommon"><img src="img/rarity/Uncommon_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Common"><img src="img/rarity/Common_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Mythical"><img src="/tools/champions-index/img/rarity/Mythical_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Legendary"><img src="/tools/champions-index/img/rarity/Legendary_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Epic"><img src="/tools/champions-index/img/rarity/Epic_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Rare"><img src="/tools/champions-index/img/rarity/Rare_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Uncommon"><img src="/tools/champions-index/img/rarity/Uncommon_Icon.webp"></button>
+        <button class="rarity-btn" data-rarity="Common"><img src="/tools/champions-index/img/rarity/Common_Icon.webp"></button>
       </div>
     </div>
 
@@ -717,10 +717,10 @@
     <div class="filter-section">
       <div class="section-label">Affinity</div>
       <div class="filter-buttons affinity-grid">
-        <button class="affinity-btn" data-affinity="Force"><img src="img/affinity/Force.webp"></button>
-        <button class="affinity-btn" data-affinity="Magic"><img src="img/affinity/Magic.webp"></button>
-        <button class="affinity-btn" data-affinity="Spirit"><img src="img/affinity/Spirit.webp"></button>
-        <button class="affinity-btn" data-affinity="Void"><img src="img/affinity/Void.webp"></button>
+        <button class="affinity-btn" data-affinity="Force"><img src="/tools/champions-index/img/affinity/Force.webp"></button>
+        <button class="affinity-btn" data-affinity="Magic"><img src="/tools/champions-index/img/affinity/Magic.webp"></button>
+        <button class="affinity-btn" data-affinity="Spirit"><img src="/tools/champions-index/img/affinity/Spirit.webp"></button>
+        <button class="affinity-btn" data-affinity="Void"><img src="/tools/champions-index/img/affinity/Void.webp"></button>
       </div>
     </div>
 
@@ -897,7 +897,7 @@ document.addEventListener("DOMContentLoaded", () => {
     locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
   }).then(SQL => {
     
-    fetch("champions.db") // 🔥 Ajuste le chemin selon ton site !
+    fetch("/tools/champions-index/champions.db") // 🔥 Ajuste le chemin selon ton site !
       .then(res => res.arrayBuffer())
       .then(buffer => {
         const db = new SQL.Database(new Uint8Array(buffer));
@@ -943,7 +943,7 @@ function renderFactions() {
   factions.forEach(f => {
     const img = document.createElement('img');
     const icon = f.toLowerCase().replace(/ /g, "");
-    img.src = `img/factions/${icon}.webp`;
+    img.src = `/tools/champions-index/img/factions/${icon}.webp`;
     img.alt = f;
     img.classList.add('faction-icon');
     img.dataset.faction = f;
@@ -1094,18 +1094,18 @@ function displayChampions() {
     imgWrapper.classList.add('card-image', c.rarity.toLowerCase());
 
     const img = document.createElement('img');
-    img.src = `img/champions/${c.image}.webp`;
+    img.src = `/tools/champions-index/img/champions/${c.image}.webp`;
     img.alt = c.name;
     img.loading = "lazy";
     img.classList.add('champion-img');
 
     const frame = document.createElement('img');
-    frame.src = `img/rarity/${c.rarity}.webp`;
+    frame.src = `/tools/champions-index/img/rarity/${c.rarity}.webp`;
     frame.alt = `${c.rarity} frame`;
     frame.classList.add('rarity-frame');
 
     const affinity = document.createElement('img');
-    affinity.src = `img/affinity/${c.affinity}.webp`;
+    affinity.src = `/tools/champions-index/img/affinity/${c.affinity}.webp`;
     affinity.alt = `${c.affinity} affinity`;
     affinity.classList.add('affinity-icon');
 
@@ -1217,13 +1217,13 @@ function openChampionModal(champ) {
   primaryChampion = champ;
   resetCompareUI();
 
-  document.getElementById("modalChampionImg").src = `img/champions/${champ.image}.webp`;
-  document.getElementById("modalFrameImg").src = `img/rarity/${champ.rarity}.webp`;
+  document.getElementById("modalChampionImg").src = `/tools/champions-index/img/champions/${champ.image}.webp`;
+  document.getElementById("modalFrameImg").src = `/tools/champions-index/img/rarity/${champ.rarity}.webp`;
 
   document.getElementById("modalFactionBanner").src =
-    `img/factions/${champ.faction.toLowerCase().replace(/ /g,'')}.webp`;
+    `/tools/champions-index/img/factions/${champ.faction.toLowerCase().replace(/ /g,'')}.webp`;
   document.getElementById("modalAffinityBig").src =
-    `img/affinity/${champ.affinity}.webp`;
+    `/tools/champions-index/img/affinity/${champ.affinity}.webp`;
 
   document.getElementById("modalFactionTitle").textContent = champ.faction;
   document.getElementById("modalChampionTitle").textContent = champ.name;
@@ -1338,6 +1338,6 @@ modal.addEventListener("click", e => {
     </script>
   </div>
 
-<script src="../../script.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>
