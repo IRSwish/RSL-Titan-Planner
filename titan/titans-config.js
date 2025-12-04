@@ -15,5 +15,9 @@ window.fusions = {
   "Community-Weeks": {
     name: "Community Weeks Titan Event",
     json: "Community-Weeks.json"
+  },
+  "Tea-Party": {
+    name: "Tea Party Titan Event",
+    json: "Tea-Party.json"
   }
 };

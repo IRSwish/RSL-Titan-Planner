@@ -1,0 +1,115 @@
+-- database: champions.db
+
+------------------------------------------------------------
+-- CONFIGURATION : MODIFIE SEULEMENT CES 3 VALEURS
+------------------------------------------------------------
+DROP TABLE IF EXISTS vars;
+CREATE TEMP TABLE vars (
+  move_id INTEGER,      -- id du champion à déplacer
+  before_id INTEGER,    -- champion AVANT lequel tu veux le mettre
+  after_id INTEGER      -- champion APRÈS lequel tu veux le mettre
+);
+
+INSERT INTO vars VALUES (
+  1020,   -- move_id (Gaellut)
+  825,    -- before_id (Kawn)
+  826 -- after_id (Ultimate Galek)
+);
+
+------------------------------------------------------------
+-- REBUILD COMPLET AVEC REASSIGNATION DES ID = ROWID
+-- CHAMPIONS_NEW AURA LES NOUVEAUX ID DANS LE BON ORDRE
+------------------------------------------------------------
+
+CREATE TABLE champions_new (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    faction TEXT,
+    rarity TEXT,
+    affinity TEXT,
+    type TEXT,
+    image TEXT,
+    invocable INTEGER,
+    hp INTEGER,
+    atk INTEGER,
+    def INTEGER,
+    spd INTEGER,
+    crate INTEGER,
+    cdmg REAL,
+    res INTEGER,
+    acc INTEGER,
+    aura TEXT,
+    auratext TEXT,
+    s1 TEXT,
+    s2 TEXT,
+    s3 TEXT,
+    s4 TEXT,
+    p1 TEXT,
+    p2 TEXT,
+    effects TEXT,
+    IGid TEXT
+);
+
+------------------------------------------------------------
+-- 1. INSÉRER before_id (ex : Kawn)
+------------------------------------------------------------
+
+INSERT INTO champions_new
+SELECT 
+  before_id,
+  name, faction, rarity, affinity, type, image, invocable,
+  hp, atk, def, spd, crate, cdmg, res, acc, aura, auratext, s1, s2, s3, s4, p1, p2, effects, IGid
+FROM champions, vars
+WHERE id = before_id;
+
+------------------------------------------------------------
+-- 2. INSÉRER move_id (ex : Gaellut) → NOUVEL ID = before_id + 1
+------------------------------------------------------------
+
+INSERT INTO champions_new
+SELECT 
+  before_id + 1,
+  name, faction, rarity, affinity, type, image, invocable,
+  hp, atk, def, spd, crate, cdmg, res, acc, aura, auratext, s1, s2, s3, s4, p1, p2, effects, IGid
+FROM champions, vars
+WHERE id = move_id;
+
+------------------------------------------------------------
+-- 3. INSÉRER after_id (ex : Ultimate Galek) → NOUVEL ID = before_id + 2
+------------------------------------------------------------
+
+INSERT INTO champions_new
+SELECT 
+  before_id + 2,
+  name, faction, rarity, affinity, type, image, invocable,
+  hp, atk, def, spd, crate, cdmg, res, acc, aura, auratext, s1, s2, s3, s4, p1, p2, effects, IGid
+FROM champions, vars
+WHERE id = after_id;
+
+------------------------------------------------------------
+-- 4. INSÉRER TOUS LES AUTRES AVEC RE-NUMÉROTATION AUTO
+------------------------------------------------------------
+
+INSERT INTO champions_new
+SELECT
+    CASE
+        WHEN id > after_id THEN id + 1   -- ceux après Ultimate Galek se décalent
+        WHEN id <= before_id THEN id     -- ceux avant gardent leur ID
+        ELSE id + 2                      -- rare si écart entre before/after
+    END,
+    name, faction, rarity, affinity, type, image, invocable,
+    hp, atk, def, spd, crate, cdmg, res, acc, aura, auratext, s1, s2, s3, s4, p1, p2, effects, IGid
+FROM champions, vars
+WHERE id NOT IN (before_id, move_id, after_id)
+ORDER BY id;
+
+------------------------------------------------------------
+-- 5. REMPLACER ANCIENNE TABLE PAR LA NOUVELLE
+------------------------------------------------------------
+
+DROP TABLE champions;
+ALTER TABLE champions_new RENAME TO champions;
+
+------------------------------------------------------------
+-- FIN DU SCRIPT / LES ID ET ROWID SONT RECRÉÉS PROPREMENT
+------------------------------------------------------------

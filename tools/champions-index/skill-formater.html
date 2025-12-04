@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+
+<title>RSL Skill Formatter</title>
+
+<style>
+    body {
+        background: #0e0e0e;
+        color: #fcf6ff;
+        font-family: "Inter", sans-serif;
+        padding: 40px;
+    }
+
+    h1 {
+        font-family: "American Captain", sans-serif;
+        font-size: 42px;
+        color: #d4af37;
+        text-align: center;
+        margin-bottom: 25px;
+        letter-spacing: 2px;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    textarea {
+        width: 100%;
+        height: 220px;
+        background: #1a1a1a;
+        border: 1px solid #f52584;
+        padding: 12px;
+        color: #fcf6ff;
+        font-size: 16px;
+        border-radius: 6px;
+        resize: vertical;
+    }
+
+    #output {
+        height: 260px;
+        margin-top: 20px;
+        white-space: pre-wrap;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 14px 22px;
+        background: #f52584;
+        border: none;
+        color: #fcf6ff;
+        font-size: 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    button:hover {
+        background: #d4176c;
+        transform: scale(1.03);
+    }
+
+    .copy-btn {
+        background: #00c9ff;
+        margin-left: 10px;
+    }
+
+    .copy-btn:hover {
+        background: #00a7d6;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>RSL SKILL FORMATTER</h1>
+
+    <textarea id="input" placeholder="Colle ici le texte brut HellHades..."></textarea>
+
+    <button onclick="runFormatter()">FORMATER</button>
+    <button class="copy-btn" onclick="copyOutput()">COPIER</button>
+
+    <textarea id="output" placeholder="Résultat propre..."></textarea>
+</div>
+
+
+<script>
+function formatSkill(raw) {
+    let lines = raw.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+
+    // 1) Nom du sort
+    let name = lines.shift();
+
+    // 2) Retirer buff/debuff name sur lignes suivantes
+    lines = lines.filter(l => !/^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/.test(l));
+
+    // 3) Cooldown strict : "<num> Turns"
+    let cooldownIndex = lines.findIndex(l => /^\d+\s*Turns?$/i.test(l));
+    let cooldown = null;
+
+    if (cooldownIndex !== -1) {
+        cooldown = lines[cooldownIndex].replace(/(\d+)\s*Turns?/i, "⟳ $1 Turns");
+        lines.splice(cooldownIndex, 1);
+    }
+
+    // 4) Retirer Rating
+    lines = lines.filter(l => !/^Rating:/i.test(l));
+
+    // 5) Split blocs
+    let descriptionLines = [];
+    let levelLines = [];
+    let multiplierLines = [];
+
+    for (let l of lines) {
+        if (/^Level \d+/i.test(l)) levelLines.push(l);
+        else if (/Multiplier:/i.test(l)) multiplierLines.push(l);
+        else descriptionLines.push(l);
+    }
+
+    // 6) Level X → Level (X+1)
+    levelLines = levelLines.map(l =>
+        l.replace(/^Level (\d+)/, (_, n) => "Level " + (parseInt(n) + 1))
+    );
+
+    // 7) Reconstruction
+    let out = name + "\n"; // toujours le titre + 1 retour
+
+    if (cooldown)
+        out += cooldown + "\n\n"; // cooldown → saut après
+    else
+        out += "\n"; // pas cooldown → ligne vide obligatoire
+
+    out += descriptionLines.join(" ") + "\n\n";
+
+    if (levelLines.length)
+        out += levelLines.join("\n") + "\n\n";
+
+    if (multiplierLines.length)
+        out += multiplierLines.join("\n");
+
+    return out.trim();
+}
+
+
+function runFormatter() {
+    let input = document.getElementById("input").value;
+    let result = formatSkill(input);
+    document.getElementById("output").value = result;
+}
+
+function copyOutput() {
+    let out = document.getElementById("output");
+    out.select();
+    document.execCommand("copy");
+
+    // Après copie → vider l'entrée
+    document.getElementById("input").value = "";
+
+    // Remettre le focus dans la zone d'entrée
+    document.getElementById("input").focus();
+}
+</script>
+
+</body>
+</html>

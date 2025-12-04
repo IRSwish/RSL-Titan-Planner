@@ -1,0 +1,56 @@
+-- database: c:\Users\total\OneDrive\Desktop\Site\tools\champions-index\champions.db
+
+UPDATE champions
+SET
+    name = 'Ash''nar Dragonsoul',
+    aura = 'HP',
+    auratext = 'Increases Ally HP in All Battles by 35%',
+    s1 = 'Thunderstar
+
+Attacks 1 enemy 2 times. Has a 25% chance of repeating each hit.
+
+Each hit also places a 60% [Decrease DEF] debuff for 2 turns.
+
+Level 2: Buff/Debuff Chance +15%
+Level 3: Damage +20%
+
+Multiplier: 1.9*DEF',
+    s2 = 'Magma Geyser
+⟳ 3 Turns
+
+Attacks 1 enemy. 
+
+Applies a [Debuff Spread] effect, taking all debuffs from the target and placing them on all enemies.
+
+Then, repeats the attack on all enemies. Increases the duration of all debuffs on all enemies by 1 turn.
+
+Both attacks will ignore 20% of each target''s DEF.
+
+Level 2: Damage +10%
+Level 3: Damage +20%
+
+Multiplier: 4.9*DEFMultiplier: 3.7*DEF',
+    s3 = 'Cataclysm Smash
+⟳ 4 Turns
+
+Attacks all enemies. Before attacking, places a 60% [Increase DEF] buff and a 30% [Increase C. DMG] buff on all allies for 2 turns. 
+
+Places a [Provoke] debuff for 1 turn. If the target of this skill is a Boss, places a [Provoke] debuff for 2 turns instead. 
+
+This attack cannot be a weak hit when hitting enemies under a [HP Burn] debuff.
+
+Level 2: Damage +10%
+Level 3: Damage +20%
+Level 4: Cooldown -1
+
+Multiplier: 4.5*DEF',
+    p1 = 'By Fire Be Broken [P]
+
+Each [HP Burn] debuff placed by this Champion''s Base Form increases this Champion''s MAX HP and DEF by 5% (stacks up to 25% across both Forms and will not reset).
+
+All of this Champion''s skills will ignore 20% of the enemy''s DEF if they are under a [HP Burn] debuff.
+
+[HP Burn] debuffs placed on allies heal them instead of damaging them.
+
+Heal Multiplier: 0.03*Target Max HP'
+WHERE IGid = '9140_f2';

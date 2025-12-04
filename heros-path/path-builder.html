@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hero’s Path Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    background:#0e0e0e;
+    color:#fcf6ff;
+    font-family:'Inter',sans-serif;
+    padding:40px;
+  }
+  input, select {
+    background:#1a1a1a;
+    border:1px solid #d4af37;
+    color:#fcf6ff;
+    padding:6px 10px;
+    border-radius:6px;
+    margin-right:8px;
+  }
+  button {
+    background:#d4af37;
+    color:#0e0e0e;
+    border:none;
+    border-radius:6px;
+    padding:6px 14px;
+    cursor:pointer;
+    margin-right:10px;
+  }
+  button:hover { background:#f0d372; }
+  textarea {
+    width:100%;
+    height:240px;
+    background:#1a1a1a;
+    color:#00c9ff;
+    border:1px solid #d4af37;
+    border-radius:6px;
+    padding:10px;
+  }
+  .row {margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<h1>Hero’s Path JSON Builder</h1>
+
+<!-- === NAME + AMOUNT === -->
+<div class="row">
+  <label>Name: </label>
+  <input type="text" id="nameInput" list="rewardNames" placeholder="Type or select reward...">
+  <datalist id="rewardNames"></datalist>
+
+  <label>Amount: </label>
+  <input type="text" id="amount" placeholder="optional">
+</div>
+
+<!-- === IMAGE + COST === -->
+<div class="row">
+  <label>Image: </label>
+  <input type="text" id="image" placeholder="auto-filled if available">
+
+  <label>Cost: </label>
+  <input type="number" id="cost" value="500" style="width:90px;">
+</div>
+
+<!-- === TIER + REQUIRES === -->
+<div class="row">
+  <label>ID (tier): </label>
+  <input type="text" id="tier" placeholder="e.g. 3-2" style="width:120px;">
+
+  <label>Requires: </label>
+  <input type="text" id="requires" placeholder="e.g. 2-1,2-2" style="width:220px;">
+
+  <button onclick="nextTier()">Next Tier</button>
+</div>
+
+<!-- === ACTION BUTTONS === -->
+<div class="row">
+  <button onclick="addReward()">Add Reward</button>
+  <button onclick="exportJSON()">Export JSON</button>
+  <button onclick="copyJSON()">Copy JSON</button>
+  <button onclick="clearAll()">Clear All</button>
+</div>
+
+<h3>Generated JSON:</h3>
+<textarea id="output" readonly></textarea>
+
+<script>
+  let rewards = [];
+  let rewardList = [];
+
+  // === Charger la liste de récompenses ===
+  async function loadRewardList() {
+    try {
+      const res = await fetch("reward-list.json");
+      rewardList = await res.json();
+      const datalist = document.getElementById("rewardNames");
+      rewardList.forEach(r => {
+        const option = document.createElement("option");
+        option.value = r.name;
+        datalist.appendChild(option);
+      });
+    } catch (e) {
+      console.error("❌ Could not load reward-list.json:", e);
+    }
+  }
+
+  // === Auto-fill image et cost quand on sélectionne un nom ===
+  document.getElementById("nameInput").addEventListener("input", () => {
+    const name = document.getElementById("nameInput").value.trim();
+    const reward = rewardList.find(r => r.name.toLowerCase() === name.toLowerCase());
+    if (reward) {
+      document.getElementById("image").value = reward.image || "";
+      if (reward.defaultCost) document.getElementById("cost").value = reward.defaultCost;
+    }
+  });
+
+  // === Ajouter une récompense ===
+  function addReward() {
+    const nameInput = document.getElementById('nameInput').value.trim();
+    const amount = document.getElementById('amount').value.trim();
+    const image = document.getElementById('image').value.trim();
+    let cost = parseInt(document.getElementById('cost').value);
+    let tier = document.getElementById('tier').value.trim();
+    let requiresRaw = document.getElementById('requires').value.trim();
+
+    if (!tier) { alert("❌ You must specify an ID. Example: 3-2"); return; }
+    if (!nameInput) { alert("❌ You must enter or select a name."); return; }
+    if (isNaN(cost) || cost < 0) cost = 0;
+
+    // Supprime tout 't' éventuel dans la saisie
+    tier = tier.replace(/^t/i, ""); 
+    requiresRaw = requiresRaw.replace(/t(\d+-\d+)/gi, "$1");
+
+    const name = amount ? `${nameInput} x${amount}` : nameInput;
+    const requires = requiresRaw
+      ? requiresRaw.split(',').map(r => r.trim()).filter(r => r.length > 0)
+      : [];
+
+    // 🔧 Génération du JSON avec les "t"
+    const formattedId = `t${tier}`;
+    const formattedRequires = requires.map(r => `t${r}`);
+
+    rewards.push({
+      id: formattedId,
+      name,
+      image,
+      cost,
+      ...(formattedRequires.length ? { requires: formattedRequires } : {})
+    });
+
+    updateOutput();
+
+    // 🔁 Conserver les valeurs utiles
+    const lastCost = document.getElementById("cost").value;
+    const lastTier = document.getElementById("tier").value;
+    const lastReq = document.getElementById("requires").value;
+
+    // Réinitialiser les champs souvent modifiés
+    document.getElementById("nameInput").value = "";
+    document.getElementById("amount").value = "";
+    document.getElementById("image").value = "";
+
+    // Restaurer les champs utiles
+    document.getElementById("cost").value = lastCost;
+    document.getElementById("tier").value = incrementTier(lastTier);
+    document.getElementById("requires").value = lastReq;
+  }
+
+  // === Incrémenter automatiquement le second chiffre du tier ===
+  function incrementTier(tierValue) {
+    const match = tierValue.match(/^(\d+)-(\d+)$/);
+    if (!match) return tierValue;
+    let main = parseInt(match[1]);
+    let sub = parseInt(match[2]);
+    sub += 1;
+    return `${main}-${sub}`;
+  }
+
+  // === Passer au tier suivant (ex: 1-6 -> 2-1) ===
+  function nextTier() {
+    const tierValue = document.getElementById("tier").value.trim();
+    const match = tierValue.match(/^(\d+)-(\d+)$/);
+    if (!match) return;
+    let main = parseInt(match[1]);
+    main += 1;
+    document.getElementById("tier").value = `${main}-1`;
+  }
+
+  // === Met à jour la sortie (une ligne par entrée + crochets globaux) ===
+  function updateOutput() {
+    const lines = rewards.map(r => "  " + JSON.stringify(r));
+    document.getElementById('output').value = "[\n" + lines.join(",\n") + "\n]";
+  }
+
+  // === Exporter le JSON complet ===
+  function exportJSON() {
+    if (rewards.length === 0) { alert("No rewards added yet."); return; }
+    const jsonContent = "[\n" + rewards.map(r => "  " + JSON.stringify(r)).join(",\n") + "\n]";
+    const blob = new Blob([jsonContent], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'heros-path.json';
+    a.click();
+  }
+
+  // === Copier le JSON dans le presse-papier ===
+  function copyJSON() {
+    const text = document.getElementById('output').value;
+    if (!text.trim()) { alert("Nothing to copy yet."); return; }
+    navigator.clipboard.writeText(text).then(() => {
+      alert("✅ JSON copied to clipboard!");
+    });
+  }
+
+  // === Tout effacer ===
+  function clearAll() {
+    if (confirm("Clear all rewards?")) {
+      rewards = [];
+      updateOutput();
+    }
+  }
+
+  // Charger la liste à l'ouverture
+  loadRewardList();
+</script>
+
+</body>
+</html>

@@ -38,7 +38,7 @@
     .timeline{position:relative;flex:1;border:1px solid var(--gold);border-radius:14px;background:var(--bg2);overflow:auto}
 
     /* Grid responsive: chaque jour = 1fr, pas d'overflow-x */
-    .grid{position:relative;min-width:100%;padding:0 calc(var(--colpx)/2) 8px; /* demi-jour à gauche/droite pour repères midi */}
+    .grid{position:relative;min-width:100%;padding: 0 0 8px; /* demi-jour à gauche/droite pour repères midi */}
     .day-head{position:sticky;top:0;display:grid;grid-template-columns:repeat(var(--days), 1fr);gap:0;background:#121212;border-bottom:1px solid #1f1f1f;z-index:4}
     .day-cell{padding:8px 6px;text-align:center;font-weight:600;border-left:1px solid #1f1f1f;white-space:nowrap}
     .day-cell:first-child{border-left:none}
@@ -275,7 +275,7 @@
     function colFromClientX(x){
       const rect = daysEl.getBoundingClientRect();
       const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--days'));
-      const colw = rect.width / cols;
+      const colw = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--colpx'));
       const rel = clamp(x - rect.left, 0, rect.width);
       let col = Math.floor(rel / colw);
       return clamp(col, 0, cols-1);
@@ -322,8 +322,9 @@
 
       const cols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--days'));
       const rect = daysEl.getBoundingClientRect();
-      const colw = rect.width / cols;
-      document.documentElement.style.setProperty('--colpx', colw + 'px');
+      const colw = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--colpx')
+      );
 
       for(const ev of ordered){
         const c1 = clamp(colIndexForDate(ev.start), 0, cols-1);
@@ -332,8 +333,8 @@
         if(lane >= 10) { console.warn('Plus de 10 lanes, event masqué visuellement'); continue; }
         lanes[lane] = c2;
 
-        const left = (c1*colw) + 4;                 // bord gauche du jour
-        const width = Math.max(60, (c2-c1+1)*colw - 8);
+        const left = c1 * colw;
+        const width = (c2 - c1 + 1) * colw;
         const top = lane * (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lane-h'))||52) + 6;
 
         const div = document.createElement('div');
@@ -417,7 +418,7 @@
     function exportShape(){
       const titleRaw = (titleEl.value||'').trim()||'UNTITLED FUSION';
       const fmtUpper = (formatEl.value||'Fragment').toUpperCase()+ ' FUSION';
-      const titleOut = `${titleRaw} • ${fmtUpper} • ${ddmmyyyy(startEl.value)} - ${ddmmyyyy(endEl.value)}`;
+      const titleOut = `${titleRaw}`;
       const mapped = events.map(ev=>{
         const rewardNames = (ev.rewards||[]).map(r=>r.name).filter(Boolean);
         const points = (ev.rewards||[]).map(r=>parseInt(r.points)||0);
@@ -430,7 +431,8 @@
           points: points
         };
       });
-      return { title: titleOut, events: mapped };
+      const span = `${ddmmyyyy(startEl.value)} - ${ddmmyyyy(endEl.value)}`;
+      return { title: titleOut, type: formatEl.value, datespan: span, events: mapped };
     }
 
     function updateJSON(){ const obj = exportShape(); jsonEl.value = JSON.stringify(obj, null, 2); sumEl.textContent = calcTotalPoints(); }

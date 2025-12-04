@@ -1,0 +1,137 @@
+[
+  { "name": "Avatar Frame", "image": "-frame" },
+  { "name": "Avatar", "image": "-avatar" },
+  { "name": "Silver", "image": "silver" },
+  { "name": "Plarium Points", "image": "plarium-points" },
+  { "name": "XP Boost (1 Day)", "image": "xp-boost-1d" },
+  { "name": "XP Boost (3 Days)", "image": "xp-boost-3d" },
+  { "name": "Energy", "image": "Energy" },
+  { "name": "Gems", "image": "Gems" },
+  { "name": "Free Gear Removal", "image": "free-gear-removal" },
+
+  { "name": "2* Chicken", "image": "chicken-2" },
+  { "name": "3* Chicken", "image": "chicken-3" },
+  { "name": "4* Chicken", "image": "chicken-4" },
+  { "name": "5* Chicken", "image": "chicken-5" },
+  { "name": "XP Barrel", "image": "xp-barrel" },
+
+  { "name": "Epic Chaos Ore", "image": "epic-chaos-ore" },
+  { "name": "Legendary Chaos Ore", "image": "legendary-chaos-ore" },
+  { "name": "Mythical Chaos Ore", "image": "mythical-chaos-ore" },
+
+  { "name": "Arcane Lesser Potion", "image": "arcane-lesser" },
+  { "name": "Arcane Greater Potion", "image": "arcane-greater" },
+  { "name": "Arcane Superior Potion", "image": "arcane-superior" },
+
+  { "name": "Magic Lesser Potion", "image": "magic-lesser" },
+  { "name": "Magic Greater Potion", "image": "magic-greater" },
+  { "name": "Magic Superior Potion", "image": "magic-superior" },
+
+  { "name": "Spirit Lesser Potion", "image": "spirit-lesser" },
+  { "name": "Spirit Greater Potion", "image": "spirit-greater" },
+  { "name": "Spirit Superior Potion", "image": "spirit-superior" },
+
+  { "name": "Force Lesser Potion", "image": "force-lesser" },
+  { "name": "Force Greater Potion", "image": "force-greater" },
+  { "name": "Force Superior Potion", "image": "force-superior" },
+
+  { "name": "Void Lesser Potion", "image": "void-lesser" },
+  { "name": "Void Greater Potion", "image": "void-greater" },
+  { "name": "Void Superior Potion", "image": "void-superior" },
+
+  { "name": "Lesser Extract", "image": "extract-lesser" },
+  { "name": "Lesser Oil", "image": "oil-lesser" },
+  { "name": "Greater Extract", "image": "extract-greater" },
+  { "name": "Greater Oil", "image": "oil-greater" },
+  { "name": "Superior Extract", "image": "extract-superior" },
+  { "name": "Superior Oil", "image": "oil-superior" },
+
+  { "name": "Chaos Dust", "image": "chaos-dust" },
+  { "name": "Chaos Powder", "image": "chaos-powder" },
+  { "name": "Corehammer", "image": "corehammer" },
+  { "name": "Eternal Soul Coin", "image": "eternal-soul-coin" },
+
+  { "name": "Immortal Essence", "image": "immortal-soul-essence" },
+  { "name": "Eternal Essence", "image": "eternal-soul-essence" },
+
+  { "name": "Immortal Soul Coin", "image": "immortal-soul-coin" },
+  { "name": "Mortal Soul Coin", "image": "mortal-soul-coin" },
+
+  { "name": "Immortal Soulstone", "image": "immortal-soulstone" },
+  { "name": "Mortal Soulstone", "image": "mortal-soulstone" },
+  { "name": "Eternal Soulstone", "image": "eternal-soulstone" },
+
+  { "name": "Key", "image": "path-key" },
+  { "name": "Lock", "image": "lock" },
+
+  { "name": "Magic Brews", "image": "brew-magic" },
+  { "name": "Force Brews", "image": "brew-force" },
+  { "name": "Spirit Brews", "image": "brew-spirit" },
+  { "name": "Void Brews", "image": "brew-void" },
+  { "name": "Brews Chest", "image": "xp-brew-chest" },
+
+  { "name": "Rare Skill Tome", "image": "skill-tome-rare" },
+  { "name": "Epic Skill Tome", "image": "skill-tome-epic" },
+  { "name": "Legendary Skill Tome", "image": "skill-tome-legendary" },
+  { "name": "Mythical Skill Tome", "image": "skill-tome-mythical" },
+
+
+  { "name": "Precision Glyph", "image": "glyph-precision" },
+  { "name": "Speed Glyph", "image": "glyph-speed" },
+  { "name": "Resistance Glyph", "image": "glyph-resistance" },
+  { "name": "HP Glyph", "image": "glyph-hp" },
+  { "name": "HP% Glyph", "image": "glyph-hppercent" },
+  { "name": "ATK Glyph", "image": "glyph-attack" },
+  { "name": "ATK% Glyph", "image": "glyph-attackpercent" },
+  { "name": "DEF Glyph", "image": "glyph-defense" },
+  { "name": "DEF% Glyph", "image": "glyph-defensepercent" },
+
+  { "name": "Rank 1 Basalt", "image": "rank-1-basalt" },
+  { "name": "Rank 2 Basalt", "image": "rank-2-basalt" },
+  { "name": "Rank 3 Basalt", "image": "rank-3-basalt" },
+  { "name": "Rank 4 Basalt", "image": "rank-4-basalt" },
+  { "name": "Rank 5 Basalt", "image": "rank-5-basalt" },
+
+  { "name": "Rank Charm", "image": "rank-charm" },
+  { "name": "Rarity Charm", "image": "rarity-charm" },
+  { "name": "Type Charm", "image": "type-charm" },
+  { "name": "Substat Charm", "image": "substat-charm" },
+
+
+  { "name": "Resistance Glyph", "image": "resistance-glyph-5" },
+  { "name": "Precision Glyph", "image": "precision-glyph-5" },
+  { "name": "Speed Glyph", "image": "speed-glyph-5" },
+
+
+  { "name": "Radiant Sunlily (Rare)", "image": "radiant-sunlily-rare" },
+  { "name": "Radiant Sunlily (Epic)", "image": "radiant-sunlily-epic" },
+  { "name": "Radiant Sunlily (Legendary)", "image": "radiant-sunlily-legendary" },
+  { "name": "Radiant Sunlily (Mythical)", "image": "radiant-sunlily-mythical" },
+  { "name": "Runed Obsidian (Rare)", "image": "runed-obsidian-rare" },
+  { "name": "Runed Obsidian (Epic)", "image": "runed-obsidian-epic" },
+  { "name": "Runed Obsidian (Legendary)", "image": "runed-obsidian-legendary" },
+  { "name": "Runed Obsidian (Mythical)", "image": "runed-obsidian-mythical" },
+  { "name": "Ocular Masses (Rare)", "image": "ocular-masses-rare" },
+  { "name": "Ocular Masses (Epic)", "image": "ocular-masses-epic" },
+  { "name": "Ocular Masses (Legendary)", "image": "ocular-masses-legendary" },
+  { "name": "Ocular Masses (Mythical)", "image": "ocular-masses-mythical" },
+  { "name": "Regal Masks (Rare)", "image": "regal-masks-rare" },
+  { "name": "Regal Masks (Epic)", "image": "regal-masks-epic" },
+  { "name": "Regal Masks (Legendary)", "image": "regal-masks-legendary" },
+  { "name": "Regal Masks (Mythical)", "image": "oregal-masks-mythical" },
+  { "name": "Spiteful Remains (Rare)", "image": "spiteful-remains-rare" },
+  { "name": "Spiteful Remains (Epic)", "image": "spiteful-remains-epic" },
+  { "name": "Spiteful Remains (Legendary)", "image": "spiteful-remains-legendary" },
+  { "name": "Spiteful Remains (Mythical)", "image": "spiteful-remains-mythical" },
+  { "name": "Twysted Horns (Rare)", "image": "twysted-horns-rare" },
+  { "name": "Twysted Horns (Epic)", "image": "twysted-horns-epic" },
+  { "name": "Twysted Horns (Legendary)", "image": "twysted-horns-legendary" },
+  { "name": "Twysted Horns (Mythical)", "image": "twysted-horns-mythical" },
+
+  { "name": "3* Perfect Soul", "image": "-3" },
+  { "name": "4* Perfect Soul", "image": "-4" },
+  { "name": "5* Perfect Soul", "image": "-5" },
+  { "name": "4* Split Soul", "image": "-split-4" },
+  { "name": "5* Split Soul", "image": "-split-5" }
+
+]

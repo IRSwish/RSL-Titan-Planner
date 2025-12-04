@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RSL Tools – Skill SQL Formatter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg-main: #0e0e0e;
+      --bg-panel: #1a1a1a;
+      --bg-accent: #141414;
+      --text-main: #fcf6ff;
+      --text-muted: #b4b0c0;
+      --gold: #d4af37;
+      --pink: #f52584;
+      --blue: #00c9ff;
+      --border-subtle: #2a2a2a;
+      --radius-xl: 18px;
+      --shadow-soft: 0 18px 35px rgba(0, 0, 0, 0.75);
+      --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-title: "American Captain", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #161622 0, #050507 45%, #000 100%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .rsl-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      background: linear-gradient(135deg, rgba(245,37,132,0.08), rgba(0,201,255,0.06));
+      border-radius: 24px;
+      padding: 2px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .rsl-inner {
+      background: radial-gradient(circle at top, #1a1a1f 0, #050507 55%);
+      border-radius: 22px;
+      padding: 20px 18px 22px;
+    }
+
+    .rsl-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(212,175,55,0.35);
+      padding-bottom: 10px;
+    }
+
+    .rsl-title {
+      font-family: var(--font-title);
+      font-size: 26px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rsl-title span.badge {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0,201,255,0.08);
+      border: 1px solid rgba(0,201,255,0.55);
+      color: var(--blue);
+    }
+
+    .rsl-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: right;
+      max-width: 360px;
+      line-height: 1.5;
+    }
+
+    .rsl-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 960px) {
+      .rsl-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .rsl-subtitle {
+        text-align: left;
+      }
+    }
+
+    .panel {
+      background: linear-gradient(145deg, rgba(20,20,26,0.98), rgba(8,8,10,0.98));
+      border-radius: var(--radius-xl);
+      padding: 14px 14px 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(245,37,132,0.16), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(0,201,255,0.16), transparent 55%);
+      opacity: 0.65;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 1px 8px 2px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.7);
+      color: var(--gold);
+      background: rgba(212,175,55,0.08);
+      white-space: nowrap;
+    }
+
+    .panel-help {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .small-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .small-row > div {
+      flex: 1;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-accent);
+      color: var(--text-main);
+      font-size: 12px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #6f6a7a;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 1px rgba(245,37,132,0.6);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 260px;
+      max-height: 480px;
+      resize: vertical;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-accent);
+      color: var(--text-main);
+      font-size: 12px;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
+      line-height: 1.5;
+      outline: none;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(245,37,132,0.7);
+      background: radial-gradient(circle at top left, rgba(245,37,132,0.32), rgba(28,28,36,0.95));
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      cursor: pointer;
+      outline: none;
+      white-space: nowrap;
+    }
+
+    .btn.secondary {
+      border-color: rgba(0,201,255,0.7);
+      background: radial-gradient(circle at top left, rgba(0,201,255,0.24), rgba(28,30,40,0.95));
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .btn span.icon {
+      font-size: 14px;
+    }
+
+    .status-line {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status-line strong {
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .status-line .error {
+      color: #ff6b6b;
+    }
+
+    pre {
+      margin: 0;
+      padding: 8px 10px;
+      background: var(--bg-accent);
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 11px;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
+      max-height: 420px;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .output-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .output-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px 3px;
+      border-radius: 999px;
+      background: rgba(20,20,25,0.96);
+      border: 1px solid rgba(60,60,80,0.9);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 0 0 8px rgba(245,37,132,0.9);
+    }
+
+    .dot.blue {
+      background: var(--blue);
+      box-shadow: 0 0 8px rgba(0,201,255,0.9);
+    }
+
+    .dot.gold {
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(212,175,55,0.9);
+    }
+
+    .tiny {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="rsl-wrapper">
+  <div class="rsl-inner">
+    <header class="rsl-header">
+      <div class="rsl-title">
+        Skill SQL Formatter
+        <span class="badge">RSL Tools · Sacred Order</span>
+      </div>
+      <div class="rsl-subtitle">
+        Colle le bloc HTML des compétences (comme sur les pages HellHades),
+        ajuste éventuellement le nom, puis génère directement un
+        <strong>UPDATE champions</strong> propre, prêt à coller dans SQLite.
+      </div>
+    </header>
+
+    <main class="rsl-grid">
+      <!-- LEFT PANEL – INPUT -->
+      <section class="panel">
+        <div class="panel-inner">
+          <div class="panel-title">
+            <h2>Source HTML</h2>
+            <span class="pill">input</span>
+          </div>
+          <p class="panel-help">
+            1. Colle ici le bloc <code>&lt;div id="skills"&gt;...&lt;/div&gt;</code> complet.<br>
+            2. Le script détecte le nom (&laquo; Penitent Skills &raquo; → Penitent), l’aura, les skills,
+            et génère un UPDATE avec <strong>s1 &rarr; s6</strong> (actives puis passives).
+          </p>
+
+          <div class="small-row">
+            <div>
+              <label for="champName">Champion (override)</label>
+              <input id="champName" type="text" placeholder="Laisse vide pour utiliser le titre &quot;XYZ Skills&quot;">
+            </div>
+            <div>
+              <label for="whereName">WHERE name</label>
+              <input id="whereName" type="text" placeholder="Laisse vide pour reprendre le nom détecté">
+            </div>
+          </div>
+
+          <label for="htmlInput">Bloc HTML des compétences</label>
+          <textarea id="htmlInput" placeholder="Colle ici le HTML des skills..."></textarea>
+
+          <div class="btn-row">
+            <button id="parseBtn" class="btn" type="button">
+              <span class="icon">⚙️</span> Générer SQL
+            </button>
+            <button id="clearBtn" class="btn secondary" type="button">
+              <span class="icon">🧹</span> Clear
+            </button>
+          </div>
+
+          <div class="status-line" id="inputStatus">
+            <span>Champion détecté : <strong id="detectedName">—</strong></span>
+            <span id="parseInfo"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT PANEL – OUTPUT -->
+      <section class="panel">
+        <div class="panel-inner">
+          <div class="panel-title">
+            <h2>SQL généré</h2>
+            <span class="pill">output</span>
+          </div>
+
+          <div class="output-meta">
+            <span><span class="dot gold"></span> Aura auto &rarr; champ <code>aura</code></span>
+            <span><span class="dot"></span> Actives &rarr; <code>s1</code>, <code>s2</code>, <code>s3</code></span>
+            <span><span class="dot blue"></span> Passives &rarr; <code>s4</code>, <code>s5</code>, <code>s6</code> (via <code>.raid-skill-passive</code>)</span>
+          </div>
+
+          <pre id="sqlOutput">-- Le SQL apparaîtra ici après génération.
+-- Actives : mappées sur s1, s2, s3
+-- Passives (icône avec .raid-skill-passive) : s4, s5, s6</pre>
+
+          <div class="btn-row">
+            <button id="copyBtn" class="btn secondary" type="button" disabled>
+              <span class="icon">📋</span> Copier le SQL
+            </button>
+          </div>
+
+          <div class="tiny">
+            Règles appliquées :
+            <ul style="margin: 4px 0 0 18px; padding: 0; list-style: disc; font-size: 10px;">
+              <li><code>Lvl.</code> → <code>Level</code></li>
+              <li>Pas de <code>''Nom''</code> : les quotes ne sont doublées que <em>dans</em> le contenu</li>
+              <li>Si aura trouvée : utilisation des short codes <code>HP/ATK/DEF/SPD/ACC/RES/CRATE</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const htmlInput = document.getElementById("htmlInput");
+    const champNameInput = document.getElementById("champName");
+    const whereNameInput = document.getElementById("whereName");
+    const parseBtn = document.getElementById("parseBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const sqlOutput = document.getElementById("sqlOutput");
+    const detectedName = document.getElementById("detectedName");
+    const parseInfo = document.getElementById("parseInfo");
+    const inputStatus = document.getElementById("inputStatus");
+
+    function normalizeLevelPrefix(str) {
+      // Lvl. X -> Level X (on laisse le ":" d'origine s'il existe)
+      return str.replace(/Lvl\.\s*(\d+)/gi, "Level $1");
+    }
+
+    function cleanupText(str) {
+      if (!str) return "";
+
+      let out = str.replace(/\r/g, "");
+
+      // Remove rating lines
+      out = out.replace(/rating[:\s].*/gi, "");
+      out = out.replace(/weak - view breakdown/gi, "");
+      out = out.replace(/average - view breakdown/gi, "");
+      out = out.replace(/legendary - view breakdown/gi, "");
+      out = out.replace(/view breakdown/gi, "");
+      out = out.replace(/skill-damage-rating/gi, "");
+
+      // Remove empty div/span leftovers
+      out = out.replace(/<[^>]+>/g, " ");
+
+      // Normalize Level prefix
+      out = normalizeLevelPrefix(out);
+
+      // Clean spacing (sans casser les sauts de ligne)
+      out = out.replace(/[ \t]+/g, " ");
+      out = out.replace(/\n\s+/g, "\n");
+      out = out.replace(/\s+\n/g, "\n");
+
+      return out.trim();
+    }
+
+    function adjustBookLevels(books) {
+      // Décale les Levels de +1 si ça commence à Level 1
+      if (!Array.isArray(books) || !books.length) return books;
+
+      let minLevel = Infinity;
+      books.forEach(line => {
+        const m = line.match(/Level\s+(\d+)(\s*:)?/i);
+        if (m) {
+          const lvl = parseInt(m[1], 10);
+          if (!isNaN(lvl) && lvl < minLevel) minLevel = lvl;
+        }
+      });
+
+      if (minLevel !== 1) return books; // on ne touche à rien si ça ne commence pas à 1
+
+      return books.map(line =>
+        line.replace(/Level\s+(\d+)(\s*:)?/gi, (match, p1, colon) => {
+          const lvl = parseInt(p1, 10);
+          if (isNaN(lvl)) return match;
+          return "Level " + (lvl + 1) + (colon || "");
+        })
+      );
+    }
+
+    function escapeSql(str) {
+      if (str == null) return "";
+      return String(str).replace(/'/g, "''");
+    }
+
+    // Return both aura short code and full text
+    function parseAura(raw) {
+    if (!raw) return { code: "", full: "" };
+
+    const full = cleanupText(raw); // texte complet propre
+
+    const text = raw.replace(/\s+/g, " ").trim();
+    const m = text.match(/Increases\s+Ally\s+(.+?)\s+in\s+(.+?)\s+by\s+(\d+)(%?)/i);
+
+    if (!m) {
+        // Aura non standard → on met full dans auratext et code = ""
+        return { code: "", full };
+    }
+
+    let stat = m[1].toUpperCase().trim();
+
+    const statMap = {
+        "HP": "HP",
+        "HEALTH": "HP",
+        "ATK": "ATK",
+        "ATTACK": "ATK",
+        "DEF": "DEF",
+        "DEFENSE": "DEF",
+        "SPD": "SPD",
+        "SPEED": "SPD",
+        "RES": "RES",
+        "RESIST": "RES",
+        "RESISTANCE": "RES",
+        "ACC": "ACC",
+        "ACCURACY": "ACC",
+        "C. RATE": "CRATE",
+        "CRIT RATE": "CRATE",
+        "CRITICAL RATE": "CRATE"
+    };
+
+    let key = stat;
+    if (!statMap[stat]) {
+        if (/C\.\s*RATE/i.test(stat)) key = "C. RATE";
+        else if (/CRIT/i.test(stat)) key = "CRITICAL RATE";
+    }
+
+    const code = statMap[key] || "";
+
+    return {
+        code,
+        full
+    };
+    }
+
+
+    // Extract champion ID from skill icons, e.g. "2060_s1.png"
+    function detectChampionId(doc) {
+    const firstIcon = doc.querySelector(".raid-skill-icon img[src*='_s1']");
+    if (!firstIcon) return "";
+
+    const src = firstIcon.getAttribute("src") || "";
+    const match = src.match(/([0-9]+)_s[0-9]+\.png/i);
+    return match ? match[1] : "";
+    }
+
+
+    function parseHtml() {
+      const rawHtml = htmlInput.value.trim();
+      if (!rawHtml) {
+        sqlOutput.textContent = "-- Aucun HTML fourni.";
+        parseInfo.textContent = "";
+        detectedName.textContent = "—";
+        copyBtn.disabled = true;
+        return;
+      }
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(rawHtml, "text/html");
+      // Detect champion ID from skillicons
+      const champId = detectChampionId(doc);
+
+      // Champion name
+      let champName = champNameInput.value.trim();
+      if (!champName) {
+        const titleNode = doc.querySelector(".raid-mythical-title h2");
+        if (titleNode) {
+          const t = titleNode.textContent || "";
+          champName = t.replace(/Skills\s*$/i, "").trim();
+        }
+      }
+
+      if (!champName) champName = "(Unknown)";
+      detectedName.textContent = champName;
+
+      // WHERE name
+      let whereName = whereNameInput.value.trim() || champName;
+
+      // Aura
+      const auraNode = doc.querySelector(".raid-aura-description");
+    let auraCode = "";
+    let auraFull = "";
+
+    if (auraNode) {
+    const auraRaw = auraNode.textContent || "";
+    const parsed = parseAura(auraRaw);
+    auraCode = parsed.code;
+    auraFull = parsed.full;
+    }
+
+
+      // Skills
+    const skillNodes = Array.from(doc.querySelectorAll(".raid-skills-container .raid-skill"));
+    const actives = [];
+    const passives = [];
+
+    skillNodes.forEach(node => {
+        const icon = node.querySelector(".raid-skill-icon");
+        const isPassive = icon && icon.classList.contains("raid-skill-passive");
+
+        const titleNode = node.querySelector(".raid-skill-title-row h4");
+        const descNode = node.querySelector(".raid-skill-description");
+        const cdNode = node.querySelector(".raid-skill-cooldown");
+        const bookNodes = Array.from(node.querySelectorAll(".raid-skill-books .raid-skill-book-row"));
+        const multNodes = Array.from(node.querySelectorAll(".raid-skill-damage-container .raid-skill-multipliers"));
+
+        const title = cleanupText(titleNode ? titleNode.textContent : "");
+
+        // ⟳ Cooldown
+        let cooldown = "";
+        if (cdNode) {
+            const cdText = cleanupText(cdNode.textContent || "");
+            const m = cdText.match(/(\d+)/);
+            if (m) cooldown = "⟳ " + m[1] + " Turns";
+        }
+
+        // Description AVEC vraies lignes vides
+        let desc = "";
+        if (descNode) {
+            let raw = descNode.innerHTML || "";
+
+            raw = raw
+                // Un <br> devient une vraie ligne vide
+                .replace(/<br\s*\/?>/gi, "\n\n")
+
+                // un <p> … </p> doit aussi créer une vraie ligne vide entre blocs
+                .replace(/<p[^>]*>/gi, "")
+                .replace(/<\/p>/gi, "\n\n");
+
+            const tmp = document.createElement("div");
+            tmp.innerHTML = raw;
+
+            desc = tmp.textContent || "";
+
+            // Convertir tous les simples retours en doubles retours = vraies lignes vides
+            desc = desc
+                .replace(/\r/g, "")
+                .replace(/\n{3,}/g, "\n\n") // normalise pour éviter 3+ lignes
+                .trim();
+        }
+
+
+        // Books (sans "Books:" et avec Level+1 si nécessaire)
+        let books = bookNodes
+            .map(n => cleanupText(n.textContent || ""))
+            .filter(Boolean);
+
+        books = adjustBookLevels(books);
+
+        // Multipliers
+        const mults = multNodes
+            .map(n => cleanupText(n.textContent || ""))
+            .filter(Boolean);
+
+        // FORMAT EXACT VALIDÉ
+        let full = title;
+
+        if (cooldown) {
+            full += "\n" + cooldown;
+        }
+
+        // ligne vide obligatoire
+        full += "\n\n";
+
+        full += desc.trim();
+
+        if (books.length) {
+            full += "\n\n" + books.join("\n");
+        }
+        if (mults.length) {
+            full += "\n\n" + mults.join("\n");
+        }
+
+        full = full.trim();
+
+        const skillObj = {
+            title,
+            desc,
+            books,
+            mults,
+            fullText: full
+        };
+
+        if (isPassive) passives.push(skillObj);
+        else actives.push(skillObj);
+    });
+
+      // Build fields -> SQL columns
+      const fieldsInOrder = [];
+
+      fieldsInOrder.push(["name", champName]);
+
+        if (champId) {
+        fieldsInOrder.push(["IGid", champId]);
+        }
+
+        // aura = stat code only
+        if (auraCode) {
+        fieldsInOrder.push(["aura", auraCode]);
+        }
+
+        // auratext = full aura description
+        if (auraFull) {
+        fieldsInOrder.push(["auratext", auraFull]);
+        }
+
+
+      // Actives → s1, s2, s3
+        actives.forEach((s, i) => {
+        if (i < 3 && s.fullText) {
+            fieldsInOrder.push(["s" + (i + 1), s.fullText]);
+        }
+        });
+
+        // Passives → p1, p2
+        passives.forEach((s, i) => {
+        if (i < 2 && s.fullText) {   // maximum 2 passifs p1/p2
+            fieldsInOrder.push(["p" + (i + 1), s.fullText]);
+        }
+        });
+
+
+      // Build SQL
+      if (!fieldsInOrder.length) {
+        sqlOutput.textContent = "-- Aucun champ détecté.";
+        parseInfo.textContent = "";
+        copyBtn.disabled = true;
+        return;
+      }
+
+        const sqlLines = [];
+        sqlLines.push("-- database: c:\\Users\\total\\OneDrive\\Desktop\\Site\\tools\\champions-index\\champions.db");
+        sqlLines.push("");
+        sqlLines.push("UPDATE champions");
+      sqlLines.push("SET");
+
+      fieldsInOrder.forEach(([col, val], idx) => {
+        const isLast = idx === fieldsInOrder.length - 1;
+        const escaped = escapeSql(val);
+        const comma = isLast ? "" : ",";
+        sqlLines.push("    " + col + " = '" + escaped + "'" + comma);
+      });
+
+      sqlLines.push("WHERE name = '" + escapeSql(whereName) + "';");
+
+      const sql = sqlLines.join("\n");
+      sqlOutput.textContent = sql;
+      copyBtn.disabled = false;
+
+      // Auto-copy on generation
+      navigator.clipboard.writeText(sql).catch(() => {
+          console.warn("Auto-copy failed (clipboard permissions).");
+      });
+
+
+      const skillCount = skillNodes.length;
+      const passiveCount = passives.length;
+      parseInfo.innerHTML =
+        "<span>" + skillCount + " skill(s) · " + passiveCount + " passive(s)</span>";
+    }
+
+    function clearAll() {
+      htmlInput.value = "";
+      champNameInput.value = "";
+      whereNameInput.value = "";
+      sqlOutput.textContent =
+        "-- Le SQL apparaîtra ici après génération.\n" +
+        "-- Actives : mappées sur s1, s2, s3\n" +
+        "-- Passives (icône avec .raid-skill-passive) : s4, s5, s6";
+      detectedName.textContent = "—";
+      parseInfo.textContent = "";
+      copyBtn.disabled = true;
+    }
+
+    async function copySql() {
+      const text = sqlOutput.textContent || "";
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        const old = sqlOutput.textContent;
+        sqlOutput.textContent = "-- Copié dans le presse-papiers ✅\n\n" + text;
+        setTimeout(() => {
+          sqlOutput.textContent = old;
+        }, 800);
+      } catch (e) {
+        alert("Impossible de copier automatiquement. Copie manuelle nécessaire.");
+      }
+    }
+
+    parseBtn.addEventListener("click", parseHtml);
+    clearBtn.addEventListener("click", clearAll);
+    copyBtn.addEventListener("click", copySql);
+  })();
+</script>
+</body>
+</html>

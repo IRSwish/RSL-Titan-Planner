@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Effects Tool</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+</head>
+<body>
+
+<h2>Effects Tool</h2>
+
+<!-- 4 dropdowns -->
+<div>
+    <label>Buff :</label>
+    <select id="buff-select">
+        <option value="">-- Buff ID --</option>
+    </select>
+</div>
+
+<br>
+
+<div>
+    <label>Debuff :</label>
+    <select id="debuff-select">
+        <option value="">-- Debuff ID --</option>
+    </select>
+</div>
+
+<br>
+
+<div>
+    <label>Positive :</label>
+    <select id="positive-select">
+        <option value="">-- Positive Name --</option>
+    </select>
+</div>
+
+<br>
+
+<div>
+    <label>Negative :</label>
+    <select id="negative-select">
+        <option value="">-- Negative Name --</option>
+    </select>
+</div>
+
+<br><br>
+
+<textarea id="output" style="width:400px; height:200px;" placeholder="Vos effets ici..."></textarea>
+<br><br>
+
+<button id="copy-effects">Copier</button>
+<button id="clear-effects">Clear</button>
+
+
+<script>
+let effectsData = [];
+let selectedValues = [];
+
+initSqlJs({
+    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+}).then(async SQL => {
+
+    // Charger la DB
+    const dbFile = await fetch("champions.db");
+    const buffer = await dbFile.arrayBuffer();
+    const db = new SQL.Database(new Uint8Array(buffer));
+
+    // Lire la table effects
+    const res = db.exec("SELECT id, name, type FROM effects ORDER BY type, id");
+
+    if (res.length > 0) {
+        const cols = res[0].columns;
+        const rows = res[0].values;
+
+        effectsData = rows.map(row => {
+            let obj = {};
+            row.forEach((v, i) => obj[cols[i]] = v);
+            return obj;
+        });
+    }
+
+    // Remplir les dropdowns
+    fillDropdowns();
+});
+
+function fillDropdowns() {
+    const buffSelect = document.getElementById("buff-select");
+    const debuffSelect = document.getElementById("debuff-select");
+    const positiveSelect = document.getElementById("positive-select");
+    const negativeSelect = document.getElementById("negative-select");
+
+    effectsData.forEach(e => {
+        if (e.type === "Buff") {
+            const opt = document.createElement("option");
+            opt.value = e.id;
+            opt.textContent = e.id; // ✔️ ID SEUL
+            buffSelect.appendChild(opt);
+        }
+        if (e.type === "Debuff") {
+            const opt = document.createElement("option");
+            opt.value = e.id;
+            opt.textContent = e.id; // ✔️ ID SEUL
+            debuffSelect.appendChild(opt);
+        }
+        if (e.type === "Positive") {
+            const opt = document.createElement("option");
+            opt.value = e.name;
+            opt.textContent = e.name; // ✔️ NAME SEUL
+            positiveSelect.appendChild(opt);
+        }
+        if (e.type === "Negative") {
+            const opt = document.createElement("option");
+            opt.value = e.name;
+            opt.textContent = e.name; // ✔️ NAME SEUL
+            negativeSelect.appendChild(opt);
+        }
+    });
+}
+
+function addEffect(value) {
+    if (!value) return;
+    if (selectedValues.includes(value)) return;
+
+    selectedValues.push(value);
+    document.getElementById("output").value = selectedValues.join("\n");
+}
+
+// LISTENERS
+document.getElementById("buff-select").addEventListener("change", e => addEffect(e.target.value));
+document.getElementById("debuff-select").addEventListener("change", e => addEffect(e.target.value));
+document.getElementById("positive-select").addEventListener("change", e => addEffect(e.target.value));
+document.getElementById("negative-select").addEventListener("change", e => addEffect(e.target.value));
+
+// COPY
+document.getElementById("copy-effects").addEventListener("click", function () {
+    const out = document.getElementById("output");
+    out.select();
+    document.execCommand("copy");
+});
+
+// CLEAR
+document.getElementById("clear-effects").addEventListener("click", function () {
+    selectedValues = [];
+    document.getElementById("output").value = "";
+});
+
+// Quand l'utilisateur modifie manuellement les lignes du textarea
+document.getElementById("output").addEventListener("input", () => {
+    const lines = document.getElementById("output").value
+        .split("\n")
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
+
+    selectedValues = lines;
+});
+
+</script>
+
+</body>
+</html>

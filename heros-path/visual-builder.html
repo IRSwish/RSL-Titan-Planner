@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hero’s Path – Visual Builder v4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold:#d4af37; --pink:#f52584; --blue:#00c9ff; --text:#fcf6ff;
+      --bg:#0e0e0e; --bg2:#1a1a1a; --gray:#555; --green:#00ff66;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+
+    header{
+      position:fixed; top:0; z-index:10; background:#0e0e0e;
+      border-bottom:1px solid #262626; padding:10px 14px;
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;width:100%
+    }
+    .title{font-weight:700; letter-spacing:.4px; margin-right:auto}
+    .btn{background:var(--gold); color:#0e0e0e; border:none; border-radius:10px; padding:8px 12px; cursor:pointer}
+    .btn.small{padding:6px 10px; border-radius:8px}
+    .btn.secondary{background:#1a1a1a; color:var(--text); border:1px solid #333}
+    .btn.ghost{background:transparent; border:1px dashed #444; color:#ddd}
+    .hint{font-size:.9rem; opacity:.8}
+
+    .board{position:relative; width:92%; max-width:1400px; margin:48px auto; padding-top:90px;}
+    svg.connections{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0}
+
+    .reward-container{position:relative; z-index:1; display:flex; flex-direction:column; gap:30px}
+    .reward-row {
+      display:flex;gap:15px;flex-wrap:wrap;justify-content:center;align-items:flex-start;
+      position:relative;min-height:120px;padding-left:120px;border:2px dashed transparent;transition:border .2s ease;
+    }
+    .reward-row.drag-over{border-color:var(--pink)}
+
+    .tier-label {position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--gold);font-weight:600;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+    .tier-label .row-controls {position:static;display:flex;gap:6px;}
+    .tier-label .btn.small {background:#1a1a1a;color:var(--gold);border:1px solid var(--gold);}
+
+    .reward-box{
+      position:relative; background:var(--bg2); border:2px solid var(--gray);
+      border-radius:10px; padding:12px; width:120px; text-align:center;
+      transition:all .2s ease; cursor:grab; overflow:hidden;
+    }
+    .reward-box img{width:60px; height:60px; object-fit:contain; margin-bottom:8px; filter:grayscale(1) brightness(.6); transition:filter .2s ease}
+    .reward-name{font-weight:600; font-size:13px; margin-bottom:4px; color:var(--text);}
+    .reward-cost{font-size:12px; color:var(--gold)}
+    .reward-box.available img, .reward-box.active img{filter:grayscale(0) brightness(1)}
+    .reward-box.available{border-color:var(--gold); filter:grayscale(.2)}
+    .reward-box.active{border-color:var(--green); box-shadow:0 0 18px rgba(0,255,100,.35)}
+    .reward-box.locked{border-color:var(--gray); filter:grayscale(1) brightness(.5); cursor:not-allowed}
+
+    .dup-btn{
+      position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);
+      border:1px solid var(--gold);border-radius:50%;width:22px;height:22px;
+      display:flex;align-items:center;justify-content:center;
+      color:var(--gold);cursor:pointer;transition:background .2s;
+    }
+    .dup-btn:hover{background:rgba(212,175,55,.2)}
+    .dup-btn i{width:14px;height:14px}
+
+    .wire{stroke:var(--gold); stroke-width:3.5; fill:none}
+
+    textarea#json{
+      width:92%; max-width:1400px; height:180px; background:#111;
+      color:#00c9ff; border:1px solid var(--gold); border-radius:10px;
+      padding:10px; margin:16px auto; display:block
+    }
+
+    /* ===== Modal ===== */
+    .modal-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter: blur(2px);
+      display:none; align-items:center; justify-content:center; z-index:1000;
+    }
+    .modal{
+      width:min(560px, 92vw); background:#121212; border:1px solid var(--gold);
+      border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.6);
+      padding:16px; display:flex; flex-direction:column; gap:10px;
+    }
+    .modal h3{margin:0 0 6px 0; color:#d4af37; font-size:1.1rem}
+    .field{display:flex; flex-direction:column; gap:6px}
+    .field label{font-size:.9rem; color:#ddd}
+    .field input{background:#0d0d0d;border:1px solid var(--gold);color:var(--text);border-radius:8px;padding:8px 10px;font-size:14px;}
+    .modal-actions{display:flex; gap:8px; justify-content:flex-end; margin-top:6px}
+    .modal .btn.del{background:#2a1010; color:#ffd1d1; border:1px solid #a33}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Hero’s Path – Visual Builder v4</div>
+    <span class="hint">Astuce : Ctrl/Cmd + clic pour relier · Clic pour éditer</span>
+    <button class="btn small" id="btn-add-tier">+ Tier</button>
+    <button class="btn small" id="btn-import">Importer JSON</button>
+    <button class="btn small" id="btn-export">Exporter JSON</button>
+    <button class="btn small secondary" id="btn-clear">Tout effacer</button>
+  </header>
+
+  <div class="board">
+    <svg class="connections" id="wires"></svg>
+    <div class="reward-container" id="container"></div>
+  </div>
+
+  <textarea id="json" readonly>[ ]</textarea>
+
+  <!-- ===== Modal ===== -->
+  <div class="modal-backdrop" id="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title">Éditer l’élément</h3>
+
+      <div class="field">
+        <label for="m-name">Name</label>
+        <input id="m-name" list="rewardNames" placeholder="Silver, Gems, ...">
+        <datalist id="rewardNames"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="m-amount">Amount</label>
+        <input id="m-amount" placeholder="ex: 5000 (optionnel)">
+      </div>
+
+      <div class="field">
+        <label for="m-image">Image</label>
+        <input id="m-image" placeholder="auto si connu">
+      </div>
+
+      <div class="field">
+        <label for="m-cost">Cost</label>
+        <input id="m-cost" type="number" value="0">
+      </div>
+
+      <div class="field">
+        <label for="m-req">Requires</label>
+        <input id="m-req" placeholder="t1-1,t1-2">
+      </div>
+
+      <!-- Copy / Paste actions -->
+      <div class="modal-actions" style="justify-content:flex-start">
+        <button class="btn small ghost" id="m-copy">Copier</button>
+        <button class="btn small ghost" id="m-paste">Coller</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn small del" id="m-delete">Supprimer</button>
+        <button class="btn small secondary" id="m-cancel">Annuler</button>
+        <button class="btn small" id="m-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    // ===== State =====
+    let rewards = [];               // {id, name, image, cost, requires[]}
+    let linkFrom = null;            // parent id when linking
+    let rewardList = [];            // from reward-list.json
+    let currentEditId = null;       // id of node being edited
+    let copiedNodeData = null;      // copy/paste buffer
+
+    const container = document.getElementById('container');
+    const wiresEl = document.getElementById('wires');
+    const jsonEl = document.getElementById('json');
+
+    // Modal refs
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const mName   = document.getElementById('m-name');
+    const mAmount = document.getElementById('m-amount');
+    const mImage  = document.getElementById('m-image');
+    const mCost   = document.getElementById('m-cost');
+    const mReq    = document.getElementById('m-req');
+    const mSave   = document.getElementById('m-save');
+    const mCancel = document.getElementById('m-cancel');
+    const mDelete = document.getElementById('m-delete');
+    const mCopy   = document.getElementById('m-copy');
+    const mPaste  = document.getElementById('m-paste');
+
+    // ===== Utils =====
+    const idToRC = (id) => {
+      const m = /^t?(\d+)-(\d+)$/.exec(id);
+      return m ? { r: +m[1], c: +m[2] } : null;
+    };
+    const rcToId = (r, c) => `t${r}-${c}`;
+    const getById = (id) => rewards.find(x => x.id === id);
+    const upsert = (obj) => {
+      const i = rewards.findIndex(x => x.id === obj.id);
+      if (i > -1) rewards[i] = obj; else rewards.push(obj);
+    };
+    const tiersMap = () => {
+      const map = new Map();
+      for (const r of rewards) {
+        const rc = idToRC(r.id); if (!rc) continue;
+        if (!map.has(rc.r)) map.set(rc.r, []);
+        map.get(rc.r).push(r);
+      }
+      for (const [tier, arr] of map) arr.sort((a, b) => idToRC(a.id).c - idToRC(b.id).c);
+      return Array.from(map.entries()).sort((a, b) => a[0] - b[0]);
+    };
+    const ensureJSON = () => {
+      const sorted = [...rewards].sort((a, b) => {
+        const A = idToRC(a.id), B = idToRC(b.id);
+        return A.r === B.r ? A.c - B.c : A.r - B.r;
+      });
+      jsonEl.value = JSON.stringify(sorted, null, 2);
+    };
+
+    function renderIcons(){
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      } else {
+        setTimeout(renderIcons, 120);
+      }
+    }
+
+    // ===== Render =====
+    function render(){
+      container.innerHTML = '';
+      const tiers = tiersMap();
+
+      if (!tiers.length) {
+        const row = makeRow(1, []);
+        container.appendChild(row);
+      } else {
+        for (const [tier, arr] of tiers) {
+          const row = makeRow(tier, arr);
+          container.appendChild(row);
+        }
+      }
+
+      drawWires();
+      ensureJSON();
+      renderIcons();
+    }
+
+    function makeRow(tier, arr){
+      const row = document.createElement('div');
+      row.className = 'reward-row';
+      row.dataset.tier = tier;
+
+      // bloc label + boutons sur la gauche
+      const labelBox = document.createElement('div');
+      labelBox.className = 'tier-label';
+      labelBox.innerHTML = `<div>Tier ${tier}</div>`;
+
+      const rc = document.createElement('div');
+      rc.className = 'row-controls';
+      const add = document.createElement('button');
+      add.className = 'btn small';
+      add.textContent = '+ élément';
+      add.onclick = () => addNode(tier);
+      const rem = document.createElement('button');
+      rem.className = 'btn small';
+      rem.textContent = '– élément';
+      rem.onclick = () => removeLastNode(tier);
+      rc.append(add, rem);
+      labelBox.appendChild(rc);
+
+      row.appendChild(labelBox);
+      arr.forEach(r => row.appendChild(renderBox(r)));
+
+      // === DnD sur la ligne (drop = placer à la fin) ===
+      row.addEventListener('dragover', e => { e.preventDefault(); row.classList.add('drag-over'); });
+      row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+      row.addEventListener('drop', e => {
+        e.preventDefault();
+        row.classList.remove('drag-over');
+        const draggedId = e.dataTransfer.getData('text/plain');
+        const targetTier = +row.dataset.tier;
+        const draggedRC = idToRC(draggedId);
+        if (!draggedRC) return;
+        if (draggedRC.r === targetTier) {
+          // drop sur la ligne du même tier sans carte cible -> déplacer en fin
+          moveWithinTierToEnd(draggedId);
+        } else {
+          moveRewardToTier(draggedId, targetTier);
+        }
+      });
+
+      return row;
+    }
+
+    function renderBox(model){
+      const box = document.createElement('div');
+      box.className = 'reward-box available';
+      box.dataset.id = model.id;
+      box.title = model.id;
+
+      // === Drag handle ===
+      box.draggable = true;
+      box.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', model.id);
+      });
+
+      // === DnD sur la carte (réordonner avant/après) ===
+      box.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      box.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const draggedId = e.dataTransfer.getData('text/plain');
+        if (!draggedId) return;
+
+        const targetId = model.id;
+        const rcDragged = idToRC(draggedId);
+        const rcTarget  = idToRC(targetId);
+        if (!rcDragged || !rcTarget) return;
+
+        if (rcDragged.r === rcTarget.r) {
+          // même tier -> insérer avant ou après selon la position
+          const rect = box.getBoundingClientRect();
+          const after = e.clientX > (rect.left + rect.width / 2);
+          reorderWithinTier(draggedId, targetId, after);
+        } else {
+          // tiers différent -> par simplicité: fin de ligne du tier cible
+          moveRewardToTier(draggedId, rcTarget.r);
+        }
+      });
+
+      // === Bouton duplication ===
+      const dupBtn = document.createElement('div');
+      dupBtn.className = 'dup-btn';
+      dupBtn.innerHTML = '<i data-lucide="copy"></i>';
+      dupBtn.title = 'Dupliquer';
+      dupBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        duplicateReward(model.id);
+      });
+
+      const img = document.createElement('img');
+      img.src = iconSrc(model.image);
+      img.alt = model.name || '';
+
+      const name = document.createElement('div');
+      name.className = 'reward-name';
+      name.textContent = model.name || '';
+
+      const cost = document.createElement('div');
+      cost.className = 'reward-cost';
+      cost.textContent = (model.name || '').toLowerCase().includes('lock')
+        ? '1 key'
+        : `${(model.cost || 0).toLocaleString('en-US')} pts`;
+
+      box.append(dupBtn, img, name, cost);
+
+      // === Clic: Ctrl/Cmd pour lien ; sinon éditer ===
+      box.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (e.ctrlKey || e.metaKey) {
+          handleLinkClick(model.id);
+        } else {
+          openModal(model.id);
+        }
+      });
+
+      return box;
+    }
+
+    // ===== Add / Remove =====
+    function addNode(tier){
+      const cols = rewards.filter(r => idToRC(r.id)?.r === tier).map(r => idToRC(r.id).c);
+      let c = 1; while (cols.includes(c)) c++;
+      const id = rcToId(tier, c);
+      upsert({ id, name:'', image:'', cost:0 });
+      render();
+    }
+
+    function removeLastNode(tier){
+      const tierNodes = rewards
+        .filter(r => idToRC(r.id)?.r === tier)
+        .sort((a,b) => idToRC(b.id).c - idToRC(a.id).c);
+      if (!tierNodes.length) return;
+      deleteNode(tierNodes[0].id);
+    }
+
+    function deleteNode(id){
+      rewards.forEach(n => {
+        if (n.requires) n.requires = n.requires.filter(x => x !== id);
+        if (n.requires && !n.requires.length) delete n.requires;
+      });
+      rewards = rewards.filter(x => x.id !== id);
+      render();
+    }
+
+    // ===== Rename helper (met à jour les requires partout) =====
+    function renameNodeId(oldId, newId){
+      if (oldId === newId) return;
+      const node = getById(oldId);
+      if (!node) return;
+      // 1) retirer l'ancien
+      rewards = rewards.filter(x => x.id !== oldId);
+      // 2) pousser la version renommée
+      node.id = newId;
+      rewards.push(node);
+      // 3) mettre à jour les requires qui pointaient sur l'ancien id
+      rewards.forEach(n => {
+        if (!n.requires) return;
+        n.requires = n.requires.map(x => x === oldId ? newId : x);
+      });
+    }
+
+    // ===== Drag & Drop: move to tier (place à la fin) =====
+    function moveRewardToTier(id, newTier){
+      const node = getById(id);
+      if (!node) return;
+      const old = idToRC(id);
+      if (!old || old.r === newTier) return; // même tier -> géré ailleurs
+      const siblingsCols = rewards.filter(x => idToRC(x.id)?.r === newTier).map(x => idToRC(x.id).c);
+      let c = 1; while (siblingsCols.includes(c)) c++;
+      const newId = rcToId(newTier, c);
+      renameNodeId(id, newId);
+      render();
+    }
+
+    // ===== Same tier: move to end when dropping on empty row area =====
+    function moveWithinTierToEnd(id){
+      const rc = idToRC(id);
+      if (!rc) return;
+      const tier = rc.r;
+      const arr = rewards.filter(x => idToRC(x.id)?.r === tier).sort((a,b)=>idToRC(a.id).c-idToRC(b.id).c);
+      const cols = arr.map(x => idToRC(x.id).c);
+      const c = (cols.length ? Math.max(...cols) : 0) + 1;
+      const newId = rcToId(tier, c);
+      renameNodeId(id, newId);
+      render();
+    }
+
+    // ===== Same tier: reorder before/after a target card =====
+    function reorderWithinTier(dragId, targetId, after){
+      if (dragId === targetId) return;
+      const r1 = idToRC(dragId);
+      const r2 = idToRC(targetId);
+      if (!r1 || !r2 || r1.r !== r2.r) return;
+      const tier = r1.r;
+
+      const arr = rewards
+        .filter(x => idToRC(x.id)?.r === tier)
+        .sort((a,b)=>idToRC(a.id).c-idToRC(b.id).c);
+
+      const currentOrder = arr.map(x => x.id);
+      const list = currentOrder.filter(id => id !== dragId);
+      let idx = list.indexOf(targetId);
+      if (idx === -1) return;
+      if (after) idx += 1;
+      list.splice(idx, 0, dragId);
+
+      // === Re-numérotation sécurisée (double passe via IDs temporaires) ===
+      const tmpMap = {};
+      currentOrder.forEach((oid, i) => {
+        const tmpId = `_t${tier}_tmp_${i}_${Math.random().toString(36).slice(2,7)}`;
+        tmpMap[oid] = tmpId;
+        renameNodeId(oid, tmpId);
+      });
+
+      // appliquer l'ordre final
+      list.forEach((origId, i) => {
+        const fromTmp = tmpMap[origId];
+        const finalId = rcToId(tier, i + 1);
+        renameNodeId(fromTmp, finalId);
+      });
+
+      render();
+    }
+
+    // ===== Duplication: même tier, en fin de ligne =====
+    function duplicateReward(id){
+      const r = getById(id);
+      if (!r) return;
+      const rc = idToRC(r.id);
+      if (!rc) return;
+
+      const cols = rewards.filter(x => idToRC(x.id)?.r === rc.r).map(x => idToRC(x.id).c);
+      const c = (cols.length ? Math.max(...cols) : 0) + 1;
+      const newId = rcToId(rc.r, c);
+
+      const copy = {
+        id: newId,
+        name: r.name || '',
+        image: r.image || '',
+        cost: r.cost ?? 0,
+        ...(r.requires ? { requires: [...r.requires] } : {})
+      };
+      upsert(copy);
+      render();
+    }
+
+    // ===== Linking (requires) =====
+    function handleLinkClick(id){
+      if (!linkFrom) {
+        linkFrom = id; // c'est le parent sélectionné
+        flash(id, 'from');
+        return;
+      }
+      const parent = linkFrom;
+      const child  = id;
+      linkFrom = null;
+      if (parent === child) return;
+
+      const cm = getById(child);
+      if (!cm) return;
+      const req = new Set(cm.requires || []);
+      req.add(parent);
+      cm.requires = [...req];
+      upsert(cm);
+      drawWires();
+      ensureJSON();
+    }
+
+    function flash(id, kind){
+      const el = document.querySelector(`.reward-box[data-id='${id}']`);
+      if (!el) return;
+      el.animate(
+        [{ boxShadow:'0 0 0 rgba(0,0,0,0)' }, { boxShadow:`0 0 16px ${kind==='from' ? '#f52584' : '#00c9ff'}` }],
+        { duration:220, iterations:1 }
+      );
+    }
+
+    // ===== Wires =====
+    function drawWires(){
+      wiresEl.innerHTML = '';
+      const boardRect = wiresEl.getBoundingClientRect();
+      rewards.forEach(r => {
+        (r.requires || []).forEach(req => {
+          const pBox = document.querySelector(`.reward-box[data-id='${req}']`);
+          const cBox = document.querySelector(`.reward-box[data-id='${r.id}']`);
+          if (!pBox || !cBox) return;
+
+          const pRect = pBox.getBoundingClientRect();
+          const cRect = cBox.getBoundingClientRect();
+          const x1 = pRect.left + pRect.width/2 - boardRect.left;
+          const y1 = pRect.bottom - boardRect.top;
+          const x2 = cRect.left + cRect.width/2 - boardRect.left;
+          const y2 = cRect.top - boardRect.top;
+          const midY = y1 + (y2 - y1) * 0.45;
+
+          const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+          path.setAttribute('d', `M${x1},${y1} L${x1},${midY} L${x2},${midY} L${x2},${y2}`);
+          path.setAttribute('class', 'wire');
+          path.setAttribute('stroke', '#d4af37');
+          wiresEl.appendChild(path);
+        });
+      });
+    }
+
+    // ===== Import / Export =====
+    function importJSON(){
+      const txt = prompt('Colle ton JSON ici:');
+      if (!txt) return;
+      try{
+        const arr = JSON.parse(txt);
+        if (!Array.isArray(arr)) throw new Error('Attendu: tableau');
+        rewards = arr.map(o => ({
+          id:o.id, name:o.name || '', image:o.image || '', cost:o.cost ?? 0,
+          ...(o.requires ? { requires:o.requires.map(x => x.replace(/^t/i,'t')) } : {})
+        }));
+        render();
+      }catch(e){
+        alert('JSON invalide: ' + e.message);
+      }
+    }
+
+    function exportJSON(){
+      const sorted = [...rewards].sort((a,b) => {
+        const A=idToRC(a.id), B=idToRC(b.id);
+        return A.r===B.r ? A.c-B.c : A.r-B.r;
+      });
+      const blob = new Blob([JSON.stringify(sorted, null, 2)], { type:'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'heros-path.json';
+      a.click();
+    }
+
+    // ===== Modal Logic =====
+    function openModal(id){
+      currentEditId = id;
+      const m = getById(id) || { id, name:'', image:'', cost:0, requires:[] };
+
+      const parsed = splitNameAmount(m.name || '');
+      mName.value   = parsed.base;
+      mAmount.value = parsed.amount || '';
+      mImage.value  = m.image || '';
+      mCost.value   = m.cost ?? 0;
+      mReq.value    = (m.requires || []).join(',');
+
+      modalBackdrop.style.display = 'flex';
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      setTimeout(() => mName.focus(), 0);
+    }
+
+    function closeModal(){
+      modalBackdrop.style.display = 'none';
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+      currentEditId = null;
+    }
+
+    function splitNameAmount(name){
+      const m = /(.*) x(\d+)$/i.exec(name.trim());
+      if (m) return { base: m[1].trim(), amount: m[2] };
+      return { base: name, amount: null };
+    }
+
+    function tryAutofillImage(){
+      const base = (mName.value || '').trim().toLowerCase();
+      const found = rewardList.find(r => r.name.toLowerCase() === base);
+      if (found && found.image && !mImage.value.trim()) {
+        mImage.value = found.image;
+      }
+    }
+
+    mName.addEventListener('change', tryAutofillImage);
+
+    // Save / Cancel / Delete
+    mSave.addEventListener('click', () => {
+      if (!currentEditId) return;
+      const base = (mName.value || '').trim();
+      const amount = (mAmount.value || '').trim();
+      const name = amount ? `${base} x${amount}` : base;
+      const image = (mImage.value || '').trim();
+      const cost = parseInt(mCost.value) || 0;
+      const reqStr = (mReq.value || '').trim();
+      const requires = reqStr ? reqStr.split(',').map(s => s.trim()).filter(Boolean).map(s => s.replace(/^t/i,'t')) : [];
+
+      const updated = { id: currentEditId, name, image, cost, ...(requires.length ? { requires } : {}) };
+      upsert(updated);
+      closeModal();
+      render();
+    });
+
+    mCancel.addEventListener('click', closeModal);
+
+    mDelete.addEventListener('click', () => {
+      if (!currentEditId) return;
+      deleteNode(currentEditId);
+      closeModal();
+    });
+
+    // Copy / Paste
+    mCopy.addEventListener('click', () => {
+      copiedNodeData = {
+        name: mName.value.trim(),
+        amount: mAmount.value.trim(),
+        image: mImage.value.trim(),
+        cost: parseInt(mCost.value) || 0,
+        req: mReq.value.trim()
+      };
+      mCopy.textContent = "Copié !";
+      setTimeout(() => mCopy.textContent = "Copier", 1000);
+    });
+
+    mPaste.addEventListener('click', () => {
+      if (!copiedNodeData) return;
+      mName.value   = copiedNodeData.name;
+      mAmount.value = copiedNodeData.amount;
+      mImage.value  = copiedNodeData.image;
+      mCost.value   = copiedNodeData.cost;
+      mReq.value    = copiedNodeData.req;
+      tryAutofillImage();
+      mPaste.textContent = "Collé !";
+      setTimeout(() => mPaste.textContent = "Coller", 1000);
+    });
+
+    // No backdrop click close — only Esc or buttons
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalBackdrop.style.display === 'flex') closeModal();
+    });
+
+    // ===== Events =====
+    document.getElementById('btn-import').addEventListener('click', importJSON);
+    document.getElementById('btn-export').addEventListener('click', exportJSON);
+    document.getElementById('btn-clear').addEventListener('click', () => {
+      if (confirm('Tout effacer ?')) { rewards = []; render(); }
+    });
+    document.getElementById('btn-add-tier').addEventListener('click', () => {
+      const max = rewards.reduce((m, r) => Math.max(m, idToRC(r.id)?.r || 0), 0);
+      upsert({ id: rcToId(max + 1, 1), name:'', image:'', cost:0 });
+      render();
+    });
+
+    window.addEventListener('resize', () => requestAnimationFrame(drawWires));
+    window.addEventListener('scroll',  () => requestAnimationFrame(drawWires));
+    document.addEventListener('click', () => { linkFrom = null; });
+
+    // ===== Icons =====
+    function iconSrc(slug){
+      if (!slug) return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"/>';
+      return `/style/img/Misc/${slug}.webp`;
+    }
+
+    // ===== Reward List load (for datalist + autofill) =====
+    async function loadRewardList(){
+      try{
+        const res = await fetch('reward-list.json');
+        rewardList = await res.json();
+        const dl = document.getElementById('rewardNames');
+        dl.innerHTML = '';
+        rewardList.forEach(r => {
+          const o = document.createElement('option');
+          o.value = r.name;
+          dl.appendChild(o);
+        });
+      }catch(e){
+        console.warn('reward-list.json introuvable', e);
+      }
+    }
+
+    // ===== Boot =====
+    (function boot(){
+      upsert({ id:'t1-1', name:'', image:'', cost:0 });
+      loadRewardList().then(() => render());
+    })();
+  </script>
+</body>
+</html>

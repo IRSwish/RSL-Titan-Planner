@@ -1,166 +1,159 @@
 {
   "title": "TEA PARTY TITAN EVENT",
-  "points":"tea",
+  "points":"teacup",
   "events": [
     {
       "name": "Champion Chase Tournament",
       "type": "Tournament",
-      "start_date": "2025-06-13",
-      "end_date": "2025-06-16",
-      "points": [50,150]
-    },
-    {
-      "name": "Champion Training Event",
-      "type": "Event",
-      "start_date": "2025-06-13",
-      "end_date": "2025-06-17",
-      "points": [10,20,50]
-    },
-    {
-      "name": "Classic Arena",
-      "type": "Tournament",
-      "start_date": "2025-06-14",
-      "end_date": "2025-06-17",
-      "points": [20]
-    },
-    {
-      "name": "Gear Hunters",
-      "type": "Event",
-      "start_date": "2025-06-14",
-      "end_date": "2025-06-17",
-      "points": [20,50]
-    },
-    {
-      "name": "Fire Knight Tournament",
-      "type": "Tournament",
-      "start_date": "2025-06-15",
-      "end_date": "2025-06-18",
-      "points": [40]
-    },
-    {
-      "name": "Gear Enhancement",
-      "type": "Event",
-      "start_date": "2025-06-15",
-      "end_date": "2025-06-18",
-      "points": [60]
-    },
-    {
-      "name": "Event Dungeon",
-      "type": "Tournament",
-      "start_date": "2025-06-18",
-      "end_date": "2025-06-21",
-      "points": [50]
-    },
-    {
-      "name": "Gear Hunters",
-      "type": "Event",
-      "start_date": "2025-06-18",
-      "end_date": "2025-06-22",
-      "points": [20,50]
+      "start_date": "2025-01-24",
+      "end_date": "2025-01-27",
+      "points": [50, 150]
     },
     {
       "name": "Spider Tournament",
       "type": "Tournament",
-      "start_date": "2025-06-19",
-      "end_date": "2025-06-21",
-      "points": [50]
+      "start_date": "2025-01-24",
+      "end_date": "2025-01-26",
+      "points": [40]
     },
     {
-      "name": "Gear Enhancement",
+      "name": "Classsic Arena",
+      "type": "Tournament",
+      "start_date": "2025-01-24",
+      "end_date": "2025-01-27",
+      "points": [30]
+    },
+    {
+      "name": "Ice Golem Tournament",
+      "type": "Tournament",
+      "start_date": "2025-01-26",
+      "end_date": "2025-01-28",
+      "points": [40]
+    },
+    {
+      "name": "Deck of Fate",
       "type": "Event",
-      "start_date": "2025-06-19",
-      "end_date": "2025-06-22",
+      "start_date": "2025-01-27",
+      "end_date": "2025-01-31",
+      "points": [100]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Event",
+      "start_date": "2025-01-27",
+      "end_date": "2025-01-30",
+      "points": [10,20,70]
+    },
+    {
+      "name": "Dragon Tournament",
+      "type": "Tournament",
+      "start_date": "2025-01-28",
+      "end_date": "2025-01-30",
+      "points": [40]
+    },
+    {
+      "name": "Event Dungeon",
+      "type": "Tournament",
+      "start_date": "2025-01-29",
+      "end_date": "2025-02-01",
+      "points": [60]
+    },
+    {
+      "name": "Classic Arena",
+      "type": "Tournament",
+      "start_date": "2025-01-30",
+      "end_date": "2025-02-02",
+      "points": [30]
+    },
+    {
+      "name": "Spider Tournament",
+      "type": "Tournament",
+      "start_date": "2025-01-31",
+      "end_date": "2025-02-03",
       "points": [60]
     },
     {
       "name": "Summon Rush",
       "type": "Event",
-      "start_date": "2025-06-20",
-      "end_date": "2025-06-23",
+      "start_date": "2025-01-31",
+      "end_date": "2025-02-03",
       "points": [50,150]
-    },
-    {
-      "name": "Champion Training Tournament",
-      "type": "Tournament",
-      "start_date": "2025-06-20",
-      "end_date": "2025-06-24",
-      "points": [30,50]
-    },
-    {
-      "name": "Ice Golem Tournament",
-      "type": "Tournament",
-      "start_date": "2025-06-21",
-      "end_date": "2025-06-23",
-      "points": [40]
-    },
-    {
-      "name": "Classic Arena",
-      "type": "Tournament",
-      "start_date": "2025-06-21",
-      "end_date": "2025-06-24",
-      "points": [30]
-    },
-    {
-      "name": "Dragon Tournament",
-      "type": "Tournament",
-      "start_date": "2025-06-23",
-      "end_date": "2025-06-25",
-      "points": [50]
-    },
-    {
-      "name": "Deck of Fate",
-      "type": "Event",
-      "start_date": "2025-06-23",
-      "end_date": "2025-06-27",
-      "points": [20,20,20,40,40]
     },
     {
       "name": "Gear Enhancement",
       "type": "Event",
-      "start_date": "2025-06-24",
-      "end_date": "2025-06-27",
+      "start_date": "2025-02-01",
+      "end_date": "2025-02-04",
       "points": [60]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Event",
+      "start_date": "2025-02-01",
+      "end_date": "2025-02-05",
+      "points": [10,20,70]
+    },
+    {
+      "name": "Champion Training Tournament",
+      "type": "Tournament",
+      "start_date": "2025-02-02",
+      "end_date": "2025-02-07",
+      "points": [10,20,70]
     },
     {
       "name": "Fire Knight Tournament",
       "type": "Tournament",
-      "start_date": "2025-06-25",
-      "end_date": "2025-06-27",
+      "start_date": "2025-02-03",
+      "end_date": "2025-02-05",
       "points": [40]
+    },
+    {
+      "name": "Gear Hunters",
+      "type": "Event",
+      "start_date": "2025-02-06",
+      "end_date": "2025-02-09",
+      "points": [10,20,70]
     },
     {
       "name": "Event Dungeon",
       "type": "Tournament",
-      "start_date": "2025-06-25",
-      "end_date": "2025-06-28",
-      "points": [50]
+      "start_date": "2025-02-04",
+      "end_date": "2025-02-07",
+      "points": [60]
     },
     {
-      "name": "Champion Training Event",
+      "name": "Dragon Tournament",
       "type": "Tournament",
-      "start_date": "2025-06-26",
-      "end_date": "2025-06-30",
-      "points": [10,20,50]
+      "start_date": "2025-02-05",
+      "end_date": "2025-02-08",
+      "points": [60]
     },
     {
-      "name": "Ice Golem Tournament",
-      "type": "Tournament",
-      "start_date": "2025-06-27",
-      "end_date": "2025-06-29",
-      "points": [50]
+      "name": "Gear Enhancement",
+      "type": "Event",
+      "start_date": "2025-02-06",
+      "end_date": "2025-02-09",
+      "points": [60]
     },
     {
       "name": "Champion Chase Tournament",
       "type": "Tournament",
-      "start_date": "2025-06-27",
-      "end_date": "2025-06-30",
-      "points": [50,150]
+      "start_date": "2025-02-07",
+      "end_date": "2025-02-10",
+      "points": [200]
     },
     {
-      "name": "Classic Arena",
+      "name": "Ice Golem Tournament",
       "type": "Tournament",
-      "start_date": "2025-06-27",
-      "end_date": "2025-06-30",
+      "start_date": "2025-02-08",
+      "end_date": "2025-02-10",
+      "points": [40]
+    },
+    {
+      "name": "Fusion Warmup",
+      "type": "Event",
+      "start_date": "2025-02-07",
+      "end_date": "2025-02-11",
       "points": [30]
     }
   ]

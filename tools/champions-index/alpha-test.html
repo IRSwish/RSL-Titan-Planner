@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNK5S7EBCJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-HNK5S7EBCJ');
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -9,7 +18,6 @@
   <script>document.title =  "Champions Index | " + window.siteConfig.title;</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../style/style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8653563887265027" crossorigin="anonymous"></script>
   <style>
 
   /* === BASE === */
@@ -848,7 +856,6 @@ body.modal-open {overflow: hidden;}
 
 let currentModalIndex = null;
 let modalNavigationList = [];
-
 let champions = [];
 let factions = [];
 let filteredChampions = [];
@@ -1234,6 +1241,7 @@ function displayChampions() {
     finalFiltered = filteredChampions;
   }
 
+  window.__latestFinalFiltered = finalFiltered;
   grid.innerHTML = "";
 
   // === TRI ===
@@ -1258,6 +1266,8 @@ function displayChampions() {
       seen.add(c.name);
     }
   });
+
+  window.__latestUniqueList = unique;
 
   // === COMPTEUR CORRECT ===
   countDisplay.textContent =
@@ -1698,10 +1708,10 @@ function loadForm(index) {
 
 function openChampionModal(champ) {
 
-  // snapshot de la liste filtrée pour naviguer
-  modalNavigationList = [...filteredChampions];
+  // snapshot de la liste réellement affichée (une entrée par nom)
+  modalNavigationList = [...(window.__latestUniqueList || [])];
 
-  // position dans la liste filtrée
+  // position dans cette liste
   currentModalIndex = modalNavigationList.findIndex(c => c.id === champ.id);
 
 
