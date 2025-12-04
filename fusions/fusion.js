@@ -747,7 +747,16 @@ function buildResourcesPanel(data) {
   wrap.style.display = '';
   panel.innerHTML = '';
 
-  const fusionKey = (location.hash || '#').slice(1) || 'default';
+  let fusionKey = window.location.hash;
+
+  // enlève tous les '#' du début
+  fusionKey = fusionKey.replace(/^#+/, '');
+
+  // enlève tous les '/' du début
+  fusionKey = fusionKey.replace(/^\/+/, '');
+
+  if (!fusionKey) fusionKey = 'default';
+
   const rareAff = (data.RareAff || 'magic').toLowerCase();
   const epicAff = (data.EpicAff || 'magic').toLowerCase();
   const counts = collectTimelineCounts();
