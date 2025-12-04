@@ -399,7 +399,7 @@ function drawConnections() {
   }
 
   // === Chargement JSON + application ===
-  fetch('masteries.json')
+  fetch('/tools/mastery-builder/masteries.json')
     .then(res => res.json())
     .then(data => {
       for (const branch in data) {
