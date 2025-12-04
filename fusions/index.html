@@ -508,7 +508,14 @@
   <script src="fusions-config.js"></script>
   <script>
     function loadFusionFromHash() {
-      const fusionKey = window.location.hash.replace('#', '');
+      let fusionKey = window.location.hash;
+
+      // enlève tous les '#' du début
+      fusionKey = fusionKey.replace(/^#+/, '');
+
+      // enlève tous les '/' du début
+      fusionKey = fusionKey.replace(/^\/+/, '');
+      
       const fusion = window.fusions[fusionKey];
       if (fusion) {
         document.getElementById('page-title').textContent = fusion.name;
