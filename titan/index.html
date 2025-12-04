@@ -218,23 +218,24 @@
   <script src="/titan/titans-config.js"></script>
   <script>
     function loadFusionFromHash() {
-      const fusionKey = window.location.hash.replace('#', '');
+      let fusionKey = window.location.hash;
+
+      // enlève tous les '#' du début
+      fusionKey = fusionKey.replace(/^#+/, '');
+
+      // enlève tous les '/' du début
+      fusionKey = fusionKey.replace(/^\/+/, '');
+      
       const fusion = window.fusions[fusionKey];
-  
       if (fusion) {
         document.getElementById('page-title').textContent = fusion.name;
-        document.title = `${fusion.name} - ${window.siteConfig.title}`;
-  
+        document.title = `${fusion.name}  -  ${window.siteConfig.title}`;
         const timelineContainer = document.getElementById('timeline-container');
         timelineContainer.setAttribute('data-json', fusion.json);
-  
-        // 🔁 Recharger le JSON et la timeline
-        if (typeof window.reloadTimeline === 'function') {
-          window.reloadTimeline();
-        }
+        if (typeof window.reloadTimeline === 'function') window.reloadTimeline();
       } else {
-        document.getElementById('page-title').textContent = "Unlisted titan event yet";
-        document.title = "Unlisted titan event - " + window.siteConfig.title;
+        document.getElementById('page-title').textContent = "Unlisted fusion yet";
+        document.title = "Unlisted fusion - " + window.siteConfig.title;
       }
     }
   
