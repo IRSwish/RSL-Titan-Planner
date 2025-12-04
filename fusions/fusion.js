@@ -40,10 +40,16 @@
     const timelineContainer = document.querySelector('.timeline-container');
     if (!timelineContainer) return;
 
-    let hashRaw = window.location.hash.replace('#', '');
-    // supporte #/xxx
-    if (hashRaw.startsWith('/')) hashRaw = hashRaw.slice(1);
+    let hashRaw = window.location.hash;
+
+    // enlève tous les '#' du début
+    hashRaw = hashRaw.replace(/^#+/, '');
+
+    // enlève tous les '/' du début (si #/Kroz, #//Kroz, etc.)
+    hashRaw = hashRaw.replace(/^\/+/, '');
+
     const hash = hashRaw;
+    
     const fusionConfig = window.fusions[hash];
     if (!fusionConfig) {
       console.error('Aucune fusion trouvée pour le hash :', hash);
