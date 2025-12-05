@@ -107,7 +107,7 @@
   {
     "id": "t4-2",
     "name": "Mythical Charm x10",
-    "image": "rarity-charm",
+    "image": "mythical-charm",
     "cost": 2500,
     "requires": [
       "t3-2"
