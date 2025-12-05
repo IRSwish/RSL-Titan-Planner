@@ -11,9 +11,9 @@ CREATE TEMP TABLE vars (
 );
 
 INSERT INTO vars VALUES (
-  1020,   -- move_id (Gaellut)
-  825,    -- before_id (Kawn)
-  826 -- after_id (Ultimate Galek)
+  1006,   -- move_id (Gaellut)
+  373,    -- before_id (Kawn)
+  374 -- after_id (Ultimate Galek)
 );
 
 ------------------------------------------------------------
