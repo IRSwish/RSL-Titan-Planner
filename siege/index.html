@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Siege Planner – PoC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top-bar">
+    <div class="logo-title">
+        <div class="app-logo-circle"></div>
+        <div class="title-text">
+            <h1>Siege Planner</h1>
+            <p class="subtitle">PoC temps réel – Raid Shadow Legends</p>
+        </div>
+    </div>
+
+    <div class="room-controls">
+        <div class="room-row">
+            <input id="roomInput" placeholder="Code de salle (ex: clan-omega)" />
+            <button id="joinRoomBtn">Rejoindre</button>
+            <button id="createRoomBtn">Créer</button>
+        </div>
+
+        <div class="room-info">
+            🔗 <span id="currentRoomLabel">Aucune salle</span>
+            <button id="copyLinkBtn" class="ghost-btn">Copier le lien</button>
+        </div>
+    </div>
+</header>
+
+<main class="layout">
+    <section class="map-section">
+        <div class="map-container">
+            <img src="img/Siege_Map.webp" class="map-img" alt="Siege Map">
+
+            <div class="post-point" id="post1" data-post-id="post1"></div>
+            <div class="post-point" id="post2" data-post-id="post2"></div>
+        </div>
+
+        <p class="hint-text">
+            🔹 Clique un point pour éditer.<br>
+            🔹 Partage le code de salle pour la synchro live.
+        </p>
+    </section>
+</main>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+        <h2 id="modalTitle">Poste</h2>
+
+        <label>Champion 1</label><input id="c1">
+        <label>Champion 2</label><input id="c2">
+        <label>Champion 3</label><input id="c3">
+        <label>Champion 4</label><input id="c4">
+
+        <label>Conditions</label>
+        <select id="cond1"><option value="">Aucune</option><option>No Duplicate</option><option>Buff Cleanser</option><option>Anti-Heal</option></select>
+        <select id="cond2"><option value="">Aucune</option><option>No Duplicate</option><option>Buff Cleanser</option><option>Anti-Heal</option></select>
+        <select id="cond3"><option value="">Aucune</option><option>No Duplicate</option><option>Buff Cleanser</option><option>Anti-Heal</option></select>
+
+        <button id="saveBtn" class="save-btn">💾 Sauvegarder</button>
+        <button id="closeModal" class="ghost-btn">Fermer</button>
+
+        <p id="statusMsg" class="status"></p>
+    </div>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
