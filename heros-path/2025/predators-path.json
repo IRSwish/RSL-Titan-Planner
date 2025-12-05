@@ -50,7 +50,7 @@
     "id": "t3-1",
     "name": "Mortal Soulstone x1",
     "image": "mortal-soulstone",
-    "cost": 500,
+    "cost": 1000,
     "requires": [
       "t2-1",
       "t2-2",
@@ -346,7 +346,7 @@
     "id": "t9-2",
     "name": "Rank 4 Basalt x5",
     "image": "rank-4-basalt",
-    "cost": 6000,
+    "cost": 10000,
     "requires": [
       "t8-5"
     ],
@@ -395,7 +395,7 @@
   {
     "id": "t12-1",
     "name": "Predator 5* Split Soul x1",
-    "image": "Predator-5",
+    "image": "predator-5",
     "cost": 35000,
     "requires": [
       "t11-1"
