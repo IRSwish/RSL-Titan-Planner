@@ -45,8 +45,8 @@ body.modal-open {overflow: hidden;}
 .rarity-grid { grid-template-columns:repeat(3,1fr); }
 .affinity-grid { grid-template-columns:repeat(2,1fr); }
 .type-grid { grid-template-columns:repeat(2,1fr); }
-.rarity-btn,.affinity-btn,.type-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; border-radius:8px; padding:4px 8px; cursor:pointer; width:60px; height:40px; display:flex; justify-content:center; align-items:center; }
-.rarity-btn img,.affinity-btn img { width:24px; height:24px; object-fit:contain; }
+.rarity-btn,.affinity-btn,.type-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; border-radius:8px; padding:4px 8px; cursor:pointer; width:55px; height:55px; display:flex; justify-content:center; align-items:center; }
+.rarity-btn img,.affinity-btn img { width:28px; height:28px; object-fit:contain; }
 .rarity-btn:hover,.affinity-btn:hover,.type-btn:hover { border-color:#d4af37; box-shadow:0 0 6px rgba(212,175,55,.4); }
 .rarity-btn.active,.affinity-btn.active,.type-btn.active { border-color:#d4af37; background:rgba(212,175,55,.15); box-shadow:0 0 6px rgba(212,175,55,.4); }
 
@@ -77,10 +77,10 @@ body.modal-open {overflow: hidden;}
 .counter { text-align:center; margin-bottom:15px; font-size:15px; opacity:.8; }
 
 /* === SORT BAR === */
-.sort-bar { display:flex; justify-content:center; gap:12px; margin-bottom:20px; }
-.sort-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; padding:6px 10px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:14px; transition:.2s; }
+.sort-bar { display:flex; justify-content:center; gap: 10px; margin-bottom:20px; }
+.sort-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; padding:4px 8px; border-radius:8px; width:80px; height:55px; cursor:pointer; justify-content: center; display:flex; align-items:center; gap:6px; font-size:14px; transition:.2s; }
 .sort-btn:hover {border-color:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.4);}
-.sort-btn svg { width:18px; height:18px; }
+.sort-btn svg { width:24px; height:24px; }
 .sort-btn.active { border-color:#d4af37; background:rgba(212,175,55,.15); }
 .sort-btn .sort-icon { opacity:.8; }
 
@@ -91,7 +91,7 @@ body.modal-open {overflow: hidden;}
   border: 2px solid #555;
   border-radius: 12px;
   background: #0f0f0f;
-  margin: 30px auto;
+  margin: 15px auto;
   overflow: hidden;
   width: 100%;
   max-width: 1400px;
@@ -105,11 +105,10 @@ body.modal-open {overflow: hidden;}
 }
 
 .effects-container.collapsed {
-  width: auto !important;
-  max-width: 240px !important;
+  width: 100% !important;
+  max-width: 1400px !important;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 !important;
 }
 
 .effects-toggle {
@@ -605,6 +604,204 @@ body.modal-open {overflow: hidden;}
   width: 48px;
   height: 48px;
 }
+
+/* === FACTIONS COLLAPSIBLE === */
+
+.factions-container {
+  border: 2px solid #555;
+  border-radius: 12px;
+  background: #0f0f0f;
+  width: 100%;
+  max-width: 1400px;
+  margin: 20px auto;
+  overflow: hidden;
+  transition: .3s ease;
+}
+
+.factions-toggle {
+  padding: 12px;
+  text-align: center;
+  background: #141414;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.factions-panel {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .35s ease, opacity .3s ease, padding .3s;
+}
+
+.factions-container.open .factions-panel {
+  opacity: 1;
+  max-height: 2000px;
+  padding: 5px;
+}
+
+.faction-section-title {
+  font-size: 16px;
+  margin: 10px;
+  text-align: center;
+}
+
+.faction-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Adaptable, prend la place disponible */
+  justify-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.faction-icon {
+  width: 49px;
+  height: 49px;
+  background: #111;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 3px;
+  transition: .25s;
+}
+
+.faction-icon.active {
+  border-color: #d4af37;
+  background: rgba(212,175,55,.15);
+  box-shadow: 0 0 8px rgba(212,175,55,.5);
+}
+
+/* === ATTRIBUTES BLOCK === */
+.attributes-container {
+  border: 2px solid #555;
+  border-radius: 12px;
+  background: #0f0f0f;
+  margin: 20px 0;
+}
+
+.attributes-title {
+  font-family: 'American Captain';
+  font-size: 22px;
+  text-align: center;
+  margin: 10px;
+  background: linear-gradient(to bottom,#feeec1,#e09f40);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.attributes-group {
+  margin-bottom: 10px;
+}
+
+.attr-label {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.attr-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* === ADVANCED FILTERS === */
+
+.advanced-container {
+  border: 2px solid #555;
+  border-radius: 12px;
+  background: #0f0f0f;
+  margin: 25px 0;
+  text-align: center;  
+}
+
+.advanced-title {
+  font-family: 'American Captain';
+  font-size: 22px;
+  text-align: center;
+  margin: 10px;
+  background: linear-gradient(to bottom,#feeec1,#e09f40);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.advanced-sort-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin:20px;
+}
+
+.advanced-group-row {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* === 3-COLUMN FILTER LAYOUT === */
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.filter-col {
+  width: 33.333%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Make collapsible blocks fill column width properly */
+.filter-col .factions-container,
+.filter-col .attributes-container,
+.filter-col .advanced-container {
+  width: 100%;
+  margin: 0; /* remove double margins */
+}
+
+/* Remove collapsible behavior */
+.factions-container {
+  border: 2px solid #555;
+  border-radius: 12px;
+  background: #0f0f0f;
+  padding: 10px 0 20px 0;
+  margin: 20px 0;
+}
+
+/* New title like other sections */
+.factions-title {
+  font-family: 'American Captain';
+  font-size: 22px;
+  text-align: center;
+  background: linear-gradient(to bottom,#feeec1,#e09f40);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Remove panel collapsing rules */
+.factions-toggle, .factions-panel {
+  display: none !important;
+}
+
+/* Make columns equal height */
+.filter-row {
+  align-items: stretch; /* IMPORTANT */
+}
+
+/* Make each box stretch inside its column */
+.factions-container,
+.attributes-container,
+.advanced-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
   </style>
 </head>
 
@@ -621,45 +818,141 @@ body.modal-open {overflow: hidden;}
     <input type="text" id="searchInput" placeholder="Search a champion...">
   </div>
 
-  <div class="faction-bar" id="factionBar"></div>
+<div class="filter-row">
+  <div class="filter-col">
+  <!-- === FACTIONS (COLLAPSIBLE) === -->
+<div class="factions-container">
+  
+  <div class="factions-title">Factions</div>
 
-  <!-- FILTER SECTIONS -->
-  <div class="filters-wrapper">
-    <!-- Rarity -->
-    <div class="filter-section">
-      <div class="section-label">Rarity</div>
-      <div class="filter-buttons rarity-grid">
-        <button class="rarity-btn" data-rarity="Mythical"><img src="/tools/champions-index/img/rarity/Mythical_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Legendary"><img src="/tools/champions-index/img/rarity/Legendary_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Epic"><img src="/tools/champions-index/img/rarity/Epic_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Rare"><img src="/tools/champions-index/img/rarity/Rare_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Uncommon"><img src="/tools/champions-index/img/rarity/Uncommon_Icon.webp"></button>
-        <button class="rarity-btn" data-rarity="Common"><img src="/tools/champions-index/img/rarity/Common_Icon.webp"></button>
-      </div>
-    </div>
-
-    <!-- Affinity -->
-    <div class="filter-section">
-      <div class="section-label">Affinity</div>
-      <div class="filter-buttons affinity-grid">
-        <button class="affinity-btn" data-affinity="Force"><img src="/tools/champions-index/img/affinity/Force.webp"></button>
-        <button class="affinity-btn" data-affinity="Magic"><img src="/tools/champions-index/img/affinity/Magic.webp"></button>
-        <button class="affinity-btn" data-affinity="Spirit"><img src="/tools/champions-index/img/affinity/Spirit.webp"></button>
-        <button class="affinity-btn" data-affinity="Void"><img src="/tools/champions-index/img/affinity/Void.webp"></button>
-      </div>
-    </div>
-
-    <!-- Type -->
-    <div class="filter-section">
-      <div class="section-label">Type</div>
-      <div class="filter-buttons type-grid">
-        <button class="type-btn" data-type="HP">HP</button>
-        <button class="type-btn" data-type="Attack">Attack</button>
-        <button class="type-btn" data-type="Defense">Defense</button>
-        <button class="type-btn" data-type="Support">Support</button>
-      </div>
+  <!-- TELERIAN LEAGUE -->
+  <div class="faction-section">
+    <div class="faction-section-title">Telerian League</div>
+    <div class="faction-grid">
+      <img class="faction-icon" data-faction="Banner Lords">
+      <img class="faction-icon" data-faction="High Elves">
+      <img class="faction-icon" data-faction="Sacred Order">
+      <img class="faction-icon" data-faction="Barbarians">
     </div>
   </div>
+
+  <!-- GAELLEN PACT -->
+  <div class="faction-section">
+    <div class="faction-section-title">Gaellen Pact</div>
+    <div class="faction-grid">
+      <img class="faction-icon" data-faction="Ogryn Tribes">
+      <img class="faction-icon" data-faction="Lizardmen">
+      <img class="faction-icon" data-faction="Skinwalkers">
+      <img class="faction-icon" data-faction="Orcs">
+    </div>
+  </div>
+
+  <!-- THE CORRUPTED -->
+  <div class="faction-section">
+    <div class="faction-section-title">The Corrupted</div>
+    <div class="faction-grid">
+      <img class="faction-icon" data-faction="Demonspawn">
+      <img class="faction-icon" data-faction="Undead Hordes">
+      <img class="faction-icon" data-faction="Dark Elves">
+      <img class="faction-icon" data-faction="Knights Revenant">
+    </div>
+  </div>
+
+  <!-- NYRESAN UNION -->
+  <div class="faction-section">
+    <div class="faction-section-title">Nyresan Union</div>
+    <div class="faction-grid">
+      <img class="faction-icon" data-faction="Dwarves">
+      <img class="faction-icon" data-faction="Shadowkin">
+      <img class="faction-icon" data-faction="Sylvan Watchers">
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="filter-col">
+  <!-- FILTER SECTIONS -->
+  <!-- === CHAMPION ATTRIBUTES === -->
+<div class="attributes-container">
+  <div class="attributes-title">Attributes</div>
+
+  <div class="attributes-group">
+    <div class="attr-label">Rarity</div>
+    <div class="attr-grid">
+      <button class="rarity-btn" data-rarity="Mythical"><img src="/tools/champions-index/img/rarity/Mythical_Icon.webp"></button>
+      <button class="rarity-btn" data-rarity="Legendary"><img src="/tools/champions-index/img/rarity/Legendary_Icon.webp"></button>
+      <button class="rarity-btn" data-rarity="Epic"><img src="/tools/champions-index/img/rarity/Epic_Icon.webp"></button>
+      <button class="rarity-btn" data-rarity="Rare"><img src="/tools/champions-index/img/rarity/Rare_Icon.webp"></button>
+      <button class="rarity-btn" data-rarity="Uncommon"><img src="/tools/champions-index/img/rarity/Uncommon_Icon.webp"></button>
+      <button class="rarity-btn" data-rarity="Common"><img src="/tools/champions-index/img/rarity/Common_Icon.webp"></button>
+    </div>
+  </div>
+
+  <div class="attributes-group">
+    <div class="attr-label">Affinity</div>
+    <div class="attr-grid">
+      <button class="affinity-btn" data-affinity="Force"><img src="/tools/champions-index/img/affinity/Force.webp"></button>
+      <button class="affinity-btn" data-affinity="Magic"><img src="/tools/champions-index/img/affinity/Magic.webp"></button>
+      <button class="affinity-btn" data-affinity="Spirit"><img src="/tools/champions-index/img/affinity/Spirit.webp"></button>
+      <button class="affinity-btn" data-affinity="Void"><img src="/tools/champions-index/img/affinity/Void.webp"></button>
+    </div>
+  </div>
+
+  <div class="attributes-group">
+    <div class="attr-label">Role</div>
+    <div class="attr-grid">
+      <button class="type-btn" data-type="HP">HP</button>
+      <button class="type-btn" data-type="Attack">Attack</button>
+      <button class="type-btn" data-type="Defense">Defense</button>
+      <button class="type-btn" data-type="Support">Support</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="filter-col">
+  <!-- === ADVANCED FILTERS === -->
+  <div class="advanced-container">
+
+    <div class="advanced-title">Advanced Filters</div>
+
+    <div class="advanced-group">
+      <div class="advanced-label">Sort by :</div>
+      <div class="advanced-sort-row">
+        <button class="sort-btn" data-stat="hp" title="HP">
+          <i data-lucide="heart"></i>
+          <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+        </button>
+
+        <button class="sort-btn" data-stat="atk" title="Attack">
+          <i data-lucide="swords"></i>
+          <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+        </button>
+
+        <button class="sort-btn" data-stat="def" title="Defense">
+          <i data-lucide="shield"></i>
+          <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+        </button>
+
+        <button class="sort-btn" data-stat="spd" title="Speed">
+          <i data-lucide="zap"></i>
+          <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="advanced-group-row">
+      <label for="invocableOnly">Hide Non-Summonable</label>
+      <label class="switch">
+        <input type="checkbox" id="invocableOnly">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+  </div>
+</div>
+</div>
 <div class="effects-container collapsed">
   <div id="effectsToggle" class="effects-toggle">
     <span>Effects</span>
@@ -695,36 +988,6 @@ body.modal-open {overflow: hidden;}
 
   </div>
 </div>
-
-  <div class="sort-bar">
-    <button class="sort-btn" data-stat="hp" title="Sort by HP">
-      <i data-lucide="heart"></i>
-      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
-    </button>
-
-    <button class="sort-btn" data-stat="atk" title="Sort by Attack">
-      <i data-lucide="swords"></i>
-      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
-    </button>
-
-    <button class="sort-btn" data-stat="def" title="Sort by Defense">
-      <i data-lucide="shield"></i>
-      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
-    </button>
-
-    <button class="sort-btn" data-stat="spd" title="Sort by Speed">
-      <i data-lucide="zap"></i>
-      <i class="sort-icon" data-lucide="arrow-down-wide-narrow"></i>
-    </button>
-  </div>
-
-  <div class="checkbox-container">
-    <label for="invocableOnly">Hide Non-Summonable Champions</label>
-    <label class="switch">
-      <input type="checkbox" id="invocableOnly">
-      <span class="slider"></span>
-    </label>
-  </div>
 
   <div class="reset-wrapper">
     <button id="resetFilters" class="reset-btn">⟳ Reset Filters</button>
@@ -880,7 +1143,6 @@ const EFFECTS = {
 };
 
 const grid = document.getElementById('championGrid');
-const factionBar = document.getElementById('factionBar');
 const searchInput = document.getElementById('searchInput');
 const rarityButtons = document.querySelectorAll('.rarity-btn');
 const affinityButtons = document.querySelectorAll('.affinity-btn');
@@ -888,7 +1150,7 @@ const typeButtons = document.querySelectorAll('.type-btn');
 const invocableCheckbox = document.getElementById('invocableOnly');
 const countDisplay = document.getElementById('championCount');
 
-let selectedFaction = null;
+let selectedFactions = [];
 let selectedRarities = [];
 let selectedAffinities = [];
 let selectedTypes = [];
@@ -1057,8 +1319,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
         factions = [...new Set(champions.map(c => c.faction))].sort();
 
-        renderFactions();
         displayChampions();
+
+        // === INIT FRACTIONS (IMAGES + CLICK) ===
+        document.querySelectorAll(".faction-icon").forEach(icon => {
+          const faction = icon.dataset.faction;
+          const slug = faction.toLowerCase().replace(/ /g, "");
+
+          // assign image dynamically
+          icon.src = `/tools/champions-index/img/factions/${slug}.webp`;
+          icon.alt = faction;
+
+          // click toggle
+          icon.addEventListener("click", () => {
+            icon.classList.toggle("active");
+
+            if (icon.classList.contains("active")) {
+              selectedFactions.push(faction);
+            } else {
+              selectedFactions = selectedFactions.filter(f => f !== faction);
+            }
+
+            displayChampions();
+          });
+        });
+
+        // === COLLAPSE : Factions ===
+        const factionsContainer = document.querySelector(".factions-container");
+        const factionsToggle    = document.getElementById("factionsToggle");
+
+        factionsToggle.addEventListener("click", () => {
+          factionsContainer.classList.toggle("open");
+          lucide.createIcons();
+        });
       })
       .catch(err => console.error("Erreur chargement champions.db :", err));
 
@@ -1066,28 +1359,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-function renderFactions() {
-  factions.forEach(f => {
-    const img = document.createElement('img');
-    const icon = f.toLowerCase().replace(/ /g, "");
-    img.src = `/tools/champions-index/img/factions/${icon}.webp`;
-    img.alt = f;
-    img.classList.add('faction-icon');
-    img.dataset.faction = f;
 
-    img.addEventListener('click', () => {
-      document.querySelectorAll('.faction-icon').forEach(i => i.classList.remove('active'));
-      if (selectedFaction === f) selectedFaction = null;
-      else {
-        selectedFaction = f;
-        img.classList.add('active');
-      }
-      displayChampions();
-    });
-
-    factionBar.appendChild(img);
-  });
-}
 
 function toggleSelection(array, value) {
   return array.includes(value) ? array.filter(v => v !== value) : [...array, value];
@@ -1194,7 +1466,7 @@ function displayChampions() {
 
   filteredChampions = champions.filter(c => {
     const matchesName = c.name.toLowerCase().includes(searchTerm);
-    const matchesFaction = !selectedFaction || c.faction === selectedFaction;
+    const matchesFaction = selectedFactions.length === 0 || selectedFactions.includes(c.faction);
     const matchesRarity = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
     const matchesAffinity = selectedAffinities.length === 0 || selectedAffinities.includes(c.affinity);
     const matchesType = selectedTypes.length === 0 || selectedTypes.includes(c.type);
@@ -1328,11 +1600,11 @@ function resetAllFilters() {
   // Recherche
   searchInput.value = "";
 
-  // Faction
-  selectedFaction = null;
-  document.querySelectorAll(".faction-icon").forEach(el => el.classList.remove("active"));
+  // Factions
+  selectedFactions = [];
+  document.querySelectorAll(".faction-icon").forEach(i => i.classList.remove("active"));
 
-  // Rarete / Affinité / Type
+  // Rarity / Affinity / Type
   selectedRarities = [];
   selectedAffinities = [];
   selectedTypes = [];
@@ -1350,23 +1622,20 @@ function resetAllFilters() {
   document.querySelectorAll(".sort-btn").forEach(btn => {
     btn.classList.remove("active");
     const icon = btn.querySelector(".sort-icon");
-    icon.setAttribute("data-lucide", "arrow-down-wide-narrow");
+    if (icon) icon.setAttribute("data-lucide", "arrow-down-wide-narrow");
   });
 
-  // === Reset EFFECTS ===
-  document.querySelectorAll(".effect-icon").forEach(icon => {
-      icon.classList.remove("active");
-  });
-
+  // Effects
+  document.querySelectorAll(".effect-icon").forEach(icon => icon.classList.remove("active"));
   document
     .querySelectorAll('input[data-type="Positive"], input[data-type="Negative"]')
-    .forEach(cb => { cb.checked = false; });
+    .forEach(cb => (cb.checked = false));
 
   activeEffects = {
-      Buff: [],
-      Debuff: [],
-      Positive: [],
-      Negative: []
+    Buff: [],
+    Debuff: [],
+    Positive: [],
+    Negative: []
   };
 
   lucide.createIcons();
