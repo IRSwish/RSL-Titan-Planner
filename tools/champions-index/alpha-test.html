@@ -10,7 +10,7 @@
 
     gtag('config', 'G-HNK5S7EBCJ');
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql-wasm.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <meta charset="UTF-8">
@@ -383,7 +383,7 @@ body.modal-open {overflow: hidden;}
 .aura-desc { font-size:14px; opacity:.85; }
 .aura-icon-wrapper{position:relative;width:96px;height:96px;flex-shrink:0;}
 .aura-icon-wrapper .aura-icon{width:100%;height:100%;object-fit:contain;}
-.aura-icon-wrapper::after{content:"";position:absolute;inset:0;background:url("/tools/champions-index/img/aura/BORDER.webp") center/contain no-repeat;z-index:10;pointer-events:none;}
+.aura-icon-wrapper::after{content:"";position:absolute;inset:0;background:url("img/aura/BORDER.webp") center/contain no-repeat;z-index:10;pointer-events:none;}
 
 /* Surrounding wrapper */
 .aura-tomes-row {display: flex; justify-content: space-between; gap: 20px;}
@@ -1159,7 +1159,7 @@ let currentSort = { stat: null, order: "asc" };
 document.addEventListener("DOMContentLoaded", () => {
 
   initSqlJs({
-    locateFile: file => `https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/${file}`
+    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
   }).then(SQL => {
     
     fetch("/tools/champions-index/champions.db") // 🔥 Ajuste le chemin selon ton site !
@@ -2146,6 +2146,6 @@ document.addEventListener("keydown", e => {
     </script>
   </div>
 
-<script src="/script.js"></script>
+<script src="../../script.js"></script>
 </body>
 </html>
