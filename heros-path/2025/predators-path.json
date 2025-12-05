@@ -404,8 +404,8 @@
   },
   {
     "id": "t12-2",
-    "name": "Immortal Essence x1",
-    "image": "immortal-soul-essence",
+    "name": "Eternal Soulstone x1",
+    "image": "eternal-soulstone",
     "cost": 30000,
     "requires": [
       "t11-2"
