@@ -45,9 +45,9 @@ body.modal-open {overflow: hidden;}
 .rarity-grid { grid-template-columns:repeat(3,1fr); }
 .affinity-grid { grid-template-columns:repeat(2,1fr); }
 .type-grid { grid-template-columns:repeat(2,1fr); }
-.rarity-btn,.affinity-btn,.type-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; border-radius:8px; padding:4px 8px; cursor:pointer; width:55px; height:55px; display:flex; justify-content:center; align-items:center; }
+.rarity-btn,.affinity-btn,.type-btn {   font-size: 12px; border:2px solid transparent; background:#1a1a1a; color:#fff; border-radius:8px; padding:4px 8px; transition:.2s; width:55px; height:55px; display:flex; justify-content:center; align-items:center; }
 .rarity-btn img,.affinity-btn img { width:28px; height:28px; object-fit:contain; }
-.rarity-btn:hover,.affinity-btn:hover,.type-btn:hover { border-color:#d4af37; box-shadow:0 0 6px rgba(212,175,55,.4); }
+.rarity-btn:hover,.affinity-btn:hover,.type-btn:hover {transform:scale(1.1); border:2px solid #d4af37;}
 .rarity-btn.active,.affinity-btn.active,.type-btn.active { border-color:#d4af37; background:rgba(212,175,55,.15); box-shadow:0 0 6px rgba(212,175,55,.4); }
 
 /* === SWITCH === */
@@ -78,8 +78,8 @@ body.modal-open {overflow: hidden;}
 
 /* === SORT BAR === */
 .sort-bar { display:flex; justify-content:center; gap: 10px; margin-bottom:20px; }
-.sort-btn { background:#1a1a1a; border:2px solid #555; color:#fcf6ff; padding:4px 8px; border-radius:8px; width:80px; height:55px; cursor:pointer; justify-content: center; display:flex; align-items:center; gap:6px; font-size:14px; transition:.2s; }
-.sort-btn:hover {border-color:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.4);}
+.sort-btn { transition:.2s;background:#1a1a1a; border:2px solid transparent; color:#fcf6ff; padding:4px 8px; border-radius:8px; width:80px; height:55px; cursor:pointer; justify-content: center; display:flex; align-items:center; gap:6px; font-size:14px; transition:.2s; }
+.sort-btn:hover {transform:scale(1.1); border:2px solid #d4af37;}
 .sort-btn svg { width:24px; height:24px; }
 .sort-btn.active { border-color:#d4af37; background:rgba(212,175,55,.15); }
 .sort-btn .sort-icon { opacity:.8; }
@@ -659,7 +659,7 @@ body.modal-open {overflow: hidden;}
 .faction-icon {
   width: 49px;
   height: 49px;
-  background: #111;
+  background: #1a1a1a;
   border-radius: 8px;
   border: 2px solid transparent;
   cursor: pointer;
@@ -695,16 +695,26 @@ body.modal-open {overflow: hidden;}
   margin-bottom: 10px;
 }
 
+.attributes-group:nth-of-type(3) .attr-grid, .attributes-group:nth-of-type(4) .attr-grid {
+  display: grid !important;
+  grid-auto-columns: max-content;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+}
+
 .attr-label {
   margin-bottom: 10px;
   text-align: center;
 }
 
 .attr-grid {
-  display: flex;
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-template-columns: repeat(3, max-content);
   justify-content: center;
-  flex-wrap: wrap;
+  justify-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 /* === ADVANCED FILTERS === */
@@ -728,7 +738,10 @@ body.modal-open {overflow: hidden;}
 }
 
 .advanced-sort-row {
-  display: flex;
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
   justify-content: center;
   gap: 10px;
   margin:20px;
@@ -760,6 +773,7 @@ body.modal-open {overflow: hidden;}
 /* Make collapsible blocks fill column width properly */
 .filter-col .factions-container,
 .filter-col .attributes-container,
+.filter-col .aura-container,
 .filter-col .advanced-container {
   width: 100%;
   margin: 0; /* remove double margins */
@@ -797,10 +811,146 @@ body.modal-open {overflow: hidden;}
 /* Make each box stretch inside its column */
 .factions-container,
 .attributes-container,
+.aura-container,
 .advanced-container {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+/* === 4-COLUMN FILTER LAYOUT === */
+.filter-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.filter-col {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* === AURA FILTER BLOCK === */
+.aura-container {
+  border: 2px solid #555;
+  border-radius: 12px;
+  background: #0f0f0f;
+  padding: 10px 0 16px 0;
+  margin: 20px 0;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.aura-title {
+  font-family: 'American Captain';
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 8px;
+  background: linear-gradient(to bottom,#feeec1,#e09f40);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.aura-section-label {
+  font-weight: 600;
+  margin-bottom: 10px;
+  opacity: .85;
+}
+
+.aura-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;   /* centre toutes les lignes */
+  gap: 10px;
+  margin-bottom:10px;
+}
+
+.aura-stat-btn {
+  background: none !important;
+  border:none;
+  padding: 0;
+  width: calc(25% - 10px); /* 4 par ligne */
+  display: flex;
+  justify-content: center;
+  transition:.2s;
+}
+
+.aura-filter-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1a1a1a;
+  border: 2px solid transparent;
+  position: relative;
+  width: 55px;
+  height: 55px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color .25s, box-shadow .25s, transform .15s;
+}
+
+.aura-filter-icon {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+/* BORDER centré exactement comme l'icône */
+.aura-filter-icon-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: url("/tools/champions-index/img/aura/BORDER.webp") center/contain no-repeat;
+  pointer-events: none;
+}
+
+.aura-stat-btn:hover .aura-filter-icon-wrapper {transform:scale(1.1); border:2px solid #d4af37;}
+
+.aura-stat-btn.active .aura-filter-icon-wrapper {
+  border-color: #d4af37;
+  background: rgba(212,175,55,.15);
+  box-shadow: 0 0 8px rgba(212,175,55,.5);
+}
+
+/* Aura Areas → 2 colonnes + boutons même largeur */
+.aura-areas-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+  align-items: safe center;
+}
+
+.aura-area-btn {
+  width: 80%;    
+  text-align: center;   
+  justify-self: center;
+  background: #1a1a1a;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .2s;
+  color:#fff;
+}
+
+.aura-area-btn:hover {transform:scale(1.1); border:2px solid #d4af37;}
+
+.aura-area-btn.active {
+  
+  border-color: #d4af37;
+  background: rgba(212,175,55,.15);
+  box-shadow: 0 0 6px rgba(212,175,55,.4);
 }
   </style>
 </head>
@@ -910,6 +1060,63 @@ body.modal-open {overflow: hidden;}
   </div>
 </div>
 </div>
+
+<!-- 🔹 NOUVELLE COLONNE : AURAS -->
+  <div class="filter-col">
+    <div class="aura-container">
+      <div class="aura-title">Auras</div>
+
+      <!-- Aura stats -->
+      <div class="aura-section-label">Stat</div>
+      <div class="aura-stats-grid">
+        <button class="aura-stat-btn" data-aurastat="HP">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/HP.webp" alt="HP Aura">
+          </div>
+        </button>
+        <button class="aura-stat-btn" data-aurastat="ATK">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/ATK.webp" alt="ATK Aura">
+          </div>
+        </button>
+        <button class="aura-stat-btn" data-aurastat="DEF">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/DEF.webp" alt="DEF Aura">
+          </div>
+        </button>
+        <button class="aura-stat-btn" data-aurastat="SPD">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/SPD.webp" alt="SPD Aura">
+          </div>
+        </button>
+        <button class="aura-stat-btn" data-aurastat="CRATE">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/CRATE.webp" alt="CRATE Aura">
+          </div>
+        </button>
+        <button class="aura-stat-btn" data-aurastat="RES">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/RES.webp" alt="RES Aura">
+          </div>
+        </button>
+        <button class="aura-stat-btn" data-aurastat="ACC">
+          <div class="aura-filter-icon-wrapper">
+            <img class="aura-filter-icon" src="/tools/champions-index/img/aura/ACC.webp" alt="ACC Aura">
+          </div>
+        </button>
+      </div>
+
+      <!-- Aura areas -->
+      <div class="aura-section-label">Area</div>
+      <div class="aura-areas-row">
+        <button class="aura-area-btn" data-aurazone="Arena">Arena</button>
+        <button class="aura-area-btn" data-aurazone="Dungeons">Dungeons</button>
+        <button class="aura-area-btn" data-aurazone="Faction Wars">Faction Wars</button>
+        <button class="aura-area-btn" data-aurazone="Doom Tower">Doom Tower</button>
+      </div>
+    </div>
+  </div>
+  <!-- 🔹 FIN NOUVELLE COLONNE -->
 
 <div class="filter-col">
   <!-- === ADVANCED FILTERS === -->
@@ -1125,6 +1332,8 @@ let filteredChampions = [];
 let championForms = {};
 let currentForms = null;
 let currentFormIndex = 0;
+let selectedAuraStats = [];
+let selectedAuraZones = [];
 
 // Effets sélectionnés par l’utilisateur
 let activeEffects = {
@@ -1149,6 +1358,8 @@ const affinityButtons = document.querySelectorAll('.affinity-btn');
 const typeButtons = document.querySelectorAll('.type-btn');
 const invocableCheckbox = document.getElementById('invocableOnly');
 const countDisplay = document.getElementById('championCount');
+const auraStatButtons = document.querySelectorAll(".aura-stat-btn");
+const auraAreaButtons = document.querySelectorAll(".aura-area-btn");
 
 let selectedFactions = [];
 let selectedRarities = [];
@@ -1343,15 +1554,6 @@ document.addEventListener("DOMContentLoaded", () => {
             displayChampions();
           });
         });
-
-        // === COLLAPSE : Factions ===
-        const factionsContainer = document.querySelector(".factions-container");
-        const factionsToggle    = document.getElementById("factionsToggle");
-
-        factionsToggle.addEventListener("click", () => {
-          factionsContainer.classList.toggle("open");
-          lucide.createIcons();
-        });
       })
       .catch(err => console.error("Erreur chargement champions.db :", err));
 
@@ -1391,6 +1593,45 @@ typeButtons.forEach(btn => {
     displayChampions();
   });
 });
+
+// === AURA STAT FILTERS ===
+auraStatButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // si déjà active → désactivation totale
+    if (btn.classList.contains("active")) {
+      auraStatButtons.forEach(b => b.classList.remove("active"));
+      selectedAuraStats = [];
+    } 
+    else {
+      // sinon on active seulement celle-là
+      auraStatButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedAuraStats = [btn.dataset.aurastat];
+    }
+
+    displayChampions();
+  });
+});
+
+// === AURA AREA FILTERS ===
+auraAreaButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    if (btn.classList.contains("active")) {
+      auraAreaButtons.forEach(b => b.classList.remove("active"));
+      selectedAuraZones = [];
+    }
+    else {
+      auraAreaButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedAuraZones = [btn.dataset.aurazone];
+    }
+
+    displayChampions();
+  });
+});
+
 
 document.getElementById("resetFilters").addEventListener("click", resetAllFilters);
 
@@ -1465,14 +1706,68 @@ function displayChampions() {
   const invocableOnly = invocableCheckbox.checked;
 
   filteredChampions = champions.filter(c => {
-    const matchesName = c.name.toLowerCase().includes(searchTerm);
-    const matchesFaction = selectedFactions.length === 0 || selectedFactions.includes(c.faction);
-    const matchesRarity = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
-    const matchesAffinity = selectedAffinities.length === 0 || selectedAffinities.includes(c.affinity);
-    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(c.type);
-    const matchesInvocable = !invocableOnly || c.invocable;
-    return matchesName && matchesFaction && matchesRarity && matchesAffinity && matchesType && matchesInvocable;
-  });
+  const matchesName      = c.name.toLowerCase().includes(searchTerm);
+  const matchesFaction   = selectedFactions.length === 0 || selectedFactions.includes(c.faction);
+  const matchesRarity    = selectedRarities.length === 0 || selectedRarities.includes(c.rarity);
+  const matchesAffinity  = selectedAffinities.length === 0 || selectedAffinities.includes(c.affinity);
+  const matchesType      = selectedTypes.length === 0 || selectedTypes.includes(c.type);
+  const matchesInvocable = !invocableOnly || c.invocable;
+
+  // === AURAS ===
+  let matchesAura = true;
+
+  // Si aucun filtre aura n’est actif → on ne touche à rien
+  if (selectedAuraStats.length || selectedAuraZones.length) {
+    const auraStat = (c.aurastat || "").toUpperCase();
+    const auraTextRaw = c.aura || "";
+    const auraText = auraTextRaw.toLowerCase();
+
+    // Si le champion n’a pas d’aura → il ne matche pas
+    if (!auraStat || !auraTextRaw) {
+      matchesAura = false;
+    } else {
+      // --- Stat ---
+      let matchesAuraStat = true;
+      if (selectedAuraStats.length) {
+        matchesAuraStat = selectedAuraStats.includes(auraStat);
+      }
+
+      // --- Zones ---
+      let matchesAuraZone = true;
+      if (selectedAuraZones.length) {
+        let zones = [];
+
+        if (auraText.includes("all battles")) {
+          zones = ["Arena","Dungeons","Faction Wars","Doom Tower"];
+        } else {
+          if (auraText.includes("arena"))         zones.push("Arena");
+          if (auraText.includes("dungeon"))       zones.push("Dungeons");
+          if (auraText.includes("faction wars"))  zones.push("Faction Wars");
+          if (auraText.includes("doom tower"))    zones.push("Doom Tower");
+        }
+
+        if (!zones.length) {
+          matchesAuraZone = false;
+        } else {
+          matchesAuraZone = selectedAuraZones.some(z => zones.includes(z));
+        }
+      }
+
+      matchesAura = matchesAuraStat && matchesAuraZone;
+    }
+  }
+
+  return (
+    matchesName &&
+    matchesFaction &&
+    matchesRarity &&
+    matchesAffinity &&
+    matchesType &&
+    matchesInvocable &&
+    matchesAura
+  );
+});
+
 
   // === FILTER BY EFFECTS ===
   const hasActiveEffects =
@@ -1612,6 +1907,13 @@ function resetAllFilters() {
   document.querySelectorAll(".rarity-btn").forEach(el => el.classList.remove("active"));
   document.querySelectorAll(".affinity-btn").forEach(el => el.classList.remove("active"));
   document.querySelectorAll(".type-btn").forEach(el => el.classList.remove("active"));
+
+    // Aura filters
+  selectedAuraStats = [];
+  selectedAuraZones = [];
+  document.querySelectorAll(".aura-stat-btn").forEach(btn => btn.classList.remove("active"));
+  document.querySelectorAll(".aura-area-btn").forEach(btn => btn.classList.remove("active"));
+
 
   // Invocable only
   invocableCheckbox.checked = false;
