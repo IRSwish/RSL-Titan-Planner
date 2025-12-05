@@ -650,8 +650,10 @@ body.modal-open {overflow: hidden;}
 
 .faction-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Adaptable, prend la place disponible */
-  justify-items: center;
+  display: grid !important;
+  grid-auto-columns: max-content;
+  grid-template-columns: repeat(4, max-content);
+  justify-content: center;
   gap: 8px;
   width: 100%;
 }
