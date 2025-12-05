@@ -1,5 +1,9 @@
 // heros-path-config.js
 window.fusions = {
+  "predators-path": {
+    name: "Predator's Path",
+    json: "/heros-path/2025/predators-path.json"
+  },
   "swordmasters-path": {
     name: "Swordmaster's Path",
     json: "/heros-path/2025/swordmasters-path.json"

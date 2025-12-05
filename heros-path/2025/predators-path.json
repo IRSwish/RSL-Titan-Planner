@@ -1,0 +1,415 @@
+[
+  {
+    "id": "t1-1",
+    "name": "Silver x50000",
+    "image": "silver",
+    "cost": 250,
+    "x":2
+  },
+  {
+    "id": "t1-2",
+    "name": "Mortal Soul Coin x250",
+    "image": "mortal-soul-coin",
+    "cost": 250,
+    "x":3
+  },
+  {
+    "id": "t2-1",
+    "name": "3* Chicken x1",
+    "image": "chicken-3",
+    "cost": 500,
+    "requires": [
+      "t1-1",
+      "t1-2"
+    ],
+    "x":1
+  },
+  {
+    "id": "t2-2",
+    "name": "Gems x25",
+    "image": "Gems",
+    "cost": 500,
+    "requires": [
+      "t1-1",
+      "t1-2"
+    ],
+    "x":2.5
+  },
+  {
+    "id": "t2-3",
+    "name": "Rank 1 Basalt x1",
+    "image": "rank-1-basalt",
+    "cost": 500,
+    "requires": [
+      "t1-1",
+      "t1-2"
+    ],
+    "x":4
+  },
+  {
+    "id": "t3-1",
+    "name": "Mortal Soulstone x1",
+    "image": "mortal-soulstone",
+    "cost": 500,
+    "requires": [
+      "t2-1",
+      "t2-2",
+      "t2-3"
+    ],
+    "x":0
+  },
+  {
+    "id": "t3-2",
+    "name": "Rank 2 Basalt x1",
+    "image": "rank-2-basalt",
+    "cost": 1500,
+    "requires": [
+      "t2-2",
+      "t2-1",
+      "t2-3"
+    ],
+    "x":1.5
+  },
+  {
+    "id": "t3-3",
+    "name": "Brews Chest x15",
+    "image": "xp-brew-chest",
+    "cost": 1500,
+    "requires": [
+      "t2-1",
+      "t2-2",
+      "t2-3"
+    ],
+    "x":3.5
+  },
+  {
+    "id": "t3-4",
+    "name": "Corehammer x10",
+    "image": "corehammer",
+    "cost": 1000,
+    "requires": [
+      "t2-1",
+      "t2-2",
+      "t2-3"
+    ],
+    "x":5
+  },
+  {
+    "id": "t4-1",
+    "name": "Greater Oil x120",
+    "image": "oil-greater",
+    "cost": 3000,
+    "requires": [
+      "t3-1"
+    ],
+    "x":0
+  },
+  {
+    "id": "t4-2",
+    "name": "Mythical Charm x10",
+    "image": "rarity-charm",
+    "cost": 2500,
+    "requires": [
+      "t3-2"
+    ],
+    "x":1.5
+  },
+  {
+    "id": "t4-3",
+    "name": "4* Chicken x1",
+    "image": "chicken-4",
+    "cost": 2500,
+    "requires": [
+      "t3-3"
+    ],
+    "x":3.5
+  },
+  {
+    "id": "t4-4",
+    "name": "Greater Extract x120",
+    "image": "extract-greater",
+    "cost": 3000,
+    "requires": [
+      "t3-4"
+    ],
+    "x":5
+  },
+  {
+    "id": "t5-1",
+    "name": "Epic Chaos Ore x1",
+    "image": "epic-chaos-ore",
+    "cost": 4000,
+    "requires": [
+      "t4-1"
+    ],
+    "x":0
+  },
+  {
+    "id": "t5-2",
+    "name": "Precision Glyph x1",
+    "image": "glyph-precision",
+    "cost": 4000,
+    "requires": [
+      "t4-2"
+    ],
+    "x":1.5
+  },
+  {
+    "id": "t5-3",
+    "name": "Resistance Glyph x1",
+    "image": "glyph-resistance",
+    "cost": 4000,
+    "requires": [
+      "t4-3"
+    ],
+    "x":3.5
+  },
+  {
+    "id": "t5-4",
+    "name": "Epic Skill Tome x1",
+    "image": "skill-tome-epic",
+    "cost": 4000,
+    "requires": [
+      "t4-4"
+    ],
+    "x":5
+  },
+  {
+    "id": "t6-1",
+    "name": "5* Chicken x1",
+    "image": "chicken-5",
+    "cost": 9000,
+    "requires": [
+      "t5-1"
+    ],
+    "x":0
+  },
+  {
+    "id": "t6-2",
+    "name": "XP Barrel x1",
+    "image": "xp-barrel",
+    "cost": 9000,
+    "requires": [
+      "t5-2"
+    ],
+    "x":1.5
+  },
+  {
+    "id": "t6-3",
+    "name": "Immortal Soul Essence x25",
+    "image": "immortal-soul-essence",
+    "cost": 9000,
+    "requires": [
+      "t5-3"
+    ],
+    "x":3.5
+  },
+  {
+    "id": "t6-4",
+    "name": "Eternal Soul Essence x6",
+    "image": "eternal-soul-essence",
+    "cost": 9000,
+    "requires": [
+      "t5-4"
+    ],
+    "x":5
+  },
+  {
+    "id": "t7-1",
+    "name": "Key x1",
+    "image": "path-key",
+    "cost": 1000,
+    "requires": [
+      "t6-1"
+    ],
+    "x":0
+  },
+  {
+    "id": "t7-2",
+    "name": "Key x1",
+    "image": "path-key",
+    "cost": 1000,
+    "requires": [
+      "t6-2"
+    ],
+    "x":1.5
+  },
+  {
+    "id": "t7-3",
+    "name": "Key x1",
+    "image": "path-key",
+    "cost": 1000,
+    "requires": [
+      "t6-3"
+    ],
+    "x":3.5
+  },
+  {
+    "id": "t7-4",
+    "name": "Key x1",
+    "image": "path-key",
+    "cost": 1000,
+    "requires": [
+      "t6-4"
+    ],
+    "x":5
+  },
+  {
+    "id": "t8-1",
+    "name": "Speed Glyph x1",
+    "image": "glyph-speed",
+    "cost": 6000,
+    "requires": [
+      "t7-1",
+      "t7-2",
+      "t7-3",
+      "t7-4"
+    ],
+    "x":0
+  },
+  {
+    "id": "t8-2",
+    "name": "Lock x1",
+    "image": "lock",
+    "cost": 1,
+    "requires": [
+      "t7-1",
+      "t7-2",
+      "t7-3",
+      "t7-4"
+    ],
+    "x":1
+  },
+  {
+    "id": "t8-3",
+    "name": "Chaos Dust x5",
+    "image": "chaos-dust",
+    "cost": 6000,
+    "requires": [
+      "t7-1",
+      "t7-2",
+      "t7-3",
+      "t7-4"
+    ],
+    "x":2
+  },
+  {
+    "id": "t8-4",
+    "name": "Chaos Powder x5",
+    "image": "chaos-powder",
+    "cost": 6000,
+    "requires": [
+      "t7-1",
+      "t7-2",
+      "t7-3",
+      "t7-4"
+    ],
+    "x":3
+  },
+  {
+    "id": "t8-5",
+    "name": "Lock x1",
+    "image": "lock",
+    "cost": 1,
+    "requires": [
+      "t7-1",
+      "t7-2",
+      "t7-3",
+      "t7-4"
+    ],
+    "x":4
+  },
+  {
+    "id": "t8-6",
+    "name": "Starstone x250",
+    "image": "starstone",
+    "cost": 6000,
+    "requires": [
+      "t7-1",
+      "t7-2",
+      "t7-3",
+      "t7-4"
+    ],
+    "x":5
+  },
+  {
+    "id": "t9-1",
+    "name": "Legendary Skill Tome x1",
+    "image": "skill-tome-legendary",
+    "cost": 10000,
+    "requires": [
+      "t8-2"
+    ],
+    "x":1
+  },
+  {
+    "id": "t9-2",
+    "name": "Rank 4 Basalt x5",
+    "image": "rank-4-basalt",
+    "cost": 6000,
+    "requires": [
+      "t8-5"
+    ],
+    "x":4
+  },
+  {
+    "id": "t10-1",
+    "name": "Lock x1",
+    "image": "lock",
+    "cost": 1,
+    "requires": [
+      "t9-1"
+    ],
+    "x":1
+  },
+  {
+    "id": "t10-2",
+    "name": "Lock x1",
+    "image": "lock",
+    "cost": 1,
+    "requires": [
+      "t9-2"
+    ],
+    "x":4
+  },
+  {
+    "id": "t11-1",
+    "name": "Predator 4* Perfect Soul x1",
+    "image": "predator-4",
+    "cost": 15000,
+    "requires": [
+      "t10-1"
+    ],
+    "x":1
+  },
+  {
+    "id": "t11-2",
+    "name": "Mythical Skill Tome x1",
+    "image": "skill-tome-mythical",
+    "cost": 20000,
+    "requires": [
+      "t10-2"
+    ],
+    "x":4
+  },
+  {
+    "id": "t12-1",
+    "name": "Predator 5* Split Soul x1",
+    "image": "Predator-5",
+    "cost": 35000,
+    "requires": [
+      "t11-1"
+    ],
+    "x":1
+  },
+  {
+    "id": "t12-2",
+    "name": "Immortal Essence x1",
+    "image": "immortal-soul-essence",
+    "cost": 30000,
+    "requires": [
+      "t11-2"
+    ],
+    "x":4
+  }
+]
