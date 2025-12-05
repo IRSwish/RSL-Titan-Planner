@@ -10,7 +10,7 @@
 
     gtag('config', 'G-HNK5S7EBCJ');
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/sql-wasm.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <meta charset="UTF-8">
@@ -1159,7 +1159,7 @@ let currentSort = { stat: null, order: "asc" };
 document.addEventListener("DOMContentLoaded", () => {
 
   initSqlJs({
-    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+    locateFile: file => `https://cdn.jsdelivr.net/npm/sql.js@1.8.0/dist/${file}`
   }).then(SQL => {
     
     fetch("/tools/champions-index/champions.db") // 🔥 Ajuste le chemin selon ton site !
