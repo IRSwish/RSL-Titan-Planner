@@ -318,15 +318,6 @@ function updateVisualForInput(inputEl, champImgEl, rarityImgEl) {
     champImgEl.style.display = "block";
 }
 
-function getUsedChampionsInRow(teamRow) {
-    const values = [];
-    teamRow.querySelectorAll(".champ-input").forEach(input => {
-        const v = input.value.trim();
-        if (v !== "") values.push(v.toLowerCase());
-    });
-    return values;
-}
-
 
 function createTeamRow(teamData = {}, index = 0) {
     const teamsContainer = document.getElementById("teamsContainer");
@@ -454,34 +445,13 @@ function createTeamRow(teamData = {}, index = 0) {
 
                 // Vérification : interdit si déjà utilisé ailleurs dans la team
                 div.addEventListener("click", () => {
-                    const teamRow = cInput.closest(".team-row");
-                    const used = getUsedChampionsInRow(teamRow);
-
-                    if (used.includes(ch.name.toLowerCase()) && cInput.value.trim().toLowerCase() !== ch.name.toLowerCase()) {
-                        // affiche warning visuel
-                        cInput.classList.add("input-error");
-                        setTimeout(() => cInput.classList.remove("input-error"), 800);
-                        return;
-                    }
-
+                    const results = searchChampions(q);
                     cInput.value = ch.name;
                     sugList.innerHTML = "";
                     updateVisualForInput(cInput, champImg, rarityImg);
                 });
                 cInput.addEventListener("blur", () => {
                     const teamRow = cInput.closest(".team-row");
-                    const used = getUsedChampionsInRow(teamRow);
-                    const val = cInput.value.trim().toLowerCase();
-
-                    // Si doublon → reset champ
-                    const duplicates = used.filter(v => v === val).length;
-                    if (duplicates > 1) {
-                        cInput.value = "";
-                        updateVisualForInput(cInput, champImg, rarityImg);
-                        cInput.classList.add("input-error");
-                        setTimeout(() => cInput.classList.remove("input-error"), 800);
-                    }
-
                     setTimeout(() => { sugList.innerHTML = ""; }, 200);
                 });
                 sugList.appendChild(div);
