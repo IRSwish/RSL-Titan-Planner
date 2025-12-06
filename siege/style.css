@@ -10,8 +10,7 @@ body {
     justify-content: space-between;
     padding: 14px 22px;
     background: #121212;
-    border-bottom: 1px solid #00c9ff88;
-    box-shadow: 0 0 16px rgba(0, 201, 255, 0.4);
+    border-bottom: 2px solid #d4af37;
 }
 
 .logo-title {
@@ -27,18 +26,18 @@ body {
     background: radial-gradient(circle at 30% 20%, #f52584, #00c9ff);
 }
 
-.title-text h1 {
+.title-text {
     margin: 0;
     font-size: 22px;
-    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-family: 'American Captain', system-ui, sans-serif;
-    color: #f5e6c8;
+    color: #ffd000;
 }
 
 .subtitle {
     margin: 0;
     font-size: 12px;
+    letter-spacing: 1px;
     color: #b0b0b0;
 }
 
@@ -57,44 +56,51 @@ body {
 .room-row input {
     min-width: 220px;
     padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(252, 246, 255, 0.3);
+    border-radius: 8px;
+    border: 2px solid rgba(252, 246, 255, 0.3);
     background: rgba(5,5,5,0.9);
     color: #fcf6ff;
 }
 
 .room-row button {
-    border-radius: 999px;
+    border-radius: 8px;
     padding: 6px 12px;
     border: none;
     cursor: pointer;
     font-size: 13px;
     font-weight: 600;
+    background: #1a1a1a;
+    color: #fff;
+    transition:0.2s;
+    border:2px solid transparent;
 }
 
-#joinRoomBtn {
-    background: linear-gradient(135deg, #00c9ff, #4ce1ff);
-    color: #050505;
-}
-
-#createRoomBtn {
-    background: linear-gradient(135deg, #f52584, #ff7abf);
-    color: #050505;
+.room-row button:hover {
+    border:2px solid #d4af37;
 }
 
 .ghost-btn {
-    background: transparent;
-    border: 1px solid rgba(252, 246, 255, 0.4);
+    background: #0f0f0f;
+    border: 2px solid transparent;
     color: #fcf6ff;
-    border-radius: 999px;
-    padding: 4px 10px;
+    border-radius: 8px;
+    padding: 8px 10px;
     cursor: pointer;
     font-size: 12px;
+    transition:0.2s;
 }
 
-.ghost-btn.small {
-    padding: 2px 8px;
-    font-size: 11px;
+#addTeamBtn {
+    margin:20px auto;
+}
+
+.ghost-btn:hover {
+    
+    border:2px solid #d4af37;
+}
+
+#closeModal {
+    margin-left: auto;
 }
 
 .room-info {
@@ -114,9 +120,6 @@ body {
     border-radius: 16px;
     border: 2px solid rgba(212, 175, 55, 0.9);
     overflow: hidden;
-    box-shadow:
-        0 0 20px rgba(245, 37, 132, 0.5),
-        0 0 24px rgba(0, 201, 255, 0.4);
 }
 
 .map-img {
@@ -126,6 +129,7 @@ body {
 
 .post-point {
     position: absolute;
+    transition: .2s;
 }
 
 #post1 { left: 22.3%; top: 62.5%; }
@@ -171,7 +175,10 @@ body {
     transform: translate(-50%, -100%);
     z-index: 1;
     cursor: pointer;
+    
 }
+
+.post-point:hover { transform: scale(1.1); filter:brightness(1.2) contrast(1.3); color:#ffe600;z-index:49;}
 
 .post-border {
     position: absolute;
@@ -193,8 +200,10 @@ body {
     white-space: nowrap;
     font-size: 14px;
     font-weight: 600;
-    text-shadow: 3px 3px 3px #000;
-    color: #fcf6ff;
+    text-shadow:
+        2px 2px 3px rgb(0, 0, 0),
+        0 0 1em rgb(255, 102, 0),
+        2px 2px 0.4em rgb(255, 208, 0);
     z-index: 3;
 }
 
@@ -221,11 +230,9 @@ body {
     background: #141414;
     border-radius: 16px;
     padding: 16px 18px 18px;
-    border: 1px solid rgba(0, 201, 255, 0.7);
-    box-shadow:
-        0 0 26px rgba(0, 201, 255, 0.6),
-        0 0 24px rgba(245, 37, 132, 0.5);
-    width: 980px;
+    border: 2px solid #d4af37;
+    box-shadow:0 0 20px #d4af3770;
+    width: 870px;
     max-width: 98vw;
 }
 
@@ -237,11 +244,13 @@ body {
 }
 
 .modal-header h2 {
-    margin: 0;
     font-size: 18px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #f5e6c8;
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .field-group {
@@ -282,12 +291,6 @@ body {
     align-self: flex-start;
 }
 
-.team-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-}
-
 .member-slot {
     width: 140px;
     display: flex;
@@ -317,6 +320,7 @@ body {
 .modal-right-row {
     display: flex;
     gap: 24px;
+    
 }
 
 .champ-slot {
@@ -396,16 +400,24 @@ body {
 
 .save-btn {
     margin-top: 14px;
-    width: 100%;
+    width: 20%;
+    justify-self: center;
     padding: 8px 10px;
-    border-radius: 999px;
-    border: none;
-    background: linear-gradient(135deg, #f52584, #ff8cc8);
-    color: #050505;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: #0f0f0f;
+    color: #fff;
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     cursor: pointer;
+    transition:0.2s;
+    display: block; 
+    margin:0 auto;
+}
+
+.save-btn:hover {
+    border:2px solid #d4af37;
 }
 
 .status {
@@ -424,4 +436,525 @@ body {
     .modal-right-row {
         flex-wrap: wrap;
     }
+}
+
+.summary-section {
+    margin-top: 40px;
+    padding: 20px;
+    background: #0e0e0e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Titre centré */
+.summary-title {
+    margin-top: 0;
+    text-align: center;
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #ffbf3b;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.summary-sort {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* Tableau centré et moins large */
+#summaryTable {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+#summaryTable th,
+#summaryTable td {
+    text-align: left;       /* NEW */
+    padding: 8px 10px;
+    border-bottom: 1px solid #333;
+}
+
+#summaryTable th {
+    color: #ffca3c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+#summaryTable tbody tr {
+    cursor: pointer;
+}
+
+#summaryTable tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.summary-sort {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.summary-sort button {
+    padding: 6px 12px;
+    background: #222;
+    border: 1px solid #555;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.summary-sort button:hover {
+    background: #333;
+}
+
+.members-section {
+    margin-top: 40px;
+    padding: 20px;
+    background: #0e0e0e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom:40px;
+}
+
+.members-section h2 {
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffbf3b;
+    margin-bottom: 15px;
+}
+
+.members-list {
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    min-height: 40px;
+    margin-bottom: 12px;
+
+    display: flex;     
+    flex-wrap: wrap;       
+    gap: 10px;             
+    align-items: center; 
+}
+
+
+.member-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #222;
+    padding: 6px 10px;
+    border-radius: 999px;
+    width: fit-content;
+}
+
+.add-member {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+#newMemberInput {
+    padding: 6px 10px;
+    width: 200px;
+}
+
+#addMemberBtn {
+    padding: 6px 12px;
+}
+
+.add-member {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.add-member input {
+    padding: 6px 10px;
+    width: 200px;
+}
+
+.member-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #222;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    width: fit-content;
+}
+
+.member-pseudo {
+    font-weight: 600;
+    color: #fff;
+}
+
+.member-delete {
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+.member-delete:hover {
+    color: #ff5555;
+}
+
+.team-row .ghost-btn.small {
+    margin-left: auto;
+}
+
+.member-slot {
+    width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.member-slot select {
+    width: 140px;
+    background: #050505;
+    border: 1px solid #444;
+    color: white;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.team-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: 12px;
+}
+
+/* le bouton icône à droite des champions */
+.clear-team-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: #0f0f0f;
+    color: #ff6b81;
+    cursor: pointer;
+}
+
+.clear-team-btn:hover {
+    background: #2a1518;
+    border-color: #ff6b81;
+}
+
+.clear-team-btn svg {
+    display: block;
+}
+
+.delete-team-btn {
+    padding:7.5px 12px;
+}
+
+.team-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.delete-member-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #444;
+    background: #1a1a1a;
+    color: #ff6b81;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.delete-member-btn:hover {
+    background: #2a1518;
+    border-color: #ff6b81;
+}
+
+.add-member {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 10px;
+}
+
+.add-member input {
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #050505;
+    border: 1px solid #444;
+    color: #fcf6ff;
+    font-size: 14px;
+    width: 220px;
+    transition: 0.2s;
+}
+
+.add-member input:focus {
+    outline: none;
+    border-color: #d4af37;
+}
+
+#addMemberBtn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background:#1a1a1a;
+    color:#fff;
+    transition: 0.2s;
+}
+
+#addMemberBtn:hover {
+    border-color: #d4af37;
+}
+
+.conditions-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.condition-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border: 2px solid #333;
+    border-radius: 6px;
+    padding: 4px;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.condition-icon:hover {
+    transform: scale(1.1);
+    border-color: #d4af37;
+}
+
+.condition-icon.selected {
+    border-color: #d4af37;
+    box-shadow: 0 0 8px #d4af37;
+}
+
+.conditions-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.condition-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.condition-current-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 2px solid #444;
+    background: #111;
+    padding: 4px;
+    transition: 0.15s transform, 0.15s border-color;
+}
+
+.condition-toggle:hover .condition-current-icon {
+    transform: scale(1.05);
+    border-color: #d4af37;
+    transition:0.2s;
+    
+}
+
+.condition-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.condition-row-icons {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+}
+
+.condition-row {
+    display: flex;
+    flex-wrap: wrap;  /* 🔥 permet retour à la ligne propre */
+    gap: 6px 10px;
+    align-items: center;
+}
+
+.condition-row-icons {
+    display: flex;
+    flex-wrap: wrap; /* 🔥 toutes les icônes visibles, retour ligne automatique */
+    gap: 8px;
+}
+
+/* Panel fermé : rien n'est affiché */
+.conditions-panel {
+    display: none;
+    padding: 8px 4px;
+    border-radius: 8px;
+
+    /* pas de scroll */
+    max-height: none;
+    overflow: visible;
+
+    /* layout vertical flexible */
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Panel ouvert : bloc complet */
+.conditions-panel.open {
+    display: flex;
+}
+
+/* Une ligne par type */
+.condition-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Icônes de conditions */
+.condition-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 2px solid #333;
+    padding: 3px;
+    cursor: pointer;
+    transition: 0.15s transform, 0.15s border-color, 0.15s box-shadow;
+}
+
+.condition-icon:hover {
+    transform: scale(1.08);
+    border-color: #d4af37;
+}
+
+.condition-icon.selected {
+    border-color: #d4af37;
+    box-shadow: 0 0 8px #d4af37;
+}
+
+/* L’icône affichée quand collapsed */
+.condition-current-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    padding: 4px;
+    background: #111;
+}
+
+.condition-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.condition-toggle {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.conditions-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* <-- centre horizontalement */
+    justify-content: center;
+    gap: 8px;
+    width: 100%;           /* <-- important */
+}
+
+/* Empêche le bouton des conditions de prendre toute la largeur */
+.condition-toggle {
+    display: inline-flex; /* ou inline-block */
+    align-items: center;
+    justify-content: center;
+    width: auto;       /* important */
+    height: auto;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal {
+    max-height: 90vh;            /* limite la hauteur */
+    overflow-y: auto;            /* autorise le scroll interne */
+}
+
+/* évite que les boutons du bas collent au bord */
+.modal-content {
+    padding-bottom: 30px;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Sur tout élément scrollable du modal : .modal, .teams-wrapper, etc */
+.modal, 
+.teams-wrapper, 
+.modal-content {
+    scrollbar-width: thin;               /* Firefox */
+    scrollbar-color: #d4af37 #111;       /* Firefox */
+}
+
+/* Chrome / Edge / Safari */
+.modal::-webkit-scrollbar,
+.teams-wrapper::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal::-webkit-scrollbar-track,
+.teams-wrapper::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+    background: #111;
+}
+
+.modal::-webkit-scrollbar-thumb,
+.teams-wrapper::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 4px;
+}
+
+.input-error {
+    border: 2px solid #d4af37 !important;
+    background: rgba(245, 197, 37, 0.15);
 }

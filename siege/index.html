@@ -10,7 +10,7 @@
     <div class="logo-title">
         <div class="app-logo-circle"></div>
         <div class="title-text">
-            <h1>Siege Planner</h1>
+            Siege Planner
             <p class="subtitle">PoC temps réel – Raid Shadow Legends</p>
         </div>
     </div>
@@ -118,7 +118,7 @@
                 <img class="post-border" src="/siege/img/posts/border_post.webp">
                 <div class="post-label">Post 17</div>
             </div>
-            <div class="post-point18" id="post" data-post-id="post18" data-type="post" title="Post 18">
+            <div class="post-point" id="post18" data-post-id="post18" data-type="post" title="Post 18">
                 <img class="post-icon">
                 <img class="post-border" src="/siege/img/posts/border_post.webp">
                 <div class="post-label">Post 18</div>
@@ -193,6 +193,41 @@
     </section>
 </main>
 
+<section id="summarySection" class="summary-section">
+    <h2 class="summary-title">TEAMS</h2>
+
+    <div class="summary-sort">
+        <button id="sortByMember">Sort by Member</button>
+        <button id="sortByPost">Sort by Post</button>
+    </div>
+
+    <table id="summaryTable">
+        <thead>
+            <tr>
+                <th>Post</th>
+                <th>Member</th>
+                <th>Champion 1</th>
+                <th>Champion 2</th>
+                <th>Champion 3</th>
+                <th>Champion 4</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</section>
+
+<section id="membersSection" class="members-section">
+    <h2>Clan Members</h2>
+
+    <div class="members-list" id="membersList"></div>
+
+    <div class="add-member">
+        <input id="newMemberPseudo" placeholder="Pseudo">
+        <input id="newMemberLink" placeholder="HellHades Optimizer Link (optional)">
+        <button id="addMemberBtn">Add</button>
+    </div>
+</section>
+
 <!-- Modal de composition -->
 <div id="modalOverlay" class="modal-overlay">
     <div class="modal">
@@ -203,26 +238,25 @@
 
         <!-- Conditions (une seule fois, en haut) -->
         <div class="field-group conditions-group">
-            <label>CONDITIONS</label>
-            <select id="condition">
-                <option value="">Aucune</option>
-                <option>No Duplicate</option>
-                <option>Buff Cleanser</option>
-                <option>Anti-Heal</option>
-                <option>Anti-Résurrection</option>
-                <option>Contrôle fort</option>
-            </select>
+        <button id="conditionToggle" type="button" class="condition-toggle" title="Choisir une condition">
+            <img id="conditionCurrentIcon" class="condition-current-icon" src="/siege/img/Condition.webp" alt="Condition" />
+        </button>
+
+        <div id="conditionsPanel" class="conditions-panel"></div>
+
+        <!-- valeur vraiment stockée (id de la condition) -->
+        <input type="hidden" id="condition" value="" />
         </div>
 
         <div class="modal-content">
             <!-- Lignes d'équipes dynamiques -->
             <div class="teams-wrapper">
                 <div id="teamsContainer"></div>
-                <button id="addTeamBtn" class="ghost-btn add-team-btn">+ Add a Team</button>
+                <button id="addTeamBtn" class="ghost-btn add-team-btn">+ ADD TEAM</button>
             </div>
         </div>
 
-        <button id="saveBtn" class="save-btn">💾 Save Teams</button>
+        <button id="saveBtn" class="save-btn">💾 SAVE TEAMS</button>
         <p id="statusMsg" class="status"></p>
     </div>
 </div>
