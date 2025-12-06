@@ -74,13 +74,44 @@ function getChampionByNameExact(name) {
 // --- Siege planner state ---
 let currentRoomId = null;
 let currentPostId = null;
-const postIds = ["post1", "post2"];
+const postIds = [
+    "post1", 
+    "post2", 
+    "post3", 
+    "post4", 
+    "post5", 
+    "post6", 
+    "post7", 
+    "post8", 
+    "post9", 
+    "post10", 
+    "post11", 
+    "post12", 
+    "post13", 
+    "post14", 
+    "post15", 
+    "post16", 
+    "post17", 
+    "post18",
+    "manashrine1",
+    "manashrine2",
+    "magictower1",
+    "magictower2",
+    "magictower3",
+    "magictower4",
+    "defensetower1",
+    "defensetower2",
+    "defensetower3",
+    "defensetower4",
+    "defensetower5",
+    "stronghold",
+];
 const postDataCache = {}; // postId -> data
 
 function updateRoomLabel(roomId) {
     const el = document.getElementById("currentRoomLabel");
     if (!el) return;
-    el.textContent = roomId ? "Salle actuelle : " + roomId : "Aucune salle";
+    el.textContent = roomId ? "Room : " + roomId : "No Room";
 }
 
 function setStatus(msg, isError = false) {
@@ -97,7 +128,7 @@ function randomRoomId() {
 function connectRoom(roomId) {
     currentRoomId = roomId;
     updateRoomLabel(roomId);
-    setStatus("Connecté à la salle " + roomId);
+    setStatus("Connected to room " + roomId);
 
     postIds.forEach(id => {
         const r = ref(db, "siege/" + roomId + "/" + id);
@@ -154,7 +185,7 @@ function createTeamRow(teamData = {}, index = 0) {
     const memberSlot = document.createElement("div");
     memberSlot.className = "member-slot";
     const mLabel = document.createElement("label");
-    mLabel.textContent = "Membre";
+    mLabel.textContent = "Member";
     const mInput = document.createElement("input");
     mInput.className = "member-input";
     mInput.value = teamData.member || "";
@@ -238,7 +269,7 @@ function createTeamRow(teamData = {}, index = 0) {
     teamRow.appendChild(rightRow);
     if (index > 0) {
         const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "🗑 Supprimer";
+        deleteBtn.textContent = "🗑 Delete";
         deleteBtn.className = "ghost-btn small delete-team-btn";
 
         deleteBtn.addEventListener("click", () => {
@@ -271,12 +302,8 @@ function getTeamsFromModal() {
 }
 
 function fillModalFromData(data) {
-    const cond1 = document.getElementById("cond1");
-    const cond2 = document.getElementById("cond2");
-    const cond3 = document.getElementById("cond3");
-    cond1.value = data.cond1 || "";
-    cond2.value = data.cond2 || "";
-    cond3.value = data.cond3 || "";
+    const conditionEl = document.getElementById("condition");
+    conditionEl.value = data.condition || "";
 
     const teamsContainer = document.getElementById("teamsContainer");
     teamsContainer.innerHTML = "";
@@ -288,7 +315,7 @@ function fillModalFromData(data) {
 function openModal(postId) {
     currentPostId = postId;
     document.getElementById("modalOverlay").style.display = "flex";
-    document.getElementById("modalTitle").textContent = "Poste " + postId.replace("post", "#");
+    document.getElementById("modalTitle").textContent = postId.replace("post", "Post ").replace("magictower", "Magic Tower ").replace("defensetower", "Defense Tower ").replace("manashrine", "Mana Shrine ");
     const data = postDataCache[postId] || {};
     fillModalFromData(data);
     setStatus("");
@@ -300,41 +327,48 @@ function closeModal() {
 
 function saveCurrentPost() {
     if (!currentRoomId) {
-        setStatus("Rejoins ou crée une salle d'abord.", true);
-        alert("Rejoins ou crée une salle d'abord.");
+        setStatus("Join or create a room first.", true);
+        alert("Join or create a room first.");
         return;
     }
     if (!currentPostId) {
-        setStatus("Choisis un poste sur la map.", true);
-        alert("Choisis un poste sur la map.");
+        setStatus("Choose a post on the map.", true);
+        alert("Choose a post on the map.");
         return;
     }
 
-    const cond1 = document.getElementById("cond1").value;
-    const cond2 = document.getElementById("cond2").value;
-    const cond3 = document.getElementById("cond3").value;
-    const teams = getTeamsFromModal();
+    const condition = document.getElementById("condition").value;
 
     const data = {
-        cond1,
-        cond2,
-        cond3,
+        condition,
         teams
     };
 
     const r = ref(db, "siege/" + currentRoomId + "/" + currentPostId);
     set(r, data)
         .then(() => {
-            setStatus("Teams sauvegardées ✔");
+            setStatus("Teams saved ✔");
         })
         .catch(err => {
             console.error(err);
-            setStatus("Erreur de sauvegarde : " + err.message, true);
+            setStatus("Save Error : " + err.message, true);
         });
 }
 
 // --- init ---
 window.addEventListener("DOMContentLoaded", () => {
+
+    // Remplace automatiquement les points roses par les icônes correspondantes
+    document.querySelectorAll(".post-point").forEach(pp => {
+        const type = pp.dataset.type;
+        if (!type) return;
+
+        const iconEl = pp.querySelector(".post-icon");
+        if (iconEl) {
+            iconEl.src = `/siege/img/posts/${type}.webp`;
+        }
+    });
+
     const joinBtn = document.getElementById("joinRoomBtn");
     const createBtn = document.getElementById("createRoomBtn");
     const copyBtn = document.getElementById("copyLinkBtn");
@@ -348,7 +382,7 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!el) return;
         el.addEventListener("click", () => {
             if (!currentRoomId) {
-                alert("Rejoins ou crée une salle d'abord.");
+                alert("Join or create a room first.");
                 return;
             }
             openModal(id);
@@ -358,7 +392,7 @@ window.addEventListener("DOMContentLoaded", () => {
     joinBtn.addEventListener("click", () => {
         const room = roomInput.value.trim();
         if (!room) {
-            alert("Entre un code de salle.");
+            alert("Enter a room code.");
             return;
         }
         connectRoom(room);
@@ -372,14 +406,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     copyBtn.addEventListener("click", () => {
         if (!currentRoomId) {
-            alert("Aucune salle active.");
+            alert("No active room.");
             return;
         }
         const url = new URL(window.location.href);
         url.searchParams.set("room", currentRoomId);
         navigator.clipboard.writeText(url.toString())
-            .then(() => setStatus("Lien copié ✔"))
-            .catch(() => setStatus("Impossible de copier le lien.", true));
+            .then(() => setStatus("Link copied ✔"))
+            .catch(() => setStatus("Impossible to copy link.", true));
     });
 
     saveBtn.addEventListener("click", () => {

@@ -126,20 +126,77 @@ body {
 
 .post-point {
     position: absolute;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 20%, #fdf2ff, #f52584);
-    border: 2px solid #fcf6ff;
-    box-shadow:
-        0 0 10px rgba(245, 37, 132, 0.9),
-        0 0 16px rgba(0, 201, 255, 0.8);
-    transform: translate(-50%, -50%);
+}
+
+#post1 { left: 22.3%; top: 62.5%; }
+#post2 { left: 29.7%; top: 81.2%; }
+#post3 { left: 53.3%; top: 69%; }
+#post4 { left: 68.8%; top: 54.8%; }
+#post5 { left: 81.6%; top: 50.5%; }
+#post6 { left: 72.2%; top: 43.5%; }
+#post7 { left: 49.3%; top: 54.8%; }
+#post8 { left: 37.9%; top: 61.6%; }
+#post9 { left: 25.7%; top: 51.1%; }
+#post10 { left: 34.4%; top: 50.9%; }
+#post11 { left: 44.8%; top: 49.5%; }
+#post12 { left: 58.4%; top: 48.5%; }
+#post13 { left: 69.2%; top: 28.5%; }
+#post14 { left: 48.6%; top: 39.1%; }
+#post15 { left: 40.4%; top: 40.8%; }
+#post16 { left: 20.8%; top: 24.6%; }
+#post17 { left: 57.2%; top: 21%; }
+#post18 { left: 64.2%; top: 17.7%; }
+
+#manashrine1 { left: 76.9%; top: 19.5%; }
+#manashrine2 { left: 26.9%; top: 13.5%; }
+#magictower1 { left: 65.4%; top: 32.1%; }
+#magictower2 { left: 27.6%; top: 27.5%; }
+#magictower3 { left: 33.6%; top: 22.3%; }
+#magictower4 { left: 48.6%; top: 19.3%; }
+#defensetower1 { left: 79.5%; top: 28.3%; }
+#defensetower2 { left: 14.7%; top: 35.1%; }
+#defensetower3 { left: 52.3%; top: 25.7%; }
+#defensetower4 { left: 54.4%; top: 12.7%; }
+#defensetower5 { left: 37.7%; top: 16.3%; }
+
+#stronghold { left: 46.3%; top: 12.7%; }
+
+.post-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 41px;
+    height: 60px;
+    object-fit: contain;
+    transform: translate(-50%, -100%);
+    z-index: 1;
     cursor: pointer;
 }
 
-#post1 { left: 30%; top: 40%; }
-#post2 { left: 60%; top: 55%; }
+.post-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 41px;
+    height: 60px;
+    z-index: 2;
+    object-fit: contain;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+}
+
+.post-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translate(-50%, -375%);
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    text-shadow: 3px 3px 3px #000;
+    color: #fcf6ff;
+    z-index: 3;
+}
 
 .hint-text {
     margin-top: 8px;
