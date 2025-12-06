@@ -431,29 +431,18 @@ function createTeamRow(teamData = {}, index = 0) {
             sugList.innerHTML = "";
             if (!q || !championsDB) return;
 
-            const teamRow = cInput.closest(".team-row");
-            const used = getUsedChampionsInRow(teamRow);
+            const results = searchChampions(q);
 
-            // On filtre : on enlève les champions déjà utilisés dans cette team
-            const results = searchChampions(q).filter(ch =>
-                !used.includes(ch.name.toLowerCase()) ||
-                ch.name.toLowerCase() === cInput.value.trim().toLowerCase() // garder le champion déjà dans ce slot
-            );
             results.forEach(ch => {
                 const div = document.createElement("div");
                 div.textContent = ch.name;
 
-                // Vérification : interdit si déjà utilisé ailleurs dans la team
                 div.addEventListener("click", () => {
-                    const results = searchChampions(q);
                     cInput.value = ch.name;
                     sugList.innerHTML = "";
                     updateVisualForInput(cInput, champImg, rarityImg);
                 });
-                cInput.addEventListener("blur", () => {
-                    const teamRow = cInput.closest(".team-row");
-                    setTimeout(() => { sugList.innerHTML = ""; }, 200);
-                });
+
                 sugList.appendChild(div);
             });
         });
