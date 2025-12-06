@@ -27,7 +27,7 @@ async function loadSiegeDB() {
         const SQL = await window.initSqlJs({
             locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
         });
-        const res = await fetch("siege.db");
+        const res = await fetch("/siege/siege.db");
         const buf = await res.arrayBuffer();
         siegeDB = new SQL.Database(new Uint8Array(buf));
         console.log("Siege DB loaded");
