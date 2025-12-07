@@ -626,6 +626,8 @@ function renderConditionsUI(postId, data) {
     // -----------------------------
     // CASE 1 : POSTS CLASSIQUES → 3 conditions
     // -----------------------------
+    panel.classList.remove("open");
+    panel.innerHTML = "";
     if (postType === "post") {
         // cacher l'ancien système (un seul toggle)
         if (toggleBtn) toggleBtn.style.display = "none";
@@ -765,6 +767,15 @@ function renderConditionsUI(postId, data) {
     if (postConditionsSlotsWrapper) {
         postConditionsSlotsWrapper.style.display = "none";
     }
+
+    panel.classList.remove("open");
+    panel.innerHTML = "";
+    panel.style.display = "";
+
+    if (toggleBtn) toggleBtn.style.display = "";
+    if (currentIcon) currentIcon.style.display = "";
+    if (hiddenInput) hiddenInput.style.display = "";
+
     if (!toggleBtn || !currentIcon || !hiddenInput || !panel) return;
 
     const postTypeStrong = postType;
@@ -1308,8 +1319,10 @@ function updateSummaryTable() {
                     let folder = {
                         stronghold: "stronghold",
                         defensetower: "defensetower",
-                        magictower: "magictower"
+                        magictower: "magictower",
+                        manashrine: "manashrine"
                     }[typeForRow] || "conditions";
+
 
                     let condRow = null;
 
@@ -1325,6 +1338,11 @@ function updateSummaryTable() {
                             if (condRow) break;
                         }
                     } else {
+                        // SHRINE → pas de condition dynamique, seulement une icône fixe
+                        if (folder === "manashrine") {
+                            condIcon = `<img class="summary-cond-icon" src="/siege/img/manashrine/ManaShrine.webp" />`;
+                            return;
+                        }
                         let tableFn = {
                             stronghold: getStrongholdLevels,
                             defensetower: getDefenseTowerLevels,
