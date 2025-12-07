@@ -1182,6 +1182,23 @@ window.addEventListener("DOMContentLoaded", () => {
         createTeamRow({}, index);
     });
 
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            const overlay = document.getElementById("modalOverlay");
+            if (overlay.style.display === "flex") {
+                closeModal();
+            }
+        }
+    });
+
+    const overlay = document.getElementById("modalOverlay");
+    overlay.addEventListener("click", (e) => {
+        // Si on clique l'overlay (et pas le modal lui-même)
+        if (e.target === overlay) {
+            closeModal();
+        }
+    });
+
     document.getElementById("sortByMember").addEventListener("click", () => {
         summarySortMode = "member";
         updateSummaryTable();
