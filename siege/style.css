@@ -987,3 +987,8 @@ body.modal-open {
 #summaryTable td.summary-hh-cell img {
     display: inline-block;
 }
+
+.post-icon.desaturated {
+    filter: grayscale(100%) brightness(0.5);
+    opacity: 1;
+}

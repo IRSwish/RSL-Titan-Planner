@@ -1060,6 +1060,20 @@ function updateSummaryTable() {
 
     }
 
+    // ---- Désaturer / Réactiver les icônes de la map ----
+    postIds.forEach(pid => {
+        const icon = document.querySelector(`#${pid} .post-icon`);
+        if (!icon) return;
+
+        const hasTeam = rows.some(r => r.postId === pid);
+
+        if (hasTeam) {
+            icon.classList.remove("desaturated");
+        } else {
+            icon.classList.add("desaturated");
+        }
+    });
+
     // TRI
     if (summarySortMode === "member") {
         rows.sort((a, b) => a.member.localeCompare(b.member));
