@@ -992,3 +992,53 @@ body.modal-open {
     filter: grayscale(100%) brightness(0.5);
     opacity: 1;
 }
+
+.team-condition-slot {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-condition-choices {
+  display: flex;
+  gap: 4px;
+}
+
+.post-conditions-row {
+    display: flex;
+    flex-direction: row;        /* --> en ligne */
+    justify-content: center;    /* centre horizontalement */
+    align-items: center;
+    gap: 16px;                  /* espace entre les 3 icônes */
+    margin-bottom: 10px;
+}
+
+.team-condition-label {
+  text-align:center;
+  color:#cccccc;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+}
+
+.team-cond-btn {
+  border: 1px solid transparent;
+  background: #111;
+  padding: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  transition:0.4s;
+}
+
+.team-cond-btn.selected {
+  border-color: #d4af37;
+}
+
+.team-cond-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  position:center;
+}

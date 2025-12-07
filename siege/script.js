@@ -177,6 +177,10 @@ const postIds = [
 ];
 const postDataCache = {}; // postId -> data
 
+let currentPostConditionsList = [];  // les 3 conditions choisies pour le post courant (objets complets)
+let postConditionsSlotsWrapper = null; 
+let activeConditionSlotIndex = 0;
+
 function updateRoomLabel(roomId) {
     const el = document.getElementById("currentRoomLabel");
     if (!el) return;
@@ -388,6 +392,70 @@ function createTeamRow(teamData = {}, index = 0) {
     memberSlot.appendChild(mInput);
     teamRow.appendChild(memberSlot);
     
+        // --- Condition par team (seulement pour les posts classiques) ---
+    const postEl = currentPostId ? document.getElementById(currentPostId) : null;
+    const postTypeForTeam = postEl ? postEl.dataset.type : "post";
+
+    if (postTypeForTeam === "post") {
+        const teamCondSlot = document.createElement("div");
+        teamCondSlot.className = "team-condition-slot";
+
+        const condLabel = document.createElement("div");
+        condLabel.className = "team-condition-label";
+        condLabel.textContent = "CONDITION";
+
+        const condChoices = document.createElement("div");
+        condChoices.className = "team-condition-choices";
+
+        const condHidden = document.createElement("input");
+        condHidden.type = "hidden";
+        condHidden.className = "team-condition-value";
+        condHidden.value = teamData.condition || "";
+
+        // créer les boutons pour les 3 conditions du post
+        const buttons = [];
+        currentPostConditionsList.forEach(cond => {
+            if (!cond) return;
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "team-cond-btn";
+
+            const img = document.createElement("img");
+            img.src = `/siege/img/conditions/${cond.image}.webp`;
+            img.alt = cond.name || "Condition";
+            img.title = cond.description || cond.name || "Condition";
+
+            btn.appendChild(img);
+
+            btn.addEventListener("click", () => {
+                // Si on clique la condition déjà sélectionnée → on la retire
+                if (String(condHidden.value) === String(cond.id)) {
+                    condHidden.value = "";
+                    buttons.forEach(b => b.classList.remove("selected"));
+                    return;
+                }
+
+                // Sinon → on sélectionne normalement
+                condHidden.value = cond.id;
+                buttons.forEach(b => b.classList.remove("selected"));
+                btn.classList.add("selected");
+            });
+
+            if (String(teamData.condition || "") === String(cond.id)) {
+                btn.classList.add("selected");
+            }
+
+            buttons.push(btn);
+            condChoices.appendChild(btn);
+        });
+
+        teamCondSlot.appendChild(condLabel);
+        teamCondSlot.appendChild(condChoices);
+        teamCondSlot.appendChild(condHidden);
+
+        memberSlot.appendChild(teamCondSlot);
+    }
 
     // right champs row
     const rightRow = document.createElement("div");
@@ -488,14 +556,18 @@ function getTeamsFromModal() {
     teamsContainer.querySelectorAll(".team-row").forEach(row => {
         const memberInput = row.querySelector(".member-select");
         const champInputs = row.querySelectorAll(".champ-input");
+        const condInput = row.querySelector(".team-condition-value");
+
         const team = {
             member: memberInput ? memberInput.value.trim() : "",
             c1: champInputs[0] ? champInputs[0].value.trim() : "",
             c2: champInputs[1] ? champInputs[1].value.trim() : "",
             c3: champInputs[2] ? champInputs[2].value.trim() : "",
-            c4: champInputs[3] ? champInputs[3].value.trim() : ""
+            c4: champInputs[3] ? champInputs[3].value.trim() : "",
+            condition: condInput ? condInput.value.trim() : ""
         };
-        if (team.member || team.c1 || team.c2 || team.c3 || team.c4) {
+
+        if (team.member || team.c1 || team.c2 || team.c3 || team.c4 || team.condition) {
             teams.push(team);
         }
     });
@@ -516,10 +588,21 @@ function openModal(postId) {
     currentPostId = postId;
     document.body.classList.add("modal-open");
     document.getElementById("modalOverlay").style.display = "flex";
-    document.getElementById("modalTitle").textContent = postId.replace("post", "Post ").replace("magictower", "Magic Tower ").replace("defensetower", "Defense Tower ").replace("manashrine", "Mana Shrine ");
+    document.getElementById("modalTitle").textContent = postId
+        .replace("post", "Post ")
+        .replace("magictower", "Magic Tower ")
+        .replace("defensetower", "Defense Tower ")
+        .replace("manashrine", "Mana Shrine ")
+        .replace("stronghold", "Stronghold");
+
     const data = postDataCache[postId] || {};
+
+    // ⚠️ d'abord les conditions (post-level)
+    renderConditionsUI(postId, data);
+
+    // puis les teams (qui ont besoin des 3 conditions du post)
     fillModalFromData(data);
-    renderConditionsUI(postId, data.condition || "");
+
     setStatus("");
 }
 
@@ -528,7 +611,7 @@ function closeModal() {
     document.getElementById("modalOverlay").style.display = "none";
 }
 
-function renderConditionsUI(postId, currentValue) {
+function renderConditionsUI(postId, data) {
     const postEl = document.getElementById(postId);
     const toggleBtn = document.getElementById("conditionToggle");
     const currentIcon = document.getElementById("conditionCurrentIcon");
@@ -536,114 +619,184 @@ function renderConditionsUI(postId, currentValue) {
     const panel = document.getElementById("conditionsPanel");
     const groupEl = document.querySelector(".conditions-group");
 
-    if (!postEl || !toggleBtn || !currentIcon || !hiddenInput || !panel || !groupEl)
-        return;
+    if (!postEl || !groupEl) return;
 
-    const postType = postEl.dataset.type;
+    const postType = postEl.dataset.type || "post";
 
-    // ------------------------------------------------
-    // STRONGHOLD (3 niveaux = 3 lignes)
-    // ------------------------------------------------
-    if (postType === "stronghold") {
-        groupEl.style.display = "";
-        renderStrongholdUI(panel, toggleBtn, currentIcon, hiddenInput, currentValue);
+    // -----------------------------
+    // CASE 1 : POSTS CLASSIQUES → 3 conditions
+    // -----------------------------
+    if (postType === "post") {
+        // cacher l'ancien système (un seul toggle)
+        if (toggleBtn) toggleBtn.style.display = "none";
+        if (currentIcon) currentIcon.style.display = "none";
+        if (hiddenInput) hiddenInput.style.display = "none";
+
+        // s'assurer qu'on a un wrapper pour les 3 slots
+        if (!postConditionsSlotsWrapper) {
+            postConditionsSlotsWrapper = document.createElement("div");
+            postConditionsSlotsWrapper.className = "post-conditions-row";
+
+            for (let i = 0; i < 3; i++) {
+                const slot = document.createElement("div");
+                slot.className = "post-condition-slot";
+                slot.dataset.index = String(i);
+
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "condition-toggle";
+
+                const img = document.createElement("img");
+                img.className = "condition-current-icon";
+
+                btn.appendChild(img);
+
+                const valueInput = document.createElement("input");
+                valueInput.type = "hidden";
+                valueInput.className = "condition-value";
+
+                slot.appendChild(btn);
+                slot.appendChild(valueInput);
+                postConditionsSlotsWrapper.appendChild(slot);
+            }
+            groupEl.insertBefore(postConditionsSlotsWrapper, groupEl.firstChild);
+        }
+
+        postConditionsSlotsWrapper.style.display = "";
+        if (panel) {
+            panel.style.display = "";
+        }
+
+        const { orderedTypes, byType } = getConditionsByType();
+        panel.innerHTML = "";
+
+        // helper pour retrouver un objet condition par id
+        function resolveConditionById(id) {
+            id = String(id);
+            for (const t of orderedTypes) {
+                for (const cond of byType[t]) {
+                    if (String(cond.id) === id) return cond;
+                }
+            }
+            return null;
+        }
+
+        const conditionsArr = Array.isArray(data.conditions) ? data.conditions : [];
+        const slots = postConditionsSlotsWrapper.querySelectorAll(".post-condition-slot");
+
+        currentPostConditionsList = [];
+
+        // initialisation visuelle des 3 slots
+        slots.forEach((slot, index) => {
+            const btn = slot.querySelector(".condition-toggle");
+            const img = slot.querySelector(".condition-current-icon");
+            const valueInput = slot.querySelector(".condition-value");
+
+            const existingId = conditionsArr[index] || "";
+            const cond = existingId ? resolveConditionById(existingId) : null;
+
+            if (cond) {
+                img.src = `/siege/img/conditions/${cond.image}.webp`;
+                img.style.display = "block";
+                img.title = cond.description || cond.name || "Condition";
+                valueInput.value = cond.id;
+                currentPostConditionsList[index] = cond;
+            } else {
+                img.src = `/siege/img/conditions/Condition.webp`;
+                img.style.display = "block";
+                img.title = "Cliquez pour choisir une condition";
+                valueInput.value = "";
+                currentPostConditionsList[index] = null;
+            }
+
+            // clic sur le slot → choisir quelle "case" on édite
+            btn.onclick = () => {
+                activeConditionSlotIndex = index;
+                panel.classList.toggle("open");
+            };
+        });
+
+        // construire le panel unique de conditions
+        orderedTypes.forEach(typeKey => {
+            const row = document.createElement("div");
+            row.className = "condition-row";
+
+            const iconsWrapper = document.createElement("div");
+            iconsWrapper.className = "condition-row-icons";
+
+            byType[typeKey].forEach(cond => {
+                const icon = document.createElement("img");
+                icon.src = `/siege/img/conditions/${cond.image}.webp`;
+                icon.className = "condition-icon";
+                icon.title = cond.description || cond.name;
+
+                icon.addEventListener("click", () => {
+                    const slots = postConditionsSlotsWrapper.querySelectorAll(".post-condition-slot");
+                    const slot = slots[activeConditionSlotIndex];
+                    if (!slot) return;
+
+                    const img = slot.querySelector(".condition-current-icon");
+                    const valueInput = slot.querySelector(".condition-value");
+
+                    valueInput.value = cond.id;
+                    img.src = `/siege/img/conditions/${cond.image}.webp`;
+                    img.title = cond.description || cond.name || "Condition";
+
+                    currentPostConditionsList[activeConditionSlotIndex] = cond;
+
+                    panel.classList.remove("open");
+                    saveCurrentPost(); // on sauvegarde directement le post-level
+                });
+
+                iconsWrapper.appendChild(icon);
+            });
+
+            row.appendChild(iconsWrapper);
+            panel.appendChild(row);
+        });
+
         return;
     }
 
-    if (postType === "defensetower") {
+    // -----------------------------
+    // CASE 2 : STRONGHOLD / DEFENSE / MAGIC / AUTRES → ancien système 1 condition
+    // -----------------------------
+    // on masque la bar "3 slots" si elle existe
+    if (postConditionsSlotsWrapper) {
+        postConditionsSlotsWrapper.style.display = "none";
+    }
+    if (!toggleBtn || !currentIcon || !hiddenInput || !panel) return;
+
+    const postTypeStrong = postType;
+
+    // STRONGHOLD
+    if (postTypeStrong === "stronghold") {
         groupEl.style.display = "";
-        renderDefenseTowerUI(panel, toggleBtn, currentIcon, hiddenInput, currentValue);
+        renderStrongholdUI(panel, toggleBtn, currentIcon, hiddenInput, data.condition || "");
         return;
     }
 
-    if (postType === "magictower") {
+    // DEFENSE TOWER
+    if (postTypeStrong === "defensetower") {
         groupEl.style.display = "";
-        renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, currentValue);
+        renderDefenseTowerUI(panel, toggleBtn, currentIcon, hiddenInput, data.condition || "");
         return;
     }
 
-    // ------------------------------------------------
-    // AUCUNE CONDITION POUR SHRINES / TOWERS
-    // ------------------------------------------------
-    if (postType !== "post") {
+    // MAGIC TOWER
+    if (postTypeStrong === "magictower") {
+        groupEl.style.display = "";
+        renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, data.condition || "");
+        return;
+    }
+
+    // AUCUNE CONDITION pour shrines / autres types non "post"
+    if (postTypeStrong !== "post") {
         groupEl.style.display = "none";
         hiddenInput.value = "";
         return;
     }
-
-    // ------------------------------------------------
-    // CONDITIONS CLASSIQUES (TON CODE)
-    // ------------------------------------------------
-
-    // ❗❗❗ >>> MANQUAIT DANS TON CODE <<<
-    const { orderedTypes, byType } = getConditionsByType();
-
-    panel.innerHTML = "";
-
-    let selectedCond = null;
-    for (const t of orderedTypes) {
-        for (const cond of byType[t]) {
-            if (String(cond.id) === String(currentValue)) {
-                selectedCond = cond;
-                break;
-            }
-        }
-        if (selectedCond) break;
-    }
-
-    if (selectedCond) {
-        currentIcon.src = `/siege/img/conditions/${selectedCond.image}.webp`;
-        currentIcon.title = selectedCond.description || selectedCond.name || "Condition";
-        hiddenInput.value = selectedCond.id;
-    } else {
-        currentIcon.src = `/siege/img/conditions/Condition.webp`;
-        currentIcon.title = "Cliquez pour choisir une condition";
-        hiddenInput.value = "";
-    }
-
-    orderedTypes.forEach(typeKey => {
-        const row = document.createElement("div");
-        row.className = "condition-row";
-
-        const iconsWrapper = document.createElement("div");
-        iconsWrapper.className = "condition-row-icons";
-
-        byType[typeKey].forEach(cond => {
-            const icon = document.createElement("img");
-            icon.src = `/siege/img/conditions/${cond.image}.webp`;
-            icon.className = "condition-icon";
-            icon.title = cond.description || cond.name;
-
-            if (selectedCond && cond.id === selectedCond.id) {
-                icon.classList.add("selected");
-            }
-
-            icon.addEventListener("click", () => {
-                if (String(hiddenInput.value) === String(cond.id)) {
-                    hiddenInput.value = "";
-                    currentIcon.src = `/siege/img/conditions/Condition.webp`;
-                    panel.classList.remove("open");
-                    saveCurrentPost();
-                    return;
-                }
-
-                hiddenInput.value = cond.id;
-                currentIcon.src = `/siege/img/conditions/${cond.image}.webp`;
-                panel.classList.remove("open");
-                saveCurrentPost();
-            });
-
-            iconsWrapper.appendChild(icon);
-        });
-
-        row.appendChild(iconsWrapper);
-        panel.appendChild(row);
-    });
-
-    toggleBtn.onclick = () => panel.classList.toggle("open");
 }
-
-
 
 function saveCurrentPost() {
     if (!currentRoomId) {
@@ -657,20 +810,32 @@ function saveCurrentPost() {
         return;
     }
 
-    const condition = document.getElementById("condition").value;
-
     const teams = getTeamsFromModal();
+    const postEl = document.getElementById(currentPostId);
+    const postType = postEl ? postEl.dataset.type : "post";
 
-    const data = {
-        condition,
-        teams
-    };
+    let data = { teams };
+
+    if (postType === "post") {
+        // récupérer les 3 conditions du post
+        const slots = postConditionsSlotsWrapper
+            ? postConditionsSlotsWrapper.querySelectorAll(".condition-value")
+            : [];
+        const conditions = Array.from(slots)
+            .map(input => input.value.trim())
+            .filter(v => v !== "");
+
+        data.conditions = conditions;
+    } else {
+        const condition = document.getElementById("condition").value;
+        data.condition = condition;
+    }
 
     const r = ref(db, "siege/" + currentRoomId + "/" + currentPostId);
     set(r, data)
         .then(() => {
             setStatus("Teams saved ✔");
-            updateSummaryTable(); // optional but nice
+            updateSummaryTable();
         })
         .catch(err => {
             console.error(err);
@@ -1043,21 +1208,14 @@ function updateSummaryTable() {
                 postId,
                 member: team.member,
                 group: team.group || "-",
-                teamIndex: i + 1,  // Maintenant i existe !
+                teamIndex: i + 1,
+                teamCondition: team.condition || "",
                 c1: team.c1,
                 c2: team.c2,
                 c3: team.c3,
                 c4: team.c4
             });
-            // Mise à jour du nombre total de teams remplies
-            const totalTeams = rows.length;
-
-            const summaryTitle = document.getElementById("summaryTitle");
-            if (summaryTitle) {
-                summaryTitle.textContent = `TEAMS (${totalTeams})`;
-            }
         });
-
     }
 
     // ---- Désaturer / Réactiver les icônes de la map ----
@@ -1110,47 +1268,79 @@ function updateSummaryTable() {
                 <img src="/siege/img/HH.ico" alt="HH" />
             </a>`
             : "";  
-        const postData = postDataCache[r.postId];
-        let condIcon = "";
-        if (postData && postData.condition) {
-            // Déterminer type de poste
-            const postEl = document.getElementById(r.postId);
-            const type = postEl ? postEl.dataset.type : "post";
+            let condIcon = "";
 
-            // Déterminer le dossier image
-            let folder = "conditions";
-            if (type === "stronghold") folder = "stronghold";
-            else if (type === "defensetower") folder = "defensetower";
-            else if (type === "magictower") folder = "magictower";
+            const postElForRow = document.getElementById(r.postId);
+            const typeForRow = postElForRow ? postElForRow.dataset.type : "post";
 
-            // Trouver la ligne correspondante dans la DB
-            let condRow = null;
+            // ------------------------------
+            // CAS 1 : POST CLASSIQUE → condition par team
+            // ------------------------------
+            if (typeForRow === "post") {
+                if (r.teamCondition) {
+                    // récupérer la condition dans la table CONDITIONS
+                    const { orderedTypes, byType } = getConditionsByType();
+                    let condRow = null;
 
-            if (folder === "conditions") {
-                const { orderedTypes, byType } = getConditionsByType();
-                for (const t of orderedTypes) {
-                    for (const c of byType[t]) {
-                        if (String(c.id) === String(postData.condition)) {
-                            condRow = c;
+                    for (const t of orderedTypes) {
+                        for (const c of byType[t]) {
+                            if (String(c.id) === String(r.teamCondition)) {
+                                condRow = c;
+                                break;
+                            }
                         }
+                        if (condRow) break;
+                    }
+
+                    if (condRow) {
+                        condIcon = `<img class="summary-cond-icon" src="/siege/img/conditions/${condRow.image}.webp" />`;
                     }
                 }
-            } 
+            }
+
+            // ------------------------------
+            // CAS 2 : STRONGHOLD, DEFENSE, MAGIC → 1 condition pour TOUT LE POST
+            // ------------------------------
             else {
-                // stronghold / defensetower / magictower
-                let table = {
-                    stronghold: getStrongholdLevels,
-                    defensetower: getDefenseTowerLevels,
-                    magictower: getMagicTowerLevels
-                }[folder]();
+                const postData = postDataCache[r.postId];
+                if (postData && postData.condition) {
 
-                condRow = table.find(c => String(c.id) === String(postData.condition));
+                    let folder = {
+                        stronghold: "stronghold",
+                        defensetower: "defensetower",
+                        magictower: "magictower"
+                    }[typeForRow] || "conditions";
+
+                    let condRow = null;
+
+                    if (folder === "conditions") {
+                        const { orderedTypes, byType } = getConditionsByType();
+                        for (const t of orderedTypes) {
+                            for (const c of byType[t]) {
+                                if (String(c.id) === String(postData.condition)) {
+                                    condRow = c;
+                                    break;
+                                }
+                            }
+                            if (condRow) break;
+                        }
+                    } else {
+                        let tableFn = {
+                            stronghold: getStrongholdLevels,
+                            defensetower: getDefenseTowerLevels,
+                            magictower: getMagicTowerLevels
+                        }[folder];
+
+                        const table = tableFn ? tableFn() : [];
+                        condRow = table.find(c => String(c.id) === String(postData.condition));
+                    }
+
+                    if (condRow) {
+                        condIcon = `<img class="summary-cond-icon" src="/siege/img/${folder}/${condRow.image}.webp" />`;
+                    }
+                }
             }
 
-            if (condRow) {
-                condIcon = `<img class="summary-cond-icon" src="/siege/img/${folder}/${condRow.image}.webp" />`;
-            }
-        }
         
         tr.innerHTML = `
             <td>${getPostLabel(r.postId)}</td>
