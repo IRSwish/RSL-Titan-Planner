@@ -445,8 +445,7 @@ body {
     border: 1px solid #333;
     border-radius: 10px;
     box-shadow: 0 0 12px rgba(0,0,0,0.4);
-
-    max-width: 1300px;
+    max-width: 1500px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -957,4 +956,34 @@ body.modal-open {
 .input-error {
     border: 2px solid #d4af37 !important;
     background: rgba(245, 197, 37, 0.15);
+}
+
+/* Icône HellHades dans tableau + liste */
+.hh-table-icon img,
+.hh-link-icon img,
+.summary-cond-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.hh-link-icon {
+    margin-left: 6px;
+}
+
+#summaryTable td.summary-cond-cell,
+#summaryTable td.summary-hh-cell,
+#summaryTable td.summary-group-cell,
+#summaryTable td.summary-team-cell
+ {
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+#summaryTable td.summary-cond-cell img,
+#summaryTable td.summary-hh-cell img {
+    display: inline-block;
 }

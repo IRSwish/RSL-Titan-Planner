@@ -270,7 +270,10 @@ function updateMembersList() {
                 const linkEl = document.createElement("a");
                 linkEl.href = member.link;
                 linkEl.target = "_blank";
-                linkEl.textContent = " (Lien)";
+                linkEl.className = "hh-link-icon";
+
+                linkEl.innerHTML = `<img src="/siege/img/HH.ico" alt="HH" />`;
+
                 wrapper.appendChild(linkEl);
             }
 
@@ -279,6 +282,10 @@ function updateMembersList() {
             list.appendChild(wrapper);
 
         });
+        // mise à jour du compteur de membres
+        const membersCount = Object.keys(clanMembers).length;
+        const titleEl = document.getElementById("membersTitle");
+        if (titleEl) titleEl.textContent = `Clan Members (${membersCount})`;
 }
 
 function deleteClanMember(pseudo) {
@@ -672,7 +679,7 @@ function saveCurrentPost() {
 }
 
 function getPostLabel(postId) {
-    return postId.replace("post", "Post ").replace("magictower", "Magic Tower ").replace("defensetower", "Defense Tower ").replace("manashrine", "Mana Shrine ");
+    return postId.replace("post", "Post ").replace("magictower", "Magic Tower ").replace("defensetower", "Defense Tower ").replace("manashrine", "Mana Shrine ").replace("stronghold", "Stronghold");
 }
 
 function openPostFromSummary(postId, memberName) {
@@ -1029,18 +1036,28 @@ function updateSummaryTable() {
         const data = postDataCache[postId];
         if (!data || !data.teams) continue;
 
-        data.teams.forEach(team => {
+        data.teams.forEach((team, i) => {
             if (!team.member) return;
 
             rows.push({
                 postId,
                 member: team.member,
+                group: team.group || "-",
+                teamIndex: i + 1,  // Maintenant i existe !
                 c1: team.c1,
                 c2: team.c2,
                 c3: team.c3,
                 c4: team.c4
             });
+            // Mise à jour du nombre total de teams remplies
+            const totalTeams = rows.length;
+
+            const summaryTitle = document.getElementById("summaryTitle");
+            if (summaryTitle) {
+                summaryTitle.textContent = `TEAMS (${totalTeams})`;
+            }
         });
+
     }
 
     // TRI
@@ -1073,10 +1090,61 @@ function updateSummaryTable() {
         const tr = document.createElement("tr");
         tr.dataset.post = r.postId;        // l’ID du poste (ex: post1)
         tr.dataset.member = r.member;      // pour retrouver la bonne team
+        const memberData = clanMembers[r.member];
+        const hhIcon = memberData && memberData.link 
+            ? `<a href="${memberData.link}" target="_blank" class="hh-table-icon">
+                <img src="/siege/img/HH.ico" alt="HH" />
+            </a>`
+            : "";  
+        const postData = postDataCache[r.postId];
+        let condIcon = "";
+        if (postData && postData.condition) {
+            // Déterminer type de poste
+            const postEl = document.getElementById(r.postId);
+            const type = postEl ? postEl.dataset.type : "post";
 
+            // Déterminer le dossier image
+            let folder = "conditions";
+            if (type === "stronghold") folder = "stronghold";
+            else if (type === "defensetower") folder = "defensetower";
+            else if (type === "magictower") folder = "magictower";
+
+            // Trouver la ligne correspondante dans la DB
+            let condRow = null;
+
+            if (folder === "conditions") {
+                const { orderedTypes, byType } = getConditionsByType();
+                for (const t of orderedTypes) {
+                    for (const c of byType[t]) {
+                        if (String(c.id) === String(postData.condition)) {
+                            condRow = c;
+                        }
+                    }
+                }
+            } 
+            else {
+                // stronghold / defensetower / magictower
+                let table = {
+                    stronghold: getStrongholdLevels,
+                    defensetower: getDefenseTowerLevels,
+                    magictower: getMagicTowerLevels
+                }[folder]();
+
+                condRow = table.find(c => String(c.id) === String(postData.condition));
+            }
+
+            if (condRow) {
+                condIcon = `<img class="summary-cond-icon" src="/siege/img/${folder}/${condRow.image}.webp" />`;
+            }
+        }
+        
         tr.innerHTML = `
             <td>${getPostLabel(r.postId)}</td>
+            <td class="summary-group-cell">${r.group || "-"}</td>
+            <td class="summary-team-cell">${r.teamIndex || "-"}</td>
+            <td class="summary-cond-cell">${condIcon}</td>
             <td>${r.member}</td>
+            <td class="summary-hh-cell">${hhIcon}</td>
             <td>${r.c1}</td>
             <td>${r.c2}</td>
             <td>${r.c3}</td>
