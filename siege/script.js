@@ -219,7 +219,10 @@ function connectRoom(roomId) {
                 fillModalFromData(data);
             }
 
-            updateSummaryTable();   // ← AJOUT CRITIQUE
+            updateSummaryTable();
+            updatePostConditionsOnMap(id);  // Mettre à jour les icônes sur la carte
+            updateTeamsCountOnMap(id);  // Mettre à jour le compteur d'équipes
+            updateTooltipOnMap(id);  // Mettre à jour le tooltip hover
         });
     });
     updateSummaryTable();
@@ -329,11 +332,103 @@ function updateVisualForInput(inputEl, champImgEl, rarityImgEl) {
     champImgEl.style.display = "block";
 }
 
+function updateLeadAura(teamRow) {
+    const auraDisplay = teamRow.querySelector(".lead-aura-display");
+    if (!auraDisplay) return;
+
+    // Trouver le champion 4 (lead)
+    const rightRow = teamRow.querySelector(".modal-right-row");
+    if (!rightRow) return;
+
+    const leadSlot = Array.from(rightRow.querySelectorAll(".champ-slot")).find(
+        slot => parseInt(slot.dataset.champIndex) === 4
+    );
+
+    if (!leadSlot) return;
+
+    const leadInput = leadSlot.querySelector(".champ-input");
+    const leadName = leadInput ? leadInput.value.trim() : "";
+
+    if (!leadName || !championsDB) {
+        auraDisplay.innerHTML = "";
+        auraDisplay.style.display = "none";
+        return;
+    }
+
+    const lead = getChampionByNameExact(leadName);
+    if (!lead || !lead.auratext || !lead.aura) {
+        auraDisplay.innerHTML = "";
+        auraDisplay.style.display = "none";
+        return;
+    }
+
+    // Afficher l'aura
+    auraDisplay.innerHTML = `
+        <div class="lead-aura-container">
+            <img class="lead-aura-border" src="/tools/champions-index/img/aura/BORDER.webp" alt="">
+            <img class="lead-aura-champ" src="/tools/champions-index/img/champions/${lead.auratext}.webp" alt="${leadName}">
+            <img class="lead-aura-icon" src="/tools/champions-index/img/aura/${lead.aura}.webp" alt="Aura">
+        </div>
+    `;
+    auraDisplay.style.display = "block";
+}
+
+function moveTeamUp(teamRow) {
+    const prevRow = teamRow.previousElementSibling;
+    if (prevRow && prevRow.classList.contains("team-row")) {
+        teamRow.parentNode.insertBefore(teamRow, prevRow);
+        updateMoveButtons();
+    }
+}
+
+function moveTeamDown(teamRow) {
+    const nextRow = teamRow.nextElementSibling;
+    if (nextRow && nextRow.classList.contains("team-row")) {
+        teamRow.parentNode.insertBefore(nextRow, teamRow);
+        updateMoveButtons();
+    }
+}
+
+function updateMoveButtons() {
+    const teamsContainer = document.getElementById("teamsContainer");
+    const rows = Array.from(teamsContainer.querySelectorAll(".team-row"));
+
+    rows.forEach((row, index) => {
+        const upBtn = row.querySelector(".move-up");
+        const downBtn = row.querySelector(".move-down");
+
+        if (upBtn) upBtn.disabled = (index === 0);
+        if (downBtn) downBtn.disabled = (index === rows.length - 1);
+    });
+}
 
 function createTeamRow(teamData = {}, index = 0) {
     const teamsContainer = document.getElementById("teamsContainer");
     const teamRow = document.createElement("div");
     teamRow.className = "team-row";
+
+    // --- Boutons monter/descendre ---
+    const moveButtons = document.createElement("div");
+    moveButtons.className = "move-team-btns";
+
+    const moveUpBtn = document.createElement("button");
+    moveUpBtn.className = "move-team-btn move-up";
+    moveUpBtn.type = "button";
+    moveUpBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>`;
+    moveUpBtn.title = "Monter cette team";
+
+    const moveDownBtn = document.createElement("button");
+    moveDownBtn.className = "move-team-btn move-down";
+    moveDownBtn.type = "button";
+    moveDownBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>`;
+    moveDownBtn.title = "Descendre cette team";
+
+    moveUpBtn.onclick = () => moveTeamUp(teamRow);
+    moveDownBtn.onclick = () => moveTeamDown(teamRow);
+
+    moveButtons.appendChild(moveUpBtn);
+    moveButtons.appendChild(moveDownBtn);
+    teamRow.appendChild(moveButtons);
 
     // --- bouton clear à droite des champions ---
     const clearBtn = document.createElement("button");
@@ -348,9 +443,6 @@ function createTeamRow(teamData = {}, index = 0) {
         <path d="M9 6V4h6v2"></path>
     </svg>
     `;
-
-    // logiquement : [member][4 champs][trash]
-    teamRow.appendChild(clearBtn);
 
     // logique pour vider la team
     clearBtn.onclick = () => {
@@ -390,6 +482,12 @@ function createTeamRow(teamData = {}, index = 0) {
     mInput.value = teamData.member || "";
     memberSlot.appendChild(mLabel);
     memberSlot.appendChild(mInput);
+
+    // Aura display (will be populated when lead is set)
+    const auraDisplay = document.createElement("div");
+    auraDisplay.className = "lead-aura-display";
+    memberSlot.appendChild(auraDisplay);
+
     teamRow.appendChild(memberSlot);
     
         // --- Condition par team (seulement pour les posts classiques) ---
@@ -464,9 +562,11 @@ function createTeamRow(teamData = {}, index = 0) {
     for (let i = 1; i <= 4; i++) {
         const champSlot = document.createElement("div");
         champSlot.className = "champ-slot";
+        champSlot.draggable = true;
+        champSlot.dataset.champIndex = i;
 
         const cLabel = document.createElement("label");
-        cLabel.textContent = "Champion " + i;
+        cLabel.textContent = i === 4 ? "Lead" : "Champion " + i;
         const cInput = document.createElement("input");
         cInput.className = "champ-input";
         cInput.value = teamData["c" + i] || "";
@@ -477,8 +577,24 @@ function createTeamRow(teamData = {}, index = 0) {
         rarityImg.className = "rarity-img";
         const champImg = document.createElement("img");
         champImg.className = "champ-img";
+
+        const clearChampBtn = document.createElement("button");
+        clearChampBtn.className = "clear-champ-btn";
+        clearChampBtn.type = "button";
+        clearChampBtn.innerHTML = "×";
+        clearChampBtn.title = "Supprimer ce champion";
+
+        clearChampBtn.onclick = () => {
+            cInput.value = "";
+            champImg.src = "";
+            champImg.style.display = "none";
+            rarityImg.src = "";
+            rarityImg.style.display = "none";
+        };
+
         visual.appendChild(champImg);
         visual.appendChild(rarityImg);
+        visual.appendChild(clearChampBtn);
 
         const sugWrapper = document.createElement("div");
         sugWrapper.className = "suggestions";
@@ -489,7 +605,7 @@ function createTeamRow(teamData = {}, index = 0) {
         const inputWrapper = document.createElement("div");
         inputWrapper.className = "champ-input-wrapper";
         inputWrapper.style.position = "relative";
-        inputWrapper.style.width = "140px";
+        inputWrapper.style.width = "70px";
 
         inputWrapper.appendChild(cInput);
         inputWrapper.appendChild(sugWrapper);
@@ -531,11 +647,134 @@ function createTeamRow(teamData = {}, index = 0) {
             updateVisualForInput(cInput, champImg, rarityImg);
         }
 
+        // Update lead aura when champion 4 changes
+        if (i === 4) {
+            cInput.addEventListener("input", () => {
+                setTimeout(() => updateLeadAura(teamRow), 50);
+            });
+
+            // Also update when a suggestion is clicked or input loses focus
+            cInput.addEventListener("blur", () => {
+                setTimeout(() => updateLeadAura(teamRow), 250);
+            });
+        }
+
+        // Drag & Drop events
+        champSlot.addEventListener("dragstart", (e) => {
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", champSlot.dataset.champIndex);
+            champSlot.classList.add("dragging");
+        });
+
+        champSlot.addEventListener("dragend", () => {
+            champSlot.classList.remove("dragging");
+        });
+
+        champSlot.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+            champSlot.classList.add("drag-over");
+        });
+
+        champSlot.addEventListener("dragleave", () => {
+            champSlot.classList.remove("drag-over");
+        });
+
+        champSlot.addEventListener("drop", (e) => {
+            e.preventDefault();
+            champSlot.classList.remove("drag-over");
+
+            const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
+            const toIndex = parseInt(champSlot.dataset.champIndex);
+
+            if (fromIndex === toIndex) return;
+
+            // Échanger les champions dans la même team
+            const allSlots = rightRow.querySelectorAll(".champ-slot");
+            const fromSlot = Array.from(allSlots).find(s => parseInt(s.dataset.champIndex) === fromIndex);
+            const toSlot = champSlot;
+
+            if (!fromSlot || !toSlot) return;
+
+            const fromInput = fromSlot.querySelector(".champ-input");
+            const toInput = toSlot.querySelector(".champ-input");
+            const fromChampImg = fromSlot.querySelector(".champ-img");
+            const toChampImg = toSlot.querySelector(".champ-img");
+            const fromRarityImg = fromSlot.querySelector(".rarity-img");
+            const toRarityImg = toSlot.querySelector(".rarity-img");
+
+            // Échanger les valeurs
+            const tempValue = fromInput.value;
+            const tempChampSrc = fromChampImg.src;
+            const tempChampDisplay = fromChampImg.style.display;
+            const tempRaritySrc = fromRarityImg.src;
+            const tempRarityDisplay = fromRarityImg.style.display;
+
+            fromInput.value = toInput.value;
+            fromChampImg.src = toChampImg.src;
+            fromChampImg.style.display = toChampImg.style.display;
+            fromRarityImg.src = toRarityImg.src;
+            fromRarityImg.style.display = toRarityImg.style.display;
+
+            toInput.value = tempValue;
+            toChampImg.src = tempChampSrc;
+            toChampImg.style.display = tempChampDisplay;
+            toRarityImg.src = tempRaritySrc;
+            toRarityImg.style.display = tempRarityDisplay;
+
+            // Update lead aura if champion 4 was involved in the swap
+            if (fromIndex === 4 || toIndex === 4) {
+                setTimeout(() => updateLeadAura(teamRow), 50);
+            }
+        });
+
         rightRow.appendChild(champSlot);
     }
 
     teamRow.appendChild(rightRow);
     teamRow.appendChild(clearBtn);
+
+    // Bouton pour transférer vers un autre poste
+    const transferBtn = document.createElement("button");
+    transferBtn.className = "transfer-team-btn";
+    transferBtn.type = "button";
+    transferBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 3 9-3 9 19-9Z"/><path d="M6 12h16"/></svg>`;
+    transferBtn.title = "Déplacer vers un autre poste";
+
+    const transferMenu = document.createElement("div");
+    transferMenu.className = "transfer-menu";
+
+    // Créer les options de transfert
+    postIds.forEach(pid => {
+        const item = document.createElement("div");
+        item.className = "transfer-menu-item";
+        item.textContent = getPostLabel(pid);
+
+        if (pid === currentPostId) {
+            item.classList.add("current");
+            item.title = "Poste actuel";
+        } else {
+            item.addEventListener("click", () => {
+                transferTeamToPost(teamRow, pid);
+                transferMenu.classList.remove("open");
+            });
+        }
+
+        transferMenu.appendChild(item);
+    });
+
+    transferBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Fermer tous les autres menus
+        document.querySelectorAll(".transfer-menu.open").forEach(m => {
+            if (m !== transferMenu) m.classList.remove("open");
+        });
+        transferMenu.classList.toggle("open");
+    });
+
+    teamRow.appendChild(transferBtn);
+    teamRow.appendChild(transferMenu);
+
     if (index > 0) {
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "-";
@@ -543,11 +782,18 @@ function createTeamRow(teamData = {}, index = 0) {
 
         deleteBtn.addEventListener("click", () => {
             teamRow.remove();
+            updateMoveButtons();
         });
 
         teamRow.appendChild(deleteBtn);
     }
     teamsContainer.appendChild(teamRow);
+    updateMoveButtons();
+
+    // Update lead aura if champion 4 is set
+    if (championsDB) {
+        setTimeout(() => updateLeadAura(teamRow), 100);
+    }
 }
 
 function getTeamsFromModal() {
@@ -597,11 +843,17 @@ function openModal(postId) {
 
     const data = postDataCache[postId] || {};
 
+    // Mettre à jour l'état du bouton freeze
+    updateFreezeButton(data.frozen || false);
+
     // ⚠️ d'abord les conditions (post-level)
     renderConditionsUI(postId, data);
 
     // puis les teams (qui ont besoin des 3 conditions du post)
     fillModalFromData(data);
+
+    // Appliquer le verrouillage si nécessaire
+    applyFreezeState(data.frozen || false);
 
     setStatus("");
 }
@@ -609,6 +861,129 @@ function openModal(postId) {
 function closeModal() {
     document.body.classList.remove("modal-open");
     document.getElementById("modalOverlay").style.display = "none";
+}
+
+function updateFreezeButton(isFrozen) {
+    const btn = document.getElementById("freezePostBtn");
+    const icon = document.getElementById("freezeIcon");
+    const label = document.getElementById("freezeLabel");
+
+    if (isFrozen) {
+        btn.classList.add("frozen");
+        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+        label.textContent = "Locked";
+        btn.title = "Unlock this post";
+    } else {
+        btn.classList.remove("frozen");
+        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
+        label.textContent = "Lock";
+        btn.title = "Lock this post";
+    }
+}
+
+function applyFreezeState(isFrozen) {
+    const modal = document.querySelector(".modal");
+    const saveBtn = document.getElementById("saveBtn");
+    const addTeamBtn = document.getElementById("addTeamBtn");
+
+    if (isFrozen) {
+        // Désactiver tous les inputs et boutons d'édition
+        modal.querySelectorAll("input, select, .champ-input").forEach(el => el.disabled = true);
+        modal.querySelectorAll(".move-team-btn, .clear-team-btn, .delete-team-btn, .transfer-team-btn, .clear-champ-btn, .condition-toggle, .team-cond-btn").forEach(btn => btn.disabled = true);
+
+        if (saveBtn) saveBtn.disabled = true;
+        if (addTeamBtn) addTeamBtn.disabled = true;
+
+        modal.classList.add("frozen-post");
+    } else {
+        // Réactiver tous les inputs et boutons
+        modal.querySelectorAll("input, select, .champ-input").forEach(el => el.disabled = false);
+        modal.querySelectorAll(".move-team-btn, .clear-team-btn, .delete-team-btn, .transfer-team-btn, .clear-champ-btn, .condition-toggle, .team-cond-btn").forEach(btn => btn.disabled = false);
+
+        if (saveBtn) saveBtn.disabled = false;
+        if (addTeamBtn) addTeamBtn.disabled = false;
+
+        modal.classList.remove("frozen-post");
+
+        // Re-update move buttons pour les états corrects
+        updateMoveButtons();
+    }
+}
+
+function toggleFreezePost() {
+    if (!currentRoomId || !currentPostId) return;
+
+    const data = postDataCache[currentPostId] || {};
+    const newFrozenState = !(data.frozen || false);
+
+    data.frozen = newFrozenState;
+
+    const r = ref(db, "siege/" + currentRoomId + "/" + currentPostId + "/frozen");
+    set(r, newFrozenState)
+        .then(() => {
+            updateFreezeButton(newFrozenState);
+            applyFreezeState(newFrozenState);
+            updatePostConditionsOnMap(currentPostId);  // Masquer/afficher les icônes sur la carte
+            setStatus(newFrozenState ? "Post locked ✔" : "Post unlocked ✔");
+        })
+        .catch(err => {
+            console.error(err);
+            setStatus("Error: " + err.message, true);
+        });
+}
+
+function transferTeamToPost(teamRow, targetPostId) {
+    if (!currentRoomId || !currentPostId || !targetPostId) return;
+
+    // Extraire les données de la team à partir de la row
+    const memberInput = teamRow.querySelector(".member-select");
+    const champInputs = teamRow.querySelectorAll(".champ-input");
+    const condInput = teamRow.querySelector(".team-condition-value");
+
+    const teamData = {
+        member: memberInput ? memberInput.value.trim() : "",
+        c1: champInputs[0] ? champInputs[0].value.trim() : "",
+        c2: champInputs[1] ? champInputs[1].value.trim() : "",
+        c3: champInputs[2] ? champInputs[2].value.trim() : "",
+        c4: champInputs[3] ? champInputs[3].value.trim() : "",
+        condition: condInput ? condInput.value.trim() : ""
+    };
+
+    // Récupérer les teams du poste source
+    const sourceData = postDataCache[currentPostId] || {};
+    const sourceTeams = Array.isArray(sourceData.teams) ? [...sourceData.teams] : [];
+
+    // Trouver l'index de la team dans le DOM pour la supprimer
+    const teamsContainer = document.getElementById("teamsContainer");
+    const allRows = Array.from(teamsContainer.querySelectorAll(".team-row"));
+    const teamIndex = allRows.indexOf(teamRow);
+
+    if (teamIndex !== -1 && teamIndex < sourceTeams.length) {
+        sourceTeams.splice(teamIndex, 1);
+    }
+
+    // Récupérer les teams du poste de destination
+    const targetData = postDataCache[targetPostId] || {};
+    const targetTeams = Array.isArray(targetData.teams) ? [...targetData.teams] : [];
+    targetTeams.push(teamData);
+
+    // Sauvegarder les deux postes
+    const sourceRef = ref(db, "siege/" + currentRoomId + "/" + currentPostId + "/teams");
+    const targetRef = ref(db, "siege/" + currentRoomId + "/" + targetPostId + "/teams");
+
+    Promise.all([
+        set(sourceRef, sourceTeams),
+        set(targetRef, targetTeams)
+    ])
+        .then(() => {
+            setStatus(`Team transférée vers ${getPostLabel(targetPostId)} ✔`);
+            teamRow.remove();
+            updateMoveButtons();
+        })
+        .catch(err => {
+            console.error(err);
+            setStatus("Erreur lors du transfert : " + err.message, true);
+        });
 }
 
 function renderConditionsUI(postId, data) {
@@ -1202,6 +1577,252 @@ function renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, currentV
 }
 
 
+function updatePostConditionsOnMap(postId) {
+    const postEl = document.getElementById(postId);
+    if (!postEl || postEl.dataset.type !== "post") return;
+
+    const data = postDataCache[postId] || {};
+    const conditionsDiv = postEl.querySelector(".post-conditions");
+    if (!conditionsDiv) return;
+
+    // Masquer si le poste est locked et ajouter la classe pour ajuster le label
+    if (data.frozen) {
+        conditionsDiv.classList.add("hidden");
+        postEl.classList.add("post-frozen");
+        return;
+    } else {
+        conditionsDiv.classList.remove("hidden");
+        postEl.classList.remove("post-frozen");
+    }
+
+    const conditionsArr = Array.isArray(data.conditions) ? data.conditions : [];
+    const icons = conditionsDiv.querySelectorAll(".post-cond-icon");
+
+    icons.forEach((icon, index) => {
+        const condId = conditionsArr[index];
+
+        if (condId) {
+            // Trouver la condition dans la DB
+            const { orderedTypes, byType } = getConditionsByType();
+            let condRow = null;
+
+            for (const t of orderedTypes) {
+                for (const c of byType[t]) {
+                    if (String(c.id) === String(condId)) {
+                        condRow = c;
+                        break;
+                    }
+                }
+                if (condRow) break;
+            }
+
+            if (condRow) {
+                icon.src = `/siege/img/conditions/${condRow.image}.webp`;
+                icon.title = condRow.description || condRow.name || "";
+            } else {
+                icon.src = "/siege/img/conditions/Condition.webp";
+                icon.title = "";
+            }
+        } else {
+            // Pas de condition sélectionnée → fallback
+            icon.src = "/siege/img/conditions/Condition.webp";
+            icon.title = "";
+        }
+    });
+}
+
+function updateTeamsCountOnMap(postId) {
+    const postEl = document.getElementById(postId);
+    if (!postEl) return;
+
+    const countDiv = postEl.querySelector(".post-teams-count");
+    if (!countDiv) return;
+
+    const data = postDataCache[postId] || {};
+    const teams = Array.isArray(data.teams) ? data.teams : [];
+
+    // Compter les équipes qui ont au moins un champion assigné
+    const teamsWithMembers = teams.filter(team => {
+        return team.c1 || team.c2 || team.c3 || team.c4;
+    });
+
+    const count = teamsWithMembers.length;
+    countDiv.textContent = count;
+
+    // Ajouter/retirer la classe 'empty' selon le nombre
+    if (count === 0) {
+        countDiv.classList.add("empty");
+    } else {
+        countDiv.classList.remove("empty");
+    }
+}
+
+let globalTooltip = null;
+
+function createTooltipContent(postId) {
+    const data = postDataCache[postId] || {};
+    const teams = Array.isArray(data.teams) ? data.teams : [];
+    const postEl = document.getElementById(postId);
+    const postType = postEl ? postEl.dataset.type : "post";
+
+    // Filtrer les équipes qui ont au moins un champion
+    const teamsWithMembers = teams.filter(team => {
+        return team.member || team.c1 || team.c2 || team.c3 || team.c4;
+    });
+
+    if (teamsWithMembers.length === 0) return null;
+
+    const content = document.createElement("div");
+
+    // Titre
+    const title = document.createElement("div");
+    title.className = "post-tooltip-title";
+    title.textContent = getPostLabel(postId);
+    content.appendChild(title);
+
+    // Afficher toutes les équipes
+    teamsWithMembers.forEach((team, index) => {
+        const teamDiv = document.createElement("div");
+        teamDiv.className = "post-tooltip-team";
+
+        // Pseudo
+        const memberSpan = document.createElement("span");
+        memberSpan.className = "post-tooltip-member";
+        memberSpan.textContent = team.member || `Team ${index + 1}`;
+        teamDiv.appendChild(memberSpan);
+
+        // Icône de condition (seulement pour les posts classiques)
+        if (postType === "post" && team.condition) {
+            const { orderedTypes, byType } = getConditionsByType();
+            let condRow = null;
+
+            for (const t of orderedTypes) {
+                for (const c of byType[t]) {
+                    if (String(c.id) === String(team.condition)) {
+                        condRow = c;
+                        break;
+                    }
+                }
+                if (condRow) break;
+            }
+
+            if (condRow) {
+                const condIcon = document.createElement("img");
+                condIcon.className = "post-tooltip-cond-icon";
+                condIcon.src = `/siege/img/conditions/${condRow.image}.webp`;
+                condIcon.title = condRow.description || condRow.name || "";
+                teamDiv.appendChild(condIcon);
+            }
+        }
+
+        // Champions (images carrées)
+        const champsDiv = document.createElement("div");
+        champsDiv.className = "post-tooltip-champs";
+
+        for (let i = 1; i <= 4; i++) {
+            const champName = team["c" + i];
+
+            if (champName && championsDB) {
+                const champ = getChampionByNameExact(champName);
+
+                if (champ && champ.image) {
+                    const champImg = document.createElement("img");
+                    champImg.className = "post-tooltip-champ-img";
+                    champImg.src = `/tools/champions-index/img/champions/${champ.image}.webp`;
+                    champImg.title = champName;
+                    champsDiv.appendChild(champImg);
+                } else {
+                    const emptySlot = document.createElement("div");
+                    emptySlot.className = "post-tooltip-champ-empty";
+                    emptySlot.title = "Champion non trouvé";
+                    champsDiv.appendChild(emptySlot);
+                }
+            } else {
+                const emptySlot = document.createElement("div");
+                emptySlot.className = "post-tooltip-champ-empty";
+                champsDiv.appendChild(emptySlot);
+            }
+        }
+
+        teamDiv.appendChild(champsDiv);
+        content.appendChild(teamDiv);
+    });
+
+    return content;
+}
+
+function showTooltip(postEl, postId) {
+    const content = createTooltipContent(postId);
+    if (!content) return;
+
+    if (!globalTooltip) {
+        globalTooltip = document.createElement("div");
+        globalTooltip.className = "post-tooltip";
+        document.body.appendChild(globalTooltip);
+    }
+
+    globalTooltip.innerHTML = "";
+    globalTooltip.appendChild(content);
+
+    const rect = postEl.getBoundingClientRect();
+    const tooltipRect = globalTooltip.getBoundingClientRect();
+
+    // Position de base : à droite du point, centré verticalement
+    let left = rect.right + 12;
+    let top = rect.top + rect.height / 2;
+    let transform = "translateY(-50%)";
+
+    // Vérifier si le tooltip dépasse en haut
+    const tooltipHalfHeight = tooltipRect.height / 2;
+    if (top - tooltipHalfHeight < 0) {
+        // Aligner en haut au lieu de centrer
+        top = 8;
+        transform = "translateY(0)";
+    }
+
+    // Vérifier si le tooltip dépasse en bas
+    if (top + tooltipHalfHeight > window.innerHeight) {
+        // Aligner en bas au lieu de centrer
+        top = window.innerHeight - 8;
+        transform = "translateY(-100%)";
+    }
+
+    // Vérifier si le tooltip dépasse à droite
+    if (left + tooltipRect.width > window.innerWidth) {
+        // Positionner à gauche du point au lieu de droite
+        left = rect.left - tooltipRect.width - 12;
+    }
+
+    globalTooltip.style.position = "fixed";
+    globalTooltip.style.left = left + "px";
+    globalTooltip.style.top = top + "px";
+    globalTooltip.style.transform = transform;
+    globalTooltip.style.opacity = "1";
+}
+
+function hideTooltip() {
+    if (globalTooltip) {
+        globalTooltip.style.opacity = "0";
+    }
+}
+
+function updateTooltipOnMap(postId) {
+    const postEl = document.getElementById(postId);
+    if (!postEl) return;
+
+    // Retirer les anciens listeners
+    postEl.removeEventListener("mouseenter", postEl._tooltipMouseEnter);
+    postEl.removeEventListener("mouseleave", postEl._tooltipMouseLeave);
+
+    // Créer les nouveaux handlers
+    postEl._tooltipMouseEnter = () => showTooltip(postEl, postId);
+    postEl._tooltipMouseLeave = hideTooltip;
+
+    // Ajouter les listeners
+    postEl.addEventListener("mouseenter", postEl._tooltipMouseEnter);
+    postEl.addEventListener("mouseleave", postEl._tooltipMouseLeave);
+}
+
 function updateSummaryTable() {
     const tbody = document.querySelector("#summaryTable tbody");
     tbody.innerHTML = "";
@@ -1227,6 +1848,12 @@ function updateSummaryTable() {
                 c4: team.c4
             });
         });
+    }
+
+    // === METTRE À JOUR LE COMPTEUR DE TEAMS DANS LE TITRE ===
+    const summaryTitle = document.getElementById("summaryTitle");
+    if (summaryTitle) {
+        summaryTitle.textContent = `TEAMS (${rows.length})`;
     }
 
     // ---- Désaturer / Réactiver les icônes de la map ----
@@ -1391,6 +2018,31 @@ window.addEventListener("DOMContentLoaded", () => {
         if (iconEl) {
             iconEl.src = `/siege/img/posts/${type}.webp`;
         }
+
+        // Ajouter les 3 icônes de conditions pour les posts uniquement
+        if (type === "post" && !pp.querySelector(".post-conditions")) {
+            const conditionsDiv = document.createElement("div");
+            conditionsDiv.className = "post-conditions";
+
+            for (let i = 0; i < 3; i++) {
+                const img = document.createElement("img");
+                img.className = "post-cond-icon";
+                img.dataset.index = i;
+                img.src = "/siege/img/conditions/Condition.webp";
+                conditionsDiv.appendChild(img);
+            }
+
+            // Insérer avant le post-icon
+            pp.insertBefore(conditionsDiv, pp.querySelector(".post-icon"));
+        }
+
+        // Ajouter le compteur d'équipes pour tous les points
+        if (!pp.querySelector(".post-teams-count")) {
+            const countDiv = document.createElement("div");
+            countDiv.className = "post-teams-count empty";
+            countDiv.textContent = "0";
+            pp.appendChild(countDiv);
+        }
     });
 
     const joinBtn = document.getElementById("joinRoomBtn");
@@ -1400,6 +2052,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("saveBtn");
     const closeModalBtn = document.getElementById("closeModal");
     const addTeamBtn = document.getElementById("addTeamBtn");
+    const freezePostBtn = document.getElementById("freezePostBtn");
 
     postIds.forEach(id => {
         const el = document.getElementById(id);
@@ -1472,6 +2125,10 @@ window.addEventListener("DOMContentLoaded", () => {
         createTeamRow({}, index);
     });
 
+    freezePostBtn.addEventListener("click", () => {
+        toggleFreezePost();
+    });
+
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             const overlay = document.getElementById("modalOverlay");
@@ -1486,6 +2143,15 @@ window.addEventListener("DOMContentLoaded", () => {
         // Si on clique l'overlay (et pas le modal lui-même)
         if (e.target === overlay) {
             closeModal();
+        }
+    });
+
+    // Fermer les menus de transfert quand on clique ailleurs
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".transfer-team-btn") && !e.target.closest(".transfer-menu")) {
+            document.querySelectorAll(".transfer-menu.open").forEach(m => {
+                m.classList.remove("open");
+            });
         }
     });
 
