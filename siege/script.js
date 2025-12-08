@@ -352,6 +352,14 @@ function deleteClanMember(pseudo) {
         alert("Cannot delete in viewer mode.");
         return;
     }
+
+    // Double validation
+    const firstConfirm = confirm(`Are you sure you want to delete member "${pseudo}"?`);
+    if (!firstConfirm) return;
+
+    const secondConfirm = confirm(`⚠️ FINAL WARNING ⚠️\n\nThis will permanently delete "${pseudo}" and remove them from all teams.\n\nThis action CANNOT be undone!\n\nClick OK to confirm deletion.`);
+    if (!secondConfirm) return;
+
     delete clanMembers[pseudo];
 
     const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
