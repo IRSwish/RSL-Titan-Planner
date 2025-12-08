@@ -17,7 +17,8 @@ const db = getDatabase(app);
 
 // --- SQLite champions DB (sql.js global) ---
 let championsDB = null;
-let summarySortMode = "member"; // default
+let summarySortMode = "post"; // default
+let summarySortDirection = "asc"; // asc or desc
 let clanMembers = {};
 
 let siegeDB = null;
@@ -92,7 +93,7 @@ function searchChampions(query) {
     if (!championsDB || !query) return [];
     try {
         const stmt = championsDB.prepare(
-            "SELECT name, rarity, image FROM champions WHERE name LIKE '%' || ? || '%' ORDER BY name LIMIT 20;"
+            "SELECT name, rarity, image, auratext, aura FROM champions WHERE name LIKE '%' || ? || '%' ORDER BY name LIMIT 20;"
         );
 
         const raw = [];
@@ -125,7 +126,7 @@ function getChampionByNameExact(name) {
     if (!championsDB || !name) return null;
     try {
         const stmt = championsDB.prepare(
-            "SELECT name, rarity, image FROM champions WHERE name = ? LIMIT 1;"
+            "SELECT name, rarity, image, auratext, aura FROM champions WHERE name = ? LIMIT 1;"
         );
         stmt.bind([name]);
         let found = null;
@@ -207,6 +208,7 @@ function connectRoom(roomId) {
     onValue(mref, snap => {
         clanMembers = snap.val() || {};
         updateMembersList();
+        updateMemberFilter();
     });
 
     postIds.forEach(id => {
@@ -230,6 +232,44 @@ function connectRoom(roomId) {
     const url = new URL(window.location.href);
     url.searchParams.set("room", roomId);
     window.history.replaceState({}, "", url.toString());
+}
+
+function updateMemberFilter() {
+    const select = document.getElementById("memberFilter");
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">All</option>';
+
+    Object.keys(clanMembers).sort().forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+    });
+
+    select.value = currentValue;
+}
+
+function applyMemberFilter(selectedMember) {
+    postIds.forEach(postId => {
+        const postEl = document.getElementById(postId);
+        if (!postEl) return;
+
+        const data = postDataCache[postId] || {};
+        const teams = data.teams || [];
+
+        // Vérifier si le membre a une team sur ce post
+        const hasMember = teams.some(team => team.member === selectedMember);
+
+        if (selectedMember === "" || hasMember) {
+            // Afficher le post
+            postEl.style.display = "";
+        } else {
+            // Cacher le post
+            postEl.style.display = "none";
+        }
+    });
 }
 
 function updateMembersList() {
@@ -334,6 +374,7 @@ function updateVisualForInput(inputEl, champImgEl, rarityImgEl) {
 
 function updateLeadAura(teamRow) {
     const auraDisplay = teamRow.querySelector(".lead-aura-display");
+    console.log("updateLeadAura - auraDisplay:", auraDisplay);
     if (!auraDisplay) return;
 
     // Trouver le champion 4 (lead)
@@ -348,6 +389,7 @@ function updateLeadAura(teamRow) {
 
     const leadInput = leadSlot.querySelector(".champ-input");
     const leadName = leadInput ? leadInput.value.trim() : "";
+    console.log("updateLeadAura - leadName:", leadName);
 
     if (!leadName || !championsDB) {
         auraDisplay.innerHTML = "";
@@ -356,21 +398,46 @@ function updateLeadAura(teamRow) {
     }
 
     const lead = getChampionByNameExact(leadName);
+    console.log("updateLeadAura - lead:", lead);
     if (!lead || !lead.auratext || !lead.aura) {
+        console.log("updateLeadAura - pas d'aura trouvée");
         auraDisplay.innerHTML = "";
         auraDisplay.style.display = "none";
         return;
     }
 
+    // Parser l'aura pour extraire zone et valeur
+    const auraText = lead.auratext || '';
+    let zone = '';
+    let value = '';
+
+    // Extraire la zone (All Battles, Dungeons, Doom Tower, Arena)
+    const zoneMatch = auraText.match(/in (all battles|dungeons|doom tower|arena)/i);
+    if (zoneMatch) {
+        zone = zoneMatch[1];
+    }
+
+    // Extraire la valeur (dernier nombre avec % si présent)
+    const valueMatch = auraText.match(/by (\d+%?)\s*(?:SPD|ACC|ATK|DEF|HP|C\.RATE|C\.DMG|RES)?$/i);
+    if (valueMatch) {
+        value = valueMatch[1];
+        // Ajouter le % s'il n'y est pas mais qu'il y a un % ailleurs dans le texte
+        if (!value.includes('%') && auraText.includes('%')) {
+            value += '%';
+        }
+    }
+
     // Afficher l'aura
+    console.log("updateLeadAura - zone:", zone, "value:", value);
     auraDisplay.innerHTML = `
         <div class="lead-aura-container">
-            <img class="lead-aura-border" src="/tools/champions-index/img/aura/BORDER.webp" alt="">
-            <img class="lead-aura-champ" src="/tools/champions-index/img/champions/${lead.auratext}.webp" alt="${leadName}">
             <img class="lead-aura-icon" src="/tools/champions-index/img/aura/${lead.aura}.webp" alt="Aura">
+            <img class="lead-aura-border" src="/tools/champions-index/img/aura/BORDER.webp" alt="">
         </div>
+        <div class="lead-aura-zone">${zone}</div>
+        <div class="lead-aura-value">${value}</div>
     `;
-    auraDisplay.style.display = "block";
+    auraDisplay.style.display = "flex";
 }
 
 function moveTeamUp(teamRow) {
@@ -415,13 +482,13 @@ function createTeamRow(teamData = {}, index = 0) {
     moveUpBtn.className = "move-team-btn move-up";
     moveUpBtn.type = "button";
     moveUpBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>`;
-    moveUpBtn.title = "Monter cette team";
+    moveUpBtn.title = "Move team up";
 
     const moveDownBtn = document.createElement("button");
     moveDownBtn.className = "move-team-btn move-down";
     moveDownBtn.type = "button";
     moveDownBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>`;
-    moveDownBtn.title = "Descendre cette team";
+    moveDownBtn.title = "Move team down";
 
     moveUpBtn.onclick = () => moveTeamUp(teamRow);
     moveDownBtn.onclick = () => moveTeamDown(teamRow);
@@ -429,6 +496,46 @@ function createTeamRow(teamData = {}, index = 0) {
     moveButtons.appendChild(moveUpBtn);
     moveButtons.appendChild(moveDownBtn);
     teamRow.appendChild(moveButtons);
+
+    // --- Bouton de sélection (pour posts classiques uniquement) ---
+    const postElForSelect = currentPostId ? document.getElementById(currentPostId) : null;
+    const postTypeForSelect = postElForSelect ? postElForSelect.dataset.type : "post";
+
+    if (postTypeForSelect === "post") {
+        const selectBtn = document.createElement("button");
+        selectBtn.className = "team-select-btn";
+        selectBtn.type = "button";
+        selectBtn.dataset.selected = teamData.selected === true ? "true" : "false";
+        selectBtn.innerHTML = teamData.selected === true
+            ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+            : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        selectBtn.title = "Select this team";
+
+        selectBtn.onclick = () => {
+            // Toggle selection
+            const isSelected = selectBtn.dataset.selected === "true";
+
+            if (!isSelected) {
+                // Marquer cette team comme sélectionnée
+                selectBtn.dataset.selected = "true";
+                selectBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+                // Désélectionner toutes les autres teams du même poste
+                teamsContainer.querySelectorAll(".team-select-btn").forEach(btn => {
+                    if (btn !== selectBtn) {
+                        btn.dataset.selected = "false";
+                        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+                    }
+                });
+            } else {
+                // Désélectionner cette team
+                selectBtn.dataset.selected = "false";
+                selectBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+            }
+        };
+
+        teamRow.appendChild(selectBtn);
+    }
 
     // --- bouton clear à droite des champions ---
     const clearBtn = document.createElement("button");
@@ -467,7 +574,7 @@ function createTeamRow(teamData = {}, index = 0) {
     memberSlot.className = "member-slot";
 
     const mLabel = document.createElement("label");
-    mLabel.textContent = "Membre";
+    mLabel.textContent = "Member";
 
     const mInput = document.createElement("select");
     mInput.className = "member-select";
@@ -482,11 +589,6 @@ function createTeamRow(teamData = {}, index = 0) {
     mInput.value = teamData.member || "";
     memberSlot.appendChild(mLabel);
     memberSlot.appendChild(mInput);
-
-    // Aura display (will be populated when lead is set)
-    const auraDisplay = document.createElement("div");
-    auraDisplay.className = "lead-aura-display";
-    memberSlot.appendChild(auraDisplay);
 
     teamRow.appendChild(memberSlot);
     
@@ -566,7 +668,12 @@ function createTeamRow(teamData = {}, index = 0) {
         champSlot.dataset.champIndex = i;
 
         const cLabel = document.createElement("label");
-        cLabel.textContent = i === 4 ? "Lead" : "Champion " + i;
+        // Inverser l'ordre: 4, 3, 2, Lead (au lieu de 1, 2, 3, Lead)
+        if (i === 4) {
+            cLabel.textContent = "Lead";
+        } else {
+            cLabel.textContent = "Champion " + (5 - i);
+        }
         const cInput = document.createElement("input");
         cInput.className = "champ-input";
         cInput.value = teamData["c" + i] || "";
@@ -582,7 +689,7 @@ function createTeamRow(teamData = {}, index = 0) {
         clearChampBtn.className = "clear-champ-btn";
         clearChampBtn.type = "button";
         clearChampBtn.innerHTML = "×";
-        clearChampBtn.title = "Supprimer ce champion";
+        clearChampBtn.title = "Remove this champion";
 
         clearChampBtn.onclick = () => {
             cInput.value = "";
@@ -732,6 +839,12 @@ function createTeamRow(teamData = {}, index = 0) {
     }
 
     teamRow.appendChild(rightRow);
+
+    // Aura display (will be populated when lead is set)
+    const auraDisplay = document.createElement("div");
+    auraDisplay.className = "lead-aura-display";
+    teamRow.appendChild(auraDisplay);
+
     teamRow.appendChild(clearBtn);
 
     // Bouton pour transférer vers un autre poste
@@ -739,7 +852,7 @@ function createTeamRow(teamData = {}, index = 0) {
     transferBtn.className = "transfer-team-btn";
     transferBtn.type = "button";
     transferBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 3 9-3 9 19-9Z"/><path d="M6 12h16"/></svg>`;
-    transferBtn.title = "Déplacer vers un autre poste";
+    transferBtn.title = "Move to another post";
 
     const transferMenu = document.createElement("div");
     transferMenu.className = "transfer-menu";
@@ -752,7 +865,7 @@ function createTeamRow(teamData = {}, index = 0) {
 
         if (pid === currentPostId) {
             item.classList.add("current");
-            item.title = "Poste actuel";
+            item.title = "Current post";
         } else {
             item.addEventListener("click", () => {
                 transferTeamToPost(teamRow, pid);
@@ -799,10 +912,17 @@ function createTeamRow(teamData = {}, index = 0) {
 function getTeamsFromModal() {
     const teams = [];
     const teamsContainer = document.getElementById("teamsContainer");
+
+    // Vérifier le type de post
+    const postEl = currentPostId ? document.getElementById(currentPostId) : null;
+    const postType = postEl ? postEl.dataset.type : "post";
+
+    let teamIndex = 0;
     teamsContainer.querySelectorAll(".team-row").forEach(row => {
         const memberInput = row.querySelector(".member-select");
         const champInputs = row.querySelectorAll(".champ-input");
         const condInput = row.querySelector(".team-condition-value");
+        const selectBtn = row.querySelector(".team-select-btn");
 
         const team = {
             member: memberInput ? memberInput.value.trim() : "",
@@ -813,21 +933,58 @@ function getTeamsFromModal() {
             condition: condInput ? condInput.value.trim() : ""
         };
 
+        // Ajouter selected pour les posts classiques
+        if (postType === "post" && selectBtn) {
+            team.selected = selectBtn.dataset.selected === "true";
+        }
+
+        // Ajouter group et team pour les non-posts
+        if (postType !== "post") {
+            team.group = Math.floor(teamIndex / 3) + 1;
+            team.team = (teamIndex % 3) + 1;
+        }
+
         if (team.member || team.c1 || team.c2 || team.c3 || team.c4 || team.condition) {
             teams.push(team);
+            teamIndex++;
         }
     });
     return teams;
 }
 
+function createGroupHeader(groupNumber) {
+    const header = document.createElement("div");
+    header.className = "group-header";
+    header.textContent = `Group ${groupNumber}`;
+    return header;
+}
+
 function fillModalFromData(data) {
-    // CONDIS NON UTILISÉES POUR L’INSTANT → CHECK SAFE
+    // CONDIS NON UTILISÉES POUR L'INSTANT → CHECK SAFE
 
     const teamsContainer = document.getElementById("teamsContainer");
     teamsContainer.innerHTML = "";
 
     const teams = Array.isArray(data.teams) && data.teams.length ? data.teams : [{}];
-    teams.forEach((team, i) => createTeamRow(team, i));
+
+    // Vérifier le type de post
+    const postEl = currentPostId ? document.getElementById(currentPostId) : null;
+    const postType = postEl ? postEl.dataset.type : "post";
+
+    // Pour les tours, shrine et stronghold, grouper par 3
+    if (postType !== "post") {
+        teams.forEach((team, i) => {
+            // Ajouter un header de groupe tous les 3 teams
+            if (i % 3 === 0) {
+                const groupNumber = Math.floor(i / 3) + 1;
+                teamsContainer.appendChild(createGroupHeader(groupNumber));
+            }
+            createTeamRow(team, i);
+        });
+    } else {
+        // Pour les posts classiques, pas de groupes
+        teams.forEach((team, i) => createTeamRow(team, i));
+    }
 }
 
 function openModal(postId) {
@@ -1081,7 +1238,7 @@ function renderConditionsUI(postId, data) {
             } else {
                 img.src = `/siege/img/conditions/Condition.webp`;
                 img.style.display = "block";
-                img.title = "Cliquez pour choisir une condition";
+                img.title = "Click to choose a condition";
                 valueInput.value = "";
                 currentPostConditionsList[index] = null;
             }
@@ -1311,7 +1468,7 @@ if (!selected) {
         hiddenInput.value = selected.id;
     } else {
         currentIcon.src = `/siege/img/stronghold/Stronghold.webp`;
-        currentIcon.title = "Choisir un niveau Stronghold";
+        currentIcon.title = "Choose a Stronghold level";
         hiddenInput.value = "";
     }
 
@@ -1416,7 +1573,7 @@ function renderDefenseTowerUI(panel, toggleBtn, currentIcon, hiddenInput, curren
         hiddenInput.value = selected.id;
     } else {
         currentIcon.src = `/siege/img/defensetower/DefenseTower.webp`;
-        currentIcon.title = "Choisir une condition Defense Tower";
+        currentIcon.title = "Choose a Defense Tower condition";
         hiddenInput.value = "";
     }
 
@@ -1519,7 +1676,7 @@ function renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, currentV
         hiddenInput.value = selected.id;
     } else {
         currentIcon.src = `/siege/img/magictower/MagicTower.webp`;
-        currentIcon.title = "Choisir une condition Magic Tower";
+        currentIcon.title = "Choose a Magic Tower condition";
         hiddenInput.value = "";
     }
 
@@ -1768,9 +1925,9 @@ function showTooltip(postEl, postId) {
     const tooltipRect = globalTooltip.getBoundingClientRect();
 
     // Position de base : à droite du point, centré verticalement
-    let left = rect.right + 12;
+    let left = rect.right + 25;
     let top = rect.top + rect.height / 2;
-    let transform = "translateY(-50%)";
+    let transform = "translateY(-100%)";
 
     // Vérifier si le tooltip dépasse en haut
     const tooltipHalfHeight = tooltipRect.height / 2;
@@ -1833,20 +1990,37 @@ function updateSummaryTable() {
         const data = postDataCache[postId];
         if (!data || !data.teams) continue;
 
+        // Vérifier le type de post
+        const postEl = document.getElementById(postId);
+        const postType = postEl ? postEl.dataset.type : "post";
+
+        let teamCounter = 0;
         data.teams.forEach((team, i) => {
             if (!team.member) return;
+
+            // Calculer group et team pour les non-posts
+            let group = "-";
+            let teamNum = i + 1;
+
+            if (postType !== "post") {
+                group = Math.floor(teamCounter / 3) + 1;
+                teamNum = (teamCounter % 3) + 1;
+            }
 
             rows.push({
                 postId,
                 member: team.member,
-                group: team.group || "-",
-                teamIndex: i + 1,
+                group: group,
+                teamIndex: teamNum,
                 teamCondition: team.condition || "",
+                selected: team.selected || false,
                 c1: team.c1,
                 c2: team.c2,
                 c3: team.c3,
                 c4: team.c4
             });
+
+            teamCounter++;
         });
     }
 
@@ -1870,10 +2044,23 @@ function updateSummaryTable() {
         }
     });
 
+    // Update active header and direction arrow
+    document.querySelectorAll("#summaryTable th.sortable").forEach(th => {
+        if (th.dataset.sort === summarySortMode) {
+            th.classList.add("active");
+            th.classList.toggle("desc", summarySortDirection === "desc");
+        } else {
+            th.classList.remove("active", "desc");
+        }
+    });
+
     // TRI
     if (summarySortMode === "member") {
-        rows.sort((a, b) => a.member.localeCompare(b.member));
-    } 
+        rows.sort((a, b) => {
+            const result = a.member.localeCompare(b.member);
+            return summarySortDirection === "desc" ? -result : result;
+        });
+    }
     else if (summarySortMode === "post") {
 
         rows.sort((a, b) => {
@@ -1885,13 +2072,16 @@ function updateSummaryTable() {
             const na = pa.startsWith("post") ? parseInt(pa.replace("post", "")) : null;
             const nb = pb.startsWith("post") ? parseInt(pb.replace("post", "")) : null;
 
+            let result;
             // si deux postes classiques : tri numérique correct
             if (na !== null && nb !== null) {
-                return na - nb;
+                result = na - nb;
+            } else {
+                // sinon tri alphabétique standard pour towers/shrines/etc
+                result = pa.localeCompare(pb);
             }
 
-            // sinon tri alphabétique standard pour towers/shrines/etc
-            return pa.localeCompare(pb);
+            return summarySortDirection === "desc" ? -result : result;
         });
     }
 
@@ -1986,11 +2176,23 @@ function updateSummaryTable() {
                 }
             }
 
-        
+        // Selection icon (only for classic posts)
+        let selIcon = "";
+        if (typeForRow === "post") {
+            if (r.selected === true) {
+                selIcon = `<svg class="summary-sel-icon selected" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            } else {
+                selIcon = `<svg class="summary-sel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+            }
+        } else {
+            selIcon = "-";
+        }
+
         tr.innerHTML = `
             <td>${getPostLabel(r.postId)}</td>
             <td class="summary-group-cell">${r.group || "-"}</td>
             <td class="summary-team-cell">${r.teamIndex || "-"}</td>
+            <td class="summary-sel-cell">${selIcon}</td>
             <td class="summary-cond-cell">${condIcon}</td>
             <td>${r.member}</td>
             <td class="summary-hh-cell">${hhIcon}</td>
@@ -2000,6 +2202,15 @@ function updateSummaryTable() {
             <td>${r.c4}</td>
         `;
         tbody.appendChild(tr);
+
+        // Empêcher l'ouverture du modal quand on clique sur le lien HellHades
+        const hhLink = tr.querySelector(".hh-table-icon");
+        if (hhLink) {
+            hhLink.addEventListener("click", (e) => {
+                e.stopPropagation();
+            });
+        }
+
         tr.addEventListener("click", () => {
             openPostFromSummary(r.postId, r.member);
         });
@@ -2053,6 +2264,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const closeModalBtn = document.getElementById("closeModal");
     const addTeamBtn = document.getElementById("addTeamBtn");
     const freezePostBtn = document.getElementById("freezePostBtn");
+    const memberFilter = document.getElementById("memberFilter");
+
+    if (memberFilter) {
+        memberFilter.addEventListener("change", (e) => {
+            applyMemberFilter(e.target.value);
+        });
+    }
 
     postIds.forEach(id => {
         const el = document.getElementById(id);
@@ -2155,14 +2373,22 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.getElementById("sortByMember").addEventListener("click", () => {
-        summarySortMode = "member";
-        updateSummaryTable();
-    });
+    // Sort by clicking table headers
+    document.querySelectorAll("#summaryTable th.sortable").forEach(th => {
+        th.addEventListener("click", () => {
+            const sortType = th.dataset.sort;
 
-    document.getElementById("sortByPost").addEventListener("click", () => {
-        summarySortMode = "post";
-        updateSummaryTable();
+            // Si on clique sur la même colonne, toggle la direction
+            if (summarySortMode === sortType) {
+                summarySortDirection = summarySortDirection === "asc" ? "desc" : "asc";
+            } else {
+                // Nouvelle colonne, réinitialiser en ascendant
+                summarySortMode = sortType;
+                summarySortDirection = "asc";
+            }
+
+            updateSummaryTable();
+        });
     });
 
     // Auto room via ?room=

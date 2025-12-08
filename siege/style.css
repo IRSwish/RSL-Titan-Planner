@@ -228,6 +228,49 @@ body.modal-open {
 }
 
 /* ==================== MAP ==================== */
+.map-filter {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(10, 10, 10, 0.95);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d4af37;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.map-filter label {
+    font-size: 12px;
+    color: #d4af37;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.map-filter select {
+    background: #050505;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #fcf6ff;
+    padding: 6px 8px;
+    font-size: 13px;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.map-filter select:focus {
+    outline: none;
+    border-color: #d4af37;
+}
+
+.map-section {
+    position: relative;
+}
+
 .map-container {
     position: relative;
     border-radius: 16px;
@@ -298,7 +341,8 @@ body.modal-open {
     cursor: pointer;
 }
 
-.post-icon.desaturated {
+.post-icon.desaturated,
+.post-icon.filtered-out {
     filter: grayscale(100%) brightness(0.5);
     opacity: 1;
 }
@@ -486,28 +530,38 @@ body.modal-open {
 .modal {
     background: #141414;
     border-radius: 16px;
-    padding: 16px 18px 18px;
+    padding: 0;
     border: 2px solid #d4af37;
     box-shadow: 0 0 20px #d4af3770;
     width: 870px;
     max-width: 98vw;
     max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-scrollable {
     overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 18px 18px;
     scrollbar-width: thin;
-    scrollbar-color: #d4af37 #111;
+    scrollbar-color: #d4af37 transparent;
 }
 
-.modal::-webkit-scrollbar {
-    width: 8px;
+.modal-scrollable::-webkit-scrollbar {
+    width: 10px;
 }
 
-.modal::-webkit-scrollbar-track {
-    background: #111;
+.modal-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px 0;
 }
 
-.modal::-webkit-scrollbar-thumb {
+.modal-scrollable::-webkit-scrollbar-thumb {
     background: #d4af37;
-    border-radius: 4px;
+    border-radius: 5px;
+    border: 2px solid #141414;
 }
 
 .modal-header {
@@ -719,6 +773,7 @@ body.modal-open {
     gap: 12px;
     scrollbar-width: thin;
     scrollbar-color: #d4af37 #111;
+    overflow-x: hidden;
 }
 
 .teams-wrapper::-webkit-scrollbar {
@@ -734,17 +789,36 @@ body.modal-open {
     border-radius: 4px;
 }
 
+.group-header {
+    margin-top: 16px;
+    margin-bottom: 4px;
+    padding: 6px 12px;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+    border-left: 3px solid #d4af37;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+}
+
+.group-header:first-child {
+    margin-top: 8px;
+}
+
 .team-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 100%;
     margin-top: 8px;
     padding: 8px;
     background: rgba(255, 255, 255, 0.02);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
+    flex-shrink: 0;
 }
 
 .team-row:hover {
@@ -824,6 +898,48 @@ body.modal-open {
     cursor: not-allowed;
 }
 
+.team-select-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 8px;
+    border: 2px solid #444;
+    background: #0f0f0f;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
+}
+
+.team-select-btn[data-selected="true"] {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.team-select-btn[data-selected="true"] svg {
+    color: #22c55e;
+}
+
+.team-select-btn[data-selected="false"] {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.team-select-btn[data-selected="false"] svg {
+    color: #ef4444;
+}
+
+.team-select-btn:hover {
+    transform: scale(1.05);
+}
+
+.team-select-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
 .transfer-menu-item.current:hover {
     background: #1a1a1a;
     border-color: #333;
@@ -899,6 +1015,56 @@ body.modal-open {
     color: #fcf6ff;
     padding: 6px 8px;
     font-size: 13px;
+}
+
+/* Lead Aura Display */
+.lead-aura-display {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.lead-aura-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lead-aura-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 1;
+}
+
+.lead-aura-border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 2;
+}
+
+.lead-aura-zone {
+    font-size: 9px;
+    color: #aaa;
+    text-align: center;
+    text-transform: capitalize;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+}
+
+.lead-aura-value {
+    font-size: 11px;
+    color: #d4af37;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.05em;
 }
 
 .modal-right-row {
@@ -1181,6 +1347,34 @@ body.modal-open {
     font-weight: 600;
 }
 
+#summaryTable th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background 0.2s;
+}
+
+#summaryTable th.sortable:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+#summaryTable th.sortable::after {
+    content: "▼";
+    margin-left: 6px;
+    font-size: 10px;
+    opacity: 0.3;
+    transition: transform 0.2s;
+}
+
+#summaryTable th.sortable.active::after {
+    opacity: 1;
+    color: #d4af37;
+}
+
+#summaryTable th.sortable.desc::after {
+    content: "▲";
+}
+
 #summaryTable tbody tr {
     cursor: pointer;
 }
@@ -1192,7 +1386,8 @@ body.modal-open {
 #summaryTable td.summary-cond-cell,
 #summaryTable td.summary-hh-cell,
 #summaryTable td.summary-group-cell,
-#summaryTable td.summary-team-cell {
+#summaryTable td.summary-team-cell,
+#summaryTable td.summary-sel-cell {
     text-align: center;
     vertical-align: middle;
 }
@@ -1215,6 +1410,21 @@ body.modal-open {
 
 .hh-link-icon {
     margin-left: 6px;
+}
+
+.summary-sel-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.summary-sel-icon.selected {
+    color: #22c55e;
+}
+
+.summary-sel-icon:not(.selected) {
+    color: #ef4444;
 }
 
 /* ==================== RESPONSIVE ==================== */

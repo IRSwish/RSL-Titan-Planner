@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Siege Planner – PoC</title>
@@ -30,6 +30,12 @@
 
 <main class="layout">
     <section class="map-section">
+        <div class="map-filter">
+            <label for="memberFilter">Member:</label>
+            <select id="memberFilter">
+                <option value="">All</option>
+            </select>
+        </div>
         <div class="map-container">
             <img src="/siege/img/Siege_Map.webp" class="map-img" alt="Siege Map">
 
@@ -201,19 +207,15 @@
 <section id="summarySection" class="summary-section">
     <h2 class="summary-title" id="summaryTitle">TEAMS (0)</h2>
 
-    <div class="summary-sort">
-        <button id="sortByMember">Sort by Member</button>
-        <button id="sortByPost">Sort by Post</button>
-    </div>
-
     <table id="summaryTable">
         <thead>
             <tr>
-                <th>Post</th>
+                <th class="sortable" data-sort="post">Post</th>
                 <th>Group</th>
                 <th>Team</th>
+                <th>Sel.</th>
                 <th>Cond.</th>
-                <th>Member</th>
+                <th class="sortable" data-sort="member">Member</th>
                 <th>HH</th>
                 <th>Lead</th>
                 <th>Champion 2</th>
@@ -237,40 +239,42 @@
     </div>
 </section>
 
-<!-- Modal de composition -->
+<!-- Modal -->
 <div id="modalOverlay" class="modal-overlay">
     <div class="modal">
-        <div class="modal-header">
-            <button id="freezePostBtn" class="freeze-post-btn">
-                <span id="freezeIcon"></span>
-                <span id="freezeLabel">Lock</span>
-            </button>
-            <h2 id="modalTitle">Poste</h2>
-            <button id="closeModal" class="ghost-btn small">✕</button>
-        </div>
-
-        <!-- Conditions (une seule fois, en haut) -->
-        <div class="field-group conditions-group">
-        <button id="conditionToggle" type="button" class="condition-toggle">
-            <img id="conditionCurrentIcon" class="condition-current-icon" src="/siege/img/Condition.webp" alt="Condition" />
-        </button>
-
-        <div id="conditionsPanel" class="conditions-panel"></div>
-
-        <!-- valeur vraiment stockée (id de la condition) -->
-        <input type="hidden" id="condition" value="" />
-        </div>
-
-        <div class="modal-content">
-            <!-- Lignes d'équipes dynamiques -->
-            <div class="teams-wrapper">
-                <div id="teamsContainer"></div>
-                <button id="addTeamBtn" class="ghost-btn add-team-btn">+ ADD TEAM</button>
+        <div class="modal-scrollable">
+            <div class="modal-header">
+                <button id="freezePostBtn" class="freeze-post-btn">
+                    <span id="freezeIcon"></span>
+                    <span id="freezeLabel">Lock</span>
+                </button>
+                <h2 id="modalTitle">Post</h2>
+                <button id="closeModal" class="ghost-btn small">✕</button>
             </div>
-        </div>
 
-        <button id="saveBtn" class="save-btn">💾 SAVE TEAMS</button>
-        <p id="statusMsg" class="status"></p>
+            <!-- Conditions -->
+            <div class="field-group conditions-group">
+            <button id="conditionToggle" type="button" class="condition-toggle">
+                <img id="conditionCurrentIcon" class="condition-current-icon" src="/siege/img/Condition.webp" alt="Condition" />
+            </button>
+
+            <div id="conditionsPanel" class="conditions-panel"></div>
+
+            <!-- Hidden value (condition id) -->
+            <input type="hidden" id="condition" value="" />
+            </div>
+
+            <div class="modal-content">
+                <!-- Teams -->
+                <div class="teams-wrapper">
+                    <div id="teamsContainer"></div>
+                    <button id="addTeamBtn" class="ghost-btn add-team-btn">+ ADD TEAM</button>
+                </div>
+            </div>
+
+            <button id="saveBtn" class="save-btn">💾 SAVE TEAMS</button>
+            <p id="statusMsg" class="status"></p>
+        </div>
     </div>
 </div>
 
