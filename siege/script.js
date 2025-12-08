@@ -485,7 +485,7 @@ function updateMoveButtons() {
     });
 }
 
-function createTeamRow(teamData = {}, index = 0) {
+function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
     const teamsContainer = document.getElementById("teamsContainer");
     const teamRow = document.createElement("div");
     teamRow.className = "team-row";
@@ -532,9 +532,16 @@ function createTeamRow(teamData = {}, index = 0) {
             selectBtn.innerHTML = checkmarkSVG;
             selectBtn.dataset.state = "selected";
         } else {
-            // On mettra à jour l'état après avoir vérifié toutes les équipes
-            selectBtn.innerHTML = hourglassSVG;
-            selectBtn.dataset.state = "pending";
+            // Set initial state based on whether any team is selected
+            if (hasSelectedTeam) {
+                // Another team is selected, so this one is rejected
+                selectBtn.innerHTML = crossSVG;
+                selectBtn.dataset.state = "rejected";
+            } else {
+                // No team selected yet, so this is pending
+                selectBtn.innerHTML = hourglassSVG;
+                selectBtn.dataset.state = "pending";
+            }
         }
         selectBtn.title = "Select this team";
 
@@ -570,6 +577,9 @@ function createTeamRow(teamData = {}, index = 0) {
                     }
                 });
             }
+
+            // Apply team-specific locks after selection change
+            applyTeamSelectionLocks();
         };
 
         teamRow.appendChild(selectBtn);
@@ -625,6 +635,17 @@ function createTeamRow(teamData = {}, index = 0) {
     });
 
     mInput.value = teamData.member || "";
+
+    // Add hover listener to highlight team when member is hovered
+    mInput.addEventListener("mouseenter", () => {
+        teamRow.style.background = "rgba(212, 175, 55, 0.15)";
+        teamRow.style.transition = "background 0.2s";
+    });
+
+    mInput.addEventListener("mouseleave", () => {
+        teamRow.style.background = "";
+    });
+
     memberSlot.appendChild(mLabel);
     memberSlot.appendChild(mInput);
 
@@ -921,6 +942,23 @@ function createTeamRow(teamData = {}, index = 0) {
             if (m !== transferMenu) m.classList.remove("open");
         });
         transferMenu.classList.toggle("open");
+
+        // Fix positioning if menu would go off screen
+        if (transferMenu.classList.contains("open")) {
+            setTimeout(() => {
+                const menuRect = transferMenu.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+
+                // If menu goes below viewport, position it above the button
+                if (menuRect.bottom > viewportHeight) {
+                    transferMenu.style.top = 'auto';
+                    transferMenu.style.bottom = '100%';
+                } else {
+                    transferMenu.style.top = '100%';
+                    transferMenu.style.bottom = 'auto';
+                }
+            }, 0);
+        }
     });
 
     teamRow.appendChild(transferBtn);
@@ -1005,6 +1043,9 @@ function fillModalFromData(data) {
 
     const teams = Array.isArray(data.teams) && data.teams.length ? data.teams : [{}];
 
+    // Check if any team is selected (for correct initial state)
+    const hasSelectedTeam = teams.some(t => t.selected === true);
+
     // Vérifier le type de post
     const postEl = currentPostId ? document.getElementById(currentPostId) : null;
     const postType = postEl ? postEl.dataset.type : "post";
@@ -1017,11 +1058,11 @@ function fillModalFromData(data) {
                 const groupNumber = Math.floor(i / 3) + 1;
                 teamsContainer.appendChild(createGroupHeader(groupNumber));
             }
-            createTeamRow(team, i);
+            createTeamRow(team, i, hasSelectedTeam);
         });
     } else {
         // Pour les posts classiques, pas de groupes
-        teams.forEach((team, i) => createTeamRow(team, i));
+        teams.forEach((team, i) => createTeamRow(team, i, hasSelectedTeam));
     }
 }
 
@@ -1029,17 +1070,26 @@ function openModal(postId) {
     currentPostId = postId;
     document.body.classList.add("modal-open");
     document.getElementById("modalOverlay").style.display = "flex";
-    document.getElementById("modalTitle").textContent = postId
+
+    const data = postDataCache[postId] || {};
+    const isFrozen = data.frozen || false;
+
+    // Add lock/unlock icon before title
+    const lockIcon = isFrozen
+        ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
+
+    const titleText = postId
         .replace("post", "Post ")
         .replace("magictower", "Magic Tower ")
         .replace("defensetower", "Defense Tower ")
         .replace("manashrine", "Mana Shrine ")
         .replace("stronghold", "Stronghold");
 
-    const data = postDataCache[postId] || {};
+    document.getElementById("modalTitle").innerHTML = lockIcon + titleText;
 
     // Mettre à jour l'état du bouton freeze
-    updateFreezeButton(data.frozen || false);
+    updateFreezeButton(isFrozen);
 
     // Mettre à jour le bonus du bastion (visible sur tous les posts)
     updateStrongholdBonus();
@@ -1076,14 +1126,21 @@ function updateSelectionButtonsState() {
     // Mettre à jour les boutons non sélectionnés
     selectButtons.forEach(btn => {
         if (btn.dataset.selected !== "true") {
+            // PRESERVE the rejected state if it's already set (don't revert cross to hourglass)
+            const currentState = btn.dataset.state;
+
             if (hasSelection) {
-                // Une sélection existe : afficher la croix
-                btn.dataset.state = "rejected";
-                btn.innerHTML = crossSVG;
+                // Une sélection existe : afficher la croix (only if not already rejected)
+                if (currentState !== "rejected") {
+                    btn.dataset.state = "rejected";
+                    btn.innerHTML = crossSVG;
+                }
             } else {
-                // Aucune sélection : afficher le sablier
-                btn.dataset.state = "pending";
-                btn.innerHTML = hourglassSVG;
+                // Aucune sélection : afficher le sablier (only if currently pending or undefined)
+                if (currentState !== "rejected") {
+                    btn.dataset.state = "pending";
+                    btn.innerHTML = hourglassSVG;
+                }
             }
         }
     });
@@ -1143,6 +1200,21 @@ function updateFreezeButton(isFrozen) {
         label.textContent = "Lock";
         btn.title = "Lock this post";
     }
+
+    // Update modal title icon
+    updateModalTitleIcon(isFrozen);
+}
+
+function updateModalTitleIcon(isFrozen) {
+    const modalTitle = document.getElementById("modalTitle");
+    if (!modalTitle) return;
+
+    const lockIcon = isFrozen
+        ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
+
+    const currentText = modalTitle.textContent;
+    modalTitle.innerHTML = lockIcon + currentText;
 }
 
 function applyFreezeState(isFrozen) {
@@ -1155,6 +1227,19 @@ function applyFreezeState(isFrozen) {
         modal.querySelectorAll("input, select, .champ-input").forEach(el => el.disabled = true);
         modal.querySelectorAll(".move-team-btn, .clear-team-btn, .delete-team-btn, .transfer-team-btn, .clear-champ-btn, .condition-toggle, .team-cond-btn").forEach(btn => btn.disabled = true);
 
+        // Disable drag & drop
+        modal.querySelectorAll('[draggable="true"]').forEach(el => {
+            el.draggable = false;
+            el.style.cursor = 'not-allowed';
+            el.style.opacity = '0.6';
+        });
+
+        // Disable champion slots (autocomplete)
+        modal.querySelectorAll('.champ-slot').forEach(slot => {
+            slot.style.pointerEvents = 'none';
+            slot.style.opacity = '0.6';
+        });
+
         if (saveBtn) saveBtn.disabled = true;
         if (addTeamBtn) addTeamBtn.disabled = true;
 
@@ -1164,6 +1249,19 @@ function applyFreezeState(isFrozen) {
         modal.querySelectorAll("input, select, .champ-input").forEach(el => el.disabled = false);
         modal.querySelectorAll(".move-team-btn, .clear-team-btn, .delete-team-btn, .transfer-team-btn, .clear-champ-btn, .condition-toggle, .team-cond-btn").forEach(btn => btn.disabled = false);
 
+        // Re-enable drag & drop
+        modal.querySelectorAll('[draggable="false"]').forEach(el => {
+            el.draggable = true;
+            el.style.cursor = '';
+            el.style.opacity = '';
+        });
+
+        // Re-enable champion slots
+        modal.querySelectorAll('.champ-slot').forEach(slot => {
+            slot.style.pointerEvents = '';
+            slot.style.opacity = '';
+        });
+
         if (saveBtn) saveBtn.disabled = false;
         if (addTeamBtn) addTeamBtn.disabled = false;
 
@@ -1172,6 +1270,98 @@ function applyFreezeState(isFrozen) {
         // Re-update move buttons pour les états corrects
         updateMoveButtons();
     }
+
+    // Apply team-specific locks (validated/rejected teams) - do this regardless of freeze state
+    // But only if the post is not frozen (otherwise everything is already disabled)
+    if (!isFrozen) {
+        applyTeamSelectionLocks();
+    }
+}
+
+function applyTeamSelectionLocks() {
+    // Only for regular posts (not towers/shrines)
+    const postEl = currentPostId ? document.getElementById(currentPostId) : null;
+    const postType = postEl ? postEl.dataset.type : "post";
+
+    if (postType !== "post") return;
+
+    const teamsContainer = document.getElementById("teamsContainer");
+    if (!teamsContainer) return;
+
+    const teamRows = teamsContainer.querySelectorAll(".team-row");
+
+    teamRows.forEach(row => {
+        const selectBtn = row.querySelector(".team-select-btn");
+        if (!selectBtn) return;
+
+        const state = selectBtn.dataset.state;
+
+        // If team is selected (validated) or rejected, disable ALL editing
+        if (state === "selected" || state === "rejected") {
+            // Disable champion slots
+            row.querySelectorAll(".champ-slot").forEach(slot => {
+                slot.style.pointerEvents = "none";
+                slot.style.opacity = "0.6";
+
+                // Disable the autocomplete input inside
+                const input = slot.querySelector(".champ-input");
+                if (input) {
+                    input.disabled = true;
+                }
+            });
+
+            // Disable ALL buttons (move, delete, clear, transfer, condition)
+            row.querySelectorAll(".move-team-btn, .delete-team-btn, .clear-team-btn, .clear-champ-btn, .transfer-dropdown-toggle, .team-cond-btn").forEach(btn => {
+                btn.disabled = true;
+                btn.style.pointerEvents = "none";
+                btn.style.opacity = "0.5";
+            });
+
+            // Disable drag & drop on champions
+            row.querySelectorAll('[draggable="true"]').forEach(el => {
+                el.draggable = false;
+                el.style.cursor = 'not-allowed';
+            });
+
+            // Disable member select
+            const memberSelect = row.querySelector(".member-select");
+            if (memberSelect) {
+                memberSelect.disabled = true;
+                memberSelect.style.opacity = "0.6";
+            }
+        } else {
+            // Team is pending - ensure editing is allowed
+            row.querySelectorAll(".champ-slot").forEach(slot => {
+                slot.style.pointerEvents = "";
+                slot.style.opacity = "";
+
+                const input = slot.querySelector(".champ-input");
+                if (input) {
+                    input.disabled = false;
+                }
+            });
+
+            // Re-enable buttons
+            row.querySelectorAll(".move-team-btn, .delete-team-btn, .clear-team-btn, .clear-champ-btn, .transfer-dropdown-toggle, .team-cond-btn").forEach(btn => {
+                btn.disabled = false;
+                btn.style.pointerEvents = "";
+                btn.style.opacity = "";
+            });
+
+            // Re-enable drag & drop
+            row.querySelectorAll('[draggable="false"]').forEach(el => {
+                el.draggable = true;
+                el.style.cursor = '';
+            });
+
+            // Re-enable member select
+            const memberSelect = row.querySelector(".member-select");
+            if (memberSelect) {
+                memberSelect.disabled = false;
+                memberSelect.style.opacity = "";
+            }
+        }
+    });
 }
 
 function toggleFreezePost() {
@@ -1193,6 +1383,7 @@ function toggleFreezePost() {
             updateFreezeButton(newFrozenState);
             applyFreezeState(newFrozenState);
             updatePostConditionsOnMap(currentPostId);  // Masquer/afficher les icônes sur la carte
+            updateTeamsCountOnMap(currentPostId);  // Update team count and hourglass
             setStatus(newFrozenState ? "Post locked ✔" : "Post unlocked ✔");
         })
         .catch(err => {
@@ -2105,7 +2296,38 @@ function updateTeamsCountOnMap(postId) {
     });
 
     const count = teamsWithMembers.length;
-    countDiv.textContent = count;
+
+    // Check if this is a regular post (not tower/shrine/stronghold)
+    const postType = postEl.dataset.type;
+    const isRegularPost = postType === "post";
+
+    // Check if we need to show hourglass (pending arbitration)
+    // Conditions: regular post, more than 1 team, no team is validated
+    const hasMultipleTeams = count > 1;
+    const hasValidatedTeam = isRegularPost && teams.some(team => team.selected === true);
+    const showHourglass = isRegularPost && hasMultipleTeams && !hasValidatedTeam;
+
+    // For regular posts, show "x/1" format
+    if (isRegularPost) {
+        // Set count with optional hourglass icon (red to indicate action needed)
+        if (showHourglass) {
+            countDiv.innerHTML = `${count}/1 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 2px;"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/><path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12 7.586 7.414A2 2 0 0 1 7 6.172V2"/></svg>`;
+            countDiv.classList.add("alert"); // Red styling
+        } else {
+            countDiv.textContent = `${count}/1`;
+
+            // Red styling if 0/1 (empty post)
+            if (count === 0) {
+                countDiv.classList.add("alert");
+            } else {
+                countDiv.classList.remove("alert");
+            }
+        }
+    } else {
+        // For towers/shrines/stronghold, keep old format (just the number)
+        countDiv.textContent = count;
+        countDiv.classList.remove("alert");
+    }
 
     // Ajouter/retirer la classe 'empty' selon le nombre
     if (count === 0) {
@@ -2132,16 +2354,55 @@ function createTooltipContent(postId) {
 
     const content = document.createElement("div");
 
-    // Titre
+    // Titre avec icône lock/unlock
     const title = document.createElement("div");
     title.className = "post-tooltip-title";
-    title.textContent = getPostLabel(postId);
+
+    const isFrozen = data.frozen || false;
+    const lockIcon = isFrozen
+        ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
+
+    title.innerHTML = lockIcon + getPostLabel(postId);
     content.appendChild(title);
+
+    // Get selected member from filter
+    const memberFilter = document.getElementById("memberFilter");
+    const selectedMember = memberFilter ? memberFilter.value : "";
 
     // Afficher toutes les équipes
     teamsWithMembers.forEach((team, index) => {
+        // Add group separator for buildings (every 3 teams)
+        if (postType !== "post" && index > 0 && index % 3 === 0) {
+            const separator = document.createElement("div");
+            separator.className = "post-tooltip-group-separator";
+            content.appendChild(separator);
+        }
+
         const teamDiv = document.createElement("div");
         teamDiv.className = "post-tooltip-team";
+
+        // Highlight if this is the selected member
+        if (selectedMember && team.member === selectedMember) {
+            teamDiv.style.background = "rgba(212, 175, 55, 0.25)";
+            teamDiv.style.borderRadius = "6px";
+        }
+
+        // Add hover effect to highlight this line
+        teamDiv.addEventListener("mouseenter", () => {
+            teamDiv.style.background = "rgba(212, 175, 55, 0.2)";
+            teamDiv.style.borderRadius = "6px";
+        });
+        teamDiv.addEventListener("mouseleave", () => {
+            // Restore the highlight if this is the selected member
+            if (selectedMember && team.member === selectedMember) {
+                teamDiv.style.background = "rgba(212, 175, 55, 0.25)";
+                teamDiv.style.borderRadius = "6px";
+            } else {
+                teamDiv.style.background = "";
+                teamDiv.style.borderRadius = "";
+            }
+        });
 
         // Pseudo
         const memberSpan = document.createElement("span");
@@ -2507,8 +2768,16 @@ function updateSummaryTable() {
             }
         }
 
+        // Add status icon (lock/unlock) with colors
+        const postData = postDataCache[r.postId];
+        const isFrozen = postData && postData.frozen;
+        const statusIcon = isFrozen
+            ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
+
         tr.innerHTML = `
             <td>${getPostLabel(r.postId)}</td>
+            <td class="summary-status-cell">${statusIcon}</td>
             <td class="summary-group-cell">${r.group || "-"}</td>
             <td class="summary-team-cell">${r.teamIndex || "-"}</td>
             <td class="summary-sel-cell">${selIcon}</td>
@@ -2548,30 +2817,53 @@ function applyViewerRestrictions() {
         '.team-freeze-btn',
         '.team-select-btn',
         '.transfer-dropdown-toggle',
-        '.move-up-btn',
-        '.move-down-btn',
+        '.transfer-menu-item',
+        '.delete-team-btn',
+        '.move-team-btn',
         '.clear-team-btn',
         '#conditionsPanelToggle',
-        '.condition-icon',
-        '.condition-toggle',
         '.post-condition-slot',
         '.member-delete-btn',
         'input[type="text"]',
         'input[type="number"]',
         'select',
         '.champ-slot',
-        '.champ-slot img',
         '.team-member-select',
         '.clear-champ-btn'
     ];
 
     disableSelectors.forEach(selector => {
         document.querySelectorAll(selector).forEach(el => {
+            // Exception: keep member filter active in viewer mode
+            if (el.id === 'memberFilter') {
+                return;
+            }
             el.disabled = true;
             el.style.opacity = '0.5';
             el.style.cursor = 'not-allowed';
             el.style.pointerEvents = 'none';
         });
+    });
+
+    // Keep champion slots and images fully visible (important for viewing)
+    document.querySelectorAll('.champ-slot').forEach(slot => {
+        // Override the disabled opacity for the slot itself
+        if (slot.style.opacity === '0.5') {
+            slot.style.opacity = '1';
+        }
+    });
+
+    document.querySelectorAll('.champ-slot img').forEach(img => {
+        img.style.opacity = '1';
+        img.style.cursor = 'default';
+        img.style.pointerEvents = 'none';
+    });
+
+    // Keep conditions/bonus icons fully visible
+    document.querySelectorAll('.condition-icon, .condition-toggle, .condition-current-icon, .stronghold-bonus-icon').forEach(icon => {
+        icon.style.opacity = '1';
+        icon.style.cursor = 'default';
+        icon.style.pointerEvents = 'none';
     });
 
     // Disable drag and drop
@@ -2597,7 +2889,7 @@ function disableViewerControls() {
     if (header && !document.getElementById('viewerModeIndicator')) {
         const indicator = document.createElement('div');
         indicator.id = 'viewerModeIndicator';
-        indicator.style.cssText = 'position: fixed; top: 10px; right: 10px; background: rgba(245, 158, 11, 0.2); border: 2px solid #f59e0b; color: #f59e0b; padding: 8px 16px; border-radius: 8px; font-weight: 600; z-index: 9999; display: flex; align-items: center; gap: 8px;';
+        indicator.style.cssText = 'position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(245, 158, 11, 0.2); border: 2px solid #f59e0b; color: #f59e0b; padding: 8px 16px; border-radius: 8px; font-weight: 600; z-index: 9999; display: flex; align-items: center; gap: 8px;';
         indicator.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>

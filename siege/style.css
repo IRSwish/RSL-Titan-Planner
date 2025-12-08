@@ -358,6 +358,11 @@ body.modal-open {
     height: 60px;
     object-fit: contain;
     transform: translate(-50%, -100%);
+    transform-origin: center center;
+    -webkit-transform: translate(-50%, -100%);
+    -webkit-transform-origin: center center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     z-index: 1;
     cursor: pointer;
 }
@@ -377,6 +382,11 @@ body.modal-open {
     z-index: 2;
     object-fit: contain;
     transform: translate(-50%, -100%);
+    transform-origin: center center;
+    -webkit-transform: translate(-50%, -100%);
+    -webkit-transform-origin: center center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     pointer-events: none;
 }
 
@@ -414,6 +424,12 @@ body.modal-open {
 
 .post-teams-count.empty {
     display: none;
+}
+
+.post-teams-count.alert {
+    color: #ef4444;
+    border-color: #ef4444;
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
 }
 
 .post-conditions {
@@ -510,8 +526,8 @@ body.modal-open {
     object-fit: cover;
     border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    image-rendering: auto;
+    image-rendering: smooth;
 }
 
 .post-tooltip-champ-empty {
@@ -528,6 +544,12 @@ body.modal-open {
     font-style: italic;
     margin-top: 4px;
     text-align: center;
+}
+
+.post-tooltip-group-separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4) 20%, rgba(212, 175, 55, 0.4) 80%, transparent);
+    margin: 6px 0;
 }
 
 .hint-text {
@@ -1590,7 +1612,8 @@ body.modal-open {
 #summaryTable td.summary-hh-cell,
 #summaryTable td.summary-group-cell,
 #summaryTable td.summary-team-cell,
-#summaryTable td.summary-sel-cell {
+#summaryTable td.summary-sel-cell,
+#summaryTable td.summary-status-cell {
     text-align: center;
     vertical-align: middle;
 }
