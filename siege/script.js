@@ -157,6 +157,8 @@ let currentRoomId = null;
 let currentPostId = null;
 let hasUnsavedChanges = false;
 let initialModalState = null;
+let memberSortColumn = "member"; // "member" or "teams"
+let memberSortDirection = "asc"; // "asc" or "desc"
 const postIds = [
     "post1", 
     "post2", 
@@ -191,8 +193,16 @@ const postIds = [
 ];
 const postDataCache = {}; // postId -> data
 
+// Irradiance des tours de magie
+const MAGIC_TOWER_IRRADIANCE = {
+    "magictower1": ["post12", "post13"],
+    "magictower2": ["defensetower2", "post10", "post15"],
+    "magictower3": ["post15", "defensetower3", "defensetower5"],
+    "magictower4": ["defensetower4", "defensetower5", "stronghold"]
+};
+
 let currentPostConditionsList = [];  // les 3 conditions choisies pour le post courant (objets complets)
-let postConditionsSlotsWrapper = null; 
+let postConditionsSlotsWrapper = null;
 let activeConditionSlotIndex = 0;
 
 function updateRoomLabel(roomId) {
@@ -239,6 +249,7 @@ function connectRoom(roomId) {
             updatePostConditionsOnMap(id);  // Mettre à jour les icônes sur la carte
             updateTeamsCountOnMap(id);  // Mettre à jour le compteur d'équipes
             updateTooltipOnMap(id);  // Mettre à jour le tooltip hover
+            updateMembersList();  // Mettre à jour le compteur de teams par membre
         });
     });
     updateSummaryTable();
@@ -303,10 +314,24 @@ function updateMembersList() {
         }
     });
 
-    // Sort members alphabetically
-    Object.values(clanMembers)
-        .sort((a, b) => a.pseudo.localeCompare(b.pseudo))
-        .forEach(member => {
+    // Sort members based on current sort settings
+    const membersArray = Object.values(clanMembers);
+    membersArray.sort((a, b) => {
+        let compareResult;
+
+        if (memberSortColumn === "teams") {
+            const countA = teamCounts[a.pseudo] || 0;
+            const countB = teamCounts[b.pseudo] || 0;
+            compareResult = countA - countB;
+        } else {
+            // Sort by member name
+            compareResult = a.pseudo.localeCompare(b.pseudo);
+        }
+
+        return memberSortDirection === "asc" ? compareResult : -compareResult;
+    });
+
+    membersArray.forEach(member => {
             const tr = document.createElement("tr");
 
             // Member name
@@ -380,6 +405,16 @@ function updateMembersList() {
     const membersCount = Object.keys(clanMembers).length;
     const titleEl = document.getElementById("membersTitle");
     if (titleEl) titleEl.textContent = `Clan Members (${membersCount})`;
+
+    // Update active header and direction arrow
+    document.querySelectorAll("#membersTable th.sortable").forEach(th => {
+        if (th.dataset.sort === memberSortColumn) {
+            th.classList.add("active");
+            th.classList.toggle("desc", memberSortDirection === "desc");
+        } else {
+            th.classList.remove("active", "desc");
+        }
+    });
 }
 
 function editMember(pseudo, currentLink) {
@@ -1197,6 +1232,9 @@ function openModal(postId) {
     // Mettre à jour le bonus du bastion (visible sur tous les posts)
     updateStrongholdBonus();
 
+    // Mettre à jour l'irradiance des tours de magie
+    updateIrradianceDisplay();
+
     // ⚠️ d'abord les conditions (post-level)
     renderConditionsUI(postId, data);
 
@@ -1377,6 +1415,53 @@ function updateStrongholdBonus() {
 
     // Pas de bonus actif, on cache l'élément
     bonusDisplay.classList.remove("active");
+}
+
+function updateIrradianceDisplay() {
+    const irradianceDisplay = document.getElementById("irradianceDisplay");
+    if (!irradianceDisplay) return;
+
+    // Trouver quelles tours de magie irradient le post courant
+    const affectingTowers = [];
+    for (const [towerId, affectedPosts] of Object.entries(MAGIC_TOWER_IRRADIANCE)) {
+        if (affectedPosts.includes(currentPostId)) {
+            const towerData = postDataCache[towerId] || {};
+
+            // Les tours de magie stockent leur niveau dans 'condition', pas 'magictower'
+            const towerLevelId = towerData.condition;
+
+            if (towerLevelId) {
+                // Récupérer l'image depuis la DB
+                const levels = getMagicTowerLevels();
+                const selectedLevel = levels.find(l => String(l.id) === String(towerLevelId));
+
+                if (selectedLevel) {
+                    affectingTowers.push({
+                        towerId,
+                        image: selectedLevel.image,
+                        description: selectedLevel.description || `Magic Tower ${towerId.replace('magictower', '')}`
+                    });
+                }
+            }
+        }
+    }
+
+    // Vider le container
+    irradianceDisplay.innerHTML = "";
+
+    // Afficher les icônes des tours qui irradient ce post
+    if (affectingTowers.length > 0) {
+        affectingTowers.forEach(tower => {
+            const icon = document.createElement("img");
+            icon.className = "irradiance-display-icon";
+            icon.src = `/siege/img/magictower/${tower.image}.webp`;
+            icon.title = tower.description;
+            irradianceDisplay.appendChild(icon);
+        });
+        irradianceDisplay.classList.add("active");
+    } else {
+        irradianceDisplay.classList.remove("active");
+    }
 }
 
 function updateFreezeButton(isFrozen) {
@@ -1987,6 +2072,11 @@ function saveCurrentPost() {
             // Si on vient de sauvegarder le stronghold, mettre à jour le bonus sur tous les modals ouverts
             if (currentPostId === "stronghold") {
                 updateStrongholdBonus();
+            }
+
+            // Si on vient de sauvegarder une tour de magie, mettre à jour l'irradiance
+            if (currentPostId.startsWith("magictower")) {
+                updateIrradianceDisplay();
             }
         })
         .catch(err => {
@@ -3383,6 +3473,24 @@ window.addEventListener("DOMContentLoaded", () => {
             }
 
             updateSummaryTable();
+        });
+    });
+
+    // Sort members table by clicking headers
+    document.querySelectorAll("#membersTable th.sortable").forEach(th => {
+        th.addEventListener("click", () => {
+            const sortType = th.dataset.sort;
+
+            // Si on clique sur la même colonne, toggle la direction
+            if (memberSortColumn === sortType) {
+                memberSortDirection = memberSortDirection === "asc" ? "desc" : "asc";
+            } else {
+                // Nouvelle colonne, réinitialiser en ascendant
+                memberSortColumn = sortType;
+                memberSortDirection = "asc";
+            }
+
+            updateMembersList();
         });
     });
 
