@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+import { setupAuthUI, getCurrentRoom, isViewer, exportSiegeData, importSiegeData, showChangePasswordModal, logout } from "./auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -14,6 +15,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+// Room-based path helper
+function getRoomPath(path) {
+    const roomId = getCurrentRoom();
+    if (!roomId) {
+        console.error('No room selected');
+        return null;
+    }
+    return `rooms/${roomId}/siege/${path}`;
+}
 
 // --- SQLite champions DB (sql.js global) ---
 let championsDB = null;
@@ -204,7 +215,8 @@ function connectRoom(roomId) {
     updateRoomLabel(roomId);
     setStatus("Connected to room " + roomId);
 
-    const mref = ref(db, "siege/" + roomId + "/members");
+    // Use new room-based path structure: rooms/{roomId}/siege/
+    const mref = ref(db, `rooms/${roomId}/siege/members`);
     onValue(mref, snap => {
         clanMembers = snap.val() || {};
         updateMembersList();
@@ -212,7 +224,7 @@ function connectRoom(roomId) {
     });
 
     postIds.forEach(id => {
-        const r = ref(db, "siege/" + roomId + "/" + id);
+        const r = ref(db, `rooms/${roomId}/siege/${id}`);
         onValue(r, snap => {
             const data = snap.val() || {};
             postDataCache[id] = data;
@@ -336,9 +348,13 @@ function updateMembersList() {
 }
 
 function deleteClanMember(pseudo) {
+    if (isViewer()) {
+        alert("Cannot delete in viewer mode.");
+        return;
+    }
     delete clanMembers[pseudo];
 
-    const refMembers = ref(db, "siege/" + currentRoomId + "/members");
+    const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
     set(refMembers, clanMembers);
 }
 
@@ -502,13 +518,24 @@ function createTeamRow(teamData = {}, index = 0) {
     const postTypeForSelect = postElForSelect ? postElForSelect.dataset.type : "post";
 
     if (postTypeForSelect === "post") {
+        // SVG icons
+        const checkmarkSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+        const crossSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        const hourglassSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/><path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12 7.586 7.414A2 2 0 0 1 7 6.172V2"/></svg>`;
+
         const selectBtn = document.createElement("button");
         selectBtn.className = "team-select-btn";
         selectBtn.type = "button";
         selectBtn.dataset.selected = teamData.selected === true ? "true" : "false";
-        selectBtn.innerHTML = teamData.selected === true
-            ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
-            : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+        if (teamData.selected === true) {
+            selectBtn.innerHTML = checkmarkSVG;
+            selectBtn.dataset.state = "selected";
+        } else {
+            // On mettra à jour l'état après avoir vérifié toutes les équipes
+            selectBtn.innerHTML = hourglassSVG;
+            selectBtn.dataset.state = "pending";
+        }
         selectBtn.title = "Select this team";
 
         selectBtn.onclick = () => {
@@ -518,19 +545,30 @@ function createTeamRow(teamData = {}, index = 0) {
             if (!isSelected) {
                 // Marquer cette team comme sélectionnée
                 selectBtn.dataset.selected = "true";
-                selectBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+                selectBtn.dataset.state = "selected";
+                selectBtn.innerHTML = checkmarkSVG;
 
                 // Désélectionner toutes les autres teams du même poste
                 teamsContainer.querySelectorAll(".team-select-btn").forEach(btn => {
                     if (btn !== selectBtn) {
                         btn.dataset.selected = "false";
-                        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+                        btn.dataset.state = "rejected";
+                        btn.innerHTML = crossSVG;
                     }
                 });
             } else {
-                // Désélectionner cette team
+                // Désélectionner cette team - toutes repassent en pending
                 selectBtn.dataset.selected = "false";
-                selectBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+                selectBtn.dataset.state = "pending";
+                selectBtn.innerHTML = hourglassSVG;
+
+                // Remettre toutes les autres en pending aussi
+                teamsContainer.querySelectorAll(".team-select-btn").forEach(btn => {
+                    if (btn !== selectBtn && btn.dataset.selected !== "true") {
+                        btn.dataset.state = "pending";
+                        btn.innerHTML = hourglassSVG;
+                    }
+                });
             }
         };
 
@@ -1003,11 +1041,17 @@ function openModal(postId) {
     // Mettre à jour l'état du bouton freeze
     updateFreezeButton(data.frozen || false);
 
+    // Mettre à jour le bonus du bastion (visible sur tous les posts)
+    updateStrongholdBonus();
+
     // ⚠️ d'abord les conditions (post-level)
     renderConditionsUI(postId, data);
 
     // puis les teams (qui ont besoin des 3 conditions du post)
     fillModalFromData(data);
+
+    // Mettre à jour l'état des boutons de sélection (sablier vs croix)
+    updateSelectionButtonsState();
 
     // Appliquer le verrouillage si nécessaire
     applyFreezeState(data.frozen || false);
@@ -1015,9 +1059,72 @@ function openModal(postId) {
     setStatus("");
 }
 
+function updateSelectionButtonsState() {
+    const teamsContainer = document.getElementById("teamsContainer");
+    if (!teamsContainer) return;
+
+    const selectButtons = teamsContainer.querySelectorAll(".team-select-btn");
+    if (selectButtons.length === 0) return;
+
+    // SVG icons
+    const crossSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    const hourglassSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/><path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12 7.586 7.414A2 2 0 0 1 7 6.172V2"/></svg>`;
+
+    // Vérifier si au moins une équipe est sélectionnée
+    const hasSelection = Array.from(selectButtons).some(btn => btn.dataset.selected === "true");
+
+    // Mettre à jour les boutons non sélectionnés
+    selectButtons.forEach(btn => {
+        if (btn.dataset.selected !== "true") {
+            if (hasSelection) {
+                // Une sélection existe : afficher la croix
+                btn.dataset.state = "rejected";
+                btn.innerHTML = crossSVG;
+            } else {
+                // Aucune sélection : afficher le sablier
+                btn.dataset.state = "pending";
+                btn.innerHTML = hourglassSVG;
+            }
+        }
+    });
+}
+
 function closeModal() {
     document.body.classList.remove("modal-open");
     document.getElementById("modalOverlay").style.display = "none";
+}
+
+function updateStrongholdBonus() {
+    const strongholdData = postDataCache["stronghold"] || {};
+    const bonusIcon = document.getElementById("strongholdBonusIcon");
+    const bonusDisplay = document.getElementById("strongholdBonusDisplay");
+
+    if (!bonusIcon || !bonusDisplay) return;
+
+    // Ne pas afficher le bonus sur le stronghold lui-même
+    if (currentPostId === "stronghold") {
+        bonusDisplay.classList.remove("active");
+        return;
+    }
+
+    // Récupérer le bonus sélectionné pour le stronghold
+    const conditionId = strongholdData.condition;
+
+    if (conditionId) {
+        // Trouver l'image du bonus dans la DB
+        const levels = getStrongholdLevels();
+        const selectedLevel = levels.find(l => String(l.id) === String(conditionId));
+
+        if (selectedLevel) {
+            bonusIcon.src = `/siege/img/stronghold/${selectedLevel.image}.webp`;
+            bonusIcon.title = selectedLevel.description || "Stronghold Bonus";
+            bonusDisplay.classList.add("active");
+            return;
+        }
+    }
+
+    // Pas de bonus actif, on cache l'élément
+    bonusDisplay.classList.remove("active");
 }
 
 function updateFreezeButton(isFrozen) {
@@ -1075,7 +1182,12 @@ function toggleFreezePost() {
 
     data.frozen = newFrozenState;
 
-    const r = ref(db, "siege/" + currentRoomId + "/" + currentPostId + "/frozen");
+    if (isViewer()) {
+        alert("Cannot freeze/unfreeze in viewer mode.");
+        return;
+    }
+
+    const r = ref(db, `rooms/${currentRoomId}/siege/${currentPostId}/frozen`);
     set(r, newFrozenState)
         .then(() => {
             updateFreezeButton(newFrozenState);
@@ -1124,9 +1236,15 @@ function transferTeamToPost(teamRow, targetPostId) {
     const targetTeams = Array.isArray(targetData.teams) ? [...targetData.teams] : [];
     targetTeams.push(teamData);
 
+    // Check viewer mode
+    if (isViewer()) {
+        alert("Cannot transfer teams in viewer mode.");
+        return;
+    }
+
     // Sauvegarder les deux postes
-    const sourceRef = ref(db, "siege/" + currentRoomId + "/" + currentPostId + "/teams");
-    const targetRef = ref(db, "siege/" + currentRoomId + "/" + targetPostId + "/teams");
+    const sourceRef = ref(db, `rooms/${currentRoomId}/siege/${currentPostId}/teams`);
+    const targetRef = ref(db, `rooms/${currentRoomId}/siege/${targetPostId}/teams`);
 
     Promise.all([
         set(sourceRef, sourceTeams),
@@ -1160,11 +1278,18 @@ function renderConditionsUI(postId, data) {
     // -----------------------------
     panel.classList.remove("open");
     panel.innerHTML = "";
+
+    const panelToggle = document.getElementById("conditionsPanelToggle");
+    if (panelToggle) panelToggle.classList.remove("open");
+
     if (postType === "post") {
         // cacher l'ancien système (un seul toggle)
         if (toggleBtn) toggleBtn.style.display = "none";
         if (currentIcon) currentIcon.style.display = "none";
         if (hiddenInput) hiddenInput.style.display = "none";
+
+        // Afficher le bouton toggle pour les posts classiques
+        if (panelToggle) panelToggle.style.display = "inline-flex";
 
         // s'assurer qu'on a un wrapper pour les 3 slots
         if (!postConditionsSlotsWrapper) {
@@ -1178,7 +1303,7 @@ function renderConditionsUI(postId, data) {
 
                 const btn = document.createElement("button");
                 btn.type = "button";
-                btn.className = "condition-toggle";
+                btn.className = "condition-toggle bg-post";
 
                 const img = document.createElement("img");
                 img.className = "condition-current-icon";
@@ -1193,7 +1318,14 @@ function renderConditionsUI(postId, data) {
                 slot.appendChild(valueInput);
                 postConditionsSlotsWrapper.appendChild(slot);
             }
-            groupEl.insertBefore(postConditionsSlotsWrapper, groupEl.firstChild);
+
+            // Insérer dans le conditions-top-row plutôt qu'en premier dans groupEl
+            const topRow = groupEl.querySelector(".conditions-top-row");
+            if (topRow) {
+                topRow.insertBefore(postConditionsSlotsWrapper, topRow.firstChild);
+            } else {
+                groupEl.insertBefore(postConditionsSlotsWrapper, groupEl.firstChild);
+            }
         }
 
         postConditionsSlotsWrapper.style.display = "";
@@ -1243,11 +1375,59 @@ function renderConditionsUI(postId, data) {
                 currentPostConditionsList[index] = null;
             }
 
-            // clic sur le slot → choisir quelle "case" on édite
+            // clic sur le slot → choisir quelle "case" on édite et ouvrir le panel
             btn.onclick = () => {
                 activeConditionSlotIndex = index;
-                panel.classList.toggle("open");
+                if (!panel.classList.contains("open")) {
+                    panel.classList.add("open");
+                    const toggle = document.getElementById("conditionsPanelToggle");
+                    if (toggle) toggle.classList.add("open");
+                }
             };
+
+            // Drag & Drop sur les slots
+            slot.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                slot.classList.add("drag-over");
+            });
+
+            slot.addEventListener("dragleave", () => {
+                slot.classList.remove("drag-over");
+            });
+
+            slot.addEventListener("drop", (e) => {
+                e.preventDefault();
+                slot.classList.remove("drag-over");
+
+                const conditionId = e.dataTransfer.getData("conditionId");
+                const conditionImage = e.dataTransfer.getData("conditionImage");
+                const conditionTitle = e.dataTransfer.getData("conditionTitle");
+
+                if (conditionId) {
+                    // Mettre à jour le slot avec la condition droppée
+                    valueInput.value = conditionId;
+                    img.src = `/siege/img/conditions/${conditionImage}.webp`;
+                    img.title = conditionTitle || "Condition";
+
+                    // Trouver la condition complète pour la stocker
+                    const { orderedTypes, byType } = getConditionsByType();
+                    let foundCond = null;
+                    for (const t of orderedTypes) {
+                        for (const c of byType[t]) {
+                            if (String(c.id) === String(conditionId)) {
+                                foundCond = c;
+                                break;
+                            }
+                        }
+                        if (foundCond) break;
+                    }
+
+                    currentPostConditionsList[index] = foundCond;
+
+                    // Sauvegarder (le panel reste ouvert)
+                    saveCurrentPost();
+                }
+            });
         });
 
         // construire le panel unique de conditions
@@ -1263,6 +1443,20 @@ function renderConditionsUI(postId, data) {
                 icon.src = `/siege/img/conditions/${cond.image}.webp`;
                 icon.className = "condition-icon";
                 icon.title = cond.description || cond.name;
+                icon.draggable = true;
+                icon.dataset.conditionId = cond.id;
+
+                // Drag start
+                icon.addEventListener("dragstart", (e) => {
+                    e.dataTransfer.setData("conditionId", cond.id);
+                    e.dataTransfer.setData("conditionImage", cond.image);
+                    e.dataTransfer.setData("conditionTitle", cond.description || cond.name);
+                    icon.style.opacity = "0.5";
+                });
+
+                icon.addEventListener("dragend", () => {
+                    icon.style.opacity = "1";
+                });
 
                 icon.addEventListener("click", () => {
                     const slots = postConditionsSlotsWrapper.querySelectorAll(".post-condition-slot");
@@ -1272,13 +1466,20 @@ function renderConditionsUI(postId, data) {
                     const img = slot.querySelector(".condition-current-icon");
                     const valueInput = slot.querySelector(".condition-value");
 
-                    valueInput.value = cond.id;
-                    img.src = `/siege/img/conditions/${cond.image}.webp`;
-                    img.title = cond.description || cond.name || "Condition";
+                    // Si on clique sur la même condition, on la retire
+                    if (valueInput.value === String(cond.id)) {
+                        valueInput.value = "";
+                        img.src = `/siege/img/conditions/Condition.webp`;
+                        img.title = "Click to choose a condition";
+                        currentPostConditionsList[activeConditionSlotIndex] = null;
+                    } else {
+                        // Sinon on l'ajoute
+                        valueInput.value = cond.id;
+                        img.src = `/siege/img/conditions/${cond.image}.webp`;
+                        img.title = cond.description || cond.name || "Condition";
+                        currentPostConditionsList[activeConditionSlotIndex] = cond;
+                    }
 
-                    currentPostConditionsList[activeConditionSlotIndex] = cond;
-
-                    panel.classList.remove("open");
                     saveCurrentPost(); // on sauvegarde directement le post-level
                 });
 
@@ -1300,6 +1501,9 @@ function renderConditionsUI(postId, data) {
         postConditionsSlotsWrapper.style.display = "none";
     }
 
+    // Cacher le bouton toggle pour les tours/stronghold
+    if (panelToggle) panelToggle.style.display = "none";
+
     panel.classList.remove("open");
     panel.innerHTML = "";
     panel.style.display = "";
@@ -1315,6 +1519,7 @@ function renderConditionsUI(postId, data) {
     // STRONGHOLD
     if (postTypeStrong === "stronghold") {
         groupEl.style.display = "";
+        toggleBtn.className = "condition-toggle bg-stronghold";
         renderStrongholdUI(panel, toggleBtn, currentIcon, hiddenInput, data.condition || "");
         return;
     }
@@ -1322,6 +1527,7 @@ function renderConditionsUI(postId, data) {
     // DEFENSE TOWER
     if (postTypeStrong === "defensetower") {
         groupEl.style.display = "";
+        toggleBtn.className = "condition-toggle bg-defensetower";
         renderDefenseTowerUI(panel, toggleBtn, currentIcon, hiddenInput, data.condition || "");
         return;
     }
@@ -1329,6 +1535,7 @@ function renderConditionsUI(postId, data) {
     // MAGIC TOWER
     if (postTypeStrong === "magictower") {
         groupEl.style.display = "";
+        toggleBtn.className = "condition-toggle bg-magictower";
         renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, data.condition || "");
         return;
     }
@@ -1374,11 +1581,22 @@ function saveCurrentPost() {
         data.condition = condition;
     }
 
-    const r = ref(db, "siege/" + currentRoomId + "/" + currentPostId);
+    // Check if viewer mode
+    if (isViewer()) {
+        setStatus("Cannot save in viewer mode.", true);
+        alert("You are in viewer mode. Cannot save changes.");
+        return;
+    }
+
+    const r = ref(db, `rooms/${currentRoomId}/siege/${currentPostId}`);
     set(r, data)
         .then(() => {
             setStatus("Teams saved ✔");
             updateSummaryTable();
+            // Si on vient de sauvegarder le stronghold, mettre à jour le bonus sur tous les modals ouverts
+            if (currentPostId === "stronghold") {
+                updateStrongholdBonus();
+            }
         })
         .catch(err => {
             console.error(err);
@@ -1417,6 +1635,41 @@ function openPostFromSummary(postId, memberName) {
     }, 80); // léger délai le temps que le modal génère le DOM
 }
 
+function addDragDropToToggleBtn(toggleBtn, panel, currentIcon, hiddenInput, folder) {
+    // Drag & Drop sur le toggle button
+    toggleBtn.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        toggleBtn.classList.add("drag-over");
+    });
+
+    toggleBtn.addEventListener("dragleave", () => {
+        toggleBtn.classList.remove("drag-over");
+    });
+
+    toggleBtn.addEventListener("drop", (e) => {
+        e.preventDefault();
+        toggleBtn.classList.remove("drag-over");
+
+        const conditionId = e.dataTransfer.getData("conditionId");
+        const conditionImage = e.dataTransfer.getData("conditionImage");
+        const conditionFolder = e.dataTransfer.getData("conditionFolder");
+
+        if (conditionId && conditionFolder === folder) {
+            hiddenInput.value = conditionId;
+            currentIcon.src = `/siege/img/${folder}/${conditionImage}.webp`;
+
+            // Mettre à jour la sélection visuelle
+            panel.querySelectorAll(".condition-icon.selected").forEach(el => {
+                el.classList.remove("selected");
+            });
+            const droppedIcon = panel.querySelector(`.condition-icon[data-condition-id="${conditionId}"]`);
+            if (droppedIcon) droppedIcon.classList.add("selected");
+
+            saveCurrentPost();
+        }
+    });
+}
+
 function getStrongholdLevels() {
     if (!siegeDB) return [];
 
@@ -1447,7 +1700,7 @@ function renderStrongholdUI(panel, toggleBtn, currentIcon, hiddenInput, currentV
         grouped[lvl.level].push(lvl);
     });
 
-// === 2) Déterminer l’élément actuellement sélectionné ===
+// === 2) Déterminer l'élément actuellement sélectionné ===
 
 // currentValue = valeur stockée dans Firebase
 // Elle peut être soit un ID (nouveau système), soit un LEVEL (ancien système)
@@ -1456,7 +1709,7 @@ let selected = null;
 // 1) Essayer de matcher sur l'id
 selected = levels.find(l => String(l.id) === String(currentValue));
 
-// 2) Sinon l’ancien système stockait le "level", donc on essaye ça
+// 2) Sinon l'ancien système stockait le "level", donc on essaye ça
 if (!selected) {
     selected = levels.find(l => String(l.level) === String(currentValue));
 }
@@ -1487,8 +1740,23 @@ if (!selected) {
             icon.src = `/siege/img/stronghold/${lvl.image}.webp`;
             icon.className = "condition-icon";
             icon.title = lvl.description || "";
+            icon.draggable = true;
+            icon.dataset.conditionId = lvl.id;
 
             if (selected && lvl.id === selected.id) icon.classList.add("selected");
+
+            // Drag start
+            icon.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("conditionId", lvl.id);
+                e.dataTransfer.setData("conditionImage", lvl.image);
+                e.dataTransfer.setData("conditionTitle", lvl.description);
+                e.dataTransfer.setData("conditionFolder", "stronghold");
+                icon.style.opacity = "0.5";
+            });
+
+            icon.addEventListener("dragend", () => {
+                icon.style.opacity = "1";
+            });
 
            icon.addEventListener("click", () => {
                 panel.querySelectorAll(".condition-icon.selected").forEach(el => {
@@ -1523,6 +1791,7 @@ if (!selected) {
     });
 
     toggleBtn.onclick = () => panel.classList.toggle("open");
+    addDragDropToToggleBtn(toggleBtn, panel, currentIcon, hiddenInput, "stronghold");
 }
 
 function getDefenseTowerLevels() {
@@ -1590,10 +1859,25 @@ function renderDefenseTowerUI(panel, toggleBtn, currentIcon, hiddenInput, curren
             icon.src = `/siege/img/defensetower/${lvl.image}.webp`;
             icon.className = "condition-icon";
             icon.title = lvl.description || "";
+            icon.draggable = true;
+            icon.dataset.conditionId = lvl.id;
 
             if (selected && lvl.id === selected.id) {
                 icon.classList.add("selected");
             }
+
+            // Drag start
+            icon.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("conditionId", lvl.id);
+                e.dataTransfer.setData("conditionImage", lvl.image);
+                e.dataTransfer.setData("conditionTitle", lvl.description);
+                e.dataTransfer.setData("conditionFolder", "defensetower");
+                icon.style.opacity = "0.5";
+            });
+
+            icon.addEventListener("dragend", () => {
+                icon.style.opacity = "1";
+            });
 
             icon.addEventListener("click", () => {
 
@@ -1630,6 +1914,7 @@ function renderDefenseTowerUI(panel, toggleBtn, currentIcon, hiddenInput, curren
     });
 
     toggleBtn.onclick = () => panel.classList.toggle("open");
+    addDragDropToToggleBtn(toggleBtn, panel, currentIcon, hiddenInput, "defensetower");
 }
 
 function getMagicTowerLevels() {
@@ -1693,10 +1978,25 @@ function renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, currentV
             icon.src = `/siege/img/magictower/${lvl.image}.webp`;
             icon.className = "condition-icon";
             icon.title = lvl.description || "";
+            icon.draggable = true;
+            icon.dataset.conditionId = lvl.id;
 
             if (selected && lvl.id === selected.id) {
                 icon.classList.add("selected");
             }
+
+            // Drag start
+            icon.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("conditionId", lvl.id);
+                e.dataTransfer.setData("conditionImage", lvl.image);
+                e.dataTransfer.setData("conditionTitle", lvl.description);
+                e.dataTransfer.setData("conditionFolder", "magictower");
+                icon.style.opacity = "0.5";
+            });
+
+            icon.addEventListener("dragend", () => {
+                icon.style.opacity = "1";
+            });
 
             icon.addEventListener("click", () => {
 
@@ -1731,6 +2031,7 @@ function renderMagicTowerUI(panel, toggleBtn, currentIcon, hiddenInput, currentV
     });
 
     toggleBtn.onclick = () => panel.classList.toggle("open");
+    addDragDropToToggleBtn(toggleBtn, panel, currentIcon, hiddenInput, "magictower");
 }
 
 
@@ -2179,13 +2480,31 @@ function updateSummaryTable() {
         // Selection icon (only for classic posts)
         let selIcon = "";
         if (typeForRow === "post") {
+            // Check if there's a selected team on this post
+            const postTeams = rows.filter(row => row.postId === r.postId);
+            const hasSelection = postTeams.some(team => team.selected === true);
+
             if (r.selected === true) {
+                // This team is selected - checkmark (green)
                 selIcon = `<svg class="summary-sel-icon selected" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            } else if (hasSelection) {
+                // Another team is selected - cross (red)
+                selIcon = `<svg class="summary-sel-icon rejected" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
             } else {
-                selIcon = `<svg class="summary-sel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+                // No selection yet - hourglass (amber)
+                selIcon = `<svg class="summary-sel-icon pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/><path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12 7.586 7.586A2 2 0 0 1 7 6.172V2"/></svg>`;
             }
         } else {
             selIcon = "-";
+        }
+
+        // Add rejected class if this team is not selected and another is
+        if (typeForRow === "post") {
+            const postTeams = rows.filter(row => row.postId === r.postId);
+            const hasSelection = postTeams.some(team => team.selected === true);
+            if (hasSelection && r.selected !== true) {
+                tr.classList.add("rejected");
+            }
         }
 
         tr.innerHTML = `
@@ -2217,8 +2536,119 @@ function updateSummaryTable() {
     });
 }
 
+// ==================== VIEWER MODE CONTROLS ====================
+function applyViewerRestrictions() {
+    // Disable all edit buttons and controls
+    const disableSelectors = [
+        '#saveBtn',
+        '#addTeamBtn',
+        '#addMemberBtn',
+        '#freezePostBtn',
+        '.team-delete-btn',
+        '.team-freeze-btn',
+        '.team-select-btn',
+        '.transfer-dropdown-toggle',
+        '.move-up-btn',
+        '.move-down-btn',
+        '.clear-team-btn',
+        '#conditionsPanelToggle',
+        '.condition-icon',
+        '.condition-toggle',
+        '.post-condition-slot',
+        '.member-delete-btn',
+        'input[type="text"]',
+        'input[type="number"]',
+        'select',
+        '.champ-slot',
+        '.champ-slot img',
+        '.team-member-select',
+        '.clear-champ-btn'
+    ];
+
+    disableSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.disabled = true;
+            el.style.opacity = '0.5';
+            el.style.cursor = 'not-allowed';
+            el.style.pointerEvents = 'none';
+        });
+    });
+
+    // Disable drag and drop
+    document.querySelectorAll('[draggable="true"]').forEach(el => {
+        el.draggable = false;
+        el.style.cursor = 'not-allowed';
+    });
+}
+
+function disableViewerControls() {
+    // Initial disable
+    applyViewerRestrictions();
+
+    // Continuously apply restrictions (for dynamically added elements)
+    setInterval(() => {
+        if (isViewer()) {
+            applyViewerRestrictions();
+        }
+    }, 500);
+
+    // Add viewer mode indicator with Lucide icon
+    const header = document.querySelector('.top-bar');
+    if (header && !document.getElementById('viewerModeIndicator')) {
+        const indicator = document.createElement('div');
+        indicator.id = 'viewerModeIndicator';
+        indicator.style.cssText = 'position: fixed; top: 10px; right: 10px; background: rgba(245, 158, 11, 0.2); border: 2px solid #f59e0b; color: #f59e0b; padding: 8px 16px; border-radius: 8px; font-weight: 600; z-index: 9999; display: flex; align-items: center; gap: 8px;';
+        indicator.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>VIEWER MODE (Read Only)</span>
+        `;
+        document.body.appendChild(indicator);
+    }
+}
+
+function initializeAppWithRoom(roomId) {
+    console.log('Initializing app with room:', roomId);
+
+    // Show logout button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.style.display = 'inline-flex';
+    }
+
+    // Show admin controls if admin mode
+    if (!isViewer()) {
+        const adminControls = document.getElementById('adminControls');
+        if (adminControls) {
+            adminControls.style.display = 'flex';
+        }
+    }
+
+    // Update all Firebase listeners to use room-based paths
+    // The existing listeners will be updated when connectRoom is called
+    connectRoom(roomId);
+}
+
 // --- init ---
 window.addEventListener("DOMContentLoaded", () => {
+    // Initialize auth UI first
+    setupAuthUI(db);
+
+    // Listen for room ready event
+    window.addEventListener('roomReady', (e) => {
+        const { roomId, accessMode, isViewerMode } = e.detail;
+        console.log(`Room ready: ${roomId} (${accessMode})`);
+
+        // Disable UI if viewer mode
+        if (isViewerMode) {
+            disableViewerControls();
+        }
+
+        // Initialize app with room-based data
+        initializeAppWithRoom(roomId);
+    });
 
     // Remplace automatiquement les points roses par les icônes correspondantes
     document.querySelectorAll(".post-point").forEach(pp => {
@@ -2256,10 +2686,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const joinBtn = document.getElementById("joinRoomBtn");
-    const createBtn = document.getElementById("createRoomBtn");
     const copyBtn = document.getElementById("copyLinkBtn");
-    const roomInput = document.getElementById("roomInput");
     const saveBtn = document.getElementById("saveBtn");
     const closeModalBtn = document.getElementById("closeModal");
     const addTeamBtn = document.getElementById("addTeamBtn");
@@ -2277,26 +2704,11 @@ window.addEventListener("DOMContentLoaded", () => {
         if (!el) return;
         el.addEventListener("click", () => {
             if (!currentRoomId) {
-                alert("Join or create a room first.");
+                alert("Please login first.");
                 return;
             }
             openModal(id);
         });
-    });
-
-    joinBtn.addEventListener("click", () => {
-        const room = roomInput.value.trim();
-        if (!room) {
-            alert("Enter a room code.");
-            return;
-        }
-        connectRoom(room);
-    });
-
-    createBtn.addEventListener("click", () => {
-        const id = randomRoomId();
-        roomInput.value = id;
-        connectRoom(id);
     });
 
     document.getElementById("addMemberBtn").addEventListener("click", () => {
@@ -2305,12 +2717,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (!pseudo) return;
 
+        if (isViewer()) {
+            alert("Cannot add members in viewer mode.");
+            return;
+        }
+
         clanMembers[pseudo] = {
             pseudo,
             link: link || ""
         };
 
-        const refMembers = ref(db, "siege/" + currentRoomId + "/members");
+        const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
         set(refMembers, clanMembers);
 
         document.getElementById("newMemberPseudo").value = "";
@@ -2328,6 +2745,67 @@ window.addEventListener("DOMContentLoaded", () => {
             .then(() => setStatus("Link copied ✔"))
             .catch(() => setStatus("Impossible to copy link.", true));
     });
+
+    // Logout button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+                logout();
+            }
+        });
+    }
+
+    // Admin control buttons
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const exportBtn = document.getElementById('exportDataBtn');
+    const importBtn = document.getElementById('importDataBtn');
+    const importFileInput = document.getElementById('importFileInput');
+
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', () => {
+            if (!currentRoomId) {
+                alert('No active room.');
+                return;
+            }
+            showChangePasswordModal();
+        });
+    }
+
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            if (!currentRoomId) {
+                alert('No active room.');
+                return;
+            }
+            exportSiegeData(db, currentRoomId);
+        });
+    }
+
+    if (importBtn && importFileInput) {
+        importBtn.addEventListener('click', () => {
+            if (!currentRoomId) {
+                alert('No active room.');
+                return;
+            }
+            importFileInput.click();
+        });
+
+        importFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const content = event.target.result;
+                importSiegeData(db, currentRoomId, content);
+            };
+            reader.readAsText(file);
+
+            // Reset input
+            importFileInput.value = '';
+        });
+    }
 
     saveBtn.addEventListener("click", () => {
         saveCurrentPost();
@@ -2373,6 +2851,18 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Toggle conditions panel
+    const conditionsPanelToggle = document.getElementById("conditionsPanelToggle");
+    if (conditionsPanelToggle) {
+        conditionsPanelToggle.addEventListener("click", () => {
+            const panel = document.getElementById("conditionsPanel");
+            if (panel) {
+                panel.classList.toggle("open");
+                conditionsPanelToggle.classList.toggle("open");
+            }
+        });
+    }
+
     // Sort by clicking table headers
     document.querySelectorAll("#summaryTable th.sortable").forEach(th => {
         th.addEventListener("click", () => {
@@ -2391,13 +2881,5 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Auto room via ?room=
-    const params = new URLSearchParams(window.location.search);
-    const roomFromUrl = params.get("room");
-    if (roomFromUrl) {
-        roomInput.value = roomFromUrl;
-        connectRoom(roomFromUrl);
-    } else {
-        updateRoomLabel(null);
-    }
+    // Room handling is now done by auth system
 });

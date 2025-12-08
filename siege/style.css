@@ -93,6 +93,27 @@ body.modal-open {
     color: #f5e6c8;
 }
 
+.admin-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.admin-controls .ghost-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.admin-controls .ghost-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
 /* ==================== BUTTONS ==================== */
 .ghost-btn {
     background: #0f0f0f;
@@ -582,6 +603,47 @@ body.modal-open {
     transform: translateX(-50%);
 }
 
+.stronghold-bonus-display {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+    background: none;
+    position: relative;
+}
+
+.stronghold-bonus-display.active {
+    display: inline-flex;
+}
+
+.stronghold-bonus-display::before {
+    content: "";
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    background-image: url('/siege/img/stronghold/Stronghold.webp');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.stronghold-bonus-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    padding: 4px;
+    background: #111;
+    cursor: default;
+    position: relative;
+    z-index: 1;
+}
+
 .freeze-post-btn {
     background: #0f0f0f;
     border: 2px solid #444;
@@ -662,8 +724,18 @@ body.modal-open {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0;
     width: 100%;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.conditions-top-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 }
 
 .conditions-group label {
@@ -686,18 +758,53 @@ body.modal-open {
     font-size: 13px;
 }
 
+.conditions-panel-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.1);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #d4af37;
+}
+
+.conditions-panel-toggle:hover {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: #d4af37;
+    transform: scale(1.05);
+}
+
+.conditions-panel-toggle svg {
+    transition: transform 0.3s ease;
+}
+
+.conditions-panel-toggle.open svg {
+    transform: rotate(180deg);
+}
+
 .conditions-panel {
-    display: none;
-    padding: 8px 4px;
+    display: flex;
+    padding: 0;
+    margin: 0;
     border-radius: 8px;
-    max-height: none;
-    overflow: visible;
+    max-height: 0;
+    overflow: hidden;
     flex-direction: column;
     gap: 12px;
+    opacity: 0;
+    width: 100%;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
 .conditions-panel.open {
-    display: flex;
+    max-height: 800px;
+    opacity: 1;
+    padding: 12px 4px;
+    margin-top: 12px;
 }
 
 .post-conditions-row {
@@ -705,8 +812,7 @@ body.modal-open {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 10px;
+    gap: 12px;
 }
 
 .condition-toggle {
@@ -720,6 +826,41 @@ body.modal-open {
     cursor: pointer;
     background: none;
     border: none;
+    position: relative;
+}
+
+.condition-toggle::before {
+    content: "";
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Fonds pour les différents types de posts */
+.condition-toggle.bg-stronghold::before {
+    background-image: url('/siege/img/stronghold/Stronghold.webp');
+}
+
+.condition-toggle.bg-defensetower::before {
+    background-image: url('/siege/img/defensetower/DefenseTower.webp');
+}
+
+.condition-toggle.bg-magictower::before {
+    background-image: url('/siege/img/magictower/MagicTower.webp');
+}
+
+.condition-toggle.bg-manashrine::before {
+    background-image: url('/siege/img/manashrine/ManaShrine.webp');
+}
+
+.condition-toggle.bg-post::before {
+    background-image: url('/siege/img/conditions/Condition.webp');
 }
 
 .condition-current-icon {
@@ -730,12 +871,20 @@ body.modal-open {
     border: 2px solid transparent;
     padding: 4px;
     background: #111;
+    position: relative;
+    z-index: 1;
 }
 
 .condition-toggle:hover .condition-current-icon {
     transform: scale(1.05);
     border-color: #d4af37;
     transition: 0.2s;
+}
+
+.condition-toggle.drag-over .condition-current-icon {
+    border-color: #d4af37;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+    transform: scale(1.05);
 }
 
 .condition-row {
@@ -752,8 +901,12 @@ body.modal-open {
     border-radius: 6px;
     border: 2px solid #333;
     padding: 3px;
-    cursor: pointer;
+    cursor: grab;
     transition: 0.15s transform, 0.15s border-color, 0.15s box-shadow;
+}
+
+.condition-icon:active {
+    cursor: grabbing;
 }
 
 .condition-icon:hover {
@@ -764,6 +917,19 @@ body.modal-open {
 .condition-icon.selected {
     border-color: #d4af37;
     box-shadow: 0 0 8px #d4af37;
+}
+
+.post-condition-slot {
+    transition: transform 0.2s;
+}
+
+.post-condition-slot.drag-over {
+    transform: scale(1.05);
+}
+
+.post-condition-slot.drag-over .condition-current-icon {
+    border-color: #d4af37;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
 }
 
 /* ==================== TEAMS ==================== */
@@ -929,6 +1095,34 @@ body.modal-open {
 
 .team-select-btn[data-selected="false"] svg {
     color: #ef4444;
+}
+
+/* Three-state selection system */
+.team-select-btn[data-state="selected"] {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.team-select-btn[data-state="selected"] svg {
+    color: #22c55e;
+}
+
+.team-select-btn[data-state="rejected"] {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.team-select-btn[data-state="rejected"] svg {
+    color: #ef4444;
+}
+
+.team-select-btn[data-state="pending"] {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.team-select-btn[data-state="pending"] svg {
+    color: #f59e0b;
 }
 
 .team-select-btn:hover {
@@ -1379,6 +1573,15 @@ body.modal-open {
     cursor: pointer;
 }
 
+#summaryTable tbody tr.rejected {
+    opacity: 0.4;
+    color: #888;
+}
+
+#summaryTable tbody tr.rejected:hover {
+    opacity: 0.5;
+}
+
 #summaryTable tr:hover {
     background: rgba(255, 255, 255, 0.05);
 }
@@ -1423,8 +1626,304 @@ body.modal-open {
     color: #22c55e;
 }
 
-.summary-sel-icon:not(.selected) {
+.summary-sel-icon.rejected {
     color: #ef4444;
+}
+
+.summary-sel-icon.pending {
+    color: #f59e0b;
+}
+
+/* ==================== LOGIN MODAL ==================== */
+.login-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(8px);
+}
+
+.login-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-modal-content {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-header h2 {
+    font-size: 24px;
+    color: #d4af37;
+    margin: 0;
+}
+
+.login-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+}
+
+.login-tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.login-tab.active {
+    color: #d4af37;
+    border-bottom-color: #d4af37;
+}
+
+.login-tab:hover:not(.active) {
+    color: #aaa;
+}
+
+.login-tab-content {
+    display: none;
+}
+
+.login-tab-content.active {
+    display: block;
+}
+
+.login-field {
+    margin-bottom: 20px;
+}
+
+.login-field label {
+    display: block;
+    color: #d4af37;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.login-field input[type="text"],
+.login-field input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.login-field input[type="text"]:focus,
+.login-field input[type="password"]:focus {
+    outline: none;
+    border-color: #d4af37;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.room-id-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.room-id-input-group input {
+    flex: 1;
+}
+
+.room-id-input-group .ghost-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    white-space: nowrap;
+}
+
+.access-mode-selector {
+    display: flex;
+    gap: 12px;
+}
+
+.access-mode-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.access-mode-btn svg {
+    color: inherit;
+}
+
+.access-mode-btn span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.access-mode-btn small {
+    font-size: 11px;
+    color: #666;
+}
+
+.access-mode-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+.access-mode-btn.active {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: #d4af37;
+    color: #d4af37;
+}
+
+.access-mode-btn.active small {
+    color: #d4af37;
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.login-submit-btn:active {
+    transform: translateY(0);
+}
+
+.login-error {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    color: #ef4444;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+}
+
+.login-error.active {
+    display: block;
+}
+
+.login-status {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid #22c55e;
+    border-radius: 8px;
+    color: #22c55e;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+}
+
+.login-status.active {
+    display: block;
+}
+
+.legacy-room-hint {
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 6px;
+    text-align: center;
+}
+
+.legacy-room-hint small {
+    color: #f59e0b;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.password-divider {
+    height: 1px;
+    background: rgba(212, 175, 55, 0.2);
+    margin: 20px 0;
+}
+
+.password-warning {
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 6px;
+    text-align: center;
+}
+
+.password-warning small {
+    color: #f59e0b;
+    font-size: 11px;
+    line-height: 1.4;
 }
 
 /* ==================== RESPONSIVE ==================== */
