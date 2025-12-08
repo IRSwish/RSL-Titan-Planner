@@ -227,38 +227,62 @@
 </main>
 
 <section id="summarySection" class="summary-section">
-    <h2 class="summary-title" id="summaryTitle">TEAMS (0)</h2>
+    <h2 class="section-header collapsible" data-target="summaryContent">
+        <span class="section-title" id="summaryTitle">TEAMS (0)</span>
+        <svg class="collapse-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </h2>
 
-    <table id="summaryTable">
-        <thead>
-            <tr>
-                <th class="sortable" data-sort="post">Post</th>
-                <th>Status</th>
-                <th>Group</th>
-                <th>Team</th>
-                <th>Sel.</th>
-                <th>Cond.</th>
-                <th class="sortable" data-sort="member">Member</th>
-                <th>HH</th>
-                <th>Lead</th>
-                <th>Champion 2</th>
-                <th>Champion 3</th>
-                <th>Champion 4</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div id="summaryContent" class="section-content">
+        <table id="summaryTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="post">Post</th>
+                    <th>Status</th>
+                    <th>Group</th>
+                    <th>Team</th>
+                    <th>Sel.</th>
+                    <th>Cond.</th>
+                    <th class="sortable" data-sort="member">Member</th>
+                    <th>HH</th>
+                    <th>Lead</th>
+                    <th>Champion 2</th>
+                    <th>Champion 3</th>
+                    <th>Champion 4</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </section>
 
 <section id="membersSection" class="members-section">
-    <h2 id="membersTitle">Clan Members (0)</h2>
+    <h2 class="section-header collapsible" data-target="membersContent">
+        <span class="section-title" id="membersTitle">Clan Members (0)</span>
+        <svg class="collapse-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </h2>
 
-    <div class="members-list" id="membersList"></div>
+    <div id="membersContent" class="section-content">
+        <table id="membersTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="member">Member</th>
+                    <th>HellHades Link</th>
+                    <th>Teams</th>
+                    <th>Manage</th>
+                </tr>
+            </thead>
+            <tbody id="membersTableBody"></tbody>
+        </table>
 
-    <div class="add-member">
-        <input id="newMemberPseudo" placeholder="Pseudo">
-        <input id="newMemberLink" placeholder="HellHades Optimizer Link (optional)">
-        <button id="addMemberBtn">Add</button>
+        <div class="add-member">
+            <input id="newMemberPseudo" placeholder="Pseudo">
+            <input id="newMemberLink" placeholder="HellHades Optimizer Link (optional)">
+            <button id="addMemberBtn">Add</button>
+        </div>
     </div>
 </section>
 

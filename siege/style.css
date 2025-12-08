@@ -1418,7 +1418,8 @@ body.modal-open {
     background: #0e0e0e;
     border: 1px solid #333;
     border-radius: 10px;
-    max-width: 1300px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    max-width: 1500px;
 }
 
 .members-section h2 {
@@ -1500,6 +1501,153 @@ body.modal-open {
 
 #addMemberBtn:hover {
     border-color: #d4af37;
+}
+
+/* Members Table */
+#membersTable {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+#membersTable th,
+#membersTable td {
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 1px solid #333;
+}
+
+#membersTable th {
+    color: #ffca3c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+#membersTable th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+#membersTable th.sortable:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+#membersTable tbody tr {
+    transition: background 0.2s;
+}
+
+#membersTable tbody tr:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+#membersTable td {
+    color: #fff;
+}
+
+.member-hh-link {
+    color: #6ba3ff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+}
+
+.member-hh-link:hover {
+    color: #8bb8ff;
+    text-decoration: underline;
+}
+
+.member-hh-link img {
+    width: 16px;
+    height: 16px;
+}
+
+.member-team-count {
+    color: #aaa;
+    font-weight: 600;
+}
+
+.member-manage-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.member-edit-btn,
+.member-delete-btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: #222;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+    font-size: 12px;
+}
+
+.member-edit-btn:hover {
+    background: #333;
+    border-color: #6ba3ff;
+    color: #6ba3ff;
+}
+
+.member-delete-btn:hover {
+    background: #331111;
+    border-color: #ff5555;
+    color: #ff5555;
+}
+
+/* ==================== COLLAPSIBLE SECTIONS ==================== */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    padding: 12px 16px;
+    margin: 0 0 20px 0;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.section-header:hover {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08));
+}
+
+.section-title {
+    margin: 0;
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #ffbf3b;
+    letter-spacing: 2px;
+}
+
+.collapse-icon {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.section-header.collapsed .collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.section-content {
+    max-height: 5000px;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    opacity: 1;
+}
+
+.section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
 }
 
 /* ==================== SUMMARY TABLE ==================== */

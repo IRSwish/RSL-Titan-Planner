@@ -155,6 +155,8 @@ function getChampionByNameExact(name) {
 // --- Siege planner state ---
 let currentRoomId = null;
 let currentPostId = null;
+let hasUnsavedChanges = false;
+let initialModalState = null;
 const postIds = [
     "post1", 
     "post2", 
@@ -285,66 +287,159 @@ function applyMemberFilter(selectedMember) {
 }
 
 function updateMembersList() {
-    const list = document.getElementById("membersList");
-    list.innerHTML = "";
+    const tbody = document.getElementById("membersTableBody");
+    tbody.innerHTML = "";
 
+    // Count teams per member (all posts including towers/shrines/stronghold)
+    const teamCounts = {};
+    Object.keys(postDataCache).forEach(postId => {
+        const postData = postDataCache[postId];
+        if (postData && Array.isArray(postData.teams)) {
+            postData.teams.forEach(team => {
+                if (team.member) {
+                    teamCounts[team.member] = (teamCounts[team.member] || 0) + 1;
+                }
+            });
+        }
+    });
+
+    // Sort members alphabetically
     Object.values(clanMembers)
         .sort((a, b) => a.pseudo.localeCompare(b.pseudo))
         .forEach(member => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "member-tag";
+            const tr = document.createElement("tr");
 
-            // Pseudo cliquable
-            const pseudoEl = document.createElement("span");
-            pseudoEl.textContent = member.pseudo;
-            pseudoEl.className = "member-pseudo";
+            // Member name
+            const memberTd = document.createElement("td");
+            memberTd.textContent = member.pseudo;
+            memberTd.style.fontWeight = "600";
+            tr.appendChild(memberTd);
 
+            // HellHades Link
+            const linkTd = document.createElement("td");
             if (member.link) {
-                pseudoEl.style.cursor = "pointer";
-                pseudoEl.onclick = () => window.open(member.link, "_blank");
+                const link = document.createElement("a");
+                link.href = member.link;
+                link.target = "_blank";
+                link.className = "member-hh-link";
+                link.innerHTML = `<img src="/siege/img/HH.ico" alt="HH" /> View Profile`;
+                linkTd.appendChild(link);
+            } else {
+                linkTd.textContent = "-";
+                linkTd.style.color = "#555";
             }
+            tr.appendChild(linkTd);
 
-            // Delete icon
-            const deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("delete-member-btn");
-            deleteBtn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6l-1.5 14H6.5L5 6"></path>
-                <path d="M10 11v6"></path>
-                <path d="M14 11v6"></path>
-                <path d="M9 6V4h6v2"></path>
-            </svg>
+            // Teams count
+            const teamsTd = document.createElement("td");
+            const count = teamCounts[member.pseudo] || 0;
+            teamsTd.innerHTML = `<span class="member-team-count">${count}</span>`;
+            tr.appendChild(teamsTd);
+
+            // Manage buttons
+            const manageTd = document.createElement("td");
+            const manageDiv = document.createElement("div");
+            manageDiv.className = "member-manage-btns";
+
+            // Edit button
+            const editBtn = document.createElement("button");
+            editBtn.className = "member-edit-btn";
+            editBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Edit
             `;
+            editBtn.addEventListener("click", () => editMember(member.pseudo, member.link));
 
-            deleteBtn.addEventListener("click", () => {
-                deleteClanMember(member.pseudo);
-            });
+            // Delete button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "member-delete-btn";
+            deleteBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6l-1.5 14H6.5L5 6"></path>
+                    <path d="M10 11v6"></path>
+                    <path d="M14 11v6"></path>
+                    <path d="M9 6V4h6v2"></path>
+                </svg>
+                Delete
+            `;
+            deleteBtn.addEventListener("click", () => deleteClanMember(member.pseudo));
 
-            // Append
-            wrapper.appendChild(pseudoEl);
+            manageDiv.appendChild(editBtn);
+            manageDiv.appendChild(deleteBtn);
+            manageTd.appendChild(manageDiv);
+            tr.appendChild(manageTd);
 
-            if (member.link) {
-                const linkEl = document.createElement("a");
-                linkEl.href = member.link;
-                linkEl.target = "_blank";
-                linkEl.className = "hh-link-icon";
-
-                linkEl.innerHTML = `<img src="/siege/img/HH.ico" alt="HH" />`;
-
-                wrapper.appendChild(linkEl);
-            }
-
-            wrapper.appendChild(deleteBtn);
-
-            list.appendChild(wrapper);
-
+            tbody.appendChild(tr);
         });
-        // mise à jour du compteur de membres
-        const membersCount = Object.keys(clanMembers).length;
-        const titleEl = document.getElementById("membersTitle");
-        if (titleEl) titleEl.textContent = `Clan Members (${membersCount})`;
+
+    // Update member count
+    const membersCount = Object.keys(clanMembers).length;
+    const titleEl = document.getElementById("membersTitle");
+    if (titleEl) titleEl.textContent = `Clan Members (${membersCount})`;
+}
+
+function editMember(pseudo, currentLink) {
+    if (isViewer()) {
+        alert("Cannot edit in viewer mode.");
+        return;
+    }
+
+    const newPseudo = prompt("Edit member name:", pseudo);
+    if (!newPseudo || newPseudo === pseudo) {
+        // If cancelled or same name, just edit the link
+        const newLink = prompt("Edit HellHades link (leave empty to remove):", currentLink || "");
+        if (newLink !== null) {
+            clanMembers[pseudo].link = newLink.trim();
+            const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
+            set(refMembers, clanMembers);
+        }
+        return;
+    }
+
+    // Check if new name already exists
+    if (clanMembers[newPseudo]) {
+        alert("A member with this name already exists.");
+        return;
+    }
+
+    // Edit link too
+    const newLink = prompt("Edit HellHades link (leave empty to remove):", currentLink || "");
+
+    // Update member
+    const member = { ...clanMembers[pseudo] };
+    member.pseudo = newPseudo;
+    if (newLink !== null) {
+        member.link = newLink.trim();
+    }
+
+    delete clanMembers[pseudo];
+    clanMembers[newPseudo] = member;
+
+    // Update all teams with this member
+    Object.keys(postDataCache).forEach(postId => {
+        const postData = postDataCache[postId];
+        if (postData && Array.isArray(postData.teams)) {
+            postData.teams.forEach(team => {
+                if (team.member === pseudo) {
+                    team.member = newPseudo;
+                }
+            });
+        }
+    });
+
+    // Save to Firebase
+    const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
+    set(refMembers, clanMembers);
+
+    // Save all posts with updated member names
+    Object.keys(postDataCache).forEach(postId => {
+        const postRef = ref(db, `rooms/${currentRoomId}/siege/${postId}`);
+        set(postRef, postDataCache[postId]);
+    });
 }
 
 function deleteClanMember(pseudo) {
@@ -1114,7 +1209,34 @@ function openModal(postId) {
     // Appliquer le verrouillage si nécessaire
     applyFreezeState(data.frozen || false);
 
+    // Reset unsaved changes tracking
+    hasUnsavedChanges = false;
+
+    // Capture initial state after a small delay to ensure everything is rendered
+    setTimeout(() => {
+        initialModalState = captureModalState();
+        setupChangeTracking();
+    }, 100);
+
     setStatus("");
+}
+
+function setupChangeTracking() {
+    const modal = document.getElementById("modalOverlay");
+    if (!modal) return;
+
+    // Add event listeners to track changes on inputs, selects, and buttons
+    const teamsContainer = document.getElementById("teamsContainer");
+    const conditionInput = document.getElementById("condition");
+
+    if (teamsContainer) {
+        teamsContainer.addEventListener("input", trackModalChanges);
+        teamsContainer.addEventListener("change", trackModalChanges);
+    }
+
+    if (conditionInput) {
+        conditionInput.addEventListener("change", trackModalChanges);
+    }
 }
 
 function updateSelectionButtonsState() {
@@ -1155,8 +1277,73 @@ function updateSelectionButtonsState() {
 }
 
 function closeModal() {
+    // Check for unsaved changes
+    if (hasUnsavedChanges) {
+        const confirmClose = confirm("You have unsaved changes. Do you want to save before closing?");
+        if (confirmClose) {
+            // Save and then close
+            saveCurrentPost();
+            // Wait a bit for save to complete
+            setTimeout(() => {
+                hasUnsavedChanges = false;
+                initialModalState = null;
+                document.body.classList.remove("modal-open");
+                document.getElementById("modalOverlay").style.display = "none";
+            }, 300);
+            return;
+        } else {
+            // User chose not to save, ask for final confirmation
+            const confirmDiscard = confirm("Are you sure you want to discard your changes?");
+            if (!confirmDiscard) {
+                return; // Don't close
+            }
+        }
+    }
+
+    // Close modal
+    hasUnsavedChanges = false;
+    initialModalState = null;
     document.body.classList.remove("modal-open");
     document.getElementById("modalOverlay").style.display = "none";
+}
+
+function captureModalState() {
+    const teamsContainer = document.getElementById("teamsContainer");
+
+    if (!teamsContainer) return null;
+
+    const state = {
+        teams: [],
+        condition: document.getElementById("condition")?.value || "",
+        frozen: postDataCache[currentPostId]?.frozen || false
+    };
+
+    teamsContainer.querySelectorAll(".team-row").forEach(row => {
+        const memberSelect = row.querySelector(".member-select");
+        const champInputs = row.querySelectorAll(".champ-input");
+        const condInput = row.querySelector(".team-condition-value");
+
+        state.teams.push({
+            member: memberSelect?.value || "",
+            c1: champInputs[0]?.value || "",
+            c2: champInputs[1]?.value || "",
+            c3: champInputs[2]?.value || "",
+            c4: champInputs[3]?.value || "",
+            condition: condInput?.value || ""
+        });
+    });
+
+    return JSON.stringify(state);
+}
+
+function trackModalChanges() {
+    const modal = document.getElementById("modalOverlay");
+    if (!modal || modal.style.display !== "flex") return;
+
+    const currentState = captureModalState();
+    if (currentState && initialModalState && currentState !== initialModalState) {
+        hasUnsavedChanges = true;
+    }
 }
 
 function updateStrongholdBonus() {
@@ -1791,6 +1978,11 @@ function saveCurrentPost() {
     set(r, data)
         .then(() => {
             setStatus("Teams saved ✔");
+            // Reset unsaved changes flag
+            hasUnsavedChanges = false;
+            // Update initial state to current state
+            initialModalState = captureModalState();
+
             updateSummaryTable();
             // Si on vient de sauvegarder le stronghold, mettre à jour le bonus sur tous les modals ouverts
             if (currentPostId === "stronghold") {
@@ -2948,6 +3140,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
         // Initialize app with room-based data
         initializeAppWithRoom(roomId);
+    });
+
+    // Initialize collapsible sections
+    document.querySelectorAll(".section-header.collapsible").forEach(header => {
+        header.addEventListener("click", () => {
+            const targetId = header.dataset.target;
+            const content = document.getElementById(targetId);
+
+            if (content) {
+                header.classList.toggle("collapsed");
+                content.classList.toggle("collapsed");
+            }
+        });
     });
 
     // Remplace automatiquement les points roses par les icônes correspondantes
