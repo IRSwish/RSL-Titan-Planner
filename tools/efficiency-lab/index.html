@@ -14,115 +14,573 @@
   <script src="https://unpkg.com/lucide@latest" defer></script>
   <meta charset="UTF-8">
   <script src="/config/site-config.js"></script>
-  <script>document.title =  "Efficiency Lab | " + window.siteConfig.title;</script>
+  <script>document.title = "Efficiency Lab | " + window.siteConfig.title;</script>
   <link rel="stylesheet" href="/style/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'American Captain';
-      src: url('/style/American Captain.otf') format('opentype');
+    * { box-sizing: border-box; }
+
+    .main-container {
+      width: min(1100px, 95%);
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    /* Selection Panel */
+    .selection-panel {
+      background: var(--bg2);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+    }
+
+    .section-title {
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 15px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dropdown-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeInSlide 0.3s ease forwards;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .input-group.hidden {
+      display: none;
+    }
+
+    .input-label {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .styled-select {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid var(--gray);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 14px;
+      transition: all 0.25s ease;
+      outline: none;
+    }
+
+    .styled-select:hover {
+      border-color: var(--gold);
+    }
+
+    .styled-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+    }
+
+    .styled-select option {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Points Section */
+    .points-panel {
+      background: var(--bg2);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+    }
+
+    .points-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .points-input-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid var(--gray);
+      border-radius: 8px;
+      padding: 15px;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .points-input-box:hover {
+      border-color: var(--gold);
+    }
+
+    .points-input-box label {
+      display: block;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .points-input-box input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 700;
+      outline: none;
+      text-align: center;
+    }
+
+    .remaining-box {
+      background: linear-gradient(145deg, #141414, #1b1b1b);
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .remaining-label {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .remaining-value {
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    /* Cost Section */
+    .cost-section {
+      margin-bottom: 25px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.3s ease, max-height 0.3s ease;
+    }
+
+    .cost-section.visible {
+      opacity: 1;
+      max-height: 600px;
+    }
+
+    .cost-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .cost-box {
+      background: var(--bg2);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+      min-height: 140px;
+    }
+
+    .cost-icon {
+      width: 48px;
+      height: 48px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.25));
+    }
+
+    .cost-value {
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--gold);
+      letter-spacing: 0.3px;
+    }
+
+    .cost-label {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .cost-hint {
+      font-size: 12px;
+      color: var(--text);
+      opacity: 0.7;
+      font-style: italic;
+      text-align: center;
+      margin-top: 0;
+    }
+
+    /* Table Section */
+    .table-panel {
+      margin-bottom: 25px;
+      overflow-x: auto;
+    }
+
+    #points-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 2px solid #3a3a3a !important;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #points-table thead th {
+      background: rgba(0, 0, 0, 0.6) !important;
+      color: #d4af37 !important;
+      -webkit-text-fill-color: #d4af37 !important;
+      -webkit-background-clip: unset !important;
+      background-clip: unset !important;
+      padding: 12px 10px !important;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid #3a3a3a !important;
+      border-right: 1px solid #3a3a3a !important;
+      font-size: 14px;
+    }
+
+    #points-table thead th:last-child {
+      border-right: none !important;
+    }
+
+    #points-table thead th:first-child {
+      border-top-left-radius: 10px;
+      padding: 0;
+    }
+
+    #points-table thead th:last-child {
+      border-top-right-radius: 10px;
+    }
+
+    #points-table tbody td {
+      padding: 10px !important;
+      text-align: center;
+      color: var(--text);
+      border-bottom: 1px solid #3a3a3a !important;
+      border-right: 1px solid #3a3a3a !important;
+      background-color: transparent !important;
+      transition: all 0.2s ease;
+      font-size: 13px;
+    }
+
+    #points-table tbody td:last-child {
+      border-right: none !important;
+    }
+
+    #points-table tbody tr:last-child td {
+      border-bottom: none !important;
+    }
+
+    #points-table tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 10px;
+    }
+
+    #points-table tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 10px;
+    }
+
+    #points-table tbody td:first-child {
+      background: rgba(0, 0, 0, 0.6) !important;
+      font-weight: 600;
+      color: var(--text);
+      text-align: left;
+    }
+
+    #points-table tbody tr:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* Toggle in table header */
+    .rarity-cell {
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      padding: 12px 10px;
+      width: 100%;
+      height: 100%;
+      color: #d4af37 !important;
+      -webkit-text-fill-color: #d4af37 !important;
+      -webkit-background-clip: unset !important;
+      background-clip: unset !important;
+    }
+
+    .rarity-cell:hover {
+      color: #f1f5f9 !important;
+      -webkit-text-fill-color: #f1f5f9 !important;
+    }
+
+    .rarity-cell svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Rarity colors */
+    #points-table tbody tr:nth-child(1) td:first-child {
+      color: #999 !important; /* Common - Gris */
+    }
+
+    #points-table tbody tr:nth-child(2) td:first-child {
+      color: #4ade80 !important; /* Uncommon - Vert */
+    }
+
+    #points-table tbody tr:nth-child(3) td:first-child {
+      color: #3b82f6 !important; /* Rare - Bleu */
+    }
+
+    #points-table tbody tr:nth-child(4) td:first-child {
+      color: #a855f7 !important; /* Epic - Violet */
+    }
+
+    #points-table tbody tr:nth-child(5) td:first-child {
+      color: #fbbf24 !important; /* Legendary - Jaune doré */
+    }
+
+    #points-table tbody tr:nth-child(6) td:first-child {
+      color: #ef4444 !important; /* Mythical - Rouge */
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dropdown-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .points-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cost-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cost-box {
+        min-height: auto;
+        padding: 15px;
+      }
+
+      .table-panel {
+        overflow-x: auto;
+      }
+
+      #points-table {
+        font-size: 11px;
+      }
+
+      #points-table thead th,
+      #points-table tbody td {
+        padding: 8px 5px;
+      }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  
+
 <!-- BARRE DE MENU CENTRÉE -->
 <div id="menu-container"></div>
-  
+
 <div class="header-wrapper">
   <header id="page-title">EFFICIENCY LAB</header>
-</div> 
-
-<div class="dropdown-container">
-  <select id="event-type">
-    <option value="">-- Event Type --</option>
-    <option value="tournament">Tournament</option>
-    <option value="gearhunters">Gear Hunters</option>
-    <option value="herospath">Hero's Path</option>
-    <option value="deckoffate">Deck of Fate</option>
-  </select>
-
-  <select id="zone">
-    <option value="">-- Zone --</option>
-    <option value="dungeons">Fire Knight / Ice Golem / Dragon</option>
-    <option value="spider">Spider</option>
-    <option value="eventdungeon">Event Dungeon</option>
-    <option value="campaign">Campaign</option>
-  </select>
-
-  <!-- Campagne -->
-  <select id="campaign-difficulty" class="hidden">
-    <option value="">-- Difficulty --</option>
-    <option value="Normal">Normal</option>
-    <option value="Hard">Hard</option>
-    <option value="Brutal">Brutal</option>
-    <option value="Nightmare">Nightmare</option>
-  </select>
-  <select id="campaign-stage" class="hidden"><option value="">-- Stage --</option></select>
-
-  <!-- Donjons & Spider & Event Dungeon -->
-  <select id="dungeon-difficulty" class="hidden">
-    <option value="">-- Difficulty --</option>
-    <option value="normal">Normal</option>
-    <option value="hard">Hard</option>
-  </select>
-  <select id="dungeon-stage" class="hidden"><option value="">-- Stage --</option></select>
 </div>
 
-<div class="points-inputs">
-  <label for="current-points">Current Points:</label>
-  <input type="number" id="current-points" min="0" value="0">
-  <label for="target-points">Target Points:</label>
-  <input type="number" id="target-points" min="0" value="0">
-  <span id="points-remaining">0 point(s) remaining</span>
-</div>
-  
-<div id="calculation-result"></div>
-  
-<div id="points-table-container" class="hidden">
-  <button id="toggle-btn" class="toggle-btn">Show Loot %</button>
-  <table id="points-table">
-    <thead>
-      <tr>
-        <th>Rarity</th>
-        <th>Rank 1 ⭐</th>
-        <th>Rank 2 ⭐</th>
-        <th>Rank 3 ⭐</th>
-        <th>Rank 4 ⭐</th>
-        <th>Rank 5 ⭐</th>
-        <th>Rank 6 ⭐</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Common</td></tr>
-      <tr><td>Uncommon</td></tr>
-      <tr><td>Rare</td></tr>
-      <tr><td>Epic</td></tr>
-      <tr><td>Legendary</td></tr>
-      <tr><td>Mythical</td></tr>
-    </tbody>
-  </table>
-</div>
+<div class="main-container">
+  <!-- Selection Panel -->
+  <div class="selection-panel">
+    <div class="section-title">Event & Zone Selection</div>
+    <div class="dropdown-grid">
+      <div class="input-group">
+        <label class="input-label">Event Type</label>
+        <select id="event-type" class="styled-select">
+          <option value="">-- Event Type --</option>
+          <option value="tournament">Tournament</option>
+          <option value="gearhunters">Gear Hunters</option>
+          <option value="herospath">Hero's Path</option>
+          <option value="deckoffate">Deck of Fate</option>
+        </select>
+      </div>
 
-  <div class="adsense-container">
-    <div class="ad-label">Advertisement</div>
+      <div class="input-group">
+        <label class="input-label">Zone</label>
+        <select id="zone" class="styled-select">
+          <option value="">-- Zone --</option>
+          <option value="dungeons">Fire Knight / Ice Golem / Dragon</option>
+          <option value="spider">Spider</option>
+          <option value="eventdungeon">Event Dungeon</option>
+          <option value="campaign">Campaign</option>
+        </select>
+      </div>
 
-    <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-8653563887265027"
-     data-ad-slot="9042028911"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+      <!-- Campagne -->
+      <div class="input-group hidden" id="campaign-difficulty-group">
+        <label class="input-label">Campaign Difficulty</label>
+        <select id="campaign-difficulty" class="styled-select">
+          <option value="">-- Difficulty --</option>
+          <option value="Normal">Normal</option>
+          <option value="Hard">Hard</option>
+          <option value="Brutal">Brutal</option>
+          <option value="Nightmare">Nightmare</option>
+        </select>
+      </div>
 
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+      <div class="input-group hidden" id="campaign-stage-group">
+        <label class="input-label">Campaign Stage</label>
+        <select id="campaign-stage" class="styled-select">
+          <option value="">-- Stage --</option>
+        </select>
+      </div>
+
+      <!-- Donjons & Spider & Event Dungeon -->
+      <div class="input-group hidden" id="dungeon-difficulty-group">
+        <label class="input-label">Dungeon Difficulty</label>
+        <select id="dungeon-difficulty" class="styled-select">
+          <option value="">-- Difficulty --</option>
+          <option value="normal">Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="input-group hidden" id="dungeon-stage-group">
+        <label class="input-label">Dungeon Stage</label>
+        <select id="dungeon-stage" class="styled-select">
+          <option value="">-- Stage --</option>
+        </select>
+      </div>
+    </div>
   </div>
+
+  <!-- Points Section -->
+  <div class="points-panel">
+    <div class="section-title">Points Tracking</div>
+    <div class="points-grid">
+      <div class="points-input-box">
+        <label for="current-points">Current Points</label>
+        <input type="number" id="current-points" min="0" value="0">
+      </div>
+      <div class="points-input-box">
+        <label for="target-points">Target Points</label>
+        <input type="number" id="target-points" min="0" value="0">
+      </div>
+      <div class="remaining-box">
+        <span class="remaining-label">Remaining</span>
+        <span id="points-remaining" class="remaining-value">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cost Section (hidden by default) -->
+  <div class="cost-section" id="cost-section">
+    <div class="cost-grid">
+      <div class="cost-box">
+        <div class="cost-icon" style="background-image:url('/style/img/Misc/Energy.webp');"></div>
+        <div class="cost-value" id="energy-value">0</div>
+        <div class="cost-label">Energy</div>
+      </div>
+      <div class="cost-box">
+        <div class="cost-icon" style="background-image:url('/style/img/Misc/Gems.webp');"></div>
+        <div class="cost-value" id="gems-value">0</div>
+        <div class="cost-label">Gems</div>
+      </div>
+      <div class="cost-box">
+        <div class="cost-value" id="runs-value">0</div>
+        <div class="cost-label">Runs</div>
+        <div class="cost-hint" id="runs-hint">Total runs needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div id="points-table-container" class="table-panel hidden">
+    <table id="points-table">
+      <thead>
+        <tr>
+          <th>
+            <div class="rarity-cell" id="toggle-cell">
+              <i data-lucide="hash"></i>
+              <span id="toggle-text">Points</span>
+            </div>
+          </th>
+          <th>Rank 1 ⭐</th>
+          <th>Rank 2 ⭐</th>
+          <th>Rank 3 ⭐</th>
+          <th>Rank 4 ⭐</th>
+          <th>Rank 5 ⭐</th>
+          <th>Rank 6 ⭐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Common</td></tr>
+        <tr><td>Uncommon</td></tr>
+        <tr><td>Rare</td></tr>
+        <tr><td>Epic</td></tr>
+        <tr><td>Legendary</td></tr>
+        <tr><td>Mythical</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="adsense-container">
+  <div class="ad-label">Advertisement</div>
+  <ins class="adsbygoogle"
+   style="display:block"
+   data-ad-client="ca-pub-8653563887265027"
+   data-ad-slot="9042028911"
+   data-ad-format="auto"
+   data-full-width-responsive="true"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
 <script>
 const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 const pointsTableContainer = document.getElementById('points-table-container');
 const pointsTableBody = document.getElementById('points-table').querySelector('tbody');
+const costSection = document.getElementById('cost-section');
 
 const zoneSelect = document.getElementById('zone');
 const dungeonDifficultySelect = document.getElementById('dungeon-difficulty');
@@ -130,12 +588,18 @@ const dungeonStageSelect = document.getElementById('dungeon-stage');
 const campaignDifficultySelect = document.getElementById('campaign-difficulty');
 const campaignStageSelect = document.getElementById('campaign-stage');
 const eventTypeSelect = document.getElementById('event-type');
-const toggleBtn = document.getElementById('toggle-btn');
 
 const currentPointsInput = document.getElementById('current-points');
 const targetPointsInput = document.getElementById('target-points');
 const pointsRemainingSpan = document.getElementById('points-remaining');
-const calculationResult = document.getElementById('calculation-result');
+
+const energyValue = document.getElementById('energy-value');
+const gemsValue = document.getElementById('gems-value');
+const runsValue = document.getElementById('runs-value');
+const runsHint = document.getElementById('runs-hint');
+
+const toggleCell = document.getElementById('toggle-cell');
+const toggleText = document.getElementById('toggle-text');
 
 let pointsData = {};
 let displayMode = 'points';
@@ -164,14 +628,25 @@ function generateEmptyPointsTable() {
 }
 
 function fillPointsTable(eventType) {
-  if (!pointsData.points?.[eventType]) return;
+  if (!pointsData.points?.[eventType]) {
+    console.log('No points data for event type:', eventType);
+    return;
+  }
+
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
+    if (!tr) return;
+
     const values = pointsData.points[eventType][rarity];
+    if (!values) return;
+
     for (let col = 1; col <= 6; col++) {
-      tr.cells[col].textContent = values[col-1] || 0;
-      tr.cells[col].style.backgroundColor = '';
-      tr.cells[col].style.color = '';
+      const cell = tr.cells[col];
+      if (!cell) continue;
+
+      cell.textContent = values[col-1] || 0;
+      cell.style.backgroundColor = '';
+      cell.style.color = 'var(--text)';
     }
   });
 }
@@ -230,26 +705,42 @@ function getEnergy() {
 
 function fillLootTable() {
   const loot = getLoot();
-  if (!loot) return;
+  if (!loot) {
+    console.log('No loot data available');
+    return;
+  }
+
   rarities.forEach((rarity, rowIndex) => {
     const tr = pointsTableBody.rows[rowIndex];
+    if (!tr) {
+      console.log('No table row for', rarity);
+      return;
+    }
+
     const arr = loot[rarity] || [];
     for (let i=0; i<6; i++){
+      const cell = tr.cells[i+1];
+      if (!cell) {
+        console.log('No cell at index', i+1, 'for', rarity);
+        continue;
+      }
+
       const value = arr[i] || 0;
-      tr.cells[i+1].textContent = (value*100).toFixed(2)+'%';
+      cell.textContent = (value*100).toFixed(2)+'%';
+
       if(value === 0){
-        tr.cells[i+1].style.color = '#444';
-        tr.cells[i+1].style.backgroundColor = 'transparent';
+        cell.style.setProperty('color', '#444', 'important');
+        cell.style.setProperty('background-color', 'transparent', 'important');
       } else {
-        tr.cells[i+1].style.color = '#fff';
+        cell.style.setProperty('color', '#fff', 'important');
         const alpha = 0.1 + 0.4 * value;
-        tr.cells[i+1].style.backgroundColor = `rgba(0,200,0,${alpha})`;
+        cell.style.setProperty('background-color', `rgba(0,200,0,${alpha})`, 'important');
       }
     }
   });
 }
 
-// --- Dropdowns ---
+// --- Dropdowns with animation ---
 function updateDropdowns() {
   const zone = zoneSelect.value;
 
@@ -257,12 +748,31 @@ function updateDropdowns() {
   const isDungeonOrSpider = ['dungeons','spider'].includes(zone);
   const isEventDungeon = zone === 'eventdungeon';
 
-  campaignDifficultySelect.classList.toggle('hidden', !isCampaign);
-  campaignStageSelect.classList.toggle('hidden', !isCampaign);
+  const campaignDiffGroup = document.getElementById('campaign-difficulty-group');
+  const campaignStageGroup = document.getElementById('campaign-stage-group');
+  const dungeonDiffGroup = document.getElementById('dungeon-difficulty-group');
+  const dungeonStageGroup = document.getElementById('dungeon-stage-group');
 
-  // On affiche le sélecteur de difficulté uniquement pour Dungeons et Spider
-  dungeonDifficultySelect.classList.toggle('hidden', !isDungeonOrSpider);
-  dungeonStageSelect.classList.toggle('hidden', !(isDungeonOrSpider || isEventDungeon));
+  // Animation d'apparition/disparition
+  if (isCampaign) {
+    campaignDiffGroup.classList.remove('hidden');
+    campaignStageGroup.classList.remove('hidden');
+  } else {
+    campaignDiffGroup.classList.add('hidden');
+    campaignStageGroup.classList.add('hidden');
+  }
+
+  if (isDungeonOrSpider) {
+    dungeonDiffGroup.classList.remove('hidden');
+  } else {
+    dungeonDiffGroup.classList.add('hidden');
+  }
+
+  if (isDungeonOrSpider || isEventDungeon) {
+    dungeonStageGroup.classList.remove('hidden');
+  } else {
+    dungeonStageGroup.classList.add('hidden');
+  }
 }
 
 // --- Calculs ---
@@ -270,17 +780,20 @@ function updateCalculation() {
   const current = Number(currentPointsInput.value) || 0;
   const target = Number(targetPointsInput.value) || 0;
   const remaining = Math.max(target - current, 0);
-  pointsRemainingSpan.textContent = `${remaining} point(s) remaining`;
+  pointsRemainingSpan.textContent = remaining;
 
   if (remaining <= 0) {
-    calculationResult.textContent = '';
+    costSection.classList.remove('visible');
     return;
   }
 
   const energyPerRun = getEnergy();
   const eventType = eventTypeSelect.value;
   const zone = zoneSelect.value;
-  if (!energyPerRun || !pointsData.points?.[eventType]) return;
+  if (!energyPerRun || !pointsData.points?.[eventType]) {
+    costSection.classList.remove('visible');
+    return;
+  }
 
   let totalAvgPoints = 0;
   const pointValues = pointsData.points[eventType];
@@ -307,23 +820,12 @@ function updateCalculation() {
   const totalEnergy = runsNeeded * energyPerRun;
   const gems = (totalEnergy / 3.25).toFixed(2);
 
-  calculationResult.innerHTML = `
-  <div style="display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:10px;">
-    <div style="text-align:center;">
-      <div style="font-weight:bold;font-size:18px;margin-bottom:5px;">${totalEnergy}</div>
-      <div style="width:64px;height:64px;background-image:url('/style/img/Misc/Energy.webp');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-weight:bold;font-size:18px;margin-bottom:5px;">${gems}</div>
-      <div style="width:64px;height:64px;background-image:url('/style/img/Misc/Gems.webp');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>
-    </div>
-    <div style="text-align:center;max-width:300px;">
-      <div style="font-size:15px;">
-        ${runsNeeded} run(s) or ${superrunsNeeded} super raid(s)<br>
-        to reach ${remaining} remaining points
-      </div>
-    </div>
-  </div>`;
+  energyValue.textContent = Math.round(totalEnergy);
+  gemsValue.textContent = Math.round(gems);
+  runsValue.textContent = runsNeeded;
+  runsHint.textContent = `or ${superrunsNeeded} super raids`;
+
+  costSection.classList.add('visible');
 }
 
 // --- Table update ---
@@ -332,17 +834,36 @@ function updateTable() {
   if (!eventType) {
     generateEmptyPointsTable();
     pointsTableContainer.classList.add('hidden');
-    toggleBtn.style.display = 'none';
-    calculationResult.textContent = '';
     return;
   }
   pointsTableContainer.classList.remove('hidden');
-  toggleBtn.style.display = 'inline-block';
   generateEmptyPointsTable();
   if(displayMode==='points') fillPointsTable(eventType);
   else fillLootTable();
   updateCalculation();
 }
+
+// --- Toggle ---
+toggleCell.addEventListener('click', () => {
+  displayMode = displayMode === 'points' ? 'percent' : 'points';
+  const icon = displayMode === 'points' ? 'hash' : 'bar-chart-3';
+  const text = displayMode === 'points' ? 'Points' : 'Loot %';
+
+  toggleText.textContent = text;
+
+  const iconElement = toggleCell.querySelector('i');
+  if (iconElement) {
+    iconElement.setAttribute('data-lucide', icon);
+    lucide.createIcons();
+  }
+
+  const eventType = eventTypeSelect.value;
+  if (eventType) {
+    generateEmptyPointsTable();
+    if(displayMode === 'points') fillPointsTable(eventType);
+    else fillLootTable();
+  }
+});
 
 // --- Listeners ---
 [currentPointsInput, targetPointsInput].forEach(input => input.addEventListener('input', updateCalculation));
@@ -374,7 +895,7 @@ function updateDungeonStages() {
 dungeonDifficultySelect.addEventListener('change', updateDungeonStages);
 zoneSelect.addEventListener('change', () => {
   updateDropdowns();
-  updateDungeonStages(); // <== ajoute ceci pour Event Dungeon
+  updateDungeonStages();
   updateTable();
 });
 
@@ -390,18 +911,16 @@ campaignDifficultySelect.addEventListener('change', () => {
   updateTable();
 });
 
-toggleBtn.addEventListener('click', ()=>{
-  displayMode = displayMode==='points'?'percent':'points';
-  toggleBtn.textContent = displayMode==='points'?'Show Loot %':'Show Points';
-  updateTable();
-});
-
 // --- Initial setup ---
 generateEmptyPointsTable();
 updateDropdowns();
-toggleBtn.style.display = 'none';
+
+// Initialize Lucide icons
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+});
 </script>
 
-  <script src="/script.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>

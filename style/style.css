@@ -333,7 +333,6 @@ select {
 
 #points-table th,
 #points-table td {
-  border: 1px solid var(--event-border);
   padding: 8px;
   background-color: var(--event-bg);
 }
