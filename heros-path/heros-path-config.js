@@ -2,7 +2,13 @@
 window.fusions = {
   "predators-path": {
     name: "Predator's Path",
-    json: "/heros-path/2025/predators-path.json"
+    json: "/heros-path/2025/predators-path.json",
+    shardCosts: {
+      ancient: 300,
+      void: 750,
+      primal: 1800,
+      sacred: 4500
+    }
   },
   "swordmasters-path": {
     name: "Swordmaster's Path",

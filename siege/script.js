@@ -99,6 +99,40 @@ function getConditionsByType() {
     }
 }
 
+function getBuildingSlots(buildingType, level) {
+    if (!siegeDB) return 0;
+
+    try {
+        const stmt = siegeDB.prepare(
+            "SELECT slots FROM buildings WHERE name = ? AND level = ?;"
+        );
+        stmt.bind([buildingType, level]);
+
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            stmt.free();
+            return row.slots || 0;
+        }
+        stmt.free();
+        return 0;
+    } catch (e) {
+        console.error("Erreur getBuildingSlots", e);
+        return 0;
+    }
+}
+
+function getBuildingTypeFromPostId(postId) {
+    if (postId === "stronghold") return "Stronghold";
+    if (postId.includes("magictower")) return "Magic Tower";
+    if (postId.includes("defensetower")) return "Defense Tower";
+    if (postId.includes("manashrine")) return "Mana Shrine";
+    return null;
+}
+
+function isBuildingPost(postId) {
+    return getBuildingTypeFromPostId(postId) !== null;
+}
+
 
 function searchChampions(query) {
     if (!championsDB || !query) return [];
@@ -1179,14 +1213,15 @@ function fillModalFromData(data) {
     const teamsContainer = document.getElementById("teamsContainer");
     teamsContainer.innerHTML = "";
 
+    // Vérifier le type de post
+    const postEl = currentPostId ? document.getElementById(currentPostId) : null;
+    const postType = postEl ? postEl.dataset.type : "post";
+
+    // Ne plus limiter le nombre de teams - c'est juste visuel
     const teams = Array.isArray(data.teams) && data.teams.length ? data.teams : [{}];
 
     // Check if any team is selected (for correct initial state)
     const hasSelectedTeam = teams.some(t => t.selected === true);
-
-    // Vérifier le type de post
-    const postEl = currentPostId ? document.getElementById(currentPostId) : null;
-    const postType = postEl ? postEl.dataset.type : "post";
 
     // Pour les tours, shrine et stronghold, grouper par 3
     if (postType !== "post") {
@@ -1235,6 +1270,9 @@ function openModal(postId) {
     // Mettre à jour l'irradiance des tours de magie
     updateIrradianceDisplay();
 
+    // Afficher/masquer la section de niveau de bâtiment
+    updateBuildingLevelSection(postId, data);
+
     // ⚠️ d'abord les conditions (post-level)
     renderConditionsUI(postId, data);
 
@@ -1259,6 +1297,86 @@ function openModal(postId) {
     setStatus("");
 }
 
+function updateBuildingLevelSection(postId, data) {
+    const buildingLevelSection = document.getElementById("buildingLevelSection");
+    const buildingLevelSelect = document.getElementById("buildingLevel");
+    const buildingLevelSlots = document.getElementById("buildingLevelSlots");
+
+    if (!buildingLevelSection || !buildingLevelSelect || !buildingLevelSlots) return;
+
+    const buildingType = getBuildingTypeFromPostId(postId);
+
+    if (!buildingType) {
+        // Ce n'est pas un bâtiment, masquer la section
+        buildingLevelSection.style.display = "none";
+        return;
+    }
+
+    // C'est un bâtiment, afficher la section
+    buildingLevelSection.style.display = "flex";
+
+    // Récupérer le niveau actuel (par défaut 1)
+    const currentLevel = data.buildingLevel || 1;
+    buildingLevelSelect.value = currentLevel;
+
+    // Mettre à jour les slots requis
+    updateBuildingLevelSlots(buildingType, currentLevel);
+
+    // Mettre à jour les contraintes de niveau max selon le stronghold
+    updateBuildingLevelConstraints(postId);
+
+    // Écouter les changements de niveau
+    buildingLevelSelect.onchange = function() {
+        const newLevel = parseInt(this.value);
+        updateBuildingLevelSlots(buildingType, newLevel);
+        // Ne plus ajuster automatiquement les teams - c'est juste visuel
+        trackModalChanges();
+    };
+}
+
+function updateBuildingLevelSlots(buildingType, level) {
+    const buildingLevelSlots = document.getElementById("buildingLevelSlots");
+    if (!buildingLevelSlots) return;
+
+    const requiredSlots = getBuildingSlots(buildingType, level);
+    buildingLevelSlots.textContent = requiredSlots;
+}
+
+function updateBuildingLevelConstraints(postId) {
+    const buildingLevelSelect = document.getElementById("buildingLevel");
+    if (!buildingLevelSelect) return;
+
+    // Si c'est le stronghold, pas de contraintes
+    if (postId === "stronghold") {
+        // Tous les niveaux disponibles (1-6)
+        for (let i = 1; i <= 6; i++) {
+            buildingLevelSelect.options[i - 1].disabled = false;
+        }
+        return;
+    }
+
+    // Pour les autres bâtiments, max = niveau du stronghold
+    const strongholdData = postDataCache["stronghold"] || {};
+    const strongholdLevel = strongholdData.buildingLevel || 1;
+
+    for (let i = 1; i <= 6; i++) {
+        const option = buildingLevelSelect.options[i - 1];
+        if (i > strongholdLevel) {
+            option.disabled = true;
+        } else {
+            option.disabled = false;
+        }
+    }
+
+    // Si le niveau actuel est supérieur au stronghold, le réduire
+    const currentLevel = parseInt(buildingLevelSelect.value);
+    if (currentLevel > strongholdLevel) {
+        buildingLevelSelect.value = strongholdLevel;
+        const buildingType = getBuildingTypeFromPostId(postId);
+        updateBuildingLevelSlots(buildingType, strongholdLevel);
+    }
+}
+
 function setupChangeTracking() {
     const modal = document.getElementById("modalOverlay");
     if (!modal) return;
@@ -1266,6 +1384,7 @@ function setupChangeTracking() {
     // Add event listeners to track changes on inputs, selects, and buttons
     const teamsContainer = document.getElementById("teamsContainer");
     const conditionInput = document.getElementById("condition");
+    const buildingLevelSelect = document.getElementById("buildingLevel");
 
     if (teamsContainer) {
         teamsContainer.addEventListener("input", trackModalChanges);
@@ -1274,6 +1393,10 @@ function setupChangeTracking() {
 
     if (conditionInput) {
         conditionInput.addEventListener("change", trackModalChanges);
+    }
+
+    if (buildingLevelSelect) {
+        buildingLevelSelect.addEventListener("change", trackModalChanges);
     }
 }
 
@@ -1355,6 +1478,14 @@ function captureModalState() {
         condition: document.getElementById("condition")?.value || "",
         frozen: postDataCache[currentPostId]?.frozen || false
     };
+
+    // Capturer le niveau de bâtiment si c'est un bâtiment
+    if (isBuildingPost(currentPostId)) {
+        const buildingLevelSelect = document.getElementById("buildingLevel");
+        if (buildingLevelSelect) {
+            state.buildingLevel = buildingLevelSelect.value;
+        }
+    }
 
     teamsContainer.querySelectorAll(".team-row").forEach(row => {
         const memberSelect = row.querySelector(".member-select");
@@ -2050,6 +2181,14 @@ function saveCurrentPost() {
     } else {
         const condition = document.getElementById("condition").value;
         data.condition = condition;
+
+        // Sauvegarder le niveau de bâtiment si c'est un bâtiment
+        if (isBuildingPost(currentPostId)) {
+            const buildingLevelSelect = document.getElementById("buildingLevel");
+            if (buildingLevelSelect) {
+                data.buildingLevel = parseInt(buildingLevelSelect.value);
+            }
+        }
     }
 
     // Check if viewer mode
@@ -2590,6 +2729,7 @@ function updateTeamsCountOnMap(postId) {
     // Check if this is a regular post (not tower/shrine/stronghold)
     const postType = postEl.dataset.type;
     const isRegularPost = postType === "post";
+    const isBuilding = isBuildingPost(postId);
 
     // Check if we need to show hourglass (pending arbitration)
     // Conditions: regular post, more than 1 team, no team is validated
@@ -2613,8 +2753,29 @@ function updateTeamsCountOnMap(postId) {
                 countDiv.classList.remove("alert");
             }
         }
+    } else if (isBuilding) {
+        // Pour les bâtiments, afficher X/max avec sablier si dépassement
+        const buildingType = getBuildingTypeFromPostId(postId);
+        const buildingLevel = data.buildingLevel || 1;
+        const maxSlots = getBuildingSlots(buildingType, buildingLevel);
+
+        const exceedsMax = count > maxSlots;
+
+        if (exceedsMax) {
+            countDiv.innerHTML = `${count}/${maxSlots} <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 2px;"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/><path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12 7.586 7.414A2 2 0 0 1 7 6.172V2"/></svg>`;
+            countDiv.classList.add("alert"); // Red styling
+        } else {
+            countDiv.textContent = `${count}/${maxSlots}`;
+
+            // Red styling if 0/max (empty building)
+            if (count === 0) {
+                countDiv.classList.add("alert");
+            } else {
+                countDiv.classList.remove("alert");
+            }
+        }
     } else {
-        // For towers/shrines/stronghold, keep old format (just the number)
+        // For other types (non-building, non-post), keep old format (just the number)
         countDiv.textContent = count;
         countDiv.classList.remove("alert");
     }

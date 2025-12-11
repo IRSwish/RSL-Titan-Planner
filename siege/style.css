@@ -10,6 +10,11 @@ body.modal-open {
     overflow: hidden;
 }
 
+body.modal-open .map-filter {
+    filter: blur(3px);
+    pointer-events: none;
+}
+
 /* ==================== TOP BAR ==================== */
 .top-bar {
     display: flex;
@@ -766,6 +771,81 @@ body.modal-open {
 .input-error {
     border: 2px solid #d4af37 !important;
     background: rgba(245, 197, 37, 0.15);
+}
+
+/* ==================== BUILDING LEVEL ==================== */
+.building-level-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.building-level-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+.building-level-select {
+    background: #050505;
+    border-radius: 8px;
+    border: 2px solid #d4af37;
+    color: #fcf6ff;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.building-level-select:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: #ffd700;
+}
+
+.building-level-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+.building-level-select option {
+    background: #050505;
+    color: #fcf6ff;
+}
+
+.building-level-select option:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.building-level-select option:disabled {
+    color: #555;
+    background: #222;
+}
+
+.building-level-slots {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.building-level-slots::before {
+    content: "Max team slots:";
+    margin-right: 4px;
+    font-weight: 500;
+    color: #d4af37;
 }
 
 /* ==================== CONDITIONS ==================== */

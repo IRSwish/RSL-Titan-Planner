@@ -246,10 +246,10 @@
                     <th>Cond.</th>
                     <th class="sortable" data-sort="member">Member</th>
                     <th>HH</th>
-                    <th>Lead</th>
-                    <th>Champion 2</th>
-                    <th>Champion 3</th>
                     <th>Champion 4</th>
+                    <th>Champion 3</th>
+                    <th>Champion 2</th>
+                    <th>Lead</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -297,6 +297,20 @@
                 </button>
                 <h2 id="modalTitle">Post</h2>
                 <button id="closeModal" class="ghost-btn small">✕</button>
+            </div>
+
+            <!-- Building Level Input (only for buildings) -->
+            <div id="buildingLevelSection" class="building-level-section" style="display: none;">
+                <label for="buildingLevel" class="building-level-label">Building Level:</label>
+                <select id="buildingLevel" class="building-level-select">
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                    <option value="5">Level 5</option>
+                    <option value="6">Level 6</option>
+                </select>
+                <div id="buildingLevelSlots" class="building-level-slots"></div>
             </div>
 
             <!-- Conditions -->

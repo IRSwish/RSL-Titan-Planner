@@ -17,13 +17,33 @@ const infoSidebar = document.createElement("div");
 infoSidebar.id = "info-sidebar";
 infoSidebar.innerHTML = `
 <br /><br />
-  <label style="display:flex;flex-direction:column;gap:3px;">
-    <span>Points available:</span>
-    <input id="pointsAvailable" type="number" value="0">
-  </label>
-  <span id="pointsSpent">Spent: 0</span>
-  <span id="pointsNeeded">Needed: 0</span>
-  <span id="keysCount">Keys: 0</span>
+  <div class="stat-item">
+    <span class="stat-label">Available:</span>
+    <input id="pointsAvailable" type="number" value="0" style="width: 80px; background:#0e0e0e; color:#fcf6ff; border:none; border-radius:4px; padding:4px 8px; text-align:right; font-weight:600;">
+  </div>
+
+  <div class="stat-item">
+    <span class="stat-label">Spent:</span>
+    <span class="stat-value" id="pointsSpent">0</span>
+  </div>
+
+  <div class="stat-item">
+    <span class="stat-label">Needed:</span>
+    <span class="stat-value" id="pointsNeeded">0</span>
+  </div>
+
+  <div class="stat-item">
+    <span class="stat-label">Keys:</span>
+    <span class="stat-value" id="keysCount">0</span>
+  </div>
+
+  <div id="shardsSection" class="shards-section" style="display:none;">
+    <div class="shards-title">Planned Cost in Shards</div>
+    <div id="shardsContainer"></div>
+  </div>
+
+  <div id="totalPoints" class="total-points"></div>
+
   <button id="reset" class="reset-btn" aria-label="Reset">
     <i data-lucide="rotate-cw"></i>
   </button>
@@ -42,6 +62,11 @@ const pointsSpentSpan = document.getElementById("pointsSpent");
 const pointsNeededSpan = document.getElementById("pointsNeeded");
 const keysSpan = document.getElementById("keysCount");
 const resetBtn = document.getElementById("reset");
+const shardsSection = document.getElementById("shardsSection");
+const shardsContainer = document.getElementById("shardsContainer");
+const totalPointsDiv = document.getElementById("totalPoints");
+
+let currentShardCosts = null;
 
 /* === LOCAL STORAGE === */
 function getStorageKey() {
@@ -95,10 +120,49 @@ function updateStats() {
   // Points nécessaires
   const needed = Math.max(0, plannedPoints - available);
 
-  pointsSpentSpan.textContent = `Spent: ${spentPoints.toLocaleString("en-US")}`;
-  pointsNeededSpan.textContent = `Needed: ${needed.toLocaleString("en-US")}`;
-  keysSpan.textContent = `Keys: ${keys}`;
+  pointsSpentSpan.textContent = spentPoints.toLocaleString("en-US");
+  pointsNeededSpan.textContent = needed.toLocaleString("en-US");
+  keysSpan.textContent = keys.toString();
+
+  // Calcul du total de points dans l'arbre
+  const totalTreePoints = rewards.reduce((sum, r) => {
+    if (r.name.toLowerCase().includes("lock")) return sum;
+    return sum + (r.cost || 0);
+  }, 0);
+  totalPointsDiv.textContent = `Total tree: ${totalTreePoints.toLocaleString("en-US")} pts`;
+
+  // Calcul des shards nécessaires pour le planned
+  if (currentShardCosts && plannedPoints > 0) {
+    shardsSection.style.display = 'block';
+    updateShardDisplay(plannedPoints);
+  } else {
+    shardsSection.style.display = 'none';
+  }
+
   saveState();
+}
+
+/* === CALCUL ET AFFICHAGE DES SHARDS === */
+function updateShardDisplay(plannedPoints) {
+  if (!currentShardCosts) return;
+
+  const shards = [
+    { name: 'Ancient', type: 'Ancient', cost: currentShardCosts.ancient },
+    { name: 'Void', type: 'Void', cost: currentShardCosts.void },
+    { name: 'Primal', type: 'Primal', cost: currentShardCosts.primal },
+    { name: 'Sacred', type: 'Sacred', cost: currentShardCosts.sacred }
+  ];
+
+  shardsContainer.innerHTML = shards.map(shard => {
+    const count = (plannedPoints / shard.cost).toFixed(2);
+    return `
+      <div class="shard-item">
+        <img src="/style/img/Misc/${shard.type}.webp" alt="${shard.name}">
+        <span class="shard-name">${shard.name}</span>
+        <span class="shard-count">${count}</span>
+      </div>
+    `;
+  }).join('');
 }
 
 /* === RECALCUL GÉNÉRAL === */
@@ -192,6 +256,9 @@ async function init() {
   const jsonFile = fusion.json;
   const displayName = fusion.name || "Hero's Path";
 
+  // Charge les coûts de shards s'ils existent
+  currentShardCosts = fusion.shardCosts || null;
+
   const pageTitleEl = document.getElementById("page-title");
   if (pageTitleEl) pageTitleEl.textContent = displayName.toUpperCase();
   document.title = `${displayName} - ${window.siteConfig.title}`;
@@ -264,13 +331,38 @@ async function init() {
   drawConnections();
   updateStats();
 
+  let lastWidth = window.innerWidth;
+  let lastHeight = window.innerHeight;
+
   window.addEventListener("resize", () => {
-  clearTimeout(window._resizeTimeout);
-  window._resizeTimeout = setTimeout(() => {
-    layoutByX();
-    drawConnections();
-  }, 150);
-});
+    clearTimeout(window._resizeTimeout);
+
+    // Détecte si la largeur a changé (pour les media queries)
+    const currentWidth = window.innerWidth;
+    const currentHeight = window.innerHeight;
+    const widthChanged = Math.abs(currentWidth - lastWidth) > 10;
+    const heightChanged = Math.abs(currentHeight - lastHeight) > 50;
+
+    if (widthChanged || heightChanged) {
+      // Efface immédiatement si changement significatif
+      svg.innerHTML = "";
+      lastWidth = currentWidth;
+      lastHeight = currentHeight;
+    }
+
+    // Délai plus long si changement important (changement d'écran)
+    const delay = (widthChanged && heightChanged) ? 150 : 50;
+
+    window._resizeTimeout = setTimeout(() => {
+      // Petit délai supplémentaire pour que les media queries s'appliquent
+      requestAnimationFrame(() => {
+        // Recalcule le layout avec callback pour redessiner après
+        layoutByX(() => {
+          drawConnections();
+        });
+      });
+    }, delay);
+  });
   window.addEventListener("scroll", () => requestAnimationFrame(drawConnections));
 }
 
@@ -418,7 +510,7 @@ function cascadeDeactivate(id) {
 /* === CHEMINS === */
 function drawConnections() {
   svg.innerHTML = "";
-  const boardRect = svg.getBoundingClientRect();
+
   const grayPaths = [], goldPaths = [], bluePaths = [], greenPaths = [];
 
   rewards.forEach(r => {
@@ -427,12 +519,24 @@ function drawConnections() {
       const cBox = document.querySelector(`.reward-box[data-id="${r.id}"]`);
       if (!pBox || !cBox) return;
 
-      const pRect = pBox.getBoundingClientRect();
-      const cRect = cBox.getBoundingClientRect();
-      const x1 = pRect.left + pRect.width / 2 - boardRect.left;
-      const y1 = pRect.bottom - boardRect.top;
-      const x2 = cRect.left + cRect.width / 2 - boardRect.left;
-      const y2 = cRect.top - boardRect.top;
+      // Utilise offsetLeft/offsetTop qui reflètent immédiatement style.left/style.top
+      // puis ajoute les offsets du parent pour avoir la position absolue
+      const pRow = pBox.parentElement;
+      const cRow = cBox.parentElement;
+
+      // Position de la box parent (haut de la ligne)
+      const pRowRect = pRow.getBoundingClientRect();
+      const cRowRect = cRow.getBoundingClientRect();
+      const svgRect = svg.getBoundingClientRect();
+
+      // Calcule les positions en utilisant offsetLeft (qui lit style.left directement)
+      const pLeft = parseFloat(pBox.style.left) || pBox.offsetLeft;
+      const cLeft = parseFloat(cBox.style.left) || cBox.offsetLeft;
+
+      const x1 = pLeft;
+      const y1 = pRowRect.bottom - svgRect.top;
+      const x2 = cLeft;
+      const y2 = cRowRect.top - svgRect.top;
       const midY = y1 + (y2 - y1) * 0.45;
 
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -475,9 +579,12 @@ function playActivationEffect(box) {
 }
 
 /* === LAYOUT X (placement figé par colonne, supporte x décimal, 0-based) === */
-function layoutByX() {
+function layoutByX(callback) {
   const rows = Array.from(document.querySelectorAll(".reward-row"));
-  if (!rows.length) return;
+  if (!rows.length) {
+    callback?.();
+    return;
+  }
 
   // Vérifie si le JSON contient au moins un "x"
   const hasX = rewards.some(r => typeof r.x === "number" && !isNaN(r.x));
@@ -496,6 +603,7 @@ function layoutByX() {
         box.style.transform = "";
       });
     });
+    callback?.();
     return; // on sort, pas de layout figé
   }
 
@@ -510,10 +618,19 @@ function layoutByX() {
       if (neededCols > maxCols) maxCols = neededCols;
     }
   });
-  if (maxCols <= 0) return;
+  if (maxCols <= 0) {
+    callback?.();
+    return;
+  }
+
+  // Force un reflow AVANT de lire les dimensions (important pour les media queries)
+  void container.offsetHeight;
 
   const refBox = document.querySelector(".reward-box");
-  if (!refBox) return;
+  if (!refBox) {
+    callback?.();
+    return;
+  }
   const refW = refBox.offsetWidth || 120;
   const refH = refBox.offsetHeight || 140;
   const gap = 15;
@@ -523,7 +640,12 @@ function layoutByX() {
     row.style.display = "block";
     row.style.position = "relative";
     row.style.height = refH + "px";
+  });
 
+  // Force un reflow après avoir changé les styles des rows
+  void rows[0]?.offsetHeight;
+
+  rows.forEach(row => {
     const rowWidth = row.clientWidth || row.getBoundingClientRect().width;
     const totalGridW = maxCols * cellW - gap;
     const offsetLeft = Math.max(0, (rowWidth - totalGridW) / 2);
@@ -541,14 +663,30 @@ function layoutByX() {
     });
   });
 
-  requestAnimationFrame(drawConnections);
+  // Force un repaint en changeant temporairement une propriété
+  container.style.transform = 'translateZ(0)';
+
+  // Appelle le callback APRÈS que le navigateur ait appliqué les changements
+  if (callback) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        // Retire la transformation forcée
+        container.style.transform = '';
+        callback();
+      });
+    });
+  }
 }
 
 /* === BOOT === */
 init();
 // Force layoutByX après init()
 window.addEventListener("load", () => {
-  setTimeout(() => layoutByX(), 500);
+  setTimeout(() => {
+    layoutByX(() => {
+      drawConnections();
+    });
+  }, 500);
 });
 window.addEventListener("hashchange", () => {
   container.innerHTML = "";
@@ -565,15 +703,17 @@ window.addEventListener("hashchange", () => {
 window.addEventListener("load", () => {
   // un petit délai pour que le DOM et les images soient rendus
   setTimeout(() => {
-    layoutByX();
-    drawConnections(); // redessine les lignes une fois bien placées
+    layoutByX(() => {
+      drawConnections(); // redessine les lignes une fois bien placées
+    });
   }, 300);
 });
 
 // 🧭 et si le contenu change après (ex. hashchange)
 window.addEventListener("hashchange", () => {
   setTimeout(() => {
-    layoutByX();
-    drawConnections();
+    layoutByX(() => {
+      drawConnections();
+    });
   }, 300);
 });
