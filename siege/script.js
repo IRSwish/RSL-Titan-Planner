@@ -356,6 +356,60 @@ function getValidatedConditions(team) {
     return validatedConditions;
 }
 
+function getConditionIcon(conditionId) {
+    if (!siegeDB) return null;
+    try {
+        const stmt = siegeDB.prepare("SELECT image FROM conditions WHERE id = ? LIMIT 1;");
+        stmt.bind([conditionId]);
+        let icon = null;
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            icon = `/siege/img/conditions/${row.image}.webp`;
+        }
+        stmt.free();
+        return icon;
+    } catch (e) {
+        console.error("Erreur getConditionIcon", e);
+        return null;
+    }
+}
+
+function getConditionName(conditionId) {
+    if (!siegeDB) return "";
+    try {
+        const stmt = siegeDB.prepare("SELECT name FROM conditions WHERE id = ? LIMIT 1;");
+        stmt.bind([conditionId]);
+        let name = "";
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            name = row.name;
+        }
+        stmt.free();
+        return name;
+    } catch (e) {
+        console.error("Erreur getConditionName", e);
+        return "";
+    }
+}
+
+function getConditionType(conditionId) {
+    if (!siegeDB) return "";
+    try {
+        const stmt = siegeDB.prepare("SELECT type FROM conditions WHERE id = ? LIMIT 1;");
+        stmt.bind([conditionId]);
+        let type = "";
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            type = row.type;
+        }
+        stmt.free();
+        return type;
+    } catch (e) {
+        console.error("Erreur getConditionType", e);
+        return "";
+    }
+}
+
 // --- Siege planner state ---
 let currentRoomId = null;
 let currentPostId = null;
@@ -640,6 +694,12 @@ function updateMembersList() {
             th.classList.remove("active", "desc");
         }
     });
+
+    // Refresh Teams Presets Dropdown if it's open
+    const dropdown = document.getElementById("teamsPresetsDropdown");
+    if (dropdown && dropdown.classList.contains("open")) {
+        refreshTeamsPresetsDropdown();
+    }
 }
 
 function editMember(pseudo, currentLink) {
@@ -719,6 +779,125 @@ function deleteClanMember(pseudo) {
 
     const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
     set(refMembers, clanMembers);
+}
+
+// Refresh Teams Presets Dropdown
+function refreshTeamsPresetsDropdown() {
+    const dropdown = document.getElementById("teamsPresetsDropdown");
+    if (!dropdown) return;
+
+    dropdown.innerHTML = "";
+
+    // Add header
+    const header = document.createElement("div");
+    header.className = "preset-dropdown-header";
+    header.textContent = "All Team Presets";
+    dropdown.appendChild(header);
+
+    // Collect all members with presets
+    const membersWithPresets = Object.keys(clanMembers).filter(pseudo => {
+        const member = clanMembers[pseudo];
+        return member.presets && Object.keys(member.presets).length > 0;
+    });
+
+    if (membersWithPresets.length === 0) {
+        const noPresets = document.createElement("div");
+        noPresets.className = "preset-dropdown-no-presets";
+        noPresets.textContent = "No team presets found. Add presets in the Clan Members section.";
+        dropdown.appendChild(noPresets);
+        return;
+    }
+
+    // Display each member's presets
+    membersWithPresets.forEach(pseudo => {
+        const member = clanMembers[pseudo];
+        const presets = member.presets || {};
+        const presetIds = Object.keys(presets);
+
+        const memberDiv = document.createElement("div");
+        memberDiv.className = "preset-dropdown-member";
+
+        // Member name
+        const memberName = document.createElement("div");
+        memberName.className = "preset-dropdown-member-name";
+        memberName.textContent = pseudo;
+        memberDiv.appendChild(memberName);
+
+        // Teams container
+        const teamsContainer = document.createElement("div");
+        teamsContainer.className = "preset-dropdown-teams";
+
+        presetIds.forEach((presetId, index) => {
+            const preset = presets[presetId];
+            const teamDiv = document.createElement("div");
+            teamDiv.className = "preset-dropdown-team";
+
+            // Team label
+            const teamLabel = document.createElement("div");
+            teamLabel.className = "preset-dropdown-team-label";
+            teamLabel.textContent = `Team ${index + 1}`;
+            teamDiv.appendChild(teamLabel);
+
+            // Champions
+            const champsDiv = document.createElement("div");
+            champsDiv.className = "preset-dropdown-team-champs";
+
+            ["champion4", "champion3", "champion2", "lead"].forEach(slot => {
+                const champName = preset[slot] || "";
+                if (champName) {
+                    const champData = getChampionFullData(champName);
+                    if (champData) {
+                        const img = document.createElement("img");
+                        img.src = `/tools/champions-index/img/champions/${champData.image}.webp`;
+                        img.className = "preset-dropdown-champ-img";
+                        img.title = champName;
+                        champsDiv.appendChild(img);
+                    } else {
+                        const emptyDiv = document.createElement("div");
+                        emptyDiv.className = "preset-dropdown-champ-empty";
+                        champsDiv.appendChild(emptyDiv);
+                    }
+                } else {
+                    const emptyDiv = document.createElement("div");
+                    emptyDiv.className = "preset-dropdown-champ-empty";
+                    champsDiv.appendChild(emptyDiv);
+                }
+            });
+
+            teamDiv.appendChild(champsDiv);
+
+            // Conditions (validated only, no effects)
+            const validatedConditions = getValidatedConditions(preset);
+            // Filter out effects (Irradiance and Stronghold bonus)
+            const nonEffectConditions = validatedConditions.filter(condId => {
+                const condType = getConditionType(condId);
+                return condType !== 'effects' && condType !== 'Effects';
+            });
+
+            if (nonEffectConditions.length > 0) {
+                const conditionsDiv = document.createElement("div");
+                conditionsDiv.className = "preset-dropdown-conditions";
+
+                nonEffectConditions.forEach(condId => {
+                    const condIcon = getConditionIcon(condId);
+                    if (condIcon) {
+                        const img = document.createElement("img");
+                        img.src = condIcon;
+                        img.className = "preset-dropdown-condition-icon";
+                        img.title = getConditionName(condId);
+                        conditionsDiv.appendChild(img);
+                    }
+                });
+
+                teamDiv.appendChild(conditionsDiv);
+            }
+
+            teamsContainer.appendChild(teamDiv);
+        });
+
+        memberDiv.appendChild(teamsContainer);
+        dropdown.appendChild(memberDiv);
+    });
 }
 
 // --- UI helpers ---
@@ -3297,6 +3476,37 @@ function updateSummaryTable() {
             return summarySortDirection === "desc" ? -result : result;
         });
     }
+    else if (summarySortMode === "conditions") {
+        rows.sort((a, b) => {
+            // Get condition for each team (only for classic posts, ignore buildings)
+            const getConditionName = (row) => {
+                const postEl = document.getElementById(row.postId);
+                const type = postEl ? postEl.dataset.type : "post";
+
+                // Only consider classic posts, ignore buildings (stronghold, towers, shrines)
+                if (type === "post") {
+                    // For classic posts, use team condition
+                    if (row.teamCondition) {
+                        const { orderedTypes, byType } = getConditionsByType();
+                        for (const t of orderedTypes) {
+                            for (const c of byType[t]) {
+                                if (String(c.id) === String(row.teamCondition)) {
+                                    return c.name || "";
+                                }
+                            }
+                        }
+                    }
+                }
+                // Buildings return empty string (will be sorted last)
+                return "";
+            };
+
+            const condA = getConditionName(a);
+            const condB = getConditionName(b);
+            const result = condA.localeCompare(condB);
+            return summarySortDirection === "desc" ? -result : result;
+        });
+    }
 
     // Rendu HTML
     rows.forEach(r => {
@@ -3315,7 +3525,8 @@ function updateSummaryTable() {
             const typeForRow = postElForRow ? postElForRow.dataset.type : "post";
 
             // ------------------------------
-            // CAS 1 : POST CLASSIQUE → condition par team
+            // POST CLASSIQUE UNIQUEMENT → condition par team
+            // (Les bâtiments n'affichent plus d'icône de condition)
             // ------------------------------
             if (typeForRow === "post") {
                 if (r.teamCondition) {
@@ -3338,56 +3549,7 @@ function updateSummaryTable() {
                     }
                 }
             }
-
-            // ------------------------------
-            // CAS 2 : STRONGHOLD, DEFENSE, MAGIC → 1 condition pour TOUT LE POST
-            // ------------------------------
-            else {
-                const postData = postDataCache[r.postId];
-                if (postData && postData.condition) {
-
-                    let folder = {
-                        stronghold: "stronghold",
-                        defensetower: "defensetower",
-                        magictower: "magictower",
-                        manashrine: "manashrine"
-                    }[typeForRow] || "conditions";
-
-
-                    let condRow = null;
-
-                    if (folder === "conditions") {
-                        const { orderedTypes, byType } = getConditionsByType();
-                        for (const t of orderedTypes) {
-                            for (const c of byType[t]) {
-                                if (String(c.id) === String(postData.condition)) {
-                                    condRow = c;
-                                    break;
-                                }
-                            }
-                            if (condRow) break;
-                        }
-                    } else {
-                        // SHRINE → pas de condition dynamique, seulement une icône fixe
-                        if (folder === "manashrine") {
-                            condIcon = `<img class="summary-cond-icon" src="/siege/img/manashrine/ManaShrine.webp" />`;
-                            return;
-                        }
-                        let tableFn = {
-                            stronghold: getStrongholdLevels,
-                            defensetower: getDefenseTowerLevels,
-                            magictower: getMagicTowerLevels
-                        }[folder];
-
-                        const table = tableFn ? tableFn() : [];
-                        condRow = table.find(c => String(c.id) === String(postData.condition));
-                    }
-
-                    if (condRow) {
-                        condIcon = `<img class="summary-cond-icon" src="/siege/img/${folder}/${condRow.image}.webp" />`;
-                    }
-                }
-            }
+            // Les bâtiments (stronghold, towers, shrines) n'affichent pas d'icône
 
         // Selection icon (only for classic posts)
         let selIcon = "";
@@ -3652,6 +3814,34 @@ window.addEventListener("DOMContentLoaded", () => {
     if (memberFilter) {
         memberFilter.addEventListener("change", (e) => {
             applyMemberFilter(e.target.value);
+        });
+    }
+
+    // Teams Presets Toggle Button
+    const teamsPresetsBtn = document.getElementById("teamsPresetsBtn");
+    const teamsPresetsDropdown = document.getElementById("teamsPresetsDropdown");
+
+    if (teamsPresetsBtn && teamsPresetsDropdown) {
+        teamsPresetsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = teamsPresetsDropdown.classList.contains("open");
+
+            if (isOpen) {
+                teamsPresetsDropdown.classList.remove("open");
+                teamsPresetsBtn.classList.remove("active");
+            } else {
+                refreshTeamsPresetsDropdown();
+                teamsPresetsDropdown.classList.add("open");
+                teamsPresetsBtn.classList.add("active");
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!teamsPresetsBtn.contains(e.target) && !teamsPresetsDropdown.contains(e.target)) {
+                teamsPresetsDropdown.classList.remove("open");
+                teamsPresetsBtn.classList.remove("active");
+            }
         });
     }
 
@@ -4309,42 +4499,6 @@ window.addEventListener("DOMContentLoaded", () => {
             slot.classList.remove("drag-over");
         });
         draggedPresetSlot = null;
-    }
-
-    function getConditionIcon(conditionId) {
-        if (!siegeDB) return null;
-        try {
-            const stmt = siegeDB.prepare("SELECT image FROM conditions WHERE id = ? LIMIT 1;");
-            stmt.bind([conditionId]);
-            let icon = null;
-            if (stmt.step()) {
-                const row = stmt.getAsObject();
-                icon = `/siege/img/conditions/${row.image}.webp`;
-            }
-            stmt.free();
-            return icon;
-        } catch (e) {
-            console.error("Erreur getConditionIcon", e);
-            return null;
-        }
-    }
-
-    function getConditionName(conditionId) {
-        if (!siegeDB) return "";
-        try {
-            const stmt = siegeDB.prepare("SELECT name FROM conditions WHERE id = ? LIMIT 1;");
-            stmt.bind([conditionId]);
-            let name = "";
-            if (stmt.step()) {
-                const row = stmt.getAsObject();
-                name = row.name;
-            }
-            stmt.free();
-            return name;
-        } catch (e) {
-            console.error("Erreur getConditionName", e);
-            return "";
-        }
     }
 
     // Add preset button
