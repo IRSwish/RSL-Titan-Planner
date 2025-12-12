@@ -1088,6 +1088,9 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
     const transferMenu = document.createElement("div");
     transferMenu.className = "transfer-menu";
 
+    const scrollWrapper = document.createElement("div");
+    scrollWrapper.className = "transfer-menu-scroll";
+
     // Créer les options de transfert
     postIds.forEach(pid => {
         const item = document.createElement("div");
@@ -1104,8 +1107,10 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
             });
         }
 
-        transferMenu.appendChild(item);
+        scrollWrapper.appendChild(item);
     });
+
+    transferMenu.appendChild(scrollWrapper);
 
     transferBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -1115,21 +1120,25 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
         });
         transferMenu.classList.toggle("open");
 
-        // Fix positioning if menu would go off screen
+        // Position the menu using fixed positioning
         if (transferMenu.classList.contains("open")) {
-            setTimeout(() => {
-                const menuRect = transferMenu.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
+            const btnRect = transferBtn.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
 
-                // If menu goes below viewport, position it above the button
-                if (menuRect.bottom > viewportHeight) {
-                    transferMenu.style.top = 'auto';
-                    transferMenu.style.bottom = '100%';
-                } else {
-                    transferMenu.style.top = '100%';
-                    transferMenu.style.bottom = 'auto';
-                }
-            }, 0);
+            // Position to the right of the button
+            transferMenu.style.right = `${window.innerWidth - btnRect.right}px`;
+
+            // Check if there's space below, otherwise position above
+            const estimatedMenuHeight = 300; // max-height from CSS
+            if (btnRect.bottom + estimatedMenuHeight > viewportHeight) {
+                // Position above the button
+                transferMenu.style.top = 'auto';
+                transferMenu.style.bottom = `${viewportHeight - btnRect.top}px`;
+            } else {
+                // Position below the button
+                transferMenu.style.top = `${btnRect.bottom}px`;
+                transferMenu.style.bottom = 'auto';
+            }
         }
     });
 
