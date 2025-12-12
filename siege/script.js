@@ -1,5 +1,6 @@
+// Version: 2025-01-12-003 - Fixed alliance lookup to use championsDB
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 import { setupAuthUI, getCurrentRoom, isViewer, exportSiegeData, importSiegeData, showChangePasswordModal, logout } from "./auth.js";
 
 // Firebase config
@@ -184,6 +185,175 @@ function getChampionByNameExact(name) {
         console.error("Erreur getChampionByNameExact", e);
         return null;
     }
+}
+
+// Get full champion data including faction, type, affinity for condition validation
+function getChampionFullData(name) {
+    if (!championsDB || !name) return null;
+    try {
+        const stmt = championsDB.prepare(
+            "SELECT name, faction, rarity, affinity, type, image, auratext, aura FROM champions WHERE name = ? LIMIT 1;"
+        );
+        stmt.bind([name]);
+        let found = null;
+        if (stmt.step()) {
+            found = stmt.getAsObject();
+        }
+        stmt.free();
+        return found;
+    } catch (e) {
+        console.error("Erreur getChampionFullData", e);
+        return null;
+    }
+}
+
+// Get alliance for a given faction
+function getAllianceForFaction(faction) {
+    if (!championsDB || !faction) return null;
+    try {
+        const stmt = championsDB.prepare(
+            "SELECT alliance FROM alliances WHERE faction = ? LIMIT 1;"
+        );
+        stmt.bind([faction]);
+        let result = null;
+        if (stmt.step()) {
+            const row = stmt.getAsObject();
+            result = row.alliance;
+        }
+        stmt.free();
+        return result;
+    } catch (e) {
+        console.error("Erreur getAllianceForFaction", e);
+        return null;
+    }
+}
+
+// Validate if a team satisfies a specific condition
+function validateTeamCondition(team, conditionId) {
+    if (!siegeDB || !team || !conditionId) return false;
+
+    // team = { champion4: "name", champion3: "name", champion2: "name", lead: "name" }
+    const champions = [team.champion4, team.champion3, team.champion2, team.lead].filter(c => c && c.trim());
+    if (champions.length === 0) {
+        console.log("⚠️ No champions in team");
+        return false;
+    }
+
+    try {
+        // Get condition details
+        const condStmt = siegeDB.prepare("SELECT type, name FROM conditions WHERE id = ? LIMIT 1;");
+        condStmt.bind([conditionId]);
+
+        if (!condStmt.step()) {
+            condStmt.free();
+            return false;
+        }
+
+        const condition = condStmt.getAsObject();
+        condStmt.free();
+
+        const condType = condition.type;
+        const condName = condition.name;
+
+        console.log(`🔍 Testing condition ${conditionId} (${condType}: ${condName}) with champions:`, champions);
+        console.log(`🔎 Condition type exact value:`, JSON.stringify(condType), `(length: ${condType ? condType.length : 0})`);
+
+        // Effects conditions are always true
+        if (condType === 'effects' || condType === 'Effects') {
+            console.log("✅ Effects condition - always true");
+            return true;
+        }
+
+        // Get champion data for all champions in team
+        const champData = champions.map(name => getChampionFullData(name)).filter(c => c !== null);
+        console.log("📊 Champion data:", champData);
+
+        if (champData.length === 0) {
+            console.log("❌ No champion data found");
+            return false;
+        }
+
+        if (champData.length !== champions.length) {
+            console.log(`⚠️ Some champions not found: ${champions.length} champions, ${champData.length} found`);
+        }
+
+        // Validate based on condition type (case-insensitive)
+        const condTypeLower = condType.toLowerCase();
+        switch (condTypeLower) {
+            case 'rarity':
+                // Check if all 4 champions have the specified rarity
+                const rarityMatch = champData.every(c => c.rarity === condName);
+                console.log(`  Rarity check: ${condName} - Match: ${rarityMatch}`, champData.map(c => c.rarity));
+                return rarityMatch;
+
+            case 'factions':
+                // Check if all 4 champions are from the specified faction
+                const factionMatch = champData.every(c => c.faction === condName);
+                console.log(`  Faction check: "${condName}" - Match: ${factionMatch}`, champData.map(c => `"${c.faction}"`));
+                return factionMatch;
+
+            case 'type':
+                // Check if all 4 champions are of the specified type
+                const typeMatch = champData.every(c => c.type === condName);
+                console.log(`  Type check: ${condName} - Match: ${typeMatch}`, champData.map(c => c.type));
+                return typeMatch;
+
+            case 'affinity':
+                // Check if all 4 champions have the specified affinity
+                const affinityMatch = champData.every(c => c.affinity === condName);
+                console.log(`  Affinity check: ${condName} - Match: ${affinityMatch}`, champData.map(c => c.affinity));
+                return affinityMatch;
+
+            case 'alliance':
+                // Check if all 4 champions are from factions in the specified alliance
+                const allianceMatch = champData.every(c => {
+                    const alliance = getAllianceForFaction(c.faction);
+                    console.log(`    Champion ${c.name}: faction="${c.faction}" -> alliance="${alliance}"`);
+                    return alliance === condName;
+                });
+                console.log(`  Alliance check: ${condName} - Match: ${allianceMatch}`);
+                return allianceMatch;
+
+            default:
+                console.log(`  ❌ Unknown condition type: ${condType}`);
+                return false;
+        }
+    } catch (e) {
+        console.error("Erreur validateTeamCondition", e);
+        return false;
+    }
+}
+
+// Get all conditions validated by a team
+function getValidatedConditions(team) {
+    if (!siegeDB || !team) {
+        console.log("❌ getValidatedConditions: no siegeDB or team", { siegeDB: !!siegeDB, team });
+        return [];
+    }
+
+    const validatedConditions = [];
+
+    try {
+        // Get all conditions
+        const stmt = siegeDB.prepare("SELECT id FROM conditions ORDER BY rowid;");
+
+        while (stmt.step()) {
+            const row = stmt.getAsObject();
+            const condId = row.id;
+
+            if (validateTeamCondition(team, condId)) {
+                console.log("✅ Condition validated:", condId);
+                validatedConditions.push(condId);
+            }
+        }
+
+        stmt.free();
+        console.log("📋 Total validated conditions:", validatedConditions.length, validatedConditions);
+    } catch (e) {
+        console.error("Erreur getValidatedConditions", e);
+    }
+
+    return validatedConditions;
 }
 
 // --- Siege planner state ---
@@ -394,6 +564,27 @@ function updateMembersList() {
             const count = teamCounts[member.pseudo] || 0;
             teamsTd.innerHTML = `<span class="member-team-count">${count}</span>`;
             tr.appendChild(teamsTd);
+
+            // Team Presets
+            const presetsTd = document.createElement("td");
+            presetsTd.className = "member-presets-cell";
+            const presetsCount = (member.presets && Object.keys(member.presets).length) || 0;
+            const presetsCountSpan = document.createElement("div");
+            presetsCountSpan.className = "member-presets-count";
+            presetsCountSpan.innerHTML = `
+                <span class="member-presets-number">${presetsCount}</span>
+                <button class="view-presets-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    View
+                </button>
+            `;
+            const viewBtn = presetsCountSpan.querySelector(".view-presets-btn");
+            viewBtn.addEventListener("click", () => openPresetsModal(member.pseudo));
+            presetsTd.appendChild(presetsCountSpan);
+            tr.appendChild(presetsTd);
 
             // Manage buttons
             const manageTd = document.createElement("td");
@@ -3665,4 +3856,558 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     // Room handling is now done by auth system
+
+    // ==================== TEAM PRESETS MODAL ====================
+    let currentPresetsMember = null;
+
+    window.openPresetsModal = function(memberPseudo) {
+        console.log("Opening presets modal for:", memberPseudo);
+        currentPresetsMember = memberPseudo;
+        const modal = document.getElementById("presetsModal");
+        const title = document.getElementById("presetsModalTitle");
+
+        title.textContent = `${memberPseudo} - Team Presets`;
+        modal.style.display = "flex";
+
+        renderPresets(memberPseudo);
+    }
+
+    window.closePresetsModal = function() {
+        const modal = document.getElementById("presetsModal");
+        modal.style.display = "none";
+        currentPresetsMember = null;
+    }
+
+    document.getElementById("closePresetsModal").addEventListener("click", closePresetsModal);
+
+    // Close modal on overlay click
+    document.getElementById("presetsModal").addEventListener("click", (e) => {
+        if (e.target.id === "presetsModal") {
+            closePresetsModal();
+        }
+    });
+
+    function renderPresets(memberPseudo) {
+        const container = document.getElementById("presetsContainer");
+        container.innerHTML = "";
+
+        const member = clanMembers[memberPseudo];
+        if (!member) return;
+
+        const presets = member.presets || {};
+        const presetIds = Object.keys(presets);
+
+        if (presetIds.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">No team presets yet. Click "+ ADD TEAM PRESET" to create one.</p>';
+            return;
+        }
+
+        presetIds.forEach(presetId => {
+            const preset = presets[presetId];
+            const presetRow = createPresetRow(memberPseudo, presetId, preset);
+            container.appendChild(presetRow);
+        });
+    }
+
+    function createPresetRow(memberPseudo, presetId, preset) {
+        const row = document.createElement("div");
+        row.className = "preset-row";
+
+        // Team section (champions + lead aura)
+        const teamSection = document.createElement("div");
+        teamSection.className = "preset-team-section";
+
+        // Create 4 champion slots
+        ["champion4", "champion3", "champion2", "lead"].forEach((slot, index) => {
+            const champSlot = createPresetChampSlot(memberPseudo, presetId, slot, preset[slot] || "", index);
+            teamSection.appendChild(champSlot);
+        });
+
+        // Add lead aura display after lead slot
+        const leadAuraDisplay = createLeadAuraDisplay(preset.lead || "");
+        teamSection.appendChild(leadAuraDisplay);
+
+        row.appendChild(teamSection);
+
+        // Conditions section
+        const conditionsSection = document.createElement("div");
+        conditionsSection.className = "preset-conditions-section";
+
+        const conditionsTitle = document.createElement("div");
+        conditionsTitle.className = "preset-conditions-title";
+        conditionsTitle.textContent = "Conditions";
+        conditionsSection.appendChild(conditionsTitle);
+
+        const conditionsGrid = document.createElement("div");
+        conditionsGrid.className = "preset-conditions-grid";
+
+        // Get validated conditions
+        const validatedConditions = getValidatedConditions(preset);
+        validatedConditions.forEach(condId => {
+            const condIcon = getConditionIcon(condId);
+            if (condIcon) {
+                const img = document.createElement("img");
+                img.src = condIcon;
+                img.className = "preset-condition-icon";
+                img.title = getConditionName(condId);
+                conditionsGrid.appendChild(img);
+            }
+        });
+
+        conditionsSection.appendChild(conditionsGrid);
+        row.appendChild(conditionsSection);
+
+        // Actions section (delete button)
+        const actionsSection = document.createElement("div");
+        actionsSection.className = "preset-actions";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-preset-btn";
+        deleteBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        `;
+        deleteBtn.title = "Delete preset";
+        deleteBtn.addEventListener("click", () => deletePreset(memberPseudo, presetId));
+
+        actionsSection.appendChild(deleteBtn);
+        row.appendChild(actionsSection);
+
+        return row;
+    }
+
+    function createPresetChampSlot(memberPseudo, presetId, slotName, championName, slotIndex) {
+        const champSlot = document.createElement("div");
+        champSlot.className = "champ-slot";
+        champSlot.setAttribute("draggable", true);
+        champSlot.dataset.slotName = slotName;
+        champSlot.dataset.slotIndex = slotIndex;
+
+        const label = document.createElement("label");
+        label.textContent = slotName === "lead" ? "Lead" : `Champ ${5 - slotIndex}`;
+        champSlot.appendChild(label);
+
+        // Input field
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = championName;
+        input.placeholder = "Champion";
+        input.autocomplete = "off";
+        input.addEventListener("input", () => handlePresetChampionInput(input, memberPseudo, presetId, slotName));
+        input.addEventListener("change", () => savePresetChampion(memberPseudo, presetId, slotName, input.value.trim()));
+        input.addEventListener("blur", () => {
+            setTimeout(() => savePresetChampion(memberPseudo, presetId, slotName, input.value.trim()), 200);
+        });
+        champSlot.appendChild(input);
+
+        // Suggestions container (AFTER input, BEFORE visual)
+        const suggestionsDiv = document.createElement("div");
+        suggestionsDiv.className = "suggestions";
+        const suggestionsList = document.createElement("div");
+        suggestionsList.className = "suggestions-list";
+        suggestionsDiv.appendChild(suggestionsList);
+        champSlot.appendChild(suggestionsDiv);
+
+        // Visual container
+        const visual = document.createElement("div");
+        visual.className = "champ-visual";
+
+        // Clear button
+        const clearBtn = document.createElement("button");
+        clearBtn.className = "clear-champ-btn";
+        clearBtn.textContent = "✕";
+        clearBtn.addEventListener("click", () => {
+            input.value = "";
+            savePresetChampion(memberPseudo, presetId, slotName, "");
+        });
+        visual.appendChild(clearBtn);
+
+        // Champion image
+        const champImg = document.createElement("img");
+        champImg.className = "champ-img";
+        visual.appendChild(champImg);
+
+        // Rarity border
+        const rarityImg = document.createElement("img");
+        rarityImg.className = "rarity-img";
+        visual.appendChild(rarityImg);
+
+        champSlot.appendChild(visual);
+
+        // Update visual if champion exists
+        if (championName) {
+            updatePresetChampionVisual(champSlot, championName);
+        }
+
+        // Drag & drop handlers
+        champSlot.addEventListener("dragstart", handlePresetDragStart);
+        champSlot.addEventListener("dragover", handlePresetDragOver);
+        champSlot.addEventListener("drop", (e) => handlePresetDrop(e, memberPseudo, presetId));
+        champSlot.addEventListener("dragend", handlePresetDragEnd);
+
+        return champSlot;
+    }
+
+    function createLeadAuraDisplay(leadName) {
+        const display = document.createElement("div");
+        display.className = "lead-aura-display";
+
+        if (!leadName || !leadName.trim()) {
+            return display;
+        }
+
+        const champData = getChampionByNameExact(leadName);
+        if (!champData || !champData.aura || !champData.auratext) {
+            return display;
+        }
+
+        display.style.display = "flex";
+
+        const container = document.createElement("div");
+        container.className = "lead-aura-container";
+
+        // Aura icon
+        const auraIcon = document.createElement("img");
+        auraIcon.className = "lead-aura-icon";
+        auraIcon.src = `/tools/champions-index/img/aura/${champData.aura}.webp`;
+        container.appendChild(auraIcon);
+
+        // Border
+        const auraBorder = document.createElement("img");
+        auraBorder.className = "lead-aura-border";
+        auraBorder.src = `/tools/champions-index/img/aura/BORDER.webp`;
+        container.appendChild(auraBorder);
+
+        display.appendChild(container);
+
+        // Parse aura text to extract zone and value
+        const auraText = champData.auratext || '';
+        let zone = '';
+        let value = '';
+
+        // Extract zone (All Battles, Dungeons, Doom Tower, Arena)
+        const zoneMatch = auraText.match(/in (all battles|dungeons|doom tower|arena)/i);
+        if (zoneMatch) {
+            zone = zoneMatch[1];
+        }
+
+        // Extract value (last number with % if present)
+        const valueMatch = auraText.match(/by (\d+%?)\s*(?:SPD|ACC|ATK|DEF|HP|C\.RATE|C\.DMG|RES)?$/i);
+        if (valueMatch) {
+            value = valueMatch[1];
+            // Add % if not present but % is in text
+            if (!value.includes('%') && auraText.includes('%')) {
+                value += '%';
+            }
+        }
+
+        // Zone text
+        const zoneText = document.createElement("div");
+        zoneText.className = "lead-aura-zone";
+        zoneText.textContent = zone;
+        display.appendChild(zoneText);
+
+        // Value text
+        const valueText = document.createElement("div");
+        valueText.className = "lead-aura-value";
+        valueText.textContent = value;
+        display.appendChild(valueText);
+
+        return display;
+    }
+
+    function handlePresetChampionInput(input, memberPseudo, presetId, slotName) {
+        const query = input.value.trim();
+        const suggestionsDiv = input.parentElement.querySelector(".suggestions-list");
+
+        if (query.length < 2) {
+            suggestionsDiv.innerHTML = "";
+            return;
+        }
+
+        const results = searchChampions(query);
+        suggestionsDiv.innerHTML = "";
+
+        results.forEach(c => {
+            const div = document.createElement("div");
+            div.textContent = c.name;
+            div.addEventListener("click", () => {
+                input.value = c.name;
+                suggestionsDiv.innerHTML = "";
+                savePresetChampion(memberPseudo, presetId, slotName, c.name);
+            });
+            suggestionsDiv.appendChild(div);
+        });
+    }
+
+    function updatePresetChampionVisual(champSlot, championName) {
+        const champImg = champSlot.querySelector(".champ-img");
+        const rarityImg = champSlot.querySelector(".rarity-img");
+        let affinityImg = champSlot.querySelector(".affinity-img");
+
+        if (!championName || !championName.trim()) {
+            champImg.style.display = "none";
+            rarityImg.style.display = "none";
+            if (affinityImg) affinityImg.style.display = "none";
+            return;
+        }
+
+        const champData = getChampionByNameExact(championName);
+        if (champData) {
+            champImg.src = `/tools/champions-index/img/champions/${champData.image}.webp`;
+            champImg.style.display = "block";
+            rarityImg.src = `/tools/champions-index/img/rarity/${champData.rarity}.webp`;
+            rarityImg.style.display = "block";
+
+            // Affinity border
+            if (champData.affinity) {
+                if (!affinityImg) {
+                    affinityImg = document.createElement("img");
+                    affinityImg.className = "affinity-img";
+                    champSlot.querySelector(".champ-visual").appendChild(affinityImg);
+                }
+                affinityImg.src = `/tools/champions-index/img/affinity/${champData.affinity}.webp`;
+                affinityImg.style.display = "block";
+            } else if (affinityImg) {
+                affinityImg.style.display = "none";
+            }
+        } else {
+            champImg.style.display = "none";
+            rarityImg.style.display = "none";
+            if (affinityImg) affinityImg.style.display = "none";
+        }
+    }
+
+    function savePresetChampion(memberPseudo, presetId, slotName, championName) {
+        console.log("💾 savePresetChampion:", { memberPseudo, presetId, slotName, championName });
+        if (!currentRoomId) {
+            console.error("❌ No currentRoomId");
+            return;
+        }
+
+        const member = clanMembers[memberPseudo];
+        if (!member) {
+            console.error("❌ Member not found:", memberPseudo);
+            return;
+        }
+
+        if (!member.presets) member.presets = {};
+        if (!member.presets[presetId]) member.presets[presetId] = {};
+
+        member.presets[presetId][slotName] = championName;
+
+        // Update Firebase
+        const presetRef = ref(db, `rooms/${currentRoomId}/siege/members/${memberPseudo}/presets/${presetId}`);
+        console.log("🔥 Firebase update:", `rooms/${currentRoomId}/siege/members/${memberPseudo}/presets/${presetId}`, { [slotName]: championName });
+        update(presetRef, { [slotName]: championName })
+            .then(() => console.log("✅ Firebase updated successfully"))
+            .catch(err => console.error("❌ Firebase error:", err));
+
+        // Update visual
+        const champSlot = document.querySelector(`[data-slot-name="${slotName}"]`);
+        if (champSlot) {
+            updatePresetChampionVisual(champSlot, championName);
+        }
+
+        // Update lead aura if it's the lead slot
+        if (slotName === "lead") {
+            const leadAura = champSlot ? champSlot.parentElement.querySelector(".lead-aura-display") : null;
+            if (leadAura) {
+                const newLeadAura = createLeadAuraDisplay(championName);
+                leadAura.replaceWith(newLeadAura);
+            }
+        }
+
+        // Update conditions display for this preset only
+        updatePresetConditions(memberPseudo, presetId);
+
+        // Update member count in table
+        updateMembersList();
+    }
+
+    function updatePresetConditions(memberPseudo, presetId) {
+        console.log("🔄 updatePresetConditions called:", { memberPseudo, presetId });
+        const member = clanMembers[memberPseudo];
+        if (!member || !member.presets || !member.presets[presetId]) {
+            console.log("❌ Member or preset not found");
+            return;
+        }
+
+        const preset = member.presets[presetId];
+        console.log("📦 Preset data:", preset);
+        const validatedConditions = getValidatedConditions(preset);
+        console.log("✅ Validated conditions:", validatedConditions);
+
+        // Find the conditions grid for this preset
+        const presetRows = document.querySelectorAll('.preset-row');
+        console.log("📊 Found preset rows:", presetRows.length);
+
+        presetRows.forEach(row => {
+            const conditionsGrid = row.querySelector('.preset-conditions-grid');
+            if (conditionsGrid) {
+                console.log("🎯 Updating conditions grid");
+                // Simpler: just update all rows (they'll be refreshed correctly)
+                conditionsGrid.innerHTML = "";
+                validatedConditions.forEach(condId => {
+                    const condIcon = getConditionIcon(condId);
+                    console.log("🖼️ Condition icon:", condId, condIcon);
+                    if (condIcon) {
+                        const img = document.createElement("img");
+                        img.src = condIcon;
+                        img.className = "preset-condition-icon";
+                        img.title = getConditionName(condId);
+                        conditionsGrid.appendChild(img);
+                        console.log("➕ Added condition icon to grid");
+                    }
+                });
+            }
+        });
+    }
+
+    // Drag & Drop handlers for presets
+    let draggedPresetSlot = null;
+
+    function handlePresetDragStart(e) {
+        draggedPresetSlot = e.currentTarget;
+        e.currentTarget.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+    }
+
+    function handlePresetDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        e.currentTarget.classList.add("drag-over");
+    }
+
+    function handlePresetDrop(e, memberPseudo, presetId) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("drag-over");
+
+        if (!draggedPresetSlot || draggedPresetSlot === e.currentTarget) return;
+
+        const draggedInput = draggedPresetSlot.querySelector("input");
+        const targetInput = e.currentTarget.querySelector("input");
+
+        const tempValue = draggedInput.value;
+        const draggedSlot = draggedPresetSlot.dataset.slotName;
+        const targetSlot = e.currentTarget.dataset.slotName;
+
+        // Swap values
+        draggedInput.value = targetInput.value;
+        targetInput.value = tempValue;
+
+        // Save both
+        savePresetChampion(memberPseudo, presetId, draggedSlot, draggedInput.value);
+        savePresetChampion(memberPseudo, presetId, targetSlot, targetInput.value);
+    }
+
+    function handlePresetDragEnd(e) {
+        e.currentTarget.classList.remove("dragging");
+        document.querySelectorAll(".champ-slot").forEach(slot => {
+            slot.classList.remove("drag-over");
+        });
+        draggedPresetSlot = null;
+    }
+
+    function getConditionIcon(conditionId) {
+        if (!siegeDB) return null;
+        try {
+            const stmt = siegeDB.prepare("SELECT image FROM conditions WHERE id = ? LIMIT 1;");
+            stmt.bind([conditionId]);
+            let icon = null;
+            if (stmt.step()) {
+                const row = stmt.getAsObject();
+                icon = `/siege/img/conditions/${row.image}.webp`;
+            }
+            stmt.free();
+            return icon;
+        } catch (e) {
+            console.error("Erreur getConditionIcon", e);
+            return null;
+        }
+    }
+
+    function getConditionName(conditionId) {
+        if (!siegeDB) return "";
+        try {
+            const stmt = siegeDB.prepare("SELECT name FROM conditions WHERE id = ? LIMIT 1;");
+            stmt.bind([conditionId]);
+            let name = "";
+            if (stmt.step()) {
+                const row = stmt.getAsObject();
+                name = row.name;
+            }
+            stmt.free();
+            return name;
+        } catch (e) {
+            console.error("Erreur getConditionName", e);
+            return "";
+        }
+    }
+
+    // Add preset button
+    document.getElementById("addPresetBtn").addEventListener("click", () => {
+        console.log("Add preset clicked, current member:", currentPresetsMember);
+        if (!currentPresetsMember) {
+            console.error("No current member selected");
+            return;
+        }
+        addNewPreset(currentPresetsMember);
+    });
+
+    function addNewPreset(memberPseudo) {
+        console.log("addNewPreset called for:", memberPseudo);
+        console.log("currentRoomId:", currentRoomId);
+        if (!currentRoomId) {
+            console.error("No room ID");
+            return;
+        }
+
+        const member = clanMembers[memberPseudo];
+        console.log("Member:", member);
+        if (!member) {
+            console.error("Member not found");
+            return;
+        }
+
+        if (!member.presets) member.presets = {};
+
+        // Generate new preset ID
+        const presetId = `preset_${Date.now()}`;
+        member.presets[presetId] = {
+            champion4: "",
+            champion3: "",
+            champion2: "",
+            lead: "",
+            createdAt: Date.now()
+        };
+
+        // Save to Firebase
+        const presetRef = ref(db, `rooms/${currentRoomId}/siege/members/${memberPseudo}/presets/${presetId}`);
+        set(presetRef, member.presets[presetId]);
+
+        // Refresh display
+        renderPresets(memberPseudo);
+        updateMembersList();
+    }
+
+    function deletePreset(memberPseudo, presetId) {
+        if (!confirm("Delete this team preset?")) return;
+        if (!currentRoomId) return;
+
+        const member = clanMembers[memberPseudo];
+        if (!member || !member.presets) return;
+
+        delete member.presets[presetId];
+
+        // Delete from Firebase
+        const presetRef = ref(db, `rooms/${currentRoomId}/siege/members/${memberPseudo}/presets/${presetId}`);
+        remove(presetRef);
+
+        // Refresh display
+        renderPresets(memberPseudo);
+        updateMembersList();
+    }
 });

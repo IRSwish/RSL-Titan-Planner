@@ -272,6 +272,7 @@
                     <th class="sortable" data-sort="member">Member</th>
                     <th>HellHades Link</th>
                     <th class="sortable" data-sort="teams">Teams</th>
+                    <th>Team Presets</th>
                     <th>Manage</th>
                 </tr>
             </thead>
@@ -483,9 +484,26 @@
     </div>
 </div>
 
+<!-- Team Presets Modal -->
+<div id="presetsModal" class="modal-overlay">
+    <div class="presets-modal">
+        <div class="presets-modal-scrollable">
+            <div class="presets-modal-header">
+                <h2 id="presetsModalTitle">Team Presets</h2>
+                <button id="closePresetsModal" class="ghost-btn small">✕</button>
+            </div>
+
+            <div class="presets-modal-content">
+                <div id="presetsContainer"></div>
+                <button id="addPresetBtn" class="ghost-btn add-preset-btn">+ ADD TEAM PRESET</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- sql.js (SQLite in browser) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 <!-- Script principal -->
-<script type="module" src="/siege/script.js"></script>
+<script type="module" src="/siege/script.js?v=20250112003"></script>
 </body>
 </html>

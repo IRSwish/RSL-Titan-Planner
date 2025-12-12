@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DB Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+</head>
+<body>
+    <h1>Database Explorer</h1>
+    <pre id="output"></pre>
+
+    <script>
+        async function explore() {
+            const output = document.getElementById('output');
+
+            try {
+                // Load SQL.js
+                const SQL = await window.initSqlJs({
+                    locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+                });
+
+                // Load siege.db
+                output.innerHTML += '=== SIEGE.DB ===\n\n';
+                const siegeRes = await fetch("/siege/siege.db");
+                const siegeBuf = await siegeRes.arrayBuffer();
+                const siegeDB = new SQL.Database(new Uint8Array(siegeBuf));
+
+                // Get all tables
+                let stmt = siegeDB.prepare("SELECT name FROM sqlite_master WHERE type='table';");
+                output.innerHTML += 'Tables in siege.db:\n';
+                while (stmt.step()) {
+                    const row = stmt.getAsObject();
+                    output.innerHTML += `  - ${row.name}\n`;
+                }
+                stmt.free();
+
+                // Get schema for each condition table
+                const tables = ['rarity', 'factions', 'type', 'affinity', 'alliance', 'effects', 'conditions', 'alliances'];
+                for (const table of tables) {
+                    try {
+                        output.innerHTML += `\n${table.toUpperCase()}:\n`;
+                        stmt = siegeDB.prepare(`PRAGMA table_info(${table});`);
+                        output.innerHTML += 'Columns: ';
+                        const cols = [];
+                        while (stmt.step()) {
+                            const row = stmt.getAsObject();
+                            cols.push(row.name);
+                        }
+                        output.innerHTML += cols.join(', ') + '\n';
+                        stmt.free();
+
+                        // Get sample data
+                        stmt = siegeDB.prepare(`SELECT * FROM ${table} LIMIT 3;`);
+                        output.innerHTML += 'Sample data:\n';
+                        while (stmt.step()) {
+                            output.innerHTML += '  ' + JSON.stringify(stmt.getAsObject()) + '\n';
+                        }
+                        stmt.free();
+                    } catch (e) {
+                        output.innerHTML += `  Error: ${e.message}\n`;
+                    }
+                }
+
+                // Load champions.db
+                output.innerHTML += '\n\n=== CHAMPIONS.DB ===\n\n';
+                const champRes = await fetch("/tools/champions-index/champions.db");
+                const champBuf = await champRes.arrayBuffer();
+                const champDB = new SQL.Database(new Uint8Array(champBuf));
+
+                // Get all tables
+                stmt = champDB.prepare("SELECT name FROM sqlite_master WHERE type='table';");
+                output.innerHTML += 'Tables in champions.db:\n';
+                while (stmt.step()) {
+                    const row = stmt.getAsObject();
+                    output.innerHTML += `  - ${row.name}\n`;
+                }
+                stmt.free();
+
+                // Get champions schema
+                stmt = champDB.prepare("PRAGMA table_info(champions);");
+                output.innerHTML += '\nChampions columns: ';
+                const champCols = [];
+                while (stmt.step()) {
+                    const row = stmt.getAsObject();
+                    champCols.push(row.name);
+                }
+                output.innerHTML += champCols.join(', ') + '\n';
+                stmt.free();
+
+                // Get sample champion
+                stmt = champDB.prepare("SELECT * FROM champions LIMIT 1;");
+                output.innerHTML += '\nSample champion:\n';
+                if (stmt.step()) {
+                    output.innerHTML += JSON.stringify(stmt.getAsObject(), null, 2) + '\n';
+                }
+                stmt.free();
+
+            } catch (e) {
+                output.innerHTML += `ERROR: ${e.message}\n${e.stack}`;
+            }
+        }
+
+        explore();
+    </script>
+</body>
+</html>
