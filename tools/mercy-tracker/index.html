@@ -152,6 +152,11 @@
       transition: all 0.2s ease;
     }
 
+    .btn.plus10 {
+      width: 45px;
+      font-size: 14px;
+    }
+
     .btn:hover:not(:disabled) {
       background: var(--line-color);
       color: #0e0e0e;
@@ -363,6 +368,7 @@
               <div class="buttons">
                 <button class="btn minus">−</button>
                 <button class="btn plus">+</button>
+                ${(shard.type === "Ancient" || shard.type === "Void" || shard.type === "Primal" || shard.type === "Prism") ? '<button class="btn plus10">+10</button>' : ''}
                 <button class="reset-btn">Reset</button>
               </div>
               <div class="progress-info">
@@ -396,6 +402,7 @@
         const inputCount = card.querySelector('.count');
         const plus = card.querySelector('.plus');
         const minus = card.querySelector('.minus');
+        const plus10 = card.querySelector('.plus10');
         const reset = card.querySelector('.reset-btn');
         const percent = card.querySelector('.percent');
         const circle = card.querySelector('.progress');
@@ -459,6 +466,12 @@
 
         holdButton(plus, () => { if (value < max) setProgress(++value); });
         holdButton(minus, () => { if (value > 0) setProgress(--value); });
+        if (plus10) {
+          plus10.onclick = () => {
+            value = Math.min(value + 10, max);
+            setProgress(value);
+          };
+        }
         reset.onclick = () => setProgress(value = 0);
         inputCircle.oninput = () => setProgress(value = parseInt(inputCircle.value) || 0);
         inputCount.oninput = () => setProgress(value = parseInt(inputCount.value) || 0);
