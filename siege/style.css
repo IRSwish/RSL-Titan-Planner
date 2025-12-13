@@ -10,7 +10,7 @@ body.modal-open {
     overflow: hidden;
 }
 
-body.modal-open .map-filter {
+body.modal-open .map-filters-container {
     filter: blur(3px);
     pointer-events: none;
 }
@@ -163,30 +163,69 @@ body.modal-open .map-filter {
     border: 2px solid #d4af37;
 }
 
-.clear-team-btn {
+/* Action buttons - unified style */
+.action-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: 1px solid #444;
     background: #0f0f0f;
-    color: #ff6b81;
     cursor: pointer;
+    transition: all 0.2s;
+    padding: 0;
 }
 
-.clear-team-btn:hover {
-    background: #2a1518;
-    border-color: #ff6b81;
-}
-
-.clear-team-btn svg {
+.action-btn svg {
     display: block;
 }
 
+.action-btn:hover {
+    background: #1a1a1a;
+}
+
+/* Delete button - red */
 .delete-team-btn {
-    padding: 7.5px 12px;
+    color: #ff6b81;
+    margin-left: auto;
+}
+
+.delete-team-btn:hover {
+    border-color: #ff6b81;
+}
+
+/* Clear button - red/pink */
+.clear-team-btn {
+    color: #ff6b81;
+}
+
+/* If no delete button, clear button should push right */
+.team-row:first-child .clear-team-btn {
+    margin-left: auto;
+}
+
+.clear-team-btn:hover {
+    border-color: #ff6b81;
+}
+
+/* Save preset button - green */
+.save-preset-btn {
+    color: #4caf50;
+}
+
+.save-preset-btn:hover {
+    border-color: #4caf50;
+}
+
+/* Transfer button - cyan */
+.transfer-team-btn {
+    color: #00c9ff;
+}
+
+.transfer-team-btn:hover {
+    border-color: #00c9ff;
 }
 
 .move-team-btns {
@@ -254,11 +293,17 @@ body.modal-open .map-filter {
 }
 
 /* ==================== MAP ==================== */
-.map-filter {
+.map-filters-container {
     position: absolute;
     top: 16px;
     left: 16px;
     z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.map-filter {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -278,6 +323,7 @@ body.modal-open .map-filter {
 }
 
 .map-filter select {
+    flex: 1;
     background: #050505;
     border: 1px solid #444;
     border-radius: 6px;
@@ -291,6 +337,39 @@ body.modal-open .map-filter {
 .map-filter select:focus {
     outline: none;
     border-color: #d4af37;
+}
+
+/* Condition filter with icon */
+.condition-icon-select {
+    flex: 1 !important;
+    min-width: auto !important;
+    max-width: none !important;
+    width: auto !important;
+    height: 34px !important;
+    padding: 6px 8px 6px 26px !important;
+    text-align: left;
+    background-repeat: no-repeat !important;
+    background-position: 6px center !important;
+    background-size: 8% !important;
+    font-size: 13px !important;
+    line-height: normal !important;
+    cursor: pointer;
+    color: #fcf6ff !important;
+}
+
+.condition-icon-select option {
+    background-color: #050505 !important;
+    background-repeat: no-repeat !important;
+    background-position: 6px center !important;
+    background-size: 8% !important;
+    padding-left: 32px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    padding-right: 8px !important;
+    min-height: 32px !important;
+    line-height: 20px !important;
+    color: #fcf6ff !important;
+    font-size: 13px !important;
 }
 
 /* ==================== TEAMS PRESETS TOGGLE (RIGHT SIDE) ==================== */
@@ -431,8 +510,12 @@ body.modal-open .map-filter {
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     align-items: center;
-    cursor: pointer;
+    cursor: grab;
     transition: all 0.2s;
+}
+
+.preset-dropdown-team:active {
+    cursor: grabbing;
 }
 
 .preset-dropdown-team:hover {
@@ -471,6 +554,13 @@ body.modal-open .map-filter {
     border-radius: 4px;
 }
 
+.preset-dropdown-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+}
+
 .preset-dropdown-conditions {
     display: flex;
     gap: 3px;
@@ -489,6 +579,29 @@ body.modal-open .map-filter {
     image-rendering: auto;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+}
+
+.preset-usage-indicator {
+    font-size: 9px;
+    color: #4caf50;
+    background: rgba(76, 175, 80, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(76, 175, 80, 0.4);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.preset-dropdown-team.preset-used {
+    background: rgba(76, 175, 80, 0.08);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.preset-dropdown-team.preset-used:hover {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: rgba(76, 175, 80, 0.5);
 }
 
 .preset-dropdown-no-presets {
@@ -525,6 +638,12 @@ body.modal-open .map-filter {
     filter: brightness(1.2) contrast(1.3);
     color: #ffe600;
     z-index: 49;
+}
+
+.post-point.drag-over {
+    transform: scale(1.2);
+    filter: brightness(1.5) drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
+    z-index: 50;
 }
 
 /* Post positions */
@@ -1332,29 +1451,6 @@ body.modal-open .map-filter {
     margin-left: auto;
 }
 
-.transfer-team-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background: #0f0f0f;
-    color: #00c9ff;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.transfer-team-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-.transfer-team-btn:hover {
-    background: #1a1a1a;
-    border-color: #00c9ff;
-}
 
 .transfer-menu {
     position: fixed;
@@ -1745,6 +1841,13 @@ body.modal-open .map-filter {
     font-size: 11px;
     margin-top: 4px;
     color: #a0ffa0;
+}
+
+.auto-save-status {
+    text-align: center;
+    font-size: 10px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
 }
 
 /* ==================== MEMBERS SECTION ==================== */

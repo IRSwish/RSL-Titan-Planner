@@ -1,4 +1,5 @@
-// Version: 2025-01-12-003 - Fixed alliance lookup to use championsDB
+// Version: 2025-01-12-018 - Don't auto-save while typing
+console.log("🚀 Script loaded - Version 2025-01-12-018");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 import { setupAuthUI, getCurrentRoom, isViewer, exportSiegeData, importSiegeData, showChangePasswordModal, logout } from "./auth.js";
@@ -235,7 +236,6 @@ function validateTeamCondition(team, conditionId) {
     // team = { champion4: "name", champion3: "name", champion2: "name", lead: "name" }
     const champions = [team.champion4, team.champion3, team.champion2, team.lead].filter(c => c && c.trim());
     if (champions.length === 0) {
-        console.log("⚠️ No champions in team");
         return false;
     }
 
@@ -255,67 +255,40 @@ function validateTeamCondition(team, conditionId) {
         const condType = condition.type;
         const condName = condition.name;
 
-        console.log(`🔍 Testing condition ${conditionId} (${condType}: ${condName}) with champions:`, champions);
-        console.log(`🔎 Condition type exact value:`, JSON.stringify(condType), `(length: ${condType ? condType.length : 0})`);
-
         // Effects conditions are always true
         if (condType === 'effects' || condType === 'Effects') {
-            console.log("✅ Effects condition - always true");
             return true;
         }
 
         // Get champion data for all champions in team
         const champData = champions.map(name => getChampionFullData(name)).filter(c => c !== null);
-        console.log("📊 Champion data:", champData);
 
         if (champData.length === 0) {
-            console.log("❌ No champion data found");
             return false;
-        }
-
-        if (champData.length !== champions.length) {
-            console.log(`⚠️ Some champions not found: ${champions.length} champions, ${champData.length} found`);
         }
 
         // Validate based on condition type (case-insensitive)
         const condTypeLower = condType.toLowerCase();
         switch (condTypeLower) {
             case 'rarity':
-                // Check if all 4 champions have the specified rarity
-                const rarityMatch = champData.every(c => c.rarity === condName);
-                console.log(`  Rarity check: ${condName} - Match: ${rarityMatch}`, champData.map(c => c.rarity));
-                return rarityMatch;
+                return champData.every(c => c.rarity === condName);
 
             case 'factions':
-                // Check if all 4 champions are from the specified faction
-                const factionMatch = champData.every(c => c.faction === condName);
-                console.log(`  Faction check: "${condName}" - Match: ${factionMatch}`, champData.map(c => `"${c.faction}"`));
-                return factionMatch;
+                return champData.every(c => c.faction === condName);
 
             case 'type':
-                // Check if all 4 champions are of the specified type
-                const typeMatch = champData.every(c => c.type === condName);
-                console.log(`  Type check: ${condName} - Match: ${typeMatch}`, champData.map(c => c.type));
-                return typeMatch;
+                return champData.every(c => c.type === condName);
 
             case 'affinity':
-                // Check if all 4 champions have the specified affinity
-                const affinityMatch = champData.every(c => c.affinity === condName);
-                console.log(`  Affinity check: ${condName} - Match: ${affinityMatch}`, champData.map(c => c.affinity));
-                return affinityMatch;
+                return champData.every(c => c.affinity === condName);
 
             case 'alliance':
-                // Check if all 4 champions are from factions in the specified alliance
-                const allianceMatch = champData.every(c => {
+                return champData.every(c => {
                     const alliance = getAllianceForFaction(c.faction);
-                    console.log(`    Champion ${c.name}: faction="${c.faction}" -> alliance="${alliance}"`);
                     return alliance === condName;
                 });
-                console.log(`  Alliance check: ${condName} - Match: ${allianceMatch}`);
-                return allianceMatch;
 
             default:
-                console.log(`  ❌ Unknown condition type: ${condType}`);
                 return false;
         }
     } catch (e) {
@@ -327,7 +300,6 @@ function validateTeamCondition(team, conditionId) {
 // Get all conditions validated by a team
 function getValidatedConditions(team) {
     if (!siegeDB || !team) {
-        console.log("❌ getValidatedConditions: no siegeDB or team", { siegeDB: !!siegeDB, team });
         return [];
     }
 
@@ -342,13 +314,11 @@ function getValidatedConditions(team) {
             const condId = row.id;
 
             if (validateTeamCondition(team, condId)) {
-                console.log("✅ Condition validated:", condId);
                 validatedConditions.push(condId);
             }
         }
 
         stmt.free();
-        console.log("📋 Total validated conditions:", validatedConditions.length, validatedConditions);
     } catch (e) {
         console.error("Erreur getValidatedConditions", e);
     }
@@ -491,6 +461,7 @@ function connectRoom(roomId) {
         clanMembers = snap.val() || {};
         updateMembersList();
         updateMemberFilter();
+        updateConditionsFilter();
     });
 
     postIds.forEach(id => {
@@ -508,6 +479,7 @@ function connectRoom(roomId) {
             updateTeamsCountOnMap(id);  // Mettre à jour le compteur d'équipes
             updateTooltipOnMap(id);  // Mettre à jour le tooltip hover
             updateMembersList();  // Mettre à jour le compteur de teams par membre
+            updateConditionsFilter();  // Mettre à jour le filtre des conditions
         });
     });
     updateSummaryTable();
@@ -534,25 +506,116 @@ function updateMemberFilter() {
     select.value = currentValue;
 }
 
-function applyMemberFilter(selectedMember) {
+function applyFilters() {
+    const memberFilter = document.getElementById("memberFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+
+    const selectedMember = memberFilter ? memberFilter.value : "";
+    const selectedCondition = conditionFilter ? conditionFilter.value : "";
+
     postIds.forEach(postId => {
         const postEl = document.getElementById(postId);
         if (!postEl) return;
 
+        const postType = postEl.getAttribute("data-type");
         const data = postDataCache[postId] || {};
         const teams = data.teams || [];
 
-        // Vérifier si le membre a une team sur ce post
-        const hasMember = teams.some(team => team.member === selectedMember);
+        let showPost = true;
 
-        if (selectedMember === "" || hasMember) {
-            // Afficher le post
-            postEl.style.display = "";
-        } else {
-            // Cacher le post
-            postEl.style.display = "none";
+        // Filter by member
+        if (selectedMember !== "") {
+            const hasMember = teams.some(team => team.member === selectedMember);
+            if (!hasMember) {
+                showPost = false;
+            }
         }
+
+        // Filter by condition (only for regular posts - check META conditions)
+        if (selectedCondition !== "") {
+            // Hide all buildings when filtering by condition
+            if (postType !== "post") {
+                showPost = false;
+            } else {
+                const conditionsArr = Array.isArray(data.conditions) ? data.conditions : [];
+                const hasCondition = conditionsArr.some(condId => String(condId) === String(selectedCondition));
+                if (!hasCondition) {
+                    showPost = false;
+                }
+            }
+        }
+
+        postEl.style.display = showPost ? "" : "none";
     });
+}
+
+function updateConditionsFilter() {
+    const conditionFilter = document.getElementById("conditionFilter");
+    if (!conditionFilter) return;
+
+    const currentValue = conditionFilter.value;
+
+    // Collect all unique conditions from regular posts (META conditions)
+    const conditionsSet = new Set();
+    postIds.forEach(postId => {
+        const postEl = document.getElementById(postId);
+        if (!postEl) return;
+
+        const postType = postEl.getAttribute("data-type");
+        if (postType !== "post") return; // Only regular posts
+
+        const data = postDataCache[postId] || {};
+        const conditionsArr = Array.isArray(data.conditions) ? data.conditions : [];
+
+        conditionsArr.forEach(condId => {
+            if (condId && condId !== "") {
+                conditionsSet.add(String(condId));
+            }
+        });
+    });
+
+    // Sort conditions by ID
+    const conditionIds = Array.from(conditionsSet).sort((a, b) => parseInt(a) - parseInt(b));
+
+    // Clear and rebuild options
+    conditionFilter.innerHTML = '';
+
+    // Add "All" option
+    const allOption = document.createElement("option");
+    allOption.value = "";
+    allOption.textContent = "All";
+    conditionFilter.appendChild(allOption);
+
+    // Add condition options
+    conditionIds.forEach(condId => {
+        const icon = getConditionIcon(condId);
+        const name = getConditionName(condId);
+        const option = document.createElement("option");
+        option.value = condId;
+        option.textContent = name;
+        option.setAttribute("data-icon", icon || '');
+        option.style.backgroundImage = `url('${icon}')`;
+        conditionFilter.appendChild(option);
+    });
+
+    conditionFilter.value = currentValue;
+
+    // Update icon background
+    updateConditionFilterIcon();
+}
+
+function updateConditionFilterIcon() {
+    const conditionFilter = document.getElementById("conditionFilter");
+    if (!conditionFilter) return;
+
+    const selectedOption = conditionFilter.options[conditionFilter.selectedIndex];
+    const iconUrl = selectedOption ? selectedOption.getAttribute("data-icon") : null;
+    if (iconUrl && iconUrl !== "") {
+        conditionFilter.style.backgroundImage = `url('${iconUrl}')`;
+    } else {
+        // "All" selected - no icon
+        conditionFilter.style.backgroundImage = "none";
+    }
 }
 
 function updateMembersList() {
@@ -627,12 +690,11 @@ function updateMembersList() {
             presetsCountSpan.className = "member-presets-count";
             presetsCountSpan.innerHTML = `
                 <span class="member-presets-number">${presetsCount}</span>
-                <button class="view-presets-btn">
+                <button class="view-presets-btn" title="Edit Presets">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                        <path d="m15 5 4 4"/>
                     </svg>
-                    View
                 </button>
             `;
             const viewBtn = presetsCountSpan.querySelector(".view-presets-btn");
@@ -648,18 +710,21 @@ function updateMembersList() {
             // Edit button
             const editBtn = document.createElement("button");
             editBtn.className = "member-edit-btn";
+            editBtn.title = "Change Info";
             editBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                    <path d="m15 5 4 4"/>
                 </svg>
-                Edit
             `;
             editBtn.addEventListener("click", () => editMember(member.pseudo, member.link));
 
             // Delete button
             const deleteBtn = document.createElement("button");
             deleteBtn.className = "member-delete-btn";
+            deleteBtn.title = "Delete Member";
             deleteBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"></polyline>
@@ -668,7 +733,6 @@ function updateMembersList() {
                     <path d="M14 11v6"></path>
                     <path d="M9 6V4h6v2"></path>
                 </svg>
-                Delete
             `;
             deleteBtn.addEventListener("click", () => deleteClanMember(member.pseudo));
 
@@ -781,6 +845,69 @@ function deleteClanMember(pseudo) {
     set(refMembers, clanMembers);
 }
 
+// Find if a preset is already used in a post
+function findPresetUsage(memberPseudo, preset) {
+    // Extract champion names from preset
+    const presetChamps = [
+        preset.champion4,
+        preset.champion3,
+        preset.champion2,
+        preset.lead
+    ].filter(c => c && c.trim() !== "").sort();
+
+    if (presetChamps.length === 0) {
+        return null;
+    }
+
+    // Check all posts
+    for (const postId in postDataCache) {
+        const postData = postDataCache[postId];
+        if (!postData || !postData.teams) continue;
+
+        // Check each team in the post
+        for (const team of postData.teams) {
+            if (team.member !== memberPseudo) continue;
+
+            // Extract champion names from team (using c1, c2, c3, c4)
+            const teamChamps = [
+                team.c4,
+                team.c3,
+                team.c2,
+                team.c1
+            ].filter(c => c && c.trim() !== "").sort();
+
+            // Compare sorted arrays
+            if (teamChamps.length === presetChamps.length &&
+                teamChamps.every((champ, i) => champ === presetChamps[i])) {
+                // Found a match! Return the post ID formatted nicely
+                return formatPostName(postId);
+            }
+        }
+    }
+
+    return null;
+}
+
+// Format post ID to display name
+function formatPostName(postId) {
+    if (postId.startsWith("post")) {
+        return postId.replace("post", "Post ");
+    }
+    if (postId.startsWith("defensetower")) {
+        return postId.replace("defensetower", "Defense ");
+    }
+    if (postId.startsWith("magictower")) {
+        return postId.replace("magictower", "Magic ");
+    }
+    if (postId.startsWith("manashrine")) {
+        return postId.replace("manashrine", "Shrine ");
+    }
+    if (postId === "stronghold") {
+        return "Stronghold";
+    }
+    return postId;
+}
+
 // Refresh Teams Presets Dropdown
 function refreshTeamsPresetsDropdown() {
     const dropdown = document.getElementById("teamsPresetsDropdown");
@@ -832,6 +959,11 @@ function refreshTeamsPresetsDropdown() {
             const teamDiv = document.createElement("div");
             teamDiv.className = "preset-dropdown-team";
 
+            // Make preset draggable
+            teamDiv.draggable = true;
+            teamDiv.dataset.memberPseudo = pseudo;
+            teamDiv.dataset.presetData = JSON.stringify(preset);
+
             // Team label
             const teamLabel = document.createElement("div");
             teamLabel.className = "preset-dropdown-team-label";
@@ -866,6 +998,21 @@ function refreshTeamsPresetsDropdown() {
 
             teamDiv.appendChild(champsDiv);
 
+            // Container for post usage and conditions (vertical layout)
+            const infoContainer = document.createElement("div");
+            infoContainer.className = "preset-dropdown-info";
+
+            // Check if this preset is already used in a post
+            const usedInPost = findPresetUsage(pseudo, preset);
+            if (usedInPost) {
+                const usageIndicator = document.createElement("div");
+                usageIndicator.className = "preset-usage-indicator";
+                usageIndicator.textContent = usedInPost;
+                usageIndicator.title = `Already used in ${usedInPost}`;
+                infoContainer.appendChild(usageIndicator);
+                teamDiv.classList.add("preset-used");
+            }
+
             // Conditions (validated only, no effects)
             const validatedConditions = getValidatedConditions(preset);
             // Filter out effects (Irradiance and Stronghold bonus)
@@ -889,14 +1036,96 @@ function refreshTeamsPresetsDropdown() {
                     }
                 });
 
-                teamDiv.appendChild(conditionsDiv);
+                infoContainer.appendChild(conditionsDiv);
             }
+
+            // Add info container to team div if it has content
+            if (infoContainer.children.length > 0) {
+                teamDiv.appendChild(infoContainer);
+            }
+
+            // Drag events
+            teamDiv.addEventListener("dragstart", (e) => {
+                e.dataTransfer.effectAllowed = "copy";
+                e.dataTransfer.setData("text/plain", JSON.stringify({
+                    member: pseudo,
+                    preset: preset
+                }));
+                teamDiv.style.opacity = "0.5";
+            });
+
+            teamDiv.addEventListener("dragend", (e) => {
+                teamDiv.style.opacity = "1";
+            });
 
             teamsContainer.appendChild(teamDiv);
         });
 
         memberDiv.appendChild(teamsContainer);
         dropdown.appendChild(memberDiv);
+    });
+}
+
+// Setup drag & drop zone on a post/building
+function setupPostDropZone(postElement) {
+    postElement.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "copy";
+        postElement.classList.add("drag-over");
+    });
+
+    postElement.addEventListener("dragleave", (e) => {
+        postElement.classList.remove("drag-over");
+    });
+
+    postElement.addEventListener("drop", (e) => {
+        e.preventDefault();
+        postElement.classList.remove("drag-over");
+
+        try {
+            const data = JSON.parse(e.dataTransfer.getData("text/plain"));
+            const { member, preset } = data;
+            const postId = postElement.id;
+
+            if (postId && member && preset) {
+                addPresetToPost(postId, member, preset);
+            }
+        } catch (error) {
+            console.error("Error dropping preset:", error);
+        }
+    });
+}
+
+// Add a preset to a post as a new team
+function addPresetToPost(postId, memberPseudo, preset) {
+    const currentData = postDataCache[postId] || {};
+    const teams = Array.isArray(currentData.teams) ? [...currentData.teams] : [];
+
+    // Create new team from preset
+    const newTeam = {
+        member: memberPseudo,
+        c1: preset.lead || "",
+        c2: preset.champion2 || "",
+        c3: preset.champion3 || "",
+        c4: preset.champion4 || "",
+        condition: preset.condition || "",
+        selected: false
+    };
+
+    // Add to the end of teams array
+    teams.push(newTeam);
+
+    // Update Firebase
+    const updatedData = {
+        ...currentData,
+        teams: teams
+    };
+
+    const refPost = ref(db, `rooms/${currentRoomId}/siege/${postId}`);
+    set(refPost, updatedData).then(() => {
+        console.log(`Preset added to ${postId}`);
+    }).catch(err => {
+        console.error("Error adding preset to post:", err);
     });
 }
 
@@ -1003,6 +1232,7 @@ function moveTeamUp(teamRow) {
     if (prevRow && prevRow.classList.contains("team-row")) {
         teamRow.parentNode.insertBefore(teamRow, prevRow);
         updateMoveButtons();
+        autoSaveCurrentPost();
     }
 }
 
@@ -1011,6 +1241,7 @@ function moveTeamDown(teamRow) {
     if (nextRow && nextRow.classList.contains("team-row")) {
         teamRow.parentNode.insertBefore(nextRow, teamRow);
         updateMoveButtons();
+        autoSaveCurrentPost();
     }
 }
 
@@ -1122,6 +1353,9 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
 
             // Apply team-specific locks after selection change
             applyTeamSelectionLocks();
+
+            // Auto-save on selection change
+            autoSaveCurrentPost();
         };
 
         teamRow.appendChild(selectBtn);
@@ -1129,10 +1363,11 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
 
     // --- bouton clear à droite des champions ---
     const clearBtn = document.createElement("button");
-    clearBtn.className = "icon-btn clear-team-btn";
+    clearBtn.className = "action-btn clear-team-btn";
     clearBtn.type = "button";
+    clearBtn.title = "Clear team";
     clearBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="3 6 5 6 21 6"></polyline>
         <path d="M19 6l-1.5 14H6.5L5 6"></path>
         <path d="M10 11v6"></path>
@@ -1339,7 +1574,11 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
                 div.addEventListener("click", () => {
                     cInput.value = ch.name;
                     sugList.innerHTML = "";
-                    updateVisualForInput(cInput, champImg, rarityImg);
+                    // Get the images from the DOM at click time, not from closure
+                    const slot = cInput.closest('.champ-slot');
+                    const img = slot.querySelector('.champ-img');
+                    const rarity = slot.querySelector('.rarity-img');
+                    updateVisualForInput(cInput, img, rarity);
                 });
 
                 sugList.appendChild(div);
@@ -1446,14 +1685,55 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
     auraDisplay.className = "lead-aura-display";
     teamRow.appendChild(auraDisplay);
 
+    // Delete button (only if index > 0) - BEFORE clear button
+    if (index > 0) {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "action-btn delete-team-btn";
+        deleteBtn.type = "button";
+        deleteBtn.title = "Delete team";
+        deleteBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="17" x2="22" y1="8" y2="8"/>
+            </svg>
+        `;
+        deleteBtn.addEventListener("click", () => {
+            teamRow.remove();
+            updateMoveButtons();
+            autoSaveCurrentPost();
+        });
+
+        teamRow.appendChild(deleteBtn);
+    }
+
     teamRow.appendChild(clearBtn);
+
+    // Save as Preset button
+    const savePresetBtn = document.createElement("button");
+    savePresetBtn.className = "action-btn save-preset-btn";
+    savePresetBtn.type = "button";
+    savePresetBtn.title = "Save as Preset";
+    savePresetBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 12H3"/>
+            <path d="M16 6H3"/>
+            <path d="M16 18H3"/>
+            <path d="M18 9v6"/>
+            <path d="M21 12h-6"/>
+        </svg>
+    `;
+    savePresetBtn.addEventListener("click", () => {
+        saveTeamAsPreset(teamRow);
+    });
+    teamRow.appendChild(savePresetBtn);
 
     // Bouton pour transférer vers un autre poste
     const transferBtn = document.createElement("button");
-    transferBtn.className = "transfer-team-btn";
+    transferBtn.className = "action-btn transfer-team-btn";
     transferBtn.type = "button";
-    transferBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 3 9-3 9 19-9Z"/><path d="M6 12h16"/></svg>`;
     transferBtn.title = "Move to another post";
+    transferBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 3 9-3 9 19-9Z"/><path d="M6 12h16"/></svg>`;
 
     const transferMenu = document.createElement("div");
     transferMenu.className = "transfer-menu";
@@ -1514,19 +1794,6 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
 
     teamRow.appendChild(transferBtn);
     teamRow.appendChild(transferMenu);
-
-    if (index > 0) {
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "-";
-        deleteBtn.className = "ghost-btn small delete-team-btn";
-
-        deleteBtn.addEventListener("click", () => {
-            teamRow.remove();
-            updateMoveButtons();
-        });
-
-        teamRow.appendChild(deleteBtn);
-    }
     teamsContainer.appendChild(teamRow);
     updateMoveButtons();
 
@@ -1534,6 +1801,84 @@ function createTeamRow(teamData = {}, index = 0, hasSelectedTeam = false) {
     if (championsDB) {
         setTimeout(() => updateLeadAura(teamRow), 100);
     }
+}
+
+// Save team as preset
+function saveTeamAsPreset(teamRow) {
+    // Get member from the team
+    const memberSelect = teamRow.querySelector(".member-select");
+    if (!memberSelect || !memberSelect.value) {
+        alert("Please select a member first before saving as preset.");
+        return;
+    }
+
+    const memberPseudo = memberSelect.value;
+
+    // Get champions from the team
+    const champInputs = teamRow.querySelectorAll(".champ-input");
+    const champions = {
+        champion4: champInputs[0]?.value || "",
+        champion3: champInputs[1]?.value || "",
+        champion2: champInputs[2]?.value || "",
+        lead: champInputs[3]?.value || ""
+    };
+
+    // Check if at least one champion is set
+    const hasChampions = Object.values(champions).some(c => c && c.trim() !== "");
+    if (!hasChampions) {
+        alert("Please add at least one champion before saving as preset.");
+        return;
+    }
+
+    // Get condition if any
+    const conditionInput = teamRow.querySelector(".team-condition-value");
+    const condition = conditionInput?.value || "";
+
+    // Create preset object
+    const preset = {
+        ...champions,
+        condition: condition
+    };
+
+    // Get current member data
+    const member = clanMembers[memberPseudo];
+    if (!member) {
+        alert("Member not found.");
+        return;
+    }
+
+    // Initialize presets if needed
+    if (!member.presets) {
+        member.presets = {};
+    }
+
+    // Generate unique preset ID
+    const presetIds = Object.keys(member.presets);
+    let newPresetId = `preset${presetIds.length + 1}`;
+    let counter = presetIds.length + 1;
+    while (member.presets[newPresetId]) {
+        counter++;
+        newPresetId = `preset${counter}`;
+    }
+
+    // Add preset
+    member.presets[newPresetId] = preset;
+
+    // Save to Firebase
+    const refMembers = ref(db, `rooms/${currentRoomId}/siege/members`);
+    set(refMembers, clanMembers).then(() => {
+        // Show success message
+        alert(`✓ Team saved as preset for ${memberPseudo}!`);
+
+        // Refresh the teams presets dropdown if it's open
+        const dropdown = document.getElementById("teamsPresetsDropdown");
+        if (dropdown && dropdown.classList.contains("show")) {
+            refreshTeamsPresetsDropdown();
+        }
+    }).catch(err => {
+        console.error("Error saving preset:", err);
+        alert("Error saving preset. Please try again.");
+    });
 }
 
 function getTeamsFromModal() {
@@ -1891,6 +2236,8 @@ function trackModalChanges() {
     const currentState = captureModalState();
     if (currentState && initialModalState && currentState !== initialModalState) {
         hasUnsavedChanges = true;
+        // Auto-save on change
+        autoSaveCurrentPost();
     }
 }
 
@@ -2009,7 +2356,6 @@ function updateModalTitleIcon(isFrozen) {
 
 function applyFreezeState(isFrozen) {
     const modal = document.querySelector(".modal");
-    const saveBtn = document.getElementById("saveBtn");
     const addTeamBtn = document.getElementById("addTeamBtn");
 
     if (isFrozen) {
@@ -2030,7 +2376,6 @@ function applyFreezeState(isFrozen) {
             slot.style.opacity = '0.6';
         });
 
-        if (saveBtn) saveBtn.disabled = true;
         if (addTeamBtn) addTeamBtn.disabled = true;
 
         modal.classList.add("frozen-post");
@@ -2052,7 +2397,6 @@ function applyFreezeState(isFrozen) {
             slot.style.opacity = '';
         });
 
-        if (saveBtn) saveBtn.disabled = false;
         if (addTeamBtn) addTeamBtn.disabled = false;
 
         modal.classList.remove("frozen-post");
@@ -2529,15 +2873,33 @@ function renderConditionsUI(postId, data) {
     }
 }
 
+// Auto-save with debounce
+let autoSaveTimeout = null;
+function autoSaveCurrentPost() {
+    clearTimeout(autoSaveTimeout);
+    autoSaveTimeout = setTimeout(() => {
+        // Don't save if user is currently typing in an input
+        const activeElement = document.activeElement;
+        if (activeElement && (
+            activeElement.classList.contains('champ-input') ||
+            activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'SELECT'
+        )) {
+            // Retry after another delay
+            autoSaveCurrentPost();
+            return;
+        }
+        saveCurrentPost();
+    }, 500); // 500ms debounce
+}
+
 function saveCurrentPost() {
     if (!currentRoomId) {
         setStatus("Join or create a room first.", true);
-        alert("Join or create a room first.");
         return;
     }
     if (!currentPostId) {
         setStatus("Choose a post on the map.", true);
-        alert("Choose a post on the map.");
         return;
     }
 
@@ -2580,7 +2942,7 @@ function saveCurrentPost() {
     const r = ref(db, `rooms/${currentRoomId}/siege/${currentPostId}`);
     set(r, data)
         .then(() => {
-            setStatus("Teams saved ✔");
+            setStatus("✔ Saved", false);
             // Reset unsaved changes flag
             hasUnsavedChanges = false;
             // Update initial state to current state
@@ -3778,6 +4140,9 @@ window.addEventListener("DOMContentLoaded", () => {
             iconEl.src = `/siege/img/posts/${type}.webp`;
         }
 
+        // Setup drop zone for presets
+        setupPostDropZone(pp);
+
         // Ajouter les 3 icônes de conditions pour les posts uniquement
         if (type === "post" && !pp.querySelector(".post-conditions")) {
             const conditionsDiv = document.createElement("div");
@@ -3805,15 +4170,22 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     const copyBtn = document.getElementById("copyLinkBtn");
-    const saveBtn = document.getElementById("saveBtn");
     const closeModalBtn = document.getElementById("closeModal");
     const addTeamBtn = document.getElementById("addTeamBtn");
     const freezePostBtn = document.getElementById("freezePostBtn");
     const memberFilter = document.getElementById("memberFilter");
 
     if (memberFilter) {
-        memberFilter.addEventListener("change", (e) => {
-            applyMemberFilter(e.target.value);
+        memberFilter.addEventListener("change", () => {
+            applyFilters();
+        });
+    }
+
+    const conditionFilter = document.getElementById("conditionFilter");
+    if (conditionFilter) {
+        conditionFilter.addEventListener("change", () => {
+            updateConditionFilterIcon();
+            applyFilters();
         });
     }
 
@@ -3953,10 +4325,6 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    saveBtn.addEventListener("click", () => {
-        saveCurrentPost();
-    });
-
     closeModalBtn.addEventListener("click", () => {
         closeModal();
     });
@@ -3965,6 +4333,8 @@ window.addEventListener("DOMContentLoaded", () => {
         const teamsContainer = document.getElementById("teamsContainer");
         const index = teamsContainer.children.length; // nouvelle team index
         createTeamRow({}, index);
+        // Auto-save after adding team
+        autoSaveCurrentPost();
     });
 
     freezePostBtn.addEventListener("click", () => {
@@ -4014,8 +4384,13 @@ window.addEventListener("DOMContentLoaded", () => {
         th.addEventListener("click", () => {
             const sortType = th.dataset.sort;
 
-            // Si on clique sur la même colonne, toggle la direction
-            if (summarySortMode === sortType) {
+            // Tri par conditions : toujours descendant (Z->A), pas de toggle
+            if (sortType === "conditions") {
+                summarySortMode = "conditions";
+                summarySortDirection = "desc";
+            }
+            // Autres colonnes : comportement normal avec toggle
+            else if (summarySortMode === sortType) {
                 summarySortDirection = summarySortDirection === "asc" ? "desc" : "asc";
             } else {
                 // Nouvelle colonne, réinitialiser en ascendant
@@ -4390,9 +4765,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         // Update Firebase
         const presetRef = ref(db, `rooms/${currentRoomId}/siege/members/${memberPseudo}/presets/${presetId}`);
-        console.log("🔥 Firebase update:", `rooms/${currentRoomId}/siege/members/${memberPseudo}/presets/${presetId}`, { [slotName]: championName });
         update(presetRef, { [slotName]: championName })
-            .then(() => console.log("✅ Firebase updated successfully"))
             .catch(err => console.error("❌ Firebase error:", err));
 
         // Update visual
@@ -4421,14 +4794,11 @@ window.addEventListener("DOMContentLoaded", () => {
         console.log("🔄 updatePresetConditions called:", { memberPseudo, presetId });
         const member = clanMembers[memberPseudo];
         if (!member || !member.presets || !member.presets[presetId]) {
-            console.log("❌ Member or preset not found");
             return;
         }
 
         const preset = member.presets[presetId];
-        console.log("📦 Preset data:", preset);
         const validatedConditions = getValidatedConditions(preset);
-        console.log("✅ Validated conditions:", validatedConditions);
 
         // Find the conditions grid for this preset
         const presetRows = document.querySelectorAll('.preset-row');
